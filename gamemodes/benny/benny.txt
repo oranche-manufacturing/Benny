@@ -1,0 +1,11 @@
+"benny"
+{
+	"base"		"base"
+	"title"		"Your Name Is Benny"
+	"maps"		"^benny_"
+	"category"	"other"
+	"menusystem"	"1"
+	"settings"
+	{
+	}
+}
