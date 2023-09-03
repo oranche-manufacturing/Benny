@@ -1,0 +1,21 @@
+ //-------------------------------------------------------------------------
+//
+// Game data for Your Name Is Benny
+//
+//-------------------------------------------------------------------------
+
+@include "base.fgd" 
+
+@PointClass base(Targetname, Angles, Origin) lightprop("models/editor/spot.mdl") halfgridsnap frustum(lightfov,1,100) = benny_camera : "Benny - Camera"
+[
+	camera_type(choices) : "Type" : "standard" : "Style of camera" =
+	[
+		"standard" : "Standard"
+		"field" : "Field"
+	]
+	lightfov(float)				: "FOV" : "90.0" : "FOV"
+]
+
+@SolidClass base(Targetname) = benny_camerabounds : "Benny - Camera Bounds"
+[
+]
