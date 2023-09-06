@@ -1,17 +1,19 @@
 
 -- 
 
+local debugcolor = Color( 255, 0, 255, 1 )
+
 BENNY.Cameras = {}
 
 BENNY.Cameras["main"] = {
 	Type = "Standard",
-	Pos = Vector( -892, 0, 268 ),
-	Ang = Angle( 35, 0, 0 ),
+	Pos = Vector( -692, 0, 268 ),
+	Ang = Angle( 55, 0, 0 ),
 	FOV = 90,
 	Checks = {
 		{
-			Vector( -448, 510, 0 ),
-			Vector( -911, -509, -70 ),
+			Vector( -390, 510, 0 ),
+			Vector( -924, -509, -90 ),
 		},
 	},
 
@@ -28,9 +30,11 @@ BENNY.Cameras["main"] = {
 
 		do -- Angle
 			local amt = math.TimeFraction( self.iX1, self.iX2, ppos.x )
+			debugoverlay.Line( Vector( self.iX1, 0, 0 ), Vector( self.iX2, 0, 0 ), 0, debugcolor, true )
 			amt = math.Clamp( amt, 0, 1 )
 			amt = math.ease.InOutCubic( amt )
-			ang.p = ang.p + ( 35 * (amt) )
+			ang.p = ang.p + ( 25 * (amt) )
+			pos.x = pos.x - ( 170 * (amt) )
 		end
 
 		return pos, ang, self.FOV
@@ -38,8 +42,8 @@ BENNY.Cameras["main"] = {
 }
 
 BENNY.Cameras["grass"] = {
-	Pos = Vector( -1822, -214, 284 ),
-	Ang = Angle( 60, 0, 0 ),
+	Pos = Vector( -1622, -214, 284 ),
+	Ang = Angle( 70, 0, 0 ),
 	FOV = 90,
 	Checks = {
 		{
@@ -53,7 +57,10 @@ BENNY.Cameras["grass"] = {
 	},
 
 	iX1 = -900,
-	iX2 = -1300,
+	iX2 = -1330,
+
+	iX3 = -1400,
+	iX4 = -1750,
 	Special = function( self, ply )
 		local pos = Vector()
 		pos:Set( self.Pos )
@@ -66,12 +73,49 @@ BENNY.Cameras["grass"] = {
 
 		do -- far
 			local amt = math.TimeFraction( self.iX1, self.iX2, ppos.x )
+			debugoverlay.Line( Vector( self.iX1, ppos.y, ppos.z ), Vector( self.iX2, ppos.y, ppos.z ), 0, debugcolor, true )
 			amt = 1-math.Clamp( amt, 0, 1 )
-			amt = math.ease.InOutCubic( amt )
-			ang.p = ang.p - ( 22 * amt )
+			amt = math.ease.InOutSine( amt )
+			ang.p = ang.p - ( 11 * amt )
 			pos.x = pos.x + ( 400 * amt )
 			fov = fov - ( 22 * amt )
 		end
+
+		do -- close
+			local amt = math.TimeFraction( self.iX3, self.iX4, ppos.x )
+			debugoverlay.Line( Vector( self.iX3, ppos.y, ppos.z ), Vector( self.iX4, ppos.y, ppos.z ), 0, debugcolor, true )
+			amt = math.Clamp( amt, 0, 1 )
+			amt = math.ease.InOutCubic( amt )
+			pos.x = pos.x - ( 150 * (amt) )
+			ang.p = ang.p + ( 0 * (amt) )
+		end
+
+		return pos, ang, fov
+	end
+}
+
+BENNY.Cameras["barber"] = {
+	Pos = Vector( -64, -126, 54 ),
+	Ang = Angle( 15, 45, 0 ),
+	FOV = 90,
+	Checks = {
+		{
+			Vector( -382, 128, 0 ),
+			Vector( 128, -128, -70 ),
+		},
+	},
+
+	Special = function( self, ply )
+		local pos = Vector()
+		pos:Set( self.Pos )
+		local ang = Angle()
+		ang:Set( self.Ang )
+		local fov = self.FOV
+
+		local ppos = ply:GetPos()
+		pos.x = pos.x + ppos.x
+
+		pos.x = math.max( pos.x, -378 )
 
 		return pos, ang, fov
 	end
@@ -153,17 +197,18 @@ BENNY.Cameras["grass"] = {
 	end
 } ]]
 
-BENNY_ACTIVECAMERA = nil
+BENNY_ACTIVECAMERA = BENNY_ACTIVECAMERA or nil
 
 local c_over = CreateConVar( "benny_cam_override", "" )
 local c_unlock = CreateConVar( "benny_cam_unlock", 0 )
 
 local function decide_active()
+	print( LocalPlayer():GetPos() )
 	for name, camera in pairs( BENNY.Cameras ) do
 		if camera.Checks then
 			for i, v in ipairs(camera.Checks) do
 				if LocalPlayer():GetPos():WithinAABox( v[1], v[2] ) then
-					print( LocalPlayer():GetPos() )--print( CurTime(), name, v[1], v[2] )
+					debugoverlay.Box( vector_origin, v[1], v[2], 0, debugcolor )
 					return name
 				end
 			end
