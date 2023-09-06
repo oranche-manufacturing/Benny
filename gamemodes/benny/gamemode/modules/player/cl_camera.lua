@@ -5,37 +5,88 @@ BENNY.Cameras = {}
 
 BENNY.Cameras["main"] = {
 	Type = "Standard",
-	Pos = Vector( 235.24, 0, 280 ),
-	Ang = Angle( 75, -180, 0 ),
-	FOV = 67,
-	Corner1 = Vector( 240, -240, 0 ),
-	Corner2 = Vector( -240, 240, -130 ),
-	v1 = Vector( 180, 0, -128 ),
-	v2 = Vector( -180, 0, -128 ),
+	Pos = Vector( -892, 0, 268 ),
+	Ang = Angle( 35, 0, 0 ),
+	FOV = 90,
+	Checks = {
+		{
+			Vector( -448, 510, 0 ),
+			Vector( -911, -509, -70 ),
+		},
+	},
+
+	iX1 = -550,
+	iX2 = -800,
 	Special = function( self, ply )
 		local pos = Vector()
 		pos:Set( self.Pos )
 		local ang = Angle()
 		ang:Set( self.Ang )
 
-		debugoverlay.Cross( self.v1, 8, 0, color_white, true )
-		debugoverlay.Cross( self.v2, 8, 0, color_white, true )
+		local ppos = ply:GetPos()
+		pos.y = ppos.y
 
-		local amt = math.TimeFraction( self.v1.x, self.v2.x, ply:GetPos().x )
-		amt = math.Clamp( amt, 0, 1 )
-		ang.p = ang.p - ( 23 * amt )
-		pos.x = pos.x - ( 270/2 * amt )
+		do -- Angle
+			local amt = math.TimeFraction( self.iX1, self.iX2, ppos.x )
+			amt = math.Clamp( amt, 0, 1 )
+			amt = math.ease.InOutCubic( amt )
+			ang.p = ang.p + ( 35 * (amt) )
+		end
+
 		return pos, ang, self.FOV
 	end
 }
 
+BENNY.Cameras["grass"] = {
+	Pos = Vector( -1822, -214, 284 ),
+	Ang = Angle( 60, 0, 0 ),
+	FOV = 90,
+	Checks = {
+		{
+			Vector( -931, -130, 0 ),
+			Vector( -1311, -319, -70 ),
+		},
+		{
+			Vector( -1321, 506, 0 ),
+			Vector( -1813, -503, -70 ),
+		},
+	},
 
-BENNY.Cameras["hall"] = {
+	iX1 = -900,
+	iX2 = -1300,
+	Special = function( self, ply )
+		local pos = Vector()
+		pos:Set( self.Pos )
+		local ang = Angle()
+		ang:Set( self.Ang )
+		local fov = self.FOV
+
+		local ppos = ply:GetPos()
+		pos.y = ppos.y
+
+		do -- far
+			local amt = math.TimeFraction( self.iX1, self.iX2, ppos.x )
+			amt = 1-math.Clamp( amt, 0, 1 )
+			amt = math.ease.InOutCubic( amt )
+			ang.p = ang.p - ( 22 * amt )
+			pos.x = pos.x + ( 400 * amt )
+			fov = fov - ( 22 * amt )
+		end
+
+		return pos, ang, fov
+	end
+}
+
+--[[ BENNY.Cameras["hall"] = {
 	Type = "Fixed",
 	Pos = Vector( 794, -40, 84 ),
 	Ang = Angle( 29, 180, 0 ),
-	Corner1 = Vector( 273, -111, 0 ),
-	Corner2 = Vector( 751, 99, -130 ),
+	Checks = {
+		{
+			Vector( 273, -111, 0 ),
+			Vector( 751, 99, -130 ),
+		},
+	},
 	v1 = Vector( 400, 0, -128 ),
 	v2 = Vector( 630, 0, -128 ),
 	FOV = 67,
@@ -54,15 +105,18 @@ BENNY.Cameras["hall"] = {
 		pos.x = pos.x - ( 50 * (1-amt) )
 		return pos, ang, self.FOV
 	end
-}
+} ]]
 
-
-BENNY.Cameras["racks"] = {
+--[[ BENNY.Cameras["racks"] = {
 	Type = "Standard",
 	Pos = Vector( 120, 0, 280 ),
 	Ang = Angle( 60, 180, 0 ),
-	Corner1 = Vector( 890, 135, 0 ),
-	Corner2 = Vector( -253, 765, -130 ),
+	Checks = {
+		{
+			Vector( 890, 135, 0 ),
+			Vector( -253, 765, -130 )
+		},
+	},
 	v1 = Vector( 870, 135, -130 ),
 	v2 = Vector( 760, 135, -130 ),
 	v3 = Vector( 890, 135, -130 ),
@@ -97,22 +151,32 @@ BENNY.Cameras["racks"] = {
 
 		return pos, ang, self.FOV
 	end
-}
+} ]]
 
-BENNY_ACTIVECAMERA = "main"
+BENNY_ACTIVECAMERA = nil
 
 local c_over = CreateConVar( "benny_cam_override", "" )
 local c_unlock = CreateConVar( "benny_cam_unlock", 0 )
 
-hook.Add( "CalcView", "MyCalcView", function( ply, pos, ang, fov )
-	if c_unlock:GetBool() then return end
-	for i, v in pairs( BENNY.Cameras ) do
-		if v.Corner1 and v.Corner2 then
-			if ply:GetPos():WithinAABox( v.Corner1, v.Corner2 ) then
-				BENNY_ACTIVECAMERA = i
-				break
+local function decide_active()
+	for name, camera in pairs( BENNY.Cameras ) do
+		if camera.Checks then
+			for i, v in ipairs(camera.Checks) do
+				if LocalPlayer():GetPos():WithinAABox( v[1], v[2] ) then
+					print( LocalPlayer():GetPos() )--print( CurTime(), name, v[1], v[2] )
+					return name
+				end
 			end
 		end
+	end
+end
+
+hook.Add( "CalcView", "MyCalcView", function( ply, pos, ang, fov )
+	if c_unlock:GetBool() then return end
+	if ply:GetMoveType() == MOVETYPE_NOCLIP then return end
+	local da = decide_active()
+	if da then
+		BENNY_ACTIVECAMERA = da
 	end
 	local camera = BENNY.Cameras[BENNY_ACTIVECAMERA]
 	if camera then
@@ -286,21 +350,24 @@ concommand.Add("benny_cam_panel", function()
 		local b = vgui.Create("DButton")
 		b:SetText( "Steal from current" )
 		function b:DoClick()
+			local ply = LocalPlayer()
+			local ppos = ply:EyePos()
+			local pang = ply:EyeAngles()
 			for i=1, 7 do
 				if i==1 then
-					bloink[i]:SetValue( BENNY_ACTIVECAMERA:GetPos()[1] )
+					bloink[i]:SetValue( ppos[1] )
 				elseif i==2 then
-					bloink[i]:SetValue( BENNY_ACTIVECAMERA:GetPos()[2] )
+					bloink[i]:SetValue( ppos[2] )
 				elseif i==3 then
-					bloink[i]:SetValue( BENNY_ACTIVECAMERA:GetPos()[3] )
+					bloink[i]:SetValue( ppos[3] )
 				elseif i==4 then
-					bloink[i]:SetValue( -BENNY_ACTIVECAMERA:GetAngles()[1] )
+					bloink[i]:SetValue( pang[1] )
 				elseif i==5 then
-					bloink[i]:SetValue( BENNY_ACTIVECAMERA:GetAngles()[2] )
+					bloink[i]:SetValue( pang[2] )
 				elseif i==6 then
-					bloink[i]:SetValue( BENNY_ACTIVECAMERA:GetAngles()[3] )
+					bloink[i]:SetValue( pang[3] )
 				elseif i==7 then
-					bloink[i]:SetValue( BENNY_ACTIVECAMERA.FOV )
+					bloink[i]:SetValue( 90 )
 				end
 				c_over:SetString( table.concat( st, " " ) )
 			end
@@ -323,6 +390,6 @@ end)
 
 concommand.Add( "benny_dev_eyetrace", function( ply )
 	local tr = ply:GetEyeTrace()
-	print( string.format("Vector( %f, %f, %f )", tr.HitPos.x, tr.HitPos.y, tr.HitPos.z ) )
+	print( string.format("Vector( %i, %i, %i )", math.Round( tr.HitPos.x ), math.Round( tr.HitPos.y ), math.Round( tr.HitPos.z ) ) )
 	print( tr.Entity )
 end)
