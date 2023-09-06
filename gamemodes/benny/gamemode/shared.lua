@@ -6,6 +6,8 @@ GM.Author = "Fesiug, Oranche"
 GM.Email = "N/A"
 GM.Website = "N/A"
 
+BENNY = {}
+
 -- Load modules
 local path = GM.FolderName .. "/gamemode/modules/"
 local modules, folders = file.Find(path .. "*", "LUA")

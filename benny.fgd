@@ -13,9 +13,23 @@
 		"standard" : "Standard"
 		"field" : "Field"
 	]
-	lightfov(float)				: "FOV" : "90.0" : "FOV"
+	lightfov(float)						: "FOV" : "90.0" : "FOV"
+	target(target_destination)			: "Camera Target" : : "Bounds that trigger the camera to activate"
+	lerp0_target(target_destination)	: "Lerp 0" : : "Starting point of the lerp for the camera"
+	lerp1_target(target_destination)	: "Lerp 1" : : "Ending point of the lerp for the camera"
+	lerp1_fov(float)					: "End FOV" : : "Ending FOV for the lerp"
+]
+
+@PointClass base(Targetname, Angles, Origin) lightprop("models/editor/axis_helper_thick.mdl") halfgridsnap = benny_camera : "Benny - Camera Lerp Point"
+[
+	camera_type(choices) : "Type" : "standard" : "Style of camera" =
+	[
+		"standard" : "Standard"
+		"field" : "Field"
+	]
 ]
 
 @SolidClass base(Targetname) = benny_camerabounds : "Benny - Camera Bounds"
 [
+	target(target_destination)	: "Camera Target" : : "Bounds that trigger the camera to activate"
 ]
