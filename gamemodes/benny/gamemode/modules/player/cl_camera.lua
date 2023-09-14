@@ -3,9 +3,11 @@
 
 local debugcolor = Color( 255, 0, 255, 1 )
 
-BENNY.Cameras = {}
+tempmapcameras = {}
 
-BENNY.Cameras["main"] = {
+tempmapcameras["benny_test"] = {}
+
+tempmapcameras["benny_test"]["main"] = {
 	Type = "Standard",
 	Pos = Vector( -692, 0, 268 ),
 	Ang = Angle( 55, 0, 0 ),
@@ -41,7 +43,7 @@ BENNY.Cameras["main"] = {
 	end
 }
 
-BENNY.Cameras["grass"] = {
+tempmapcameras["benny_test"]["grass"] = {
 	Pos = Vector( -1622, -214, 284 ),
 	Ang = Angle( 70, 0, 0 ),
 	FOV = 90,
@@ -94,7 +96,7 @@ BENNY.Cameras["grass"] = {
 	end
 }
 
-BENNY.Cameras["barber"] = {
+tempmapcameras["benny_test"]["barber"] = {
 	Pos = Vector( -64, -126, 54 ),
 	Ang = Angle( 15, 45, 0 ),
 	FOV = 90,
@@ -121,109 +123,69 @@ BENNY.Cameras["barber"] = {
 	end
 }
 
---[[ BENNY.Cameras["hall"] = {
-	Type = "Fixed",
-	Pos = Vector( 794, -40, 84 ),
-	Ang = Angle( 29, 180, 0 ),
-	Checks = {
-		{
-			Vector( 273, -111, 0 ),
-			Vector( 751, 99, -130 ),
-		},
-	},
-	v1 = Vector( 400, 0, -128 ),
-	v2 = Vector( 630, 0, -128 ),
-	FOV = 67,
-	Special = function( self, ply )
-		local pos = Vector()
-		pos:Set( self.Pos )
-		local ang = Angle()
-		ang:Set( self.Ang )
-
-		debugoverlay.Cross( self.v1, 8, 0, color_white, true )
-		debugoverlay.Cross( self.v2, 8, 0, color_white, true )
-
-		local amt = math.TimeFraction( self.v1.x, self.v2.x, ply:GetPos().x )
-		amt = math.Clamp( amt, 0, 1 )
-		ang.p = ang.p + ( 32 * amt )
-		pos.x = pos.x - ( 50 * (1-amt) )
-		return pos, ang, self.FOV
-	end
-} ]]
-
---[[ BENNY.Cameras["racks"] = {
-	Type = "Standard",
-	Pos = Vector( 120, 0, 280 ),
-	Ang = Angle( 60, 180, 0 ),
-	Checks = {
-		{
-			Vector( 890, 135, 0 ),
-			Vector( -253, 765, -130 )
-		},
-	},
-	v1 = Vector( 870, 135, -130 ),
-	v2 = Vector( 760, 135, -130 ),
-	v3 = Vector( 890, 135, -130 ),
-	v4 = Vector( -253, 135, -130 ),
-	FOV = 75,
-	Special = function( self, ply )
-		local pos = Vector()
-		pos:Set( ply:GetPos() )
-		pos:Add( self.Pos )
-		local ang = Angle()
-		ang:Set( self.Ang )
-
-		debugoverlay.Cross( self.v1, 8, 0, color_white, true )
-		debugoverlay.Cross( self.v2, 8, 0, color_white, true )
-
-		pos.x = math.Clamp( pos.x, -200, 890 )
-		pos.y = math.Clamp( pos.y, 300, 600 )
-
-		do -- close to back wall
-			local amt = math.TimeFraction( self.v1.x, self.v2.x, ply:GetPos().x )
-			amt = math.Clamp( amt, 0, 1 )
-			-- pos.x = pos.x - ( (150) * (1-amt) )
-			ang.p = ang.p + ( 10 * (1-amt) )
-		end
-
-		do -- stretch
-			local amt = math.TimeFraction( self.v3.x, self.v4.x, ply:GetPos().x )
-			amt = math.Clamp( amt, 0, 1 )
-			-- pos.x = pos.x - ( (1143) * (amt) )
-		end
-
-
-		return pos, ang, self.FOV
-	end
-} ]]
-
-BENNY_ACTIVECAMERA = BENNY_ACTIVECAMERA or nil
+BENNY_ACTIVECAMERA = nil
 
 local c_over = CreateConVar( "benny_cam_override", "" )
 local c_unlock = CreateConVar( "benny_cam_unlock", 0 )
 
+local si = 4
+local ctrace = {
+	start = nil,
+	endpos = nil,
+	mins = Vector( -si, -si, -si ),
+	maxs = Vector( si, si, si ),
+	mask = MASK_SHOT_HULL,
+	filter = nil,
+}
+local tempcam = {
+	FOV = 90,
+
+	Special = function( self, ply )
+		local pos = Vector()
+		local ang = Angle()
+		local fov = self.FOV
+		local ppos = ply:GetPos()
+		local pang = ply:EyeAngles()
+
+		pos:Set( ppos )
+		ang:Add( pang )
+
+		pos.z = pos.z + 68
+		ctrace.start = pos
+		ctrace.endpos = pos + ( ang:Forward() * -60 ) + ( ang:Right() * 20 )
+		ctrace.filter = ply
+		local tr = util.TraceHull( ctrace )
+
+		pos = tr.HitPos
+
+		return pos, ang, fov
+	end
+}
+
 local function decide_active()
-	print( LocalPlayer():GetPos() )
-	for name, camera in pairs( BENNY.Cameras ) do
-		if camera.Checks then
-			for i, v in ipairs(camera.Checks) do
-				if LocalPlayer():GetPos():WithinAABox( v[1], v[2] ) then
-					debugoverlay.Box( vector_origin, v[1], v[2], 0, debugcolor )
-					return name
+	-- print( LocalPlayer():GetPos() )
+	-- BENNY_ACTIVECAMERA = tempcam
+	if tempmapcameras[ game.GetMap() ] then
+		for name, camera in pairs( tempmapcameras[ game.GetMap() ] ) do
+			if camera.Checks then
+				for i, v in ipairs(camera.Checks) do
+					if LocalPlayer():GetPos():WithinAABox( v[1], v[2] ) then
+						debugoverlay.Box( vector_origin, v[1], v[2], 0, debugcolor )
+						BENNY_ACTIVECAMERA = camera
+						return true
+					end
 				end
 			end
 		end
 	end
+	return false
 end
 
 hook.Add( "CalcView", "MyCalcView", function( ply, pos, ang, fov )
 	if c_unlock:GetBool() then return end
 	if ply:GetMoveType() == MOVETYPE_NOCLIP then return end
-	local da = decide_active()
-	if da then
-		BENNY_ACTIVECAMERA = da
-	end
-	local camera = BENNY.Cameras[BENNY_ACTIVECAMERA]
+	decide_active()
+	local camera = BENNY_ACTIVECAMERA
 	if camera then
 		local view = {
 			origin = camera.Pos,
