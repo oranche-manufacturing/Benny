@@ -7,6 +7,9 @@ SWEP.ViewModel = "models/weapons/c_pistol.mdl"
 SWEP.WorldModel = "models/weapons/w_pistol.mdl"
 
 function SWEP:PrimaryAttack()
+	if CLIENT then
+		AddCaption( "PISTOL", Color( 61, 61, 61 ), "[Pistol shot]", 0.1, 0.5 )
+	end
 	return true
 end
 

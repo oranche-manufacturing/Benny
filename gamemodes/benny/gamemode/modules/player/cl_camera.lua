@@ -97,8 +97,8 @@ tempmapcameras["benny_test"]["grass"] = {
 }
 
 tempmapcameras["benny_test"]["barber"] = {
-	Pos = Vector( -64, -126, 54 ),
-	Ang = Angle( 15, 45, 0 ),
+	Pos = Vector( -64, 0, 80 ),
+	Ang = Angle( 34, 0, 0 ),
 	FOV = 90,
 	Checks = {
 		{
@@ -116,8 +116,9 @@ tempmapcameras["benny_test"]["barber"] = {
 
 		local ppos = ply:GetPos()
 		pos.x = pos.x + ppos.x
+		pos.y = pos.y + ppos.y
 
-		pos.x = math.max( pos.x, -378 )
+		pos.x = math.max( pos.x, -400 )
 
 		return pos, ang, fov
 	end
