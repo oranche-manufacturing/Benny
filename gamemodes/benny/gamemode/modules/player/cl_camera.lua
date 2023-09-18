@@ -5,6 +5,29 @@ local debugcolor = Color( 255, 0, 255, 1 )
 
 tempmapcameras = {}
 
+tempmapcameras["benny_caramelldansen"] = {}
+
+tempmapcameras["benny_caramelldansen"]["main"] = {
+	Type = "Standard",
+	Pos = Vector( -510, 0, 128 ),
+	Ang = Angle( 12, 0, 0 ),
+	FOV = 90,
+	Checks = {
+		{
+			Vector( -512, -512, 64 ),
+			Vector( 512, 512, -64 ),
+		},
+	},
+	Special = function( self, ply )
+		local pos = Vector()
+		pos:Set( self.Pos )
+		local ang = Angle()
+		ang:Set( self.Ang )
+
+		return pos, ang, self.FOV
+	end
+}
+
 tempmapcameras["benny_test"] = {}
 
 tempmapcameras["benny_test"]["main"] = {
@@ -163,15 +186,60 @@ local tempcam = {
 	end
 }
 
+local fixer = Angle( 0, -90, 90 )
+local fixer2 = Angle( 0, -90, 90 )
+local cscam = {
+	Special = function( self, ply )
+		local pos = Vector()
+		local ang = Angle()
+		local fov = 90
+		
+		cuts:SetupBones()
+		local mat = cuts:GetBoneMatrix( cuts:LookupBone( "camera" ) )
+		local matf = cuts:GetBoneMatrix( cuts:LookupBone( "camera.fov" ) )
+
+		pos:Set( mat:GetTranslation() )
+		ang:Set( mat:GetAngles() )
+		ang:Sub( fixer )
+
+		local fix, fixa = matf:GetTranslation(), matf:GetAngles()
+		fix:Sub( cuts:GetPos() )
+		fov = fix.z
+
+		do
+			local x, y, z = pos.x, pos.y, pos.z
+		end
+
+		do
+			local p, y, r = ang.p, ang.y, ang.r
+			ang.p = -r
+			ang.r = 0
+		end
+
+		fov = Convert( fov, (4/3) ) -- Convert to vertical FOV.. somehow
+		fov = Convert( fov, (ScrH()/ScrW())/(3/4) ) -- Shut up default Source FOV widescreen magic
+
+		return pos, ang, fov
+	end
+}
+
 local function decide_active()
 	-- print( LocalPlayer():GetPos() )
 	-- BENNY_ACTIVECAMERA = tempcam
+
+	local csent = ents.FindByClass( "benny_cutscene" )[1]
+	if IsValid( csent ) then
+		BENNY_ACTIVECAMERA = cscam
+		cuts = csent
+		return true
+	end
+
 	if tempmapcameras[ game.GetMap() ] then
 		for name, camera in pairs( tempmapcameras[ game.GetMap() ] ) do
 			if camera.Checks then
 				for i, v in ipairs(camera.Checks) do
+					debugoverlay.Box( vector_origin, v[1], v[2], 0, debugcolor )
 					if LocalPlayer():GetPos():WithinAABox( v[1], v[2] ) then
-						debugoverlay.Box( vector_origin, v[1], v[2], 0, debugcolor )
 						BENNY_ACTIVECAMERA = camera
 						return true
 					end
@@ -212,7 +280,7 @@ hook.Add( "CalcView", "MyCalcView", function( ply, pos, ang, fov )
 			view.fov		= tonumber(st[7])
 		end
 
-		view.fov = Convert( view.fov, (ScrH()/ScrW())/(3/4) )
+		--view.fov = Convert( view.fov, (ScrH()/ScrW())/(3/4) )
 		return view
 	end
 end )

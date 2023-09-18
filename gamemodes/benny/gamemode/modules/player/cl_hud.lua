@@ -141,7 +141,7 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 	localss = ss(1)
 	local b = ss(20)
 
-	local scheme = schemes["yanghao"]
+	local scheme = schemes["benny"]
 
 	do -- Health
 		-- BG
