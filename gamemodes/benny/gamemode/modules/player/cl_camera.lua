@@ -303,7 +303,7 @@ hook.Add( "CalcView", "MyCalcView", function( ply, pos, ang, fov )
 	end
 		
 	-- PROTO: Add correct benny weapon check
-	if IsValid(ply:GetActiveWeapon()) and ply:GetActiveWeapon():GetAim() > 0 then
+	if true or IsValid(ply:GetActiveWeapon()) and ply:GetActiveWeapon():GetAim() > 0 then
 		view.drawviewer = true
 		view.origin, view.angles, view.fov = bennyfp( view.origin, view.angles, view.fov )
 	end

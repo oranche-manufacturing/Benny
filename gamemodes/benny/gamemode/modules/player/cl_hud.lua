@@ -140,6 +140,11 @@ end
 local color_caption = Color( 0, 0, 0, 127 )
 local mat_grad = Material( "benny/hud/grad.png", "mips smooth" )
 
+local wep1 = {
+	Name = "COBRA .45",
+	Firemode = "SEMI",
+}
+
 hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 	local sw, sh = ScrW(), ScrH()
 	local b = ss(20)
@@ -185,41 +190,76 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 	end
 
 	do -- Weapon
+		local inv = p:INV_Get()
+		local wep1 = wep.B_WepT1
+		local wep1c = wep.B_ClassT1
+		local wep2 = wep.B_WepT2
+		local wep2c = wep.B_ClassT2
+
+		do
+			local ox, oy = 170, 24
+			-- Debug
+			surface.SetFont( "Benny_12" )
+			surface.SetTextColor( scheme["fg"] )
+
+			surface.SetTextPos( ss(ox), ss(oy) )
+			surface.DrawText( "Wep1: " .. wep:GetWep1() )
+
+			local num = 1
+			if wep1 then for i, v in pairs( wep1 ) do
+				surface.SetTextPos( ss(ox+16), ss(oy+10*num) )
+				surface.DrawText( i .. ": " .. (v or "[no " .. i .. "]") )
+				num = num + 1
+			end end
+
+			surface.SetTextPos( ss(ox+128), ss(oy) )
+			surface.DrawText( "Wep2: " .. wep:GetWep2() )
+
+			if wep2 then for i, v in pairs( wep2 ) do
+				surface.SetTextPos( ss(ox+128+16), ss(oy+10*num) )
+				surface.DrawText( i .. ": " .. (v or "[no " .. i .. "]") )
+				num = num + 1
+			end end
+		end
+
 		local w, h = 150, 100
 		local BOXHEIGHT = 44
-		-- BG
-		surface.SetDrawColor( scheme["bg"] )
-		surface.DrawRect( sw - b - ss(w), sh - b - ss(BOXHEIGHT), ss(w), ss(BOXHEIGHT) )
 
-		-- Text bar
-		surface.SetFont( "Benny_18" )
-		surface.SetDrawColor( scheme["fg"] )
-		surface.DrawRect( sw - b - ss(w-4), sh - b - ss(BOXHEIGHT-4), ss(w-8), ss(14) )
+		if wep1 then
+			-- BG
+			surface.SetDrawColor( scheme["bg"] )
+			surface.DrawRect( sw - b - ss(w), sh - b - ss(BOXHEIGHT), ss(w), ss(BOXHEIGHT) )
 
-		surface.SetTextColor( scheme["bg"] )
-		surface.SetTextPos( sw - b - ss(w-6), sh - b - ss(BOXHEIGHT-3) )
-		surface.DrawText( "GLOCK-17" )
-
-		surface.SetDrawColor( scheme["fg"] )
-		surface.DrawRect( sw - b - ss(w-4), sh - b + ss(16) - ss(BOXHEIGHT-4), ss(29), ss(10) )
-
-		surface.SetFont( "Benny_12" )
-		surface.SetTextColor( scheme["bg"] )
-		surface.SetTextPos( sw - b - ss(w-7), sh - b + ss(16) - ss(BOXHEIGHT-4) )
-		surface.DrawText( "3BST" )
-
-		surface.SetFont( "Benny_12" )
-		local text = wep:Clip1() .. " - MAG 3"
-		local tw = surface.GetTextSize( text )
-		surface.SetTextColor( scheme["fg"] )
-		surface.SetTextPos( sw - b - ss(4) - tw, sh - b - ss(24) )
-		surface.DrawText( text )
-
-		for i=1, 17 do
+			-- Text bar
+			surface.SetFont( "Benny_18" )
 			surface.SetDrawColor( scheme["fg"] )
-			surface.DrawOutlinedRect( sw - b - ss(3+4) - ( ss(5) * (i-1) ), sh - b - ss(8+4), ss(3), ss(8), ss(0.5) )
-			if i <= wep:Clip1() then
-				surface.DrawRect( sw - b - ss(3+4) - ( ss(5) * (i-1) ), sh - b - ss(8+4), ss(3), ss(8) )
+			surface.DrawRect( sw - b - ss(w-4), sh - b - ss(BOXHEIGHT-4), ss(w-8), ss(14) )
+
+			surface.SetTextColor( scheme["bg"] )
+			surface.SetTextPos( sw - b - ss(w-6), sh - b - ss(BOXHEIGHT-3) )
+			surface.DrawText( wep1c.Name or "???" )
+
+			surface.SetDrawColor( scheme["fg"] )
+			surface.DrawRect( sw - b - ss(w-4), sh - b + ss(16) - ss(BOXHEIGHT-4), ss(29), ss(10) )
+
+			surface.SetFont( "Benny_12" )
+			surface.SetTextColor( scheme["bg"] )
+			surface.SetTextPos( sw - b - ss(w-7), sh - b + ss(16) - ss(BOXHEIGHT-4) )
+			surface.DrawText( wep1c.Firemode or "???" )
+
+			surface.SetFont( "Benny_12" )
+			local text = wep:Clip1() .. " - MAG 3"
+			local tw = surface.GetTextSize( text )
+			surface.SetTextColor( scheme["fg"] )
+			surface.SetTextPos( sw - b - ss(4) - tw, sh - b - ss(24) )
+			surface.DrawText( text )
+
+			for i=1, math.max( wep:Clip1(), wep.B_ClassT1.Ammo ) do
+				surface.SetDrawColor( scheme["fg"] )
+				surface.DrawOutlinedRect( sw - b - ss(3+4) - ( ss(5) * (i-1) ), sh - b - ss(8+4), ss(3), ss(8), ss(0.5) )
+				if i <= wep:Clip1() then
+					surface.DrawRect( sw - b - ss(3+4) - ( ss(5) * (i-1) ), sh - b - ss(8+4), ss(3), ss(8) )
+				end
 			end
 		end
 	end
