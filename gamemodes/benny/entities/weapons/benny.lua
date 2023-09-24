@@ -30,14 +30,28 @@ function SWEP:SetupDataTables()
 	self:NetworkVarNotify( "Wep2", self.OnVarChanged )
 end
 
+function SWEP:OnReloaded()
+	self.B_WepT1 = self:GetOwner():INV_Get()[self:GetWep1()]
+	if self.B_WepT1 then
+		self.B_ClassT1 = WEAPONS[self.B_WepT1.Class]
+	end
+	self.B_WepT2 = self:GetOwner():INV_Get()[self:GetWep2()]
+	if self.B_WepT2 then
+		self.B_ClassT2 = WEAPONS[self.B_WepT2.Class]
+	end
+end
+
 function SWEP:OnVarChanged( name, old, new )
-	print( name, old, new )
 	if name == "Wep1" then
 		self.B_WepT1 = self:GetOwner():INV_Get()[new]
-		self.B_ClassT1 = WEAPONS[self.B_WepT1.Class]
+		if self.B_WepT1 then
+			self.B_ClassT1 = WEAPONS[self.B_WepT1.Class]
+		end
 	elseif name == "Wep2" then
 		self.B_WepT2 = self:GetOwner():INV_Get()[new]
-		self.B_ClassT2 = WEAPONS[self.B_WepT1.Class]
+		if self.B_WepT2 then
+			self.B_ClassT2 = WEAPONS[self.B_WepT2.Class]
+		end
 	end
 end
 
@@ -54,11 +68,12 @@ function SWEP:PrimaryAttack()
 		return
 	end
 	
-	if CLIENT then
-		AddCaption( "PISTOL", Color( 61, 61, 61 ), "[Pistol shot]", 0.1, 0.5 )
-	end
+	-- if CLIENT then
+	-- 	AddCaption( "PISTOL", Color( 61, 61, 61 ), "[Pistol shot]", 0.1, 0.5 )
+	-- end
 
-	self:EmitSound( "benny/weapons/1911/0".. math.random(1,3) ..".ogg", 110, 100, 1, CHAN_STATIC )
+	B_Sound( self, self.B_ClassT1.Sound_Fire )
+	-- self:EmitSound( "benny/weapons/1911/0".. math.random(1,3) ..".ogg", 110, 100, 1, CHAN_STATIC )
 
 	self:B_Ammo1( self:Clip1() - 1 )
 	self:SetDelay1( CurTime() + 0.2 )
@@ -98,7 +113,8 @@ function SWEP:SecondaryAttack()
 end
 
 function SWEP:Reload()
-	if self:B_Wep1() then
+	if self:B_Wep1() and self:Clip1() < self:B_Class1().Ammo then
+		B_Sound( self, self.B_ClassT1.Sound_Reload )
 		self:B_Ammo1( self:B_Class1().Ammo )
 	end
 	return true

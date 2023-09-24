@@ -130,7 +130,14 @@ captions = {
 function AddCaption( name, color, text, time_to_type, lifetime )
 	if captions[#captions] and captions[#captions].name == name then
 		local weh = captions[#captions]
-		table.insert( weh.lines, { text = text, time_to_type=time_to_type, starttime=CurTime() } )
+		local wehlast = weh.lines[#weh.lines]
+		local patty = string.gsub(wehlast.text, " %((x%d+)%)", "")
+		if patty == text then
+			wehlast.repeated = (wehlast.repeated or 1) + 1
+			wehlast.text = patty .. " (x" .. wehlast.repeated .. ")"
+		else
+			table.insert( weh.lines, { text = text, time_to_type=time_to_type, starttime=CurTime() } )
+		end
 		weh.lifetime = math.max( CurTime() + lifetime, weh.lifetime )
 	else
 		table.insert( captions, { name = name, color=color, lifetime=CurTime()+lifetime, lines = { { text=text, time_to_type=time_to_type, starttime=CurTime() } } })
@@ -139,11 +146,6 @@ end
 
 local color_caption = Color( 0, 0, 0, 127 )
 local mat_grad = Material( "benny/hud/grad.png", "mips smooth" )
-
-local wep1 = {
-	Name = "COBRA .45",
-	Firemode = "SEMI",
-}
 
 hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 	local sw, sh = ScrW(), ScrH()
@@ -196,9 +198,8 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 		local wep2 = wep.B_WepT2
 		local wep2c = wep.B_ClassT2
 
-		do
+		if false then -- Debug
 			local ox, oy = 170, 24
-			-- Debug
 			surface.SetFont( "Benny_12" )
 			surface.SetTextColor( scheme["fg"] )
 
@@ -208,7 +209,7 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 			local num = 1
 			if wep1 then for i, v in pairs( wep1 ) do
 				surface.SetTextPos( ss(ox+16), ss(oy+10*num) )
-				surface.DrawText( i .. ": " .. (v or "[no " .. i .. "]") )
+				surface.DrawText( i .. ": " .. v )
 				num = num + 1
 			end end
 
@@ -217,7 +218,7 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 
 			if wep2 then for i, v in pairs( wep2 ) do
 				surface.SetTextPos( ss(ox+128+16), ss(oy+10*num) )
-				surface.DrawText( i .. ": " .. (v or "[no " .. i .. "]") )
+				surface.DrawText( i .. ": " .. v )
 				num = num + 1
 			end end
 		end
@@ -311,13 +312,14 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 	do -- Inventory
 		local gap = 0
 		for ID, Data in pairs( p:INV_Get() ) do
+			local active = (wep:GetWep2() == ID) and "Wep2" or (wep:GetWep1() == ID) and "Wep1" or ""
 			surface.SetDrawColor( scheme["bg"] )
-			surface.DrawRect( b + ss(4), b + ss(4) + gap, ss(140), ss(30) )
+			surface.DrawRect( b + ss(4), b + ss(4) + gap, ss(240), ss(30) )
 
 			surface.SetFont( "Benny_12" )
 			surface.SetTextColor( scheme["fg"] )
 			surface.SetTextPos( b + ss(4 + 4), b + ss(4 + 3) + gap )
-			surface.DrawText( ID )
+			surface.DrawText( ID .. " " .. active )
 
 			local str = ""
 			for i, v in pairs( Data ) do
@@ -328,6 +330,11 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 			surface.SetTextColor( scheme["fg"] )
 			surface.SetTextPos( b + ss(4 + 4), b + ss(4 + 3 + 8) + gap )
 			surface.DrawText( str )
+
+			surface.SetFont( "Benny_12" )
+			surface.SetTextColor( scheme["fg"] )
+			surface.SetTextPos( b + ss(4 + 4), b + ss(4 + 3 + 8 + 8) + gap )
+			-- surface.DrawText( active )
 			gap = gap + ss(30+4)
 		end
 	end

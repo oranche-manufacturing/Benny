@@ -1,12 +1,22 @@
 
 WEAPONS = {}
 
+AddSound( "1911.Fire", {
+	"benny/weapons/1911/01.ogg",
+	"benny/weapons/1911/02.ogg",
+	"benny/weapons/1911/03.ogg",
+}, 140, 100, 0.5, CHAN_STATIC )
+
+AddSound( "1911.Reload", "benny/weapons/1911/slidedrop.ogg", 140, 100, 0.5, CHAN_STATIC )
+
 local wep = {}
 WEAPONS["1911"] = wep
 wep.Name = "COBRA .45"
 wep.Description = "Hits hard. They don't make them like they used to! Low capacity."
 
 wep.WModel = "models/weapons/w_pist_usp.mdl"
+wep.Sound_Fire = "1911.Fire"
+wep.Sound_Reload = "1911.Reload" -- placeholder
 
 wep.Delay = (60/300)
 wep.Ammo = 8
