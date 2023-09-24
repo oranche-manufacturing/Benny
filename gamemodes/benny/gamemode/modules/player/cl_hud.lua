@@ -8,6 +8,9 @@ local hide = {
 	["CHudSecondaryAmmo"] = true,
 	["CHudPoisonDamageIndicator"] = true,
 	["CHudCrosshair"] = true,
+	["CHUDQuickInfo"] = true,
+	["CHudSuitPower"] = true,
+	["CHudZoom"] = true,
 }
 
 hook.Add( "HUDShouldDraw", "HideHUD", function( name )
@@ -135,11 +138,14 @@ function AddCaption( name, color, text, time_to_type, lifetime )
 end
 
 local color_caption = Color( 0, 0, 0, 127 )
+local mat_grad = Material( "benny/hud/grad.png", "mips smooth" )
 
 hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 	local sw, sh = ScrW(), ScrH()
-	localss = ss(1)
 	local b = ss(20)
+	local p = LocalPlayer()
+	-- PROTO: Make sure this is the 'benny' weapon.
+	local wep = p:GetActiveWeapon()
 
 	local scheme = schemes["benny"]
 
@@ -148,7 +154,8 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 		surface.SetDrawColor( scheme["bg"] )
 		surface.DrawRect( b, sh - b - ss(22), ss(140), ss(14+8) )
 
-		local hp = CurTime()*0.5 % 1
+		local hp = p:Health()/100 --CurTime()*0.5 % 1
+		local ti = (CurTime()*0.75 / (hp)) % 1
 		
 		-- Text underneath
 		surface.SetFont( "Benny_18" )
@@ -160,6 +167,15 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 		surface.SetDrawColor( scheme["fg"] )
 		surface.DrawRect( b + ss(4), sh - b - ss(22) + ss(4), ss((140*hp)-8), ss(14) )
 
+		local gcol = scheme["fg"]
+		local ch, cs, cl = gcol:ToHSL()
+		cl = ((cl*0.0) + (1)*hp)
+		gcol = HSLToColor( ch, cs, cl )
+		gcol.a = ((1-ti)*255*hp) + ((1-hp)*255)
+		surface.SetDrawColor( gcol )
+		surface.SetMaterial( mat_grad )
+		surface.DrawTexturedRect( b + ss(4), sh - b - ss(22) + ss(4), ss((140*hp*ti)-8), ss(14) )
+
 		-- Bar text
 		surface.SetTextColor( scheme["bg"] )
 		surface.SetTextPos( b + ss(6), sh - b - ss(22) + ss(3) )
@@ -170,29 +186,30 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 
 	do -- Weapon
 		local w, h = 150, 100
+		local BOXHEIGHT = 44
 		-- BG
 		surface.SetDrawColor( scheme["bg"] )
-		surface.DrawRect( sw - b - ss(w), sh - b - ss(100), ss(w), ss(100) )
+		surface.DrawRect( sw - b - ss(w), sh - b - ss(BOXHEIGHT), ss(w), ss(BOXHEIGHT) )
 
 		-- Text bar
 		surface.SetFont( "Benny_18" )
 		surface.SetDrawColor( scheme["fg"] )
-		surface.DrawRect( sw - b - ss(w-4), sh - b - ss(100-4), ss(w-8), ss(14) )
+		surface.DrawRect( sw - b - ss(w-4), sh - b - ss(BOXHEIGHT-4), ss(w-8), ss(14) )
 
 		surface.SetTextColor( scheme["bg"] )
-		surface.SetTextPos( sw - b - ss(w-6), sh - b - ss(100-3) )
+		surface.SetTextPos( sw - b - ss(w-6), sh - b - ss(BOXHEIGHT-3) )
 		surface.DrawText( "GLOCK-17" )
 
 		surface.SetDrawColor( scheme["fg"] )
-		surface.DrawRect( sw - b - ss(w-4), sh - b + ss(16) - ss(100-4), ss(29), ss(10) )
+		surface.DrawRect( sw - b - ss(w-4), sh - b + ss(16) - ss(BOXHEIGHT-4), ss(29), ss(10) )
 
 		surface.SetFont( "Benny_12" )
 		surface.SetTextColor( scheme["bg"] )
-		surface.SetTextPos( sw - b - ss(w-7), sh - b + ss(16) - ss(100-4) )
+		surface.SetTextPos( sw - b - ss(w-7), sh - b + ss(16) - ss(BOXHEIGHT-4) )
 		surface.DrawText( "3BST" )
 
 		surface.SetFont( "Benny_12" )
-		local text = "17 - MAG 3"
+		local text = wep:Clip1() .. " - MAG 3"
 		local tw = surface.GetTextSize( text )
 		surface.SetTextColor( scheme["fg"] )
 		surface.SetTextPos( sw - b - ss(4) - tw, sh - b - ss(24) )
@@ -200,7 +217,10 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 
 		for i=1, 17 do
 			surface.SetDrawColor( scheme["fg"] )
-			surface.DrawRect( sw - b - ss(3+4) - ( ss(5) * (i-1) ), sh - b - ss(8+4), ss(3), ss(8) )
+			surface.DrawOutlinedRect( sw - b - ss(3+4) - ( ss(5) * (i-1) ), sh - b - ss(8+4), ss(3), ss(8), ss(0.5) )
+			if i <= wep:Clip1() then
+				surface.DrawRect( sw - b - ss(3+4) - ( ss(5) * (i-1) ), sh - b - ss(8+4), ss(3), ss(8) )
+			end
 		end
 	end
 
@@ -239,6 +259,36 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 			surface.SetFont("Benny_10")
 			surface.SetTextPos( (sw/2) - (tw/2), sh - space + ss(2) )
 			surface.DrawText( caption.name )
+		end
+	end
+
+	-- [UUID_generate()] = {
+	-- 	Clip1 = 20,
+	-- 	Mag1 = 12,
+	-- 	Mag2 = 9,
+	-- 	Mag3 = 17,
+	-- }
+	do -- Inventory
+		local gap = 0
+		for ID, Data in pairs( p:INV_Get() ) do
+			surface.SetDrawColor( scheme["bg"] )
+			surface.DrawRect( b + ss(4), b + ss(4) + gap, ss(140), ss(30) )
+
+			surface.SetFont( "Benny_12" )
+			surface.SetTextColor( scheme["fg"] )
+			surface.SetTextPos( b + ss(4 + 4), b + ss(4 + 3) + gap )
+			surface.DrawText( ID )
+
+			local str = ""
+			for i, v in pairs( Data ) do
+				str = str .. i .. ": " .. v .. " "
+			end
+
+			surface.SetFont( "Benny_10" )
+			surface.SetTextColor( scheme["fg"] )
+			surface.SetTextPos( b + ss(4 + 4), b + ss(4 + 3 + 8) + gap )
+			surface.DrawText( str )
+			gap = gap + ss(30+4)
 		end
 	end
 end )

@@ -6,8 +6,21 @@ local wa, wb = 0, 0
 local blop = Angle()
 
 hook.Add( "CreateMove", "CamFuck", function( cmd )
-	if LocalPlayer():GetMoveType() != MOVETYPE_NOCLIP then
+	if BENNY_ACTIVECAMERA and LocalPlayer():GetMoveType() != MOVETYPE_NOCLIP then
 		local x, y = cmd:GetForwardMove(), cmd:GetSideMove()
+
+		local lx=input.GetAnalogValue(ANALOG_JOY_X) // Left X Axis: left -, right +
+		local ly=input.GetAnalogValue(ANALOG_JOY_Y) // Left Y Axis: up -, bottom +
+
+		local lr=input.GetAnalogValue(ANALOG_JOY_R) // Right X Axis: left -, right +
+		local lu=input.GetAnalogValue(ANALOG_JOY_U) // Right Y Axis: up -, bottom +
+
+		lx=lx/32768; ly=ly/32768; lr=lr/32768; lu=lu/32768; // Conversion to floats -1.0 - 1.0
+
+		if lx != 0 or ly != 0 then
+			x, y = ly * -320, lx * 320
+		end
+
 		wa, wb = x, y
 
 		local ad = Vector( x, y, 0 )
@@ -23,9 +36,10 @@ hook.Add( "CreateMove", "CamFuck", function( cmd )
 		ad:Rotate( am )
 		ad:Rotate( -an )
 
-		ad:Normalize()
-		ad:Mul(320)
+		-- ad:Normalize()
+		-- ad:Mul(320)
 
+		cmd:ClearMovement()
 		cmd:SetForwardMove( ad.x )
 		cmd:SetSideMove( ad.y )
 

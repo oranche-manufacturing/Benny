@@ -3,6 +3,27 @@
 
 local debugcolor = Color( 255, 0, 255, 1 )
 
+local function QuickDrag( self, dist, ply )
+	local spos = ply:GetPos()
+	self.QuickDrag = self.QuickDrag or Vector()
+
+	-- debugoverlay.Box( self.last, Vector( -dist, -dist, 0 ), Vector( dist, dist, 64 ), 0, Color( 0, 0, 255, 0 ) )
+
+	if spos.x > (self.QuickDrag.x+dist) then
+		self.QuickDrag.x = spos.x-dist
+	elseif spos.x < (self.QuickDrag.x-dist) then
+		self.QuickDrag.x = spos.x+dist
+	end
+
+	if spos.y > (self.QuickDrag.y+dist) then
+		self.QuickDrag.y = spos.y-dist
+	elseif spos.y < (self.QuickDrag.y-dist) then
+		self.QuickDrag.y = spos.y+dist
+	end
+
+	return spos
+end
+
 tempmapcameras = {}
 
 tempmapcameras["benny_caramelldansen"] = {}
@@ -10,7 +31,7 @@ tempmapcameras["benny_caramelldansen"] = {}
 tempmapcameras["benny_caramelldansen"]["main"] = {
 	Type = "Standard",
 	Pos = Vector( -510, 0, 128 ),
-	Ang = Angle( 12, 0, 0 ),
+	Ang = Angle( 44, 0, 0 ),
 	FOV = 90,
 	Checks = {
 		{
@@ -23,6 +44,10 @@ tempmapcameras["benny_caramelldansen"]["main"] = {
 		pos:Set( self.Pos )
 		local ang = Angle()
 		ang:Set( self.Ang )
+
+		pos:Set( QuickDrag( self, 40, ply ) )
+		pos.x = pos.x - 130
+		pos.z = 180
 
 		return pos, ang, self.FOV
 	end
@@ -166,23 +191,13 @@ local tempcam = {
 
 	Special = function( self, ply )
 		local pos = Vector()
-		local ang = Angle()
-		local fov = self.FOV
-		local ppos = ply:GetPos()
-		local pang = ply:EyeAngles()
-
-		pos:Set( ppos )
-		ang:Add( pang )
-
-		pos.z = pos.z + 68
-		ctrace.start = pos
-		ctrace.endpos = pos + ( ang:Forward() * -60 ) + ( ang:Right() * 20 )
-		ctrace.filter = ply
-		local tr = util.TraceHull( ctrace )
-
-		pos = tr.HitPos
-
-		return pos, ang, fov
+		local ang = Angle( 22, 0, 0 )
+	
+		pos:Set( QuickDrag( self, 40, ply ) )
+		pos.x = pos.x - 30
+		pos.z = pos.z + 80
+	
+		return pos, ang, self.FOV
 	end
 }
 
@@ -250,39 +265,65 @@ local function decide_active()
 	return false
 end
 
+function bennyfp( origin, angles, fov )
+	local ply = LocalPlayer()
+	assert( IsValid( ply:GetActiveWeapon() ) )
+
+	local pos, ang = Vector(), Angle()
+
+	pos:Set( ply:GetPos() )
+	pos.z = pos.z + 64
+	ang:Set( angles )
+
+	pos:Add( 16 * ang:Right() )
+	pos:Add( -32 * ang:Forward() )
+	pos:Add( 0 * ang:Up() )
+
+	pos:Add( 16 * ang:Up() * (ang.p/90) )
+
+	return pos, ang, 90
+end
+
 hook.Add( "CalcView", "MyCalcView", function( ply, pos, ang, fov )
 	if c_unlock:GetBool() then return end
 	if ply:GetMoveType() == MOVETYPE_NOCLIP then return end
 	decide_active()
 	local camera = BENNY_ACTIVECAMERA
+	local view = {}
+	view.origin = pos
+	view.angles = ang
+	view.fov = 90
 	if camera then
-		local view = {
-			origin = camera.Pos,
-			angles = camera.Ang,
-			fov = camera.FOV or 60,
-			drawviewer = true
-		}
+		view.origin = camera.Pos
+		view.angles = camera.Ang
+		view.fov = camera.FOV or 60
 		if camera.Special then
 			view.origin, view.angles, view.fov = camera.Special( camera, ply )
 		end
-
-		local st = c_over:GetString()
-		if st != "" then
-			local st = string.Explode( " ", st )
-			view.origin.x	= tonumber(st[1])
-			view.origin.y	= tonumber(st[2])
-			view.origin.z	= tonumber(st[3])
-
-			view.angles.x	= tonumber(st[4])
-			view.angles.y	= tonumber(st[5])
-			view.angles.z	= tonumber(st[6])
-
-			view.fov		= tonumber(st[7])
-		end
-
-		--view.fov = Convert( view.fov, (ScrH()/ScrW())/(3/4) )
-		return view
 	end
+		
+	-- PROTO: Add correct benny weapon check
+	if IsValid(ply:GetActiveWeapon()) and ply:GetActiveWeapon():GetAim() > 0 then
+		view.drawviewer = true
+		view.origin, view.angles, view.fov = bennyfp( view.origin, view.angles, view.fov )
+	end
+
+	local st = c_over:GetString()
+	if st != "" then
+		local st = string.Explode( " ", st )
+		view.origin.x	= tonumber(st[1])
+		view.origin.y	= tonumber(st[2])
+		view.origin.z	= tonumber(st[3])
+
+		view.angles.x	= tonumber(st[4])
+		view.angles.y	= tonumber(st[5])
+		view.angles.z	= tonumber(st[6])
+
+		view.fov		= tonumber(st[7])
+	end
+
+	view.fov = Convert( view.fov, (ScrH()/ScrW())/(3/4) )
+	return view
 end )
 
 function Convert( fovDegrees, ratio )
