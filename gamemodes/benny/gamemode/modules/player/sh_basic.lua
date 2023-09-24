@@ -57,6 +57,20 @@ if CLIENT then
 	end)
 end
 
+-- PROTO: Move this all into weapon code.
+concommand.Add("benny_inv_equip", function( ply, cmd, args )
+	local inv = ply:INV_Get()
+	local wep = ply:GetActiveWeapon()
+	local item = inv[args[1]]
+	-- PROTO: Check that this is the correct 'benny' weapon.
+	assert( item, "That item doesn't exist." )
+
+	wep:SetWep1( args[1] )
+	wep:SetClip1( item.Ammo )
+	wep:OnReloaded()
+end)
+
+-- Debug inv
 if CLIENT then
 	local function regen_items( itemlist )
 		local ply = LocalPlayer()
@@ -69,12 +83,28 @@ if CLIENT then
 			button:Dock( TOP )
 			button:DockMargin( 0, 0, 0, ss(4) )
 
-			button.Text_ID = i
+			button.ID = i
 			local Class = WEAPONS[v.Class]
 			button.Text_Name = Class.Name
 			button.Text_Desc = Class.Description
 
-			-- PROTO: This paint function doesn't need to be remade over and over like this.
+			-- PROTO: These functions don't need to be remade over and over like this.
+			function button:DoClick()
+				local Menu = DermaMenu()
+				Menu:AddOption( "Equip", function()
+					RunConsoleCommand("benny_inv_equip", button.ID)
+				end )
+				Menu:AddOption( "Discard", function()
+					RunConsoleCommand("benny_inv_discard", button.ID)
+				end )
+
+				Menu:Open()
+			end
+
+			function button:DoRightClick()
+
+			end
+
 			function button:Paint( w, h )
 				surface.SetDrawColor( schemes["benny"]["fg"] )
 				surface.DrawRect( 0, 0, w, h )
@@ -91,7 +121,7 @@ if CLIENT then
 
 				surface.SetFont( "Benny_10" )
 				surface.SetTextPos( ss(4), ss(4 + 20) )
-				surface.DrawText( self.Text_ID )
+				surface.DrawText( self.ID )
 				return true
 			end
 		end

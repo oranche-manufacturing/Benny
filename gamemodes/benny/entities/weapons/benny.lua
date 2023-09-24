@@ -76,7 +76,7 @@ function SWEP:PrimaryAttack()
 	-- self:EmitSound( "benny/weapons/1911/0".. math.random(1,3) ..".ogg", 110, 100, 1, CHAN_STATIC )
 
 	self:B_Ammo1( self:Clip1() - 1 )
-	self:SetDelay1( CurTime() + 0.2 )
+	self:SetDelay1( CurTime() + self.B_ClassT1.Delay )
 	return true
 end
 

@@ -23,6 +23,25 @@ CAPTIONS["en-us"]["1911.Reload"] = {
 	LifeTime = 0.5,
 }
 
+CAPTIONS["en-us"]["Bizon.Fire"] = {
+	Name = "Bizon",
+	Color = color_white,
+	Text = "[fire]",
+	Bold = false,
+	Italic = true,
+	TypeTime = 0.1,
+	LifeTime = 0.5,
+}
+CAPTIONS["en-us"]["Bizon.Reload"] = {
+	Name = "Bizon",
+	Color = color_white,
+	Text = "[reload]",
+	Bold = false,
+	Italic = true,
+	TypeTime = 0.1,
+	LifeTime = 0.5,
+}
+
 CAPTIONS = CAPTIONS["en-us"]
 
 SOUNDS = {}
@@ -40,6 +59,7 @@ end
 local screwup = SERVER and Color(150, 255, 255) or Color(255, 200, 150)
 
 function B_Sound( ent, tag )
+	if !tag then return end
 	local tagt = SOUNDS[tag]
 	if !tagt then MsgC( screwup, "Invalid sound " .. tag .. "\n" ) return end
 	local path, sndlevel, pitch, volume, channel = tagt.path, tagt.sndlevel, tagt.pitch, tagt.volume, tagt.channel
