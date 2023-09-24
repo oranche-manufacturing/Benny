@@ -1,4 +1,4 @@
 # benny
  Your Name Is Benny
 
- See assets at [https://github.com/oranche-manufacturing/benny_assets](benny_assets).
+ See assets at [benny_assets](https://github.com/oranche-manufacturing/benny_assets).
