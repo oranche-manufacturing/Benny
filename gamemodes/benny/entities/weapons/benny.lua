@@ -42,15 +42,15 @@ function SWEP:OnVarChanged( name, old, new )
 end
 
 function SWEP:PrimaryAttack()
+	if !self:B_Wep1() then
+		return
+	end
 	if self:GetDelay1() > CurTime() then
 		return
 	end
 	if self:Clip1() == 0 then
 		self:EmitSound( "benny/weapons/common/06-13.ogg", 80, 100, 1, CHAN_STATIC )
 		self:SetDelay1( CurTime() + 0.2 )
-		return
-	end
-	if !self:B_Wep1() then
 		return
 	end
 	
