@@ -20,6 +20,8 @@ concommand.Add("benny_debug_give", function(ply, cmd, args)
 
 	local class = WEAPONS[args[3]]
 
+	assert(class, "Invalid Class.")
+
 	local item = {
 		Class = args[3],
 		Ammo = class.Ammo,
@@ -55,54 +57,61 @@ if CLIENT then
 	end)
 end
 
-CAPTIONS = {
-	["1911.Fire"] = {
-		Name = "Cobra .45",
-		Color = color_white,
-		Text = "[Cobra .45 fire]",
-		TypeTime = 0.1,
-		LifeTime = 0.5,
-	},
-	["1911.Reload"] = {
-		Name = "Cobra .45",
-		Color = color_white,
-		Text = "[Cobra .45 reload]",
-		TypeTime = 0.1,
-		LifeTime = 0.5,
-	},
-}
+if CLIENT then
+	local function regen_items( itemlist )
+		local ply = LocalPlayer()
+		itemlist:Clear()
 
--- CAPTIONS["en-us"] = {}
--- CAPTIONS = CAPTIONS["en-us"]
+		for i, v in pairs( ply:INV_Get() ) do
+			local button = vgui.Create( "DButton" )
+			itemlist:AddItem( button )
+			button:SetSize( 1, ss(36) )
+			button:Dock( TOP )
+			button:DockMargin( 0, 0, 0, ss(4) )
 
-SOUNDS = {}
+			button.Text_ID = i
+			local Class = WEAPONS[v.Class]
+			button.Text_Name = Class.Name
+			button.Text_Desc = Class.Description
 
-function AddSound( name, path, sndlevel, pitch, volume, channel )
-	SOUNDS[name] = {
-		path = path,
-		sndlevel = sndlevel or 70,
-		pitch = pitch or 100,
-		volume = volume or 1,
-		channel = channel or CHAN_STATIC,
-	}
-end
+			-- PROTO: This paint function doesn't need to be remade over and over like this.
+			function button:Paint( w, h )
+				surface.SetDrawColor( schemes["benny"]["fg"] )
+				surface.DrawRect( 0, 0, w, h )
+				
+				surface.SetTextColor( schemes["benny"]["bg"] )
 
-local screwup = SERVER and Color(150, 255, 255) or Color(255, 200, 150)
+				surface.SetFont( "Benny_16" )
+				surface.SetTextPos( ss(4), ss(4) )
+				surface.DrawText( self.Text_Name )
 
-function B_Sound( ent, tag )
-	local tagt = SOUNDS[tag]
-	if !tagt then MsgC( screwup, "Invalid sound " .. tag .. "\n" ) return end
-	local path, sndlevel, pitch, volume, channel = tagt.path, tagt.sndlevel, tagt.pitch, tagt.volume, tagt.channel
-	if istable( path ) then
-		path = path[math.Round(util.SharedRandom( "B_Sound", 1, #path ))]
-	end
-	ent:EmitSound( path, sndlevel, pitch, volume, channel )
-	if CLIENT then
-		if CAPTIONS[tag] then
-			local capt = CAPTIONS[tag]
-			AddCaption( capt.Name, capt.Color, capt.Text, capt.TypeTime, capt.LifeTime )
-		else
-			MsgC( screwup, "No caption defined for " .. tag .. "\n" )
+				surface.SetFont( "Benny_10" )
+				surface.SetTextPos( ss(4), ss(4 + 12) )
+				surface.DrawText( self.Text_Desc )
+
+				surface.SetFont( "Benny_10" )
+				surface.SetTextPos( ss(4), ss(4 + 20) )
+				surface.DrawText( self.Text_ID )
+				return true
+			end
 		end
 	end
+	concommand.Add("benny_debug_inv", function()
+		if IsValid( base ) then base:Remove() end
+		base = vgui.Create("DFrame")
+		base:SetSize( ss(340), ss(240) )
+		base:MakePopup()
+		base:Center()
+
+		function base:Paint( w, h )
+			surface.SetDrawColor( schemes["benny"]["bg"] )
+			surface.DrawRect( 0, 0, w, h )
+			return true
+		end
+
+		local itemlist = base:Add("DScrollPanel")
+		itemlist:Dock( FILL )
+
+		regen_items( itemlist )
+	end)
 end

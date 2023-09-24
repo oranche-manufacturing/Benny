@@ -50,11 +50,15 @@ local function genfonts()
 		12,
 	}
 	for _, size in pairs(sizes) do
-		surface.CreateFont( "Benny_Caption_" .. size, {
-			font = "Roboto",
-			size = ss(size),
-			weight = 0
-		} )
+		for i=1, 4 do
+			local add = i==1 and "" or i==2 and "B" or i==3 and "I" or i==4 and "BI"
+			local mode = i==1 and "" or i==2 and " Bold" or i==3 and " Italic" or i==4 and " Bold Italic"
+			surface.CreateFont( "Benny_Caption_" .. size .. add, {
+				font = "Roboto" .. mode,
+				size = ss(size),
+				weight = 0,
+			} )
+		end
 	end
 end
 genfonts()
@@ -285,8 +289,9 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 			surface.SetDrawColor( color_caption )
 			surface.DrawRect( (sw/2) - (ss(8)+tw)/2, sh - space - ss(0), ss(8)+tw, ss(22)+ss(8*(#caption.lines-1)) )
 			
+			-- PROTO: Would be nice to be able to change italics or bold inline.
 			for i, v in SortedPairsByMemberValue( caption.lines, "starttime" ) do
-				surface.SetFont("Benny_Caption_9")
+				surface.SetFont("Benny_Caption_9I")
 				surface.SetTextColor( color_white )
 				surface.SetTextPos( (sw/2) - (tw/2), sh - space + ss(10) + (ss(8)*(i-1)) )
 				local waah = ""
