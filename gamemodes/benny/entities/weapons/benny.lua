@@ -25,6 +25,8 @@ function SWEP:SetupDataTables()
 	self:NetworkVar( "Float", 2, "Delay2" )
 	self:NetworkVar( "String", 0, "Wep1" )
 	self:NetworkVar( "String", 1, "Wep2" )
+	self:NetworkVar( "Int", 0, "Wep1Clip" )
+	self:NetworkVar( "Int", 1, "Wep2Clip" )
 
 	self:NetworkVarNotify( "Wep1", self.OnVarChanged )
 	self:NetworkVarNotify( "Wep2", self.OnVarChanged )
@@ -63,17 +65,12 @@ function SWEP:PrimaryAttack()
 		return
 	end
 	if self:Clip1() == 0 then
-		self:EmitSound( "benny/weapons/common/06-13.ogg", 80, 100, 1, CHAN_STATIC )
+		B_Sound( self, self.B_ClassT1.Sound_DryFire )
 		self:SetDelay1( CurTime() + 0.2 )
 		return
 	end
 	
-	-- if CLIENT then
-	-- 	AddCaption( "PISTOL", Color( 61, 61, 61 ), "[Pistol shot]", 0.1, 0.5 )
-	-- end
-
 	B_Sound( self, self.B_ClassT1.Sound_Fire )
-	-- self:EmitSound( "benny/weapons/1911/0".. math.random(1,3) ..".ogg", 110, 100, 1, CHAN_STATIC )
 
 	self:B_Ammo1( self:Clip1() - 1 )
 	self:SetDelay1( CurTime() + self.B_ClassT1.Delay )
@@ -90,18 +87,21 @@ function SWEP:B_Wep2()
 end
 
 function SWEP:B_Ammo1( value )
+	assert( self:GetWep1Clip() > 0, "You cannot mess with an EMPTY magazine!")
 	self:SetClip1( value )
-	self:B_Wep1().Ammo = value
+	self:B_Wep1()["Ammo" .. self:GetWep1Clip()] = value
 end
 
 function SWEP:B_Ammo2( value )
+	assert( self:GetWep1Clip() > 0, "You cannot mess with an EMPTY magazine!")
 	self:SetClip2( value )
-	self:B_Wep2().Ammo = value
+	self:B_Wep2()["Ammo" .. self:GetWep1Clip()] = value
 end
 
 function SWEP:B_MaxAmmo1( value )
+	assert( self:GetWep1Clip() > 0, "You cannot mess with an EMPTY magazine!")
 	self:SetClip1( value )
-	self:B_Wep1().Ammo = value
+	self:B_Wep1()["Ammo" .. self:GetWep1Clip()] = value
 end
 
 function SWEP:B_Class1()
@@ -114,8 +114,28 @@ end
 
 function SWEP:Reload()
 	if self:B_Wep1() and self:Clip1() < self:B_Class1().Ammo then
-		B_Sound( self, self.B_ClassT1.Sound_Reload )
-		self:B_Ammo1( self:B_Class1().Ammo )
+		if self:GetDelay1() > CurTime() then
+			return false
+		end
+		self:SetDelay1( CurTime() + 0.2 )
+
+		if self:GetWep1Clip() != 0 then
+			B_Sound( self, self.B_ClassT1.Sound_MagOut )
+			self:SetClip1( 0 )
+			self:SetWep1Clip( 0 )
+			self:B_Wep1().Loaded = 0
+		else
+			local maglist = { self:B_Wep1().Ammo1, self:B_Wep1().Ammo2, self:B_Wep1().Ammo3 }
+			for i, v in SortedPairsByValue( maglist, true ) do
+				if v == 0 then B_Sound( self, "Common.NoAmmo" ) return end
+				self:B_Wep1().Loaded = i
+				self:SetWep1Clip( i )
+				self:SetClip1( v )
+				break
+			end
+			B_Sound( self, self.B_ClassT1.Sound_MagIn )
+		end
+		-- self:B_Ammo1( self:B_Class1().Ammo )
 	end
 	return true
 end

@@ -40,7 +40,7 @@ local function genfonts()
 		surface.CreateFont( "Benny_" .. size, {
 			font = "Carbon Plus Bold",
 			size = ss(size),
-			weight = 0
+			weight = 0,
 		} )
 	end
 	local sizes = {
@@ -253,7 +253,7 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 			surface.DrawText( wep1c.Firemode or "???" )
 
 			surface.SetFont( "Benny_12" )
-			local text = wep:Clip1() .. " - MAG 3"
+			local text = wep:Clip1() .. " - MAG " .. wep:GetWep1Clip()
 			local tw = surface.GetTextSize( text )
 			surface.SetTextColor( scheme["fg"] )
 			surface.SetTextPos( sw - b - ss(4) - tw, sh - b - ss(24) )
@@ -265,6 +265,25 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 				if i <= wep:Clip1() then
 					surface.DrawRect( sw - b - ss(3+4) - ( ss(5) * (i-1) ), sh - b - ss(8+4), ss(3), ss(8) )
 				end
+			end
+
+			local amlist = { wep.B_WepT1["Ammo" .. 1], wep.B_WepT1["Ammo" .. 2], wep.B_WepT1["Ammo" .. 3] }
+			local i = 1
+			for _, v in ipairs( amlist ) do
+				if v == 0 then continue end
+				local perc = v / wep.B_ClassT1.Ammo
+				surface.SetDrawColor( scheme["fg"] )
+				surface.DrawOutlinedRect( sw - b - ss(w-4-2) + ss(29) + ( ss(10+2) * (i-1) ),
+				sh - b + ss(16) - ss(BOXHEIGHT-4),
+				ss(10),
+				ss(10),
+				ss(0.5) )
+				surface.SetDrawColor( scheme["fg"] )
+				surface.DrawRect( sw - b - ss(w-4-2) + ss(29) + ( ss(10+2) * (i-1) ),
+				sh - b + ss(16) - ss(BOXHEIGHT-4) + ss(10*(1-perc)),
+				ss(10),
+				ss(10*perc) )
+				i = i + 1
 			end
 		end
 	end
@@ -308,12 +327,6 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 		end
 	end
 
-	-- [UUID_generate()] = {
-	-- 	Clip1 = 20,
-	-- 	Mag1 = 12,
-	-- 	Mag2 = 9,
-	-- 	Mag3 = 17,
-	-- }
 	do -- Inventory
 		local gap = 0
 		for ID, Data in pairs( p:INV_Get() ) do

@@ -13,18 +13,74 @@ AddSound( "Bizon.Fire", {
 	"benny/weapons/bizon/03.ogg",
 }, 140, 100, 0.5, CHAN_STATIC )
 
-AddSound( "1911.Reload", "benny/weapons/1911/slidedrop.ogg", 140, 100, 0.5, CHAN_STATIC )
+AddSound( "MP5K.Fire", {
+	"benny/weapons/mp5k/01.ogg",
+	"benny/weapons/mp5k/02.ogg",
+	"benny/weapons/mp5k/03.ogg",
+}, 140, 100, 0.5, CHAN_STATIC )
 
-AddSound( "Bizon.Reload", "benny/weapons/bizon/boltdrop.ogg", 140, 100, 0.5, CHAN_STATIC )
+AddSound( "TMP.Fire", {
+	"benny/weapons/tmp/01.ogg",
+	"benny/weapons/tmp/02.ogg",
+	"benny/weapons/tmp/03.ogg",
+}, 140, 100, 0.5, CHAN_STATIC )
+
+AddSound( "Anaconda.Fire", {
+	"benny/weapons/anaconda/01.ogg",
+	"benny/weapons/anaconda/02.ogg",
+	"benny/weapons/anaconda/03.ogg",
+}, 140, 100, 0.5, CHAN_STATIC )
+
+AddSound( "Nambu.Fire", {
+	"benny/weapons/nambu/01.ogg",
+	"benny/weapons/nambu/02.ogg",
+	"benny/weapons/nambu/03.ogg",
+}, 140, 100, 0.5, CHAN_STATIC )
+
+AddSound( "USP.Fire", {
+	"benny/weapons/usp/01.ogg",
+	"benny/weapons/usp/02.ogg",
+	"benny/weapons/usp/03.ogg",
+}, 140, 100, 0.5, CHAN_STATIC )
+
+AddSound( "Glock.Fire", {
+	"benny/weapons/glock/01.ogg",
+	"benny/weapons/glock/02.ogg",
+	"benny/weapons/glock/03.ogg",
+}, 140, 100, 0.5, CHAN_STATIC )
+
+AddSound( "MP5K.MagOut", "benny/weapons/mp5k/magout.ogg", 70, 100, 0.5, CHAN_STATIC )
+AddSound( "MP5K.MagIn", "benny/weapons/mp5k/magin.ogg", 70, 100, 0.5, CHAN_STATIC )
+AddSound( "TMP.MagOut", "benny/weapons/tmp/magout.ogg", 70, 100, 0.5, CHAN_STATIC )
+AddSound( "TMP.MagIn", "benny/weapons/tmp/magin.ogg", 70, 100, 0.5, CHAN_STATIC )
+AddSound( "Bizon.MagOut", "benny/weapons/bizon/magout.ogg", 70, 100, 0.5, CHAN_STATIC )
+AddSound( "Bizon.MagIn", "benny/weapons/bizon/magin.ogg", 70, 100, 0.5, CHAN_STATIC )
+AddSound( "Anaconda.MagOut", "benny/weapons/anaconda/magout.ogg", 70, 100, 0.5, CHAN_STATIC )
+AddSound( "Anaconda.MagIn", "benny/weapons/anaconda/magin.ogg", 70, 100, 0.5, CHAN_STATIC )
+AddSound( "Nambu.MagOut", "benny/weapons/nambu/magout.ogg", 70, 100, 0.5, CHAN_STATIC )
+AddSound( "Nambu.MagIn", "benny/weapons/nambu/magin.ogg", 70, 100, 0.5, CHAN_STATIC )
+AddSound( "1911.MagOut", "benny/weapons/1911/magout.ogg", 70, 100, 0.5, CHAN_STATIC )
+AddSound( "1911.MagIn", "benny/weapons/1911/magin.ogg", 70, 100, 0.5, CHAN_STATIC )
+AddSound( "USP.MagOut", "benny/weapons/usp/magout.ogg", 70, 100, 0.5, CHAN_STATIC )
+AddSound( "USP.MagIn", "benny/weapons/usp/magin.ogg", 70, 100, 0.5, CHAN_STATIC )
+AddSound( "Glock.MagOut", "benny/weapons/glock/magout.ogg", 70, 100, 0.5, CHAN_STATIC )
+AddSound( "Glock.MagIn", "benny/weapons/glock/magin.ogg", 70, 100, 0.5, CHAN_STATIC )
+
+AddSound( "Common.Dryfire.Pistol", "benny/weapons/common/06-13.ogg", 70, 100, 0.5, CHAN_STATIC )
+AddSound( "Common.Dryfire.Rifle", "benny/weapons/common/06-12.ogg", 70, 100, 0.5, CHAN_STATIC )
+AddSound( "Common.NoAmmo", "benny/weapons/common/30-01.ogg", 70, 100, 0.5, CHAN_STATIC )
 
 local wep = {}
 WEAPONS["1911"] = wep
 wep.Name = "COBRA .45"
-wep.Description = "Hits hard. They don't make them like they used to! Low capacity."
+wep.Description = "Hits hard. They don't make them like they used to!"
 
 wep.WModel = "models/weapons/w_pist_usp.mdl"
 wep.Sound_Fire = "1911.Fire"
+wep.Sound_DryFire = "Common.Dryfire.Pistol"
 wep.Sound_Reload = "1911.Reload" -- placeholder
+wep.Sound_MagOut = "1911.MagOut" -- placeholder
+wep.Sound_MagIn = "1911.MagIn" -- placeholder
 
 wep.Delay = (60/300)
 wep.Ammo = 8
@@ -33,11 +89,14 @@ wep.Damage = 30
 local wep = {}
 WEAPONS["usp"] = wep
 wep.Name = "USP .45"
-wep.Description = "It works for hardasses around the world, it works for you. Higher capacity."
+wep.Description = "It works for hardasses around the world, it works for you."
 
 wep.WModel = "models/weapons/w_pist_usp.mdl"
-wep.Sound_Fire = "1911.Fire"
-wep.Sound_Reload = "1911.Reload" -- placeholder
+wep.Sound_Fire = "USP.Fire"
+wep.Sound_DryFire = "Common.Dryfire.Pistol"
+wep.Sound_Reload = "USP.Reload" -- placeholder
+wep.Sound_MagOut = "USP.MagOut" -- placeholder
+wep.Sound_MagIn = "USP.MagIn" -- placeholder
 
 wep.Delay = (60/300)
 wep.Ammo = 12
@@ -46,11 +105,13 @@ wep.Damage = 30
 local wep = {}
 WEAPONS["glock"] = wep
 wep.Name = "GLOCK-18"
-wep.Description = "Superb precision but poor capacity."
+wep.Description = "Bullet storm. Lasts about a second or so, just like you!"
 
 wep.WModel = "models/weapons/w_pist_glock18.mdl"
-wep.Sound_Fire = "1911.Fire"
-wep.Sound_Reload = "1911.Reload" -- placeholder
+wep.Sound_Fire = "Glock.Fire"
+wep.Sound_DryFire = "Common.Dryfire.Pistol"
+wep.Sound_MagOut = "Glock.MagOut" -- placeholder
+wep.Sound_MagIn = "Glock.MagIn" -- placeholder
 
 wep.Delay = (60/800)
 wep.Ammo = 17
@@ -59,11 +120,13 @@ wep.Damage = 18
 local wep = {}
 WEAPONS["nambu"] = wep
 wep.Name = "NAMBU .38"
-wep.Description = "Eastern revolver that hits as much as it costs. Low capacity."
+wep.Description = "Eastern revolver that hits as much as it costs."
 
 wep.WModel = "models/weapons/w_pist_glock18.mdl"
-wep.Sound_Fire = "1911.Fire"
-wep.Sound_Reload = "1911.Reload" -- placeholder
+wep.Sound_Fire = "Nambu.Fire"
+wep.Sound_DryFire = "Common.Dryfire.Pistol"
+wep.Sound_MagOut = "Nambu.MagOut" -- placeholder
+wep.Sound_MagIn = "Nambu.MagIn" -- placeholder
 
 wep.Delay = (60/180)
 wep.Ammo = 6
@@ -72,11 +135,13 @@ wep.Damage = 26
 local wep = {}
 WEAPONS["anaconda"] = wep
 wep.Name = "ANACONDA"
-wep.Description = "Precise and kicks like a mule, but low capacity."
+wep.Description = "Precise and kicks like a mule."
 
 wep.WModel = "models/weapons/w_pist_glock18.mdl"
-wep.Sound_Fire = "1911.Fire"
-wep.Sound_Reload = "1911.Reload" -- placeholder
+wep.Sound_Fire = "Anaconda.Fire"
+wep.Sound_DryFire = "Common.Dryfire.Pistol"
+wep.Sound_MagOut = "Anaconda.MagOut" -- placeholder
+wep.Sound_MagIn = "Anaconda.MagIn" -- placeholder
 
 wep.Delay = (60/180)
 wep.Ammo = 6
@@ -85,13 +150,16 @@ wep.Damage = 40
 local wep = {}
 WEAPONS["tmp"] = wep
 wep.Name = "TMP"
-wep.Description = "Precise."
+wep.Description = "Precise and sharp, like a damn suit's pet."
 
 wep.WModel = "models/weapons/w_pist_glock18.mdl"
-wep.Sound_Fire = "1911.Fire"
-wep.Sound_Reload = "1911.Reload" -- placeholder
+wep.Sound_Fire = "MP5K.Fire"
+wep.Sound_DryFire = "Common.Dryfire.Rifle"
+wep.Sound_Reload = "TMP.Reload" -- placeholder
+wep.Sound_MagOut = "TMP.MagOut" -- placeholder
+wep.Sound_MagIn = "TMP.MagIn" -- placeholder
 
-wep.Delay = (60/800)
+wep.Delay = (60/700)
 wep.Ammo = 15
 wep.Damage = 18
 
@@ -101,8 +169,11 @@ wep.Name = "MP7"
 wep.Description = "Small, pistol-sized, and simple."
 
 wep.WModel = "models/weapons/w_pist_glock18.mdl"
-wep.Sound_Fire = "1911.Fire"
-wep.Sound_Reload = "1911.Reload" -- placeholder
+wep.Sound_Fire = "MP5K.Fire"
+wep.Sound_DryFire = "Common.Dryfire.Rifle"
+wep.Sound_Reload = "MP5K.Reload" -- placeholder
+wep.Sound_MagOut = "MP5K.MagOut" -- placeholder
+wep.Sound_MagIn = "MP5K.MagIn" -- placeholder
 
 wep.Delay = (60/700)
 wep.Ammo = 15
@@ -114,8 +185,11 @@ wep.Name = "MP5K"
 wep.Description = "Quality manufacturing, but cumbersome."
 
 wep.WModel = "models/weapons/w_pist_glock18.mdl"
-wep.Sound_Fire = "1911.Fire"
-wep.Sound_Reload = "1911.Reload" -- placeholder
+wep.Sound_Fire = "MP5K.Fire"
+wep.Sound_DryFire = "Common.Dryfire.Rifle"
+wep.Sound_Reload = "MP5K.Reload" -- placeholder
+wep.Sound_MagOut = "MP5K.MagOut" -- placeholder
+wep.Sound_MagIn = "MP5K.MagIn" -- placeholder
 
 wep.Delay = (60/700)
 wep.Ammo = 15
@@ -127,8 +201,11 @@ wep.Name = "MAC-11"
 wep.Description = "More fit for combat in a phone booth."
 
 wep.WModel = "models/weapons/w_pist_glock18.mdl"
-wep.Sound_Fire = "1911.Fire"
-wep.Sound_Reload = "1911.Reload" -- placeholder
+wep.Sound_Fire = "MP5K.Fire"
+wep.Sound_DryFire = "Common.Dryfire.Rifle"
+wep.Sound_Reload = "MP5K.Reload" -- placeholder
+wep.Sound_MagOut = "MP5K.MagOut" -- placeholder
+wep.Sound_MagIn = "MP5K.MagIn" -- placeholder
 
 wep.Delay = (60/800)
 wep.Ammo = 16
@@ -141,7 +218,10 @@ wep.Description = "Unwieldy bullet storm."
 
 wep.WModel = "models/weapons/w_pist_glock18.mdl"
 wep.Sound_Fire = "Bizon.Fire"
+wep.Sound_DryFire = "Common.Dryfire.Rifle"
 wep.Sound_Reload = "Bizon.Reload" -- placeholder
+wep.Sound_MagOut = "Bizon.MagOut" -- placeholder
+wep.Sound_MagIn = "Bizon.MagIn" -- placeholder
 
 wep.Delay = (60/600)
 wep.Ammo = 40
