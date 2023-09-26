@@ -74,6 +74,21 @@ function SWEP:B_Ammo( alt, value )
 	self:BTable( alt )["Ammo" .. clip] = value
 end
 
+function SWEP:B_Firemode( alt )
+	return self:BClass( alt ).Firemodes[1]
+end
+
+function SWEP:B_FiremodeName( alt )
+	local mode = self:B_Firemode( alt ).Mode
+	if mode == 1 then
+		return "SEMI"
+	elseif mode == math.huge then
+		return "AUTO"
+	else
+		return mode .. "RND"
+	end
+end
+
 function SWEP:SecondaryAttack()
 	return true
 end

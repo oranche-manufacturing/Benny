@@ -202,31 +202,6 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 		local wep2 = wep:BTable( true )
 		local wep2c = wep:BClass( true )
 
-		if false then -- Debug
-			local ox, oy = 170, 24
-			surface.SetFont( "Benny_12" )
-			surface.SetTextColor( scheme["fg"] )
-
-			surface.SetTextPos( ss(ox), ss(oy) )
-			surface.DrawText( "Wep1: " .. wep:GetWep1() )
-
-			local num = 1
-			if wep1 then for i, v in pairs( wep1 ) do
-				surface.SetTextPos( ss(ox+16), ss(oy+10*num) )
-				surface.DrawText( i .. ": " .. v )
-				num = num + 1
-			end end
-
-			surface.SetTextPos( ss(ox+128), ss(oy) )
-			surface.DrawText( "Wep2: " .. wep:GetWep2() )
-
-			if wep2 then for i, v in pairs( wep2 ) do
-				surface.SetTextPos( ss(ox+128+16), ss(oy+10*num) )
-				surface.DrawText( i .. ": " .. v )
-				num = num + 1
-			end end
-		end
-
 		local w, h = 150, 100
 		local BOXHEIGHT = 44
 
@@ -244,13 +219,16 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 			surface.SetTextPos( sw - b - ss(w-6), sh - b - ss(BOXHEIGHT-3) )
 			surface.DrawText( wep1c.Name or "???" )
 
+			local fmpw = 30
 			surface.SetDrawColor( scheme["fg"] )
-			surface.DrawRect( sw - b - ss(w-4), sh - b + ss(16) - ss(BOXHEIGHT-4), ss(29), ss(10) )
+			surface.DrawRect( sw - b - ss(w-4), sh - b + ss(16) - ss(BOXHEIGHT-4), ss(fmpw), ss(10) )
 
 			surface.SetFont( "Benny_12" )
+			local str = wep:B_FiremodeName( false )
+			local tw = surface.GetTextSize( str )
 			surface.SetTextColor( scheme["bg"] )
-			surface.SetTextPos( sw - b - ss(w-7), sh - b + ss(16) - ss(BOXHEIGHT-4) )
-			surface.DrawText( wep1c.Firemode or "???" )
+			surface.SetTextPos( sw - b - ss(w-19) - (tw/2), sh - b + ss(16) - ss(BOXHEIGHT-4) )
+			surface.DrawText( str )
 
 			surface.SetFont( "Benny_12" )
 			local text = wep:GetWep1Clip() == 0 and "---" or wep:Clip1()-- .. " - MAG " .. wep:GetWep1Clip()
@@ -259,12 +237,37 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 			surface.SetTextPos( sw - b - ss(4) - tw, sh - b - ss(24) )
 			surface.DrawText( text )
 
-			for i=1, math.max( wep:Clip1(), wep:BClass( false ).Ammo ) do
+			local bx = 1
+			local by = 0
+			local count = math.max( wep:Clip1(), wep:BClass( false ).Ammo )
+			local size = ss(8)
+			if count>90 then
+				size = ss(2)
+				by = by - ss(8)
+			elseif count>60 then
+				size = ss(2)
+				by = by - ss(7)
+			elseif count>30 then
+				size = ss(3)
+				by = by - ss(5)
+			end
+			for i=1, count do
 				surface.SetDrawColor( scheme["fg"] )
-				surface.DrawOutlinedRect( sw - b - ss(3+4) - ( ss(5) * (i-1) ), sh - b - ss(8+4), ss(3), ss(8), ss(0.5) )
+				surface.DrawOutlinedRect( sw - b - ss(3+4) - ( ss(5) * (bx-1) ), sh - b - ss(8+4) - by, ss(3), size, ss(0.5) )
 				if i <= wep:Clip1() then
-					surface.DrawRect( sw - b - ss(3+4) - ( ss(5) * (i-1) ), sh - b - ss(8+4), ss(3), ss(8) )
+					surface.DrawRect( sw - b - ss(3+4) - ( ss(5) * (bx-1) ), sh - b - ss(8+4) - by, ss(3), size )
 				end
+				if i%30 == 0 then
+					if count>90 then
+						by = by + ss(2.5)
+					elseif count>60 then
+						by = by + ss(3)
+					else
+						by = by + ss(5)
+					end
+					bx = 0
+				end
+				bx = bx + 1
 			end
 
 			local amlist = { wep:BTable( false )["Ammo" .. 1], wep:BTable( false )["Ammo" .. 2], wep:BTable( false )["Ammo" .. 3] }
@@ -279,7 +282,7 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 				local suuze = ss(blen*perc) - bubby*2*perc
 				if v != 0 then suuze = math.max( suuze, 1 ) end
 				surface.SetDrawColor( scheme["fg"] )
-				surface.DrawOutlinedRect( sw - b - ss(w-4-2) + ss(29) + ( ss(blen+2) * (ind-1) ),
+				surface.DrawOutlinedRect( sw - b - ss(w-4-2) + ss(fmpw) + ( ss(blen+2) * (ind-1) ),
 				sh - b + ss(16) - ss(BOXHEIGHT-4),
 				ss(blen),
 				ss(bhei),
@@ -287,24 +290,24 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 
 				if active then
 					surface.SetTextColor( scheme["fg"] )
-					surface.SetTextPos( sw - b - ss(w-4-2) + ss(29/2) + ( ss(blen+2) * (ind) ) + bubby - ss(4),
+					surface.SetTextPos( sw - b - ss(w-4-2) + ss(fmpw/2) + ( ss(blen+2) * (ind) ) + bubby - ss(4),
 					sh - b + ss(16) - ss(BOXHEIGHT-4) + bubby - ss(2) )
 					surface.DrawText( "x" )
 				end
 
 				surface.SetDrawColor( scheme["fg"] )
-				surface.DrawRect( sw - b - ss(w-4-2) + ss(29) + ( ss(blen+2) * (ind-1) ) + bubby,
+				surface.DrawRect( sw - b - ss(w-4-2) + ss(fmpw) + ( ss(blen+2) * (ind-1) ) + bubby,
 				sh - b + ss(16) - ss(BOXHEIGHT-4) + bubby,
 				suuze,
 				ss(bhei) - bubby*2 )
 
 				if active then
-					render.SetScissorRect( sw - b - ss(w-4-2) + ss(29) + ( ss(blen+2) * (ind-1) ) + bubby,
+					render.SetScissorRect( sw - b - ss(w-4-2) + ss(fmpw) + ( ss(blen+2) * (ind-1) ) + bubby,
 					sh - b + ss(16) - ss(BOXHEIGHT-4) + bubby,
-					sw - b - ss(w-4-2) + ss(29) + ( ss(blen+2) * (ind-1) ) + bubby + suuze,
+					sw - b - ss(w-4-2) + ss(fmpw) + ( ss(blen+2) * (ind-1) ) + bubby + suuze,
 					sh - b + ss(16) - ss(BOXHEIGHT-4) + bubby + (ss(bhei) - bubby*2), true )
 					surface.SetTextColor( scheme["bg"] )
-					surface.SetTextPos( sw - b - ss(w-4-2) + ss(29/2) + ( ss(blen+2) * (ind) ) + bubby - ss(4),
+					surface.SetTextPos( sw - b - ss(w-4-2) + ss(fmpw/2) + ( ss(blen+2) * (ind) ) + bubby - ss(4),
 					sh - b + ss(16) - ss(BOXHEIGHT-4) + bubby - ss(2) )
 					surface.DrawText( "x" )
 					render.SetScissorRect( 0, 0, 0, 0, false )
@@ -354,7 +357,7 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 		end
 	end
 
-	do -- Inventory
+	if false then -- Debug Inventory
 		local gap = 0
 		for ID, Data in pairs( p:INV_Get() ) do
 			local active = (wep:GetWep2() == ID) and "Wep2" or (wep:GetWep1() == ID) and "Wep1" or ""

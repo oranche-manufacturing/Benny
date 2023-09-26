@@ -1,4 +1,14 @@
 
+FIREMODE_AUTO = {
+	{ Mode = math.huge },
+}
+FIREMODE_AUTOSEMI = {
+	{ Mode = math.huge },
+	{ Mode = 1 },
+}
+FIREMODE_SEMI = {
+	{ Mode = 1 },
+}
 WEAPONS = {}
 
 AddSound( "1911.Fire", {
@@ -99,6 +109,7 @@ wep.Sound_MagOut = "1911.MagOut" -- placeholder
 wep.Sound_MagIn = "1911.MagIn" -- placeholder
 
 wep.Delay = (60/300)
+wep.Firemodes = FIREMODE_SEMI
 wep.Ammo = 8
 wep.Damage = 30
 
@@ -115,6 +126,7 @@ wep.Sound_MagOut = "USP.MagOut" -- placeholder
 wep.Sound_MagIn = "USP.MagIn" -- placeholder
 
 wep.Delay = (60/300)
+wep.Firemodes = FIREMODE_SEMI
 wep.Ammo = 12
 wep.Damage = 30
 
@@ -130,6 +142,7 @@ wep.Sound_MagOut = "Glock.MagOut" -- placeholder
 wep.Sound_MagIn = "Glock.MagIn" -- placeholder
 
 wep.Delay = (60/800)
+wep.Firemodes = FIREMODE_AUTOSEMI
 wep.Ammo = 17
 wep.Damage = 18
 
@@ -145,6 +158,7 @@ wep.Sound_MagOut = "Nambu.MagOut" -- placeholder
 wep.Sound_MagIn = "Nambu.MagIn" -- placeholder
 
 wep.Delay = (60/180)
+wep.Firemodes = FIREMODE_SEMI
 wep.Ammo = 6
 wep.Damage = 26
 
@@ -160,6 +174,7 @@ wep.Sound_MagOut = "Anaconda.MagOut" -- placeholder
 wep.Sound_MagIn = "Anaconda.MagIn" -- placeholder
 
 wep.Delay = (60/180)
+wep.Firemodes = FIREMODE_SEMI
 wep.Ammo = 6
 wep.Damage = 40
 
@@ -176,6 +191,7 @@ wep.Sound_MagOut = "TMP.MagOut" -- placeholder
 wep.Sound_MagIn = "TMP.MagIn" -- placeholder
 
 wep.Delay = (60/700)
+wep.Firemodes = FIREMODE_AUTOSEMI
 wep.Ammo = 15
 wep.Damage = 18
 
@@ -192,6 +208,7 @@ wep.Sound_MagOut = "MP7.MagOut" -- placeholder
 wep.Sound_MagIn = "MP7.MagIn" -- placeholder
 
 wep.Delay = (60/700)
+wep.Firemodes = FIREMODE_AUTOSEMI
 wep.Ammo = 15
 wep.Damage = 16
 
@@ -208,6 +225,7 @@ wep.Sound_MagOut = "MP5K.MagOut" -- placeholder
 wep.Sound_MagIn = "MP5K.MagIn" -- placeholder
 
 wep.Delay = (60/700)
+wep.Firemodes = FIREMODE_AUTOSEMI
 wep.Ammo = 15
 wep.Damage = 18
 
@@ -224,6 +242,7 @@ wep.Sound_MagOut = "MAC11.MagOut" -- placeholder
 wep.Sound_MagIn = "MAC11.MagIn" -- placeholder
 
 wep.Delay = (60/800)
+wep.Firemodes = FIREMODE_AUTOSEMI
 wep.Ammo = 16
 wep.Damage = 16
 
@@ -240,5 +259,6 @@ wep.Sound_MagOut = "Bizon.MagOut" -- placeholder
 wep.Sound_MagIn = "Bizon.MagIn" -- placeholder
 
 wep.Delay = (60/600)
-wep.Ammo = 40
+wep.Firemodes = FIREMODE_AUTOSEMI
+wep.Ammo = 30
 wep.Damage = 16
