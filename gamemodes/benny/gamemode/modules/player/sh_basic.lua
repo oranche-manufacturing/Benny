@@ -70,7 +70,6 @@ concommand.Add("benny_inv_equip", function( ply, cmd, args )
 		assert( item[ "Ammo" .. item.Loaded ], "That magazine doesn't exist." )
 	end
 	wep:SetClip1( item.Loaded == 0 and 0 or item[ "Ammo" .. item.Loaded ] )
-	wep:OnReloaded()
 end)
 
 concommand.Add("benny_inv_sync", function( ply, cmd, args )
@@ -98,21 +97,15 @@ concommand.Add("benny_inv_discard", function( ply, cmd, args )
 		net.WriteString( args[1] )
 	net.Send( ply )
 
-	local reload = false
 	if wep:GetWep1() == args[1] then
 		wep:SetWep1( "" )
 		wep:SetWep1Clip( 0 )
 		wep:SetClip1( 0 )
-		reload = true
 	end
 	if wep:GetWep2() == args[1] then
 		wep:SetWep2( "" )
 		wep:SetWep2Clip( 0 )
 		wep:SetClip2( 0 )
-		reload = true
-	end
-	if reload then
-		wep:OnReloaded()
 	end
 end)
 
