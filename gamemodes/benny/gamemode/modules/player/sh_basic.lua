@@ -66,7 +66,10 @@ concommand.Add("benny_inv_equip", function( ply, cmd, args )
 	wep:SetWep1( args[1] )
 	wep:SetWep1Clip( item.Loaded )
 	
-	wep:SetClip1( item[ "Ammo" .. item.Loaded ] )
+	if item.Loaded != 0 then
+		assert( item[ "Ammo" .. item.Loaded ], "That magazine doesn't exist." )
+	end
+	wep:SetClip1( item.Loaded == 0 and 0 or item[ "Ammo" .. item.Loaded ] )
 	wep:OnReloaded()
 end)
 
@@ -220,22 +223,12 @@ if CLIENT then
 			-- PROTO: These functions don't need to be remade over and over like this.
 			function button:DoClick()
 				RunConsoleCommand("benny_inv_equip", button.ID)
-				timer.Simple( 0.1, function() regen_items( itemlist ) end )
+				timer.Simple( 0.1, function() if IsValid( itemlist ) then regen_items( itemlist ) end end )
 			end
 
 			function button:DoRightClick()
 				RunConsoleCommand("benny_inv_discard", button.ID)
-				timer.Simple( 0.1, function() regen_items( itemlist ) end )
-				-- local Menu = DermaMenu()
-				-- Menu:AddOption( "Equip", function()
-				-- 	RunConsoleCommand("benny_inv_equip", button.ID)
-				-- 	timer.Simple( 0.1, function() regen_items( itemlist ) end )
-				-- end )
-				-- Menu:AddOption( "Discard", function()
-				-- 	RunConsoleCommand("benny_inv_discard", button.ID)
-				-- 	timer.Simple( 0.1, function() regen_items( itemlist ) end )
-				-- end )
-				-- Menu:Open()
+				timer.Simple( 0.1, function() if IsValid( itemlist ) then regen_items( itemlist ) end end )
 			end
 
 			function button:Paint( w, h )
