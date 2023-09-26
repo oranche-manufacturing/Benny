@@ -19,6 +19,18 @@ AddSound( "MP5K.Fire", {
 	"benny/weapons/mp5k/03.ogg",
 }, 140, 100, 0.5, CHAN_STATIC )
 
+AddSound( "MAC11.Fire", {
+	"benny/weapons/mac11/01.ogg",
+	"benny/weapons/mac11/02.ogg",
+	"benny/weapons/mac11/03.ogg",
+}, 140, 100, 0.5, CHAN_STATIC )
+
+AddSound( "MP7.Fire", {
+	"benny/weapons/mp7/01.ogg",
+	"benny/weapons/mp7/02.ogg",
+	"benny/weapons/mp7/03.ogg",
+}, 140, 100, 0.5, CHAN_STATIC )
+
 AddSound( "TMP.Fire", {
 	"benny/weapons/tmp/01.ogg",
 	"benny/weapons/tmp/02.ogg",
@@ -51,6 +63,10 @@ AddSound( "Glock.Fire", {
 
 AddSound( "MP5K.MagOut", "benny/weapons/mp5k/magout.ogg", 70, 100, 0.5, CHAN_STATIC )
 AddSound( "MP5K.MagIn", "benny/weapons/mp5k/magin.ogg", 70, 100, 0.5, CHAN_STATIC )
+AddSound( "MAC11.MagOut", "benny/weapons/mac11/magout.ogg", 70, 100, 0.5, CHAN_STATIC )
+AddSound( "MAC11.MagIn", "benny/weapons/mac11/magin.ogg", 70, 100, 0.5, CHAN_STATIC )
+AddSound( "MP7.MagOut", "benny/weapons/mp7/magout.ogg", 70, 100, 0.5, CHAN_STATIC )
+AddSound( "MP7.MagIn", "benny/weapons/mp7/magin.ogg", 70, 100, 0.5, CHAN_STATIC )
 AddSound( "TMP.MagOut", "benny/weapons/tmp/magout.ogg", 70, 100, 0.5, CHAN_STATIC )
 AddSound( "TMP.MagIn", "benny/weapons/tmp/magin.ogg", 70, 100, 0.5, CHAN_STATIC )
 AddSound( "Bizon.MagOut", "benny/weapons/bizon/magout.ogg", 70, 100, 0.5, CHAN_STATIC )
@@ -68,7 +84,7 @@ AddSound( "Glock.MagIn", "benny/weapons/glock/magin.ogg", 70, 100, 0.5, CHAN_STA
 
 AddSound( "Common.Dryfire.Pistol", "benny/weapons/common/06-13.ogg", 70, 100, 0.5, CHAN_STATIC )
 AddSound( "Common.Dryfire.Rifle", "benny/weapons/common/06-12.ogg", 70, 100, 0.5, CHAN_STATIC )
-AddSound( "Common.NoAmmo", "benny/weapons/common/30-01.ogg", 70, 100, 0.5, CHAN_STATIC )
+AddSound( "Common.NoAmmo", "benny/weapons/noammo.ogg", 70, 100, 0.5, CHAN_STATIC )
 
 local wep = {}
 WEAPONS["1911"] = wep
@@ -89,7 +105,7 @@ wep.Damage = 30
 local wep = {}
 WEAPONS["usp"] = wep
 wep.Name = "USP .45"
-wep.Description = "It works for hardasses around the world, it works for you."
+wep.Description = "If it works for hardasses around the world, it works for you."
 
 wep.WModel = "models/weapons/w_pist_usp.mdl"
 wep.Sound_Fire = "USP.Fire"
@@ -120,7 +136,7 @@ wep.Damage = 18
 local wep = {}
 WEAPONS["nambu"] = wep
 wep.Name = "NAMBU .38"
-wep.Description = "Eastern revolver that hits as much as it costs."
+wep.Description = "Eastern revolver that hits as hard as it costs."
 
 wep.WModel = "models/weapons/w_pist_glock18.mdl"
 wep.Sound_Fire = "Nambu.Fire"
@@ -153,7 +169,7 @@ wep.Name = "TMP"
 wep.Description = "Precise and sharp, like a damn suit's pet."
 
 wep.WModel = "models/weapons/w_pist_glock18.mdl"
-wep.Sound_Fire = "MP5K.Fire"
+wep.Sound_Fire = "TMP.Fire"
 wep.Sound_DryFire = "Common.Dryfire.Rifle"
 wep.Sound_Reload = "TMP.Reload" -- placeholder
 wep.Sound_MagOut = "TMP.MagOut" -- placeholder
@@ -169,11 +185,11 @@ wep.Name = "MP7"
 wep.Description = "Small, pistol-sized, and simple."
 
 wep.WModel = "models/weapons/w_pist_glock18.mdl"
-wep.Sound_Fire = "MP5K.Fire"
+wep.Sound_Fire = "MP7.Fire"
 wep.Sound_DryFire = "Common.Dryfire.Rifle"
-wep.Sound_Reload = "MP5K.Reload" -- placeholder
-wep.Sound_MagOut = "MP5K.MagOut" -- placeholder
-wep.Sound_MagIn = "MP5K.MagIn" -- placeholder
+wep.Sound_Reload = "MP7.Reload" -- placeholder
+wep.Sound_MagOut = "MP7.MagOut" -- placeholder
+wep.Sound_MagIn = "MP7.MagIn" -- placeholder
 
 wep.Delay = (60/700)
 wep.Ammo = 15
@@ -201,11 +217,11 @@ wep.Name = "MAC-11"
 wep.Description = "More fit for combat in a phone booth."
 
 wep.WModel = "models/weapons/w_pist_glock18.mdl"
-wep.Sound_Fire = "MP5K.Fire"
+wep.Sound_Fire = "MAC11.Fire"
 wep.Sound_DryFire = "Common.Dryfire.Rifle"
-wep.Sound_Reload = "MP5K.Reload" -- placeholder
-wep.Sound_MagOut = "MP5K.MagOut" -- placeholder
-wep.Sound_MagIn = "MP5K.MagIn" -- placeholder
+wep.Sound_Reload = "MAC11.Reload" -- placeholder
+wep.Sound_MagOut = "MAC11.MagOut" -- placeholder
+wep.Sound_MagIn = "MAC11.MagIn" -- placeholder
 
 wep.Delay = (60/800)
 wep.Ammo = 16
