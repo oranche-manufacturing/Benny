@@ -197,10 +197,10 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 
 	do -- Weapon
 		local inv = p:INV_Get()
-		local wep1 = wep.B_WepT1
-		local wep1c = wep.B_ClassT1
-		local wep2 = wep.B_WepT2
-		local wep2c = wep.B_ClassT2
+		local wep1 = wep:BTable( false )
+		local wep1c = wep:BClass( false )
+		local wep2 = wep:BTable( true )
+		local wep2c = wep:BClass( true )
 
 		if false then -- Debug
 			local ox, oy = 170, 24
@@ -253,13 +253,13 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 			surface.DrawText( wep1c.Firemode or "???" )
 
 			surface.SetFont( "Benny_12" )
-			local text = wep:Clip1() .. " - MAG " .. wep:GetWep1Clip()
+			local text = wep:GetWep1Clip() == 0 and "---" or wep:Clip1()-- .. " - MAG " .. wep:GetWep1Clip()
 			local tw = surface.GetTextSize( text )
 			surface.SetTextColor( scheme["fg"] )
 			surface.SetTextPos( sw - b - ss(4) - tw, sh - b - ss(24) )
 			surface.DrawText( text )
 
-			for i=1, math.max( wep:Clip1(), wep.B_ClassT1.Ammo ) do
+			for i=1, math.max( wep:Clip1(), wep:BClass( false ).Ammo ) do
 				surface.SetDrawColor( scheme["fg"] )
 				surface.DrawOutlinedRect( sw - b - ss(3+4) - ( ss(5) * (i-1) ), sh - b - ss(8+4), ss(3), ss(8), ss(0.5) )
 				if i <= wep:Clip1() then
@@ -267,23 +267,50 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 				end
 			end
 
-			local amlist = { wep.B_WepT1["Ammo" .. 1], wep.B_WepT1["Ammo" .. 2], wep.B_WepT1["Ammo" .. 3] }
-			local i = 1
+			local amlist = { wep:BTable( false )["Ammo" .. 1], wep:BTable( false )["Ammo" .. 2], wep:BTable( false )["Ammo" .. 3] }
+			local ind = 1
+			local bubby = ss(1)
+			local blen, bhei = 25, 10
 			for _, v in ipairs( amlist ) do
-				if v == 0 then continue end
-				local perc = v / wep.B_ClassT1.Ammo
+				local active = wep:GetWep1Clip() == _
+				if v == 0 and !active then continue end
+				local perc = v / wep:BClass( false ).Ammo
+
+				local suuze = ss(blen*perc) - bubby*2*perc
+				if v != 0 then suuze = math.max( suuze, 1 ) end
 				surface.SetDrawColor( scheme["fg"] )
-				surface.DrawOutlinedRect( sw - b - ss(w-4-2) + ss(29) + ( ss(10+2) * (i-1) ),
+				surface.DrawOutlinedRect( sw - b - ss(w-4-2) + ss(29) + ( ss(blen+2) * (ind-1) ),
 				sh - b + ss(16) - ss(BOXHEIGHT-4),
-				ss(10),
-				ss(10),
+				ss(blen),
+				ss(bhei),
 				ss(0.5) )
+
+				if active then
+					surface.SetTextColor( scheme["fg"] )
+					surface.SetTextPos( sw - b - ss(w-4-2) + ss(29/2) + ( ss(blen+2) * (ind) ) + bubby - ss(4),
+					sh - b + ss(16) - ss(BOXHEIGHT-4) + bubby - ss(2) )
+					surface.DrawText( "x" )
+				end
+
 				surface.SetDrawColor( scheme["fg"] )
-				surface.DrawRect( sw - b - ss(w-4-2) + ss(29) + ( ss(10+2) * (i-1) ),
-				sh - b + ss(16) - ss(BOXHEIGHT-4) + ss(10*(1-perc)),
-				ss(10),
-				ss(10*perc) )
-				i = i + 1
+				surface.DrawRect( sw - b - ss(w-4-2) + ss(29) + ( ss(blen+2) * (ind-1) ) + bubby,
+				sh - b + ss(16) - ss(BOXHEIGHT-4) + bubby,
+				suuze,
+				ss(bhei) - bubby*2 )
+
+				if active then
+					render.SetScissorRect( sw - b - ss(w-4-2) + ss(29) + ( ss(blen+2) * (ind-1) ) + bubby,
+					sh - b + ss(16) - ss(BOXHEIGHT-4) + bubby,
+					sw - b - ss(w-4-2) + ss(29) + ( ss(blen+2) * (ind-1) ) + bubby + suuze,
+					sh - b + ss(16) - ss(BOXHEIGHT-4) + bubby + (ss(bhei) - bubby*2), true )
+					surface.SetTextColor( scheme["bg"] )
+					surface.SetTextPos( sw - b - ss(w-4-2) + ss(29/2) + ( ss(blen+2) * (ind) ) + bubby - ss(4),
+					sh - b + ss(16) - ss(BOXHEIGHT-4) + bubby - ss(2) )
+					surface.DrawText( "x" )
+					render.SetScissorRect( 0, 0, 0, 0, false )
+				end
+
+				ind = ind + 1
 			end
 		end
 	end

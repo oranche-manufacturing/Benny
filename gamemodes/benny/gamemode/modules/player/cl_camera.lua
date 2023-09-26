@@ -267,7 +267,7 @@ end
 
 function bennyfp( origin, angles, fov )
 	local ply = LocalPlayer()
-	assert( IsValid( ply:GetActiveWeapon() ) )
+	if !IsValid( ply:GetActiveWeapon() ) then return origin, angles, fov end
 
 	local pos, ang = Vector(), Angle()
 
