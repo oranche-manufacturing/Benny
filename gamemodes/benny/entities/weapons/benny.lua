@@ -33,6 +33,9 @@ function SWEP:PrimaryAttack()
 	if !self:BTable() then
 		return
 	end
+	if self:BClass().Fire then
+		if self:BClass( false ).Fire( self, false ) then return end
+	end
 	if self:GetDelay1() > CurTime() then
 		return
 	end
@@ -42,9 +45,37 @@ function SWEP:PrimaryAttack()
 		return
 	end
 	
-	B_Sound( self, self:BClass( false ).Sound_Fire )
-
 	self:B_Ammo( false, self:Clip1() - 1 )
+
+	B_Sound( self, self:BClass( false ).Sound_Fire )
+	if CLIENT and IsFirstTimePredicted() then
+		local tr = self:GetOwner():GetEyeTrace()
+		do
+			local vStart = self:GetAttachment( 1 ).Pos
+			local vPoint = tr.HitPos
+			local effectdata = EffectData()
+			effectdata:SetStart( vStart )
+			effectdata:SetOrigin( vPoint )
+			effectdata:SetEntity( self )
+			effectdata:SetScale( 5000 )
+			effectdata:SetFlags( 1 )
+			util.Effect( "Tracer", effectdata )
+		end
+
+		-- util.DecalEx( Material( util.DecalMaterial( "Impact.Concrete" ) ), tr.Entity, tr.HitPos, tr.HitNormal, color_white, 1, 1 )
+
+		do
+			local effectdata = EffectData()
+			effectdata:SetOrigin( tr.HitPos )
+			effectdata:SetStart( tr.StartPos )
+			effectdata:SetSurfaceProp( tr.SurfaceProps )
+			effectdata:SetEntity( tr.Entity )
+			effectdata:SetDamageType( DMG_BULLET )
+			util.Effect( "Impact", effectdata )
+		end
+		
+	end
+
 	self:SetDelay1( CurTime() + self:BClass( false ).Delay )
 	return true
 end
@@ -95,6 +126,9 @@ end
 
 function SWEP:Reload()
 	if self:BTable( false ) then
+		if self:BClass().Reload then
+			if self:BClass( false ).Reload( self, false ) then return end
+		end
 		if self:GetDelay1() > CurTime() then
 			return false
 		end

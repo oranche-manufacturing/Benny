@@ -293,7 +293,7 @@ hook.Add( "CalcView", "MyCalcView", function( ply, pos, ang, fov )
 	view.origin = pos
 	view.angles = ang
 	view.fov = 90
-	if camera then
+	if false and camera then
 		view.origin = camera.Pos
 		view.angles = camera.Ang
 		view.fov = camera.FOV or 60
@@ -321,6 +321,11 @@ hook.Add( "CalcView", "MyCalcView", function( ply, pos, ang, fov )
 
 		view.fov		= tonumber(st[7])
 	end
+
+	-- if globhit then
+	globhit:Set( view.origin )
+	globang:Set( view.angles )
+	-- end
 
 	view.fov = Convert( view.fov, (ScrH()/ScrW())/(3/4) )
 	return view

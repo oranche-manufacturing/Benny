@@ -4,43 +4,39 @@
 CAPTIONS = {}
 CAPTIONS["en-us"] = {}
 
-CAPTIONS["en-us"]["1911.Fire"] = {
-	Name = "Cobra .45",
-	Color = color_white,
-	Text = "[fire]",
-	Bold = false,
-	Italic = true,
-	TypeTime = 0.1,
-	LifeTime = 0.5,
-}
-CAPTIONS["en-us"]["1911.Reload"] = {
-	Name = "Cobra .45",
-	Color = color_white,
-	Text = "[reload]",
-	Bold = false,
-	Italic = true,
-	TypeTime = 0.1,
-	LifeTime = 0.5,
-}
 
-CAPTIONS["en-us"]["Bizon.Fire"] = {
-	Name = "Bizon",
-	Color = color_white,
-	Text = "[fire]",
-	Bold = false,
-	Italic = true,
-	TypeTime = 0.1,
-	LifeTime = 0.5,
-}
-CAPTIONS["en-us"]["Bizon.Reload"] = {
-	Name = "Bizon",
-	Color = color_white,
-	Text = "[reload]",
-	Bold = false,
-	Italic = true,
-	TypeTime = 0.1,
-	LifeTime = 0.5,
-}
+function RegisterCaption( Name, Subject, Color, Text, TypeTime, LifeTime, Bold, Italic )
+	CAPTIONS["en-us"][Name] = {
+		Name = Subject,
+		Color = Color,
+		Text = Text,
+		TypeTime = TypeTime,
+		LifeTime = LifeTime,
+		Bold = Bold,
+		Italic = Italic,
+	}
+end
+
+RegisterCaption("1911.Fire", "Cobra .45", color_white, "[fire]", 0.1, 0.5, false, true )
+RegisterCaption("1911.Reload", "Cobra .45", color_white, "[reload]", 0.1, 0.5, false, true )
+RegisterCaption("Bizon.Fire", "Bizon", color_white, "[fire]", 0.1, 0.5, false, true )
+RegisterCaption("Bizon.Reload", "Bizon", color_white, "[reload]", 0.1, 0.5, false, true )
+RegisterCaption("TMP.Fire", "TMP", color_white, "[fire]", 0.1, 0.5, false, true )
+RegisterCaption("TMP.Reload", "TMP", color_white, "[reload]", 0.1, 0.5, false, true )
+RegisterCaption("USP.Fire", "USP", color_white, "[fire]", 0.1, 0.5, false, true )
+RegisterCaption("USP.Reload", "USP", color_white, "[reload]", 0.1, 0.5, false, true )
+RegisterCaption("Glock.Fire", "Glock", color_white, "[fire]", 0.1, 0.5, false, true )
+RegisterCaption("Glock.Reload", "Glock", color_white, "[reload]", 0.1, 0.5, false, true )
+RegisterCaption("MP5K.Fire", "MP5K", color_white, "[fire]", 0.1, 0.5, false, true )
+RegisterCaption("MP5K.Reload", "MP5K", color_white, "[reload]", 0.1, 0.5, false, true )
+RegisterCaption("MAC11.Fire", "MAC11", color_white, "[fire]", 0.1, 0.5, false, true )
+RegisterCaption("MAC11.Reload", "MAC11", color_white, "[reload]", 0.1, 0.5, false, true )
+RegisterCaption("MP7.Fire", "MP7", color_white, "[fire]", 0.1, 0.5, false, true )
+RegisterCaption("MP7.Reload", "MP7", color_white, "[reload]", 0.1, 0.5, false, true )
+RegisterCaption("Anaconda.Fire", "Anaconda", color_white, "[fire]", 0.1, 0.5, false, true )
+RegisterCaption("Anaconda.Reload", "Anaconda", color_white, "[reload]", 0.1, 0.5, false, true )
+RegisterCaption("Nambu.Fire", "Nambu", color_white, "[fire]", 0.1, 0.5, false, true )
+RegisterCaption("Nambu.Reload", "Nambu", color_white, "[reload]", 0.1, 0.5, false, true )
 
 CAPTIONS = CAPTIONS["en-us"]
 

@@ -151,6 +151,22 @@ end
 local color_caption = Color( 0, 0, 0, 127 )
 local mat_grad = Material( "benny/hud/grad.png", "mips smooth" )
 
+-- Stew port
+globhit = Vector()
+globang = Angle()
+tr1f = Vector()
+tr2f = Vector()
+local col_1 = Color(255, 255, 255, 200)
+local col_2 = Color(0, 0, 0, 255)
+local col_3 = Color(255, 127, 127, 255)
+local col_4 = Color(255, 222, 222, 255)
+local mat_dot = Material("benny/hud/xhair/dot.png", "mips smooth")
+local mat_long = Material("benny/hud/xhair/long.png", "mips smooth")
+local mat_dot_s = Material("benny/hud/xhair/dot_s.png", "mips smooth")
+local mat_long_s = Material("benny/hud/xhair/long_s.png", "mips smooth")
+local spacer_long = 2 -- screenscaled
+local gap = 24
+
 hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 	local sw, sh = ScrW(), ScrH()
 	local b = ss(20)
@@ -196,6 +212,7 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 	end
 
 	do -- Weapon
+		assert( IsValid(wep) and wep:GetClass() == "benny", "Failed to retrieve 'benny' weapon!" )
 		local inv = p:INV_Get()
 		local wep1 = wep:BTable( false )
 		local wep1c = wep:BClass( false )
@@ -314,6 +331,179 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 				end
 
 				ind = ind + 1
+			end
+		end
+		
+
+		do -- Crosshair
+			local s, w, h = ss, ScrW(), ScrH()
+			local pl_x, pl_y = w/2, h/2
+
+			do
+				local tr1 = util.TraceLine({
+					start = p:EyePos(),
+					endpos = p:EyePos() + (p:EyeAngles():Forward()*16000),
+					filter = p
+				})
+
+				local tr2 = util.TraceLine({
+					start = globhit,
+					endpos = globhit + (globang:Forward()*16000),
+					filter = p
+				})
+
+				tr1f:Set(tr1.HitPos)
+				tr2f:Set(tr2.HitPos)
+			end
+
+			pl_x = tr2f:ToScreen().x
+			pl_y = tr2f:ToScreen().y
+			ps_x = tr2f:ToScreen().x
+			ps_y = tr2f:ToScreen().y
+
+			local touse1 = col_1
+			local touse2 = col_2
+			if ve then
+				pl_x = tr1f:ToScreen().x
+				pl_y = tr1f:ToScreen().y
+				ps_x = tr1f:ToScreen().x
+				ps_y = tr1f:ToScreen().y
+			elseif util.TraceLine({start = tr2f, endpos = tr1f, filter = p}).Fraction != 1 and !tr2f:IsEqualTol(tr1f, 1) then
+				touse1 = col_4
+				touse2 = col_3
+				pl_x = tr1f:ToScreen().x
+				pl_y = tr1f:ToScreen().y
+			end
+
+			for i=1, 2 do
+				local cooler = i == 1 and touse2 or touse1
+				local poosx, poosy = i == 1 and ps_x or pl_x, i == 1 and ps_y or pl_y
+				local mat1 = i == 1 and mat_long_s or mat_long
+				local mat2 = i == 1 and mat_dot_s or mat_dot
+				surface.SetDrawColor( cooler )
+				if wep.XHairMode == "rifle" then
+					surface.SetMaterial( mat1 )
+					surface.DrawTexturedRectRotated( poosx - s(spacer_long) - gap, poosy, s(16), s(16), 0 )
+					surface.DrawTexturedRectRotated( poosx + s(spacer_long) + gap, poosy, s(16), s(16), 0 )
+
+					surface.SetMaterial( mat2 )
+					surface.DrawTexturedRectRotated( poosx, poosy - gap, s(16), s(16), 0 )
+					surface.DrawTexturedRectRotated( poosx, poosy + gap, s(16), s(16), 0 )
+				elseif wep.XHairMode == "smg" then
+					surface.SetMaterial( mat1 )
+					surface.DrawTexturedRectRotated( poosx, poosy + gap + s(spacer_long), s(16), s(16), 90 )
+					surface.DrawTexturedRectRotated( poosx - (math.sin(math.rad(45))*gap) - (math.sin(math.rad(45))*s(spacer_long)), poosy - (math.sin(math.rad(45))*gap) - (math.sin(math.rad(45))*s(spacer_long)), s(16), s(16), -45 )
+					surface.DrawTexturedRectRotated( poosx + (math.sin(math.rad(45))*gap) + (math.sin(math.rad(45))*s(spacer_long)), poosy - (math.sin(math.rad(45))*gap) - (math.sin(math.rad(45))*s(spacer_long)), s(16), s(16), 45 )
+
+					surface.SetMaterial( mat2 )
+					surface.DrawTexturedRectRotated( poosx, poosy, s(16), s(16), 0 )
+				else -- pistol
+					surface.SetMaterial( mat2 )
+					surface.DrawTexturedRectRotated( poosx - gap, poosy, s(24), s(24), 0 )
+					surface.DrawTexturedRectRotated( poosx + gap, poosy, s(24), s(24), 0 )
+
+					surface.SetMaterial( mat2 )
+					surface.DrawTexturedRectRotated( poosx, poosy - gap, s(24), s(24), 0 )
+					surface.DrawTexturedRectRotated( poosx, poosy + gap, s(24), s(24), 0 )
+				end
+			end
+		end
+	end
+
+	do -- Quickinv
+		local inv = p:INV_Get()
+		local gap = ss(1)
+		local size_textx = ss(96)
+		local size_texty = ss(12)
+		local size_num = ss(12)
+		local size_thi = ss(0.5)
+		
+		local nextwe = ss(96+2)
+		local nextwe_no = ss(12+2)
+		local item_start = ss(14)
+		local item_gap = ss(12+2)
+
+		local translat = {
+			["melee"]		= { 1, 1 },
+			["special"]		= { 1, 2 },
+			["pistol"]		= { 2, 1 },
+			["smg"]			= { 3, 1 },
+			["rifle"]		= { 3, 2 },
+			["shotgun"]		= { 3, 3 },
+		}
+
+		local inventorylist = {
+			[1] = {},
+			[2] = {},
+			[3] = {},
+			[4] = {},
+		}
+
+		for i, bucket in ipairs( inventorylist ) do
+			local temp = {}
+			for id, data in pairs( inv ) do
+				local idata = WEAPONS[data.Class]
+				local translated = translat[idata.Type]
+
+				if i == translated[1] then
+					table.insert( temp, { data, translated[2] } )
+				end
+			end
+			table.sort( temp, function(a, b) return b[2] > a[2] end )
+			for i, v in ipairs( temp ) do
+				table.insert( bucket, v[1] )
+			end
+		end
+
+		-- PrintTable( it )
+
+		local bump = 0
+		for i, bucket in ipairs( inventorylist ) do
+			surface.SetDrawColor( scheme["bg"] )
+			surface.DrawRect( bump + b, b, size_num, size_num )
+
+			if i==2 then
+				surface.SetDrawColor( scheme["fg"] )
+				surface.DrawRect( bump + b + gap, b + gap, size_num - (gap*2), size_num - (gap*2) )
+
+				surface.SetFont( "Benny_12" )
+				surface.SetTextColor( scheme["bg"] )
+				surface.SetTextPos( bump + b + ss(3), b + ss(1) )
+				surface.DrawText( i )
+			else
+				surface.SetFont( "Benny_12" )
+				surface.SetTextColor( scheme["fg"] )
+				surface.SetTextPos( bump + b + ss(3), b + ss(1) )
+				surface.DrawText( i )
+			end
+
+			if i!=2 then
+				for d, item in ipairs( bucket ) do
+					surface.SetDrawColor( scheme["bg"] )
+					surface.DrawRect( bump + b, (item_start+item_gap*(d-1)) + b, size_texty, size_texty )
+				end
+				bump = bump + (nextwe_no)
+			else
+				for d, item in ipairs( bucket ) do
+					local idata = WEAPONS[item.Class]
+					surface.SetDrawColor( scheme["bg"] )
+					surface.DrawRect( bump + b, (item_start+item_gap*(d-1)) + b, size_textx, size_texty )
+					if d==2 then
+						surface.SetDrawColor( scheme["fg"] )
+						surface.DrawRect( bump + b + gap, (item_start+item_gap*(d-1)) + b + gap, size_textx - (gap*2), size_texty - (gap*2) )
+
+						surface.SetFont( "Benny_12" )
+						surface.SetTextColor( scheme["bg"] )
+						surface.SetTextPos( bump + b + ss(3), (item_start+item_gap*(d-1)) + b + ss(1) )
+						surface.DrawText( idata.Name )
+					else
+						surface.SetFont( "Benny_12" )
+						surface.SetTextColor( scheme["fg"] )
+						surface.SetTextPos( bump + b + ss(3), (item_start+item_gap*(d-1)) + b + ss(1) )
+						surface.DrawText( idata.Name )
+					end
+				end
+				bump = bump + (nextwe)
 			end
 		end
 	end

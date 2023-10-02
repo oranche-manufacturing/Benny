@@ -97,9 +97,79 @@ AddSound( "Common.Dryfire.Rifle", "benny/weapons/common/06-12.ogg", 70, 100, 0.5
 AddSound( "Common.NoAmmo", "benny/weapons/noammo.ogg", 70, 100, 0.5, CHAN_STATIC )
 
 local wep = {}
+WEAPONS["toolgun"] = wep
+wep.Name = "TOOL GUN"
+wep.Description = "Developer development device"
+wep.Type = "special"
+
+wep.WModel = "models/weapons/w_toolgun.mdl"
+
+wep.Delay = (60/300)
+wep.Firemodes = FIREMODE_SEMI
+wep.Ammo = 0
+wep.Damage = 0
+
+function wep.Fire( self, slot )
+	if self:GetDelay1() > CurTime() then
+		return true
+	end
+	self:SetDelay1( CurTime() + 0.2 )
+
+	local p = self:GetOwner()
+
+	local tr = p:GetEyeTrace()
+	if SERVER then
+		local summon = ents.Create( "bnpc_human" )
+		-- summon:SetModel( "models/props_junk/cardboard_box001a.mdl" )
+		-- summon:Give( "weapon_stunstick")
+		summon:SetPos( tr.HitPos )
+		summon:Spawn()
+
+	end
+
+	if CLIENT and IsFirstTimePredicted() then
+		local vStart = self:GetAttachment( 1 ).Pos
+		local vPoint = tr.HitPos
+		local effectdata = EffectData()
+		effectdata:SetStart( vStart )
+		effectdata:SetOrigin( vPoint )
+		util.Effect( "ToolTracer", effectdata )
+	end
+
+	-- Return true to skip weapon logic
+	return true
+end
+
+function wep.Reload( self, slot )
+	if self:GetOwner():KeyPressed( IN_RELOAD ) then
+		print( self )
+	end
+
+	-- Return true to skip weapon logic
+	return true
+end
+
+local wep = {}
+WEAPONS["melee_bat"] = wep
+wep.Name = "BASEBALL BAT"
+wep.Description = "meow"
+wep.Type = "melee"
+
+wep.WModel = "models/weapons/w_crowbar.mdl"
+
+local wep = {}
+WEAPONS["melee_baton"] = wep
+wep.Name = "POLICE BATON"
+wep.Description = "meow"
+wep.Type = "melee"
+
+wep.WModel = "models/weapons/w_crowbar.mdl"
+
+local wep = {}
 WEAPONS["1911"] = wep
 wep.Name = "COBRA .45"
 wep.Description = "Hits hard. They don't make them like they used to!"
+wep.Type = "pistol"
 
 wep.WModel = "models/weapons/w_pist_usp.mdl"
 wep.Sound_Fire = "1911.Fire"
@@ -117,6 +187,7 @@ local wep = {}
 WEAPONS["usp"] = wep
 wep.Name = "USP .45"
 wep.Description = "If it works for hardasses around the world, it works for you."
+wep.Type = "pistol"
 
 wep.WModel = "models/weapons/w_pist_usp.mdl"
 wep.Sound_Fire = "USP.Fire"
@@ -134,6 +205,7 @@ local wep = {}
 WEAPONS["glock"] = wep
 wep.Name = "GLOCK-18"
 wep.Description = "Bullet storm. Lasts about a second or so, just like you!"
+wep.Type = "pistol"
 
 wep.WModel = "models/weapons/w_pist_glock18.mdl"
 wep.Sound_Fire = "Glock.Fire"
@@ -150,6 +222,7 @@ local wep = {}
 WEAPONS["nambu"] = wep
 wep.Name = "NAMBU .38"
 wep.Description = "Eastern revolver that hits as hard as it costs."
+wep.Type = "pistol"
 
 wep.WModel = "models/weapons/w_pist_glock18.mdl"
 wep.Sound_Fire = "Nambu.Fire"
@@ -166,6 +239,7 @@ local wep = {}
 WEAPONS["anaconda"] = wep
 wep.Name = "ANACONDA"
 wep.Description = "Precise and kicks like a mule."
+wep.Type = "pistol"
 
 wep.WModel = "models/weapons/w_pist_glock18.mdl"
 wep.Sound_Fire = "Anaconda.Fire"
@@ -182,6 +256,7 @@ local wep = {}
 WEAPONS["tmp"] = wep
 wep.Name = "TMP"
 wep.Description = "Precise and sharp, like a damn suit's pet."
+wep.Type = "smg"
 
 wep.WModel = "models/weapons/w_pist_glock18.mdl"
 wep.Sound_Fire = "TMP.Fire"
@@ -198,7 +273,8 @@ wep.Damage = 18
 local wep = {}
 WEAPONS["mp7"] = wep
 wep.Name = "MP7"
-wep.Description = "Small, pistol-sized, and simple."
+wep.Description = "Small, pistol-sized."
+wep.Type = "smg"
 
 wep.WModel = "models/weapons/w_pist_glock18.mdl"
 wep.Sound_Fire = "MP7.Fire"
@@ -209,13 +285,14 @@ wep.Sound_MagIn = "MP7.MagIn" -- placeholder
 
 wep.Delay = (60/700)
 wep.Firemodes = FIREMODE_AUTOSEMI
-wep.Ammo = 15
+wep.Ammo = 20
 wep.Damage = 16
 
 local wep = {}
 WEAPONS["mp5k"] = wep
 wep.Name = "MP5K"
 wep.Description = "Quality manufacturing, but cumbersome."
+wep.Type = "smg"
 
 wep.WModel = "models/weapons/w_pist_glock18.mdl"
 wep.Sound_Fire = "MP5K.Fire"
@@ -233,6 +310,7 @@ local wep = {}
 WEAPONS["mac11"] = wep
 wep.Name = "MAC-11"
 wep.Description = "More fit for combat in a phone booth."
+wep.Type = "smg"
 
 wep.WModel = "models/weapons/w_pist_glock18.mdl"
 wep.Sound_Fire = "MAC11.Fire"
@@ -250,6 +328,7 @@ local wep = {}
 WEAPONS["bizon"] = wep
 wep.Name = "BIZON"
 wep.Description = "Unwieldy bullet storm."
+wep.Type = "smg"
 
 wep.WModel = "models/weapons/w_pist_glock18.mdl"
 wep.Sound_Fire = "Bizon.Fire"
@@ -260,5 +339,25 @@ wep.Sound_MagIn = "Bizon.MagIn" -- placeholder
 
 wep.Delay = (60/600)
 wep.Firemodes = FIREMODE_AUTOSEMI
-wep.Ammo = 30
+wep.Ammo = 40
 wep.Damage = 16
+
+-- Shotguns
+
+local wep = {}
+WEAPONS["spas12"] = wep
+wep.Name = "SPAS-12"
+wep.Description = "meow"
+wep.Type = "shotgun"
+
+wep.WModel = "models/weapons/w_crowbar.mdl"
+
+-- Rifles
+
+local wep = {}
+WEAPONS["fnc"] = wep
+wep.Name = "FNC PARA"
+wep.Description = "meow"
+wep.Type = "rifle"
+
+wep.WModel = "models/weapons/w_crowbar.mdl"

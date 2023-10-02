@@ -6,7 +6,7 @@ local wa, wb = 0, 0
 local blop = Angle()
 
 hook.Add( "CreateMove", "CamFuck", function( cmd )
-	if BENNY_ACTIVECAMERA and LocalPlayer():GetMoveType() != MOVETYPE_NOCLIP then
+	if false and BENNY_ACTIVECAMERA and LocalPlayer():GetMoveType() != MOVETYPE_NOCLIP then
 		local x, y = cmd:GetForwardMove(), cmd:GetSideMove()
 
 		local lx=input.GetAnalogValue(ANALOG_JOY_X) // Left X Axis: left -, right +
