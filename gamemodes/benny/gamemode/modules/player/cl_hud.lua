@@ -174,7 +174,7 @@ local spacer_long = 2 -- screenscaled
 local gap = 24
 
 bucket_selected = 1
-item_selected = 2
+item_selected = 1
 
 hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 	local sw, sh = ScrW(), ScrH()
@@ -542,6 +542,14 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 						surface.DrawRect( bump + b + gap, (item_start+ybump) + b + gap, size_textx - (gap*2), (sel and size_texty_sel or size_texty) - (gap*2) )
 
 						surface.SetTextColor( scheme["bg"] )
+						-- PROTO: This is just useful information for me.
+						surface.SetFont( "Benny_8" )
+						local num = 0
+						for i, v in pairs( inv[item] ) do
+							surface.SetTextPos( bump + b + ss(3), (item_start+ybump) + b + ss(1+6+(4*num)) )
+							surface.DrawText( i .. " : " .. v )
+							num = num +1
+						end
 					else
 						surface.SetTextColor( scheme["fg"] )
 					end
@@ -630,26 +638,85 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 end )
 
 do
+	local function Equip()
+		local ply = LocalPlayer()
+		local buckets = ply:INV_Buckets()
+		if buckets[bucket_selected][item_selected] then
+			RunConsoleCommand( "benny_inv_equip", buckets[bucket_selected][item_selected] )
+		end
+	end
 	local qt = {
 		["invnext"] = function( ply )
-			bucket_selected = bucket_selected + 1
-			if bucket_selected > 4 then bucket_selected = 1 end
+			local buckets = ply:INV_Buckets()
+			item_selected = item_selected + 1
+			if item_selected > #buckets[bucket_selected] then
+				bucket_selected = bucket_selected + 1
+				item_selected = 1
+			end
+			if bucket_selected > #buckets then bucket_selected = 1 item_selected = 1 end
+			Equip()
 		end,
 		["invprev"] = function( ply )
-			bucket_selected = bucket_selected - 1
-			if bucket_selected < 1 then bucket_selected = 4 end
+			local buckets = ply:INV_Buckets()
+			item_selected = item_selected - 1
+			if item_selected < 1 then
+				bucket_selected = bucket_selected - 1
+				if bucket_selected < 1 then bucket_selected = #buckets end
+				item_selected = #buckets[bucket_selected]
+			end
+			Equip()
 		end,
 		["slot1"] = function( ply )
-			bucket_selected = 1
+			local buckets = ply:INV_Buckets()
+			if bucket_selected == 1 then
+				item_selected = item_selected + 1
+				if item_selected > #buckets[bucket_selected] then
+					item_selected = 1
+				end
+			else
+				bucket_selected = 1
+				item_selected = 1
+			end
+			Equip()
 		end,
 		["slot2"] = function( ply )
-			bucket_selected = 2
+			local buckets = ply:INV_Buckets()
+			if bucket_selected == 2 then
+				item_selected = item_selected + 1
+				if item_selected > #buckets[bucket_selected] then
+					item_selected = 1
+				end
+			else
+				bucket_selected = 2
+				item_selected = 1
+			end
+			Equip()
 		end,
 		["slot3"] = function( ply )
-			bucket_selected = 3
+			local buckets = ply:INV_Buckets()
+			if bucket_selected == 3 then
+				item_selected = item_selected + 1
+				if item_selected > #buckets[bucket_selected] then
+					item_selected = 1
+				end
+			else
+				bucket_selected = 3
+				item_selected = 1
+			end
+			Equip()
 		end,
 		["slot4"] = function( ply )
-			bucket_selected = 4
+			local buckets = ply:INV_Buckets()
+			if bucket_selected == 4 then
+				item_selected = item_selected + 1
+				if item_selected > #buckets[bucket_selected] then
+					item_selected = 1
+				end
+			else
+				bucket_selected = 4
+				item_selected = 1
+			end
+			Equip()
 		end,
 	}
 	hook.Add( "PlayerBindPress", "inv", function( ply, bind, pressed, code )
