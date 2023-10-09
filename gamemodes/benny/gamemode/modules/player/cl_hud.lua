@@ -534,9 +534,9 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 			else
 				for d, item in ipairs( bucket ) do
 					local idata = WEAPONS[inv[item].Class]
-					surface.SetDrawColor( scheme["bg"] )
-					surface.DrawRect( bump + b, (item_start+ybump) + b, size_textx, size_texty )
 					local sel = d==item_selected
+					surface.SetDrawColor( scheme["bg"] )
+					surface.DrawRect( bump + b, (item_start+ybump) + b, size_textx, (sel and size_texty_sel or size_texty) )
 					if sel then
 						surface.SetDrawColor( scheme["fg"] )
 						surface.DrawRect( bump + b + gap, (item_start+ybump) + b + gap, size_textx - (gap*2), (sel and size_texty_sel or size_texty) - (gap*2) )
