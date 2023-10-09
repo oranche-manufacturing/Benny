@@ -501,40 +501,7 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 		local item_gap = ss(12+2)
 		local item_gap_sel = ss(36+2)
 
-		local translat = {
-			["melee"]		= { 1, 1 },
-			["special"]		= { 1, 2 },
-			["pistol"]		= { 2, 1 },
-			["smg"]			= { 3, 1 },
-			["shotgun"]		= { 3, 2 },
-			["rifle"]		= { 4, 1 },
-			["machinegun"]		= { 4, 2 },
-		}
-
-		local inventorylist = {
-			[1] = {},
-			[2] = {},
-			[3] = {},
-			[4] = {},
-		}
-
-		for i, bucket in ipairs( inventorylist ) do
-			local temp = {}
-			for id, data in pairs( inv ) do
-				local idata = WEAPONS[data.Class]
-				local translated = translat[idata.Type]
-
-				if i == translated[1] then
-					table.insert( temp, { id, translated[2] } )
-				end
-			end
-			table.sort( temp, function(a, b) return b[2] > a[2] end )
-			for i, v in ipairs( temp ) do
-				table.insert( bucket, v[1] )
-			end
-		end
-
-		-- PrintTable( it )
+		local inventorylist = p:INV_Buckets()
 
 		local bump = 0
 		for i, bucket in ipairs( inventorylist ) do
