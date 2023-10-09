@@ -151,7 +151,7 @@ end
 
 local wep = {}
 WEAPONS["melee_bat"] = wep
-wep.Name = "BASEBALL BAT"
+wep.Name = "BAT"
 wep.Description = "meow"
 wep.Type = "melee"
 
@@ -159,7 +159,23 @@ wep.WModel = "models/weapons/w_crowbar.mdl"
 
 local wep = {}
 WEAPONS["melee_baton"] = wep
-wep.Name = "POLICE BATON"
+wep.Name = "BATON"
+wep.Description = "meow"
+wep.Type = "melee"
+
+wep.WModel = "models/weapons/w_crowbar.mdl"
+
+local wep = {}
+WEAPONS["melee_knife"] = wep
+wep.Name = "KNIFE"
+wep.Description = "meow"
+wep.Type = "melee"
+
+wep.WModel = "models/weapons/w_crowbar.mdl"
+
+local wep = {}
+WEAPONS["melee_machete"] = wep
+wep.Name = "MACHETE"
 wep.Description = "meow"
 wep.Type = "melee"
 
@@ -185,8 +201,8 @@ wep.Damage = 30
 
 local wep = {}
 WEAPONS["usp"] = wep
-wep.Name = "USP .45"
-wep.Description = "If it works for hardasses around the world, it works for you."
+wep.Name = "MK. 23"
+wep.Description = "If it works for hardasses around the world, it'll work for you."
 wep.Type = "pistol"
 
 wep.WModel = "models/weapons/w_pist_usp.mdl"
@@ -352,6 +368,11 @@ wep.Type = "shotgun"
 
 wep.WModel = "models/weapons/w_crowbar.mdl"
 
+wep.Delay = (60/600)
+wep.Firemodes = FIREMODE_AUTOSEMI
+wep.Ammo = 8
+wep.Damage = 2
+
 -- Rifles
 
 local wep = {}
@@ -361,3 +382,39 @@ wep.Description = "meow"
 wep.Type = "rifle"
 
 wep.WModel = "models/weapons/w_crowbar.mdl"
+
+wep.Delay = (60/600)
+wep.Firemodes = FIREMODE_AUTOSEMI
+wep.Ammo = 8
+wep.Damage = 2
+
+local wep = {}
+WEAPONS["m16a2"] = wep
+wep.Name = "M16A2"
+wep.Description = "meow"
+wep.Type = "rifle"
+
+wep.WModel = "models/weapons/w_crowbar.mdl"
+
+wep.Delay = (60/900)
+wep.Firemodes = {
+	{ Mode = 3 },
+	{ Mode = 1 },
+}
+wep.Ammo = 30
+wep.Damage = 2
+
+-- Machine guns
+
+local wep = {}
+WEAPONS["stoner63"] = wep
+wep.Name = "STONER 63"
+wep.Description = "meow"
+wep.Type = "machinegun"
+
+wep.WModel = "models/weapons/w_crowbar.mdl"
+
+wep.Delay = (60/700)
+wep.Firemodes = FIREMODE_AUTOSEMI
+wep.Ammo = 100
+wep.Damage = 2
