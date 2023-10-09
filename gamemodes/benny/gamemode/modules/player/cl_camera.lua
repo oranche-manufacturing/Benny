@@ -273,7 +273,7 @@ function bennyfp( origin, angles, fov )
 
 	pos:Set( ply:GetPos() )
 	pos.z = pos.z + 64
-	ang:Set( angles )
+	ang:Set( TPSOverride )
 
 	pos:Add( 16 * ang:Right() )
 	pos:Add( -32 * ang:Forward() )
