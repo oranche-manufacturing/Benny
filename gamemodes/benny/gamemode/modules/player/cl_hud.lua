@@ -17,8 +17,10 @@ hook.Add( "HUDShouldDraw", "HideHUD", function( name )
 	if ( hide[ name ] ) then return false end
 end )
 
+local HSCALE = CreateClientConVar( "benny_hud_scale", 1, true, false, "HUD scaling", 0, 4 )
+
 function ss( scale )
-	return math.Round( scale * ( ScrH() / 480 ) )
+	return math.Round( scale * ( ScrH() / 480 ) * HSCALE:GetFloat() )
 end
 
 local function genfonts()
@@ -62,6 +64,10 @@ local function genfonts()
 	end
 end
 genfonts()
+
+cvars.AddChangeCallback("benny_hud_scale", function(convar_name, value_old, value_new)
+	genfonts()
+end, "benny_hud_scale_callback")
 
 schemes = {
 	["benny"] = {
