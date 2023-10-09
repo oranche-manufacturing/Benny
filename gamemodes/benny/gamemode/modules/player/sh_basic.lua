@@ -61,7 +61,7 @@ concommand.Add("benny_inv_equip", function( ply, cmd, args )
 	local wep = ply:GetActiveWeapon()
 	local item = inv[args[1]]
 	-- PROTO: Check that this is the correct 'benny' weapon.
-	assert( item, "That item doesn't exist." )
+	assert( item, "That item doesn't exist. " .. tostring(item) )
 
 	wep:SetWep1( args[1] )
 	wep:SetWep1Clip( item.Loaded )
@@ -90,7 +90,7 @@ concommand.Add("benny_inv_discard", function( ply, cmd, args )
 	local wep = ply:GetActiveWeapon()
 	local item = inv[args[1]]
 	-- PROTO: Check that this is the correct 'benny' weapon.
-	assert( item, "That item doesn't exist." )
+	assert( item, "That item doesn't exist. " .. tostring(item) )
 
 	inv[args[1]] = nil
 	net.Start( "benny_discardinvitem" )
