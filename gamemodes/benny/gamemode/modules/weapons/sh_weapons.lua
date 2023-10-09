@@ -385,7 +385,7 @@ wep.WModel = "models/weapons/w_crowbar.mdl"
 
 wep.Delay = (60/600)
 wep.Firemodes = FIREMODE_AUTOSEMI
-wep.Ammo = 8
+wep.Ammo = 30
 wep.Damage = 2
 
 local wep = {}
