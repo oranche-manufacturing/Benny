@@ -71,6 +71,18 @@ AddSound( "Glock.Fire", {
 	"benny/weapons/glock/03.ogg",
 }, 140, 100, 0.5, CHAN_STATIC )
 
+AddSound( "M16A2.Fire", {
+	"benny/weapons/m16a2/01.ogg",
+	"benny/weapons/m16a2/02.ogg",
+	"benny/weapons/m16a2/03.ogg",
+}, 140, 100, 0.5, CHAN_STATIC )
+
+AddSound( "FNC.Fire", {
+	"benny/weapons/fnc/01.ogg",
+	"benny/weapons/fnc/02.ogg",
+	"benny/weapons/fnc/03.ogg",
+}, 140, 100, 0.5, CHAN_STATIC )
+
 AddSound( "MP5K.MagOut", "benny/weapons/mp5k/magout.ogg", 70, 100, 0.5, CHAN_STATIC )
 AddSound( "MP5K.MagIn", "benny/weapons/mp5k/magin.ogg", 70, 100, 0.5, CHAN_STATIC )
 AddSound( "MAC11.MagOut", "benny/weapons/mac11/magout.ogg", 70, 100, 0.5, CHAN_STATIC )
@@ -91,6 +103,10 @@ AddSound( "USP.MagOut", "benny/weapons/usp/magout.ogg", 70, 100, 0.5, CHAN_STATI
 AddSound( "USP.MagIn", "benny/weapons/usp/magin.ogg", 70, 100, 0.5, CHAN_STATIC )
 AddSound( "Glock.MagOut", "benny/weapons/glock/magout.ogg", 70, 100, 0.5, CHAN_STATIC )
 AddSound( "Glock.MagIn", "benny/weapons/glock/magin.ogg", 70, 100, 0.5, CHAN_STATIC )
+AddSound( "M16A2.MagOut", "benny/weapons/m16a2/magout.ogg", 70, 100, 0.5, CHAN_STATIC )
+AddSound( "M16A2.MagIn", "benny/weapons/m16a2/magin.ogg", 70, 100, 0.5, CHAN_STATIC )
+AddSound( "FNC.MagOut", "benny/weapons/fnc/magout.ogg", 70, 100, 0.5, CHAN_STATIC )
+AddSound( "FNC.MagIn", "benny/weapons/fnc/magin.ogg", 70, 100, 0.5, CHAN_STATIC )
 
 AddSound( "Common.Dryfire.Pistol", "benny/weapons/common/06-13.ogg", 70, 100, 0.5, CHAN_STATIC )
 AddSound( "Common.Dryfire.Rifle", "benny/weapons/common/06-12.ogg", 70, 100, 0.5, CHAN_STATIC )
@@ -157,6 +173,11 @@ wep.Type = "melee"
 
 wep.WModel = "models/weapons/w_crowbar.mdl"
 
+wep.Delay = (60/300)
+wep.Firemodes = FIREMODE_SEMI
+wep.Ammo = 0
+wep.Damage = 0
+
 local wep = {}
 WEAPONS["melee_baton"] = wep
 wep.Name = "BATON"
@@ -164,6 +185,11 @@ wep.Description = "meow"
 wep.Type = "melee"
 
 wep.WModel = "models/weapons/w_crowbar.mdl"
+
+wep.Delay = (60/300)
+wep.Firemodes = FIREMODE_SEMI
+wep.Ammo = 0
+wep.Damage = 0
 
 local wep = {}
 WEAPONS["melee_knife"] = wep
@@ -173,6 +199,11 @@ wep.Type = "melee"
 
 wep.WModel = "models/weapons/w_crowbar.mdl"
 
+wep.Delay = (60/300)
+wep.Firemodes = FIREMODE_SEMI
+wep.Ammo = 0
+wep.Damage = 0
+
 local wep = {}
 WEAPONS["melee_machete"] = wep
 wep.Name = "MACHETE"
@@ -180,6 +211,11 @@ wep.Description = "meow"
 wep.Type = "melee"
 
 wep.WModel = "models/weapons/w_crowbar.mdl"
+
+wep.Delay = (60/300)
+wep.Firemodes = FIREMODE_SEMI
+wep.Ammo = 0
+wep.Damage = 0
 
 local wep = {}
 WEAPONS["1911"] = wep
@@ -382,8 +418,12 @@ wep.Description = "meow"
 wep.Type = "rifle"
 
 wep.WModel = "models/weapons/w_crowbar.mdl"
+wep.Sound_Fire = "FNC.Fire"
+wep.Sound_MagOut = "FNC.MagOut" -- placeholder
+wep.Sound_MagIn = "FNC.MagIn" -- placeholder
 
-wep.Delay = (60/600)
+
+wep.Delay = (60/700)
 wep.Firemodes = FIREMODE_AUTOSEMI
 wep.Ammo = 30
 wep.Damage = 2
@@ -395,8 +435,11 @@ wep.Description = "meow"
 wep.Type = "rifle"
 
 wep.WModel = "models/weapons/w_crowbar.mdl"
+wep.Sound_Fire = "M16A2.Fire"
+wep.Sound_MagOut = "M16A2.MagOut" -- placeholder
+wep.Sound_MagIn = "M16A2.MagIn" -- placeholder
 
-wep.Delay = (60/900)
+wep.Delay = (60/1000)
 wep.Firemodes = {
 	{ Mode = 3 },
 	{ Mode = 1 },
