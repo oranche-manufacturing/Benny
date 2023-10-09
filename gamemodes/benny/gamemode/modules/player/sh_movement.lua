@@ -52,7 +52,7 @@ hook.Add( "CreateMove", "CamFuck", function( cmd )
 
 	end
 
-	if true then -- FPS cam
+	if true and LocalPlayer():GetMoveType() != MOVETYPE_NOCLIP then -- FPS cam
 		local p = LocalPlayer()
 
 		local opos, ang = p:EyePos(), TPSOverride
