@@ -173,6 +173,9 @@ local mat_long_s = Material("benny/hud/xhair/long_s.png", "mips smooth")
 local spacer_long = 2 -- screenscaled
 local gap = 24
 
+bucket_selected = 1
+item_selected = 2
+
 hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 	local sw, sh = ScrW(), ScrH()
 	local b = ss(20)
@@ -417,10 +420,12 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 	end
 
 	do -- Quickinv
+
 		local inv = p:INV_Get()
 		local gap = ss(1)
 		local size_textx = ss(96)
 		local size_texty = ss(12)
+		local size_texty_sel = ss(36)
 		local size_num = ss(12)
 		local size_thi = ss(0.5)
 		
@@ -428,14 +433,16 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 		local nextwe_no = ss(12+2)
 		local item_start = ss(14)
 		local item_gap = ss(12+2)
+		local item_gap_sel = ss(36+2)
 
 		local translat = {
 			["melee"]		= { 1, 1 },
 			["special"]		= { 1, 2 },
 			["pistol"]		= { 2, 1 },
 			["smg"]			= { 3, 1 },
-			["rifle"]		= { 3, 2 },
-			["shotgun"]		= { 3, 3 },
+			["shotgun"]		= { 3, 2 },
+			["rifle"]		= { 4, 1 },
+			["machinegun"]		= { 4, 2 },
 		}
 
 		local inventorylist = {
@@ -452,7 +459,7 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 				local translated = translat[idata.Type]
 
 				if i == translated[1] then
-					table.insert( temp, { data, translated[2] } )
+					table.insert( temp, { id, translated[2] } )
 				end
 			end
 			table.sort( temp, function(a, b) return b[2] > a[2] end )
@@ -468,7 +475,7 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 			surface.SetDrawColor( scheme["bg"] )
 			surface.DrawRect( bump + b, b, size_num, size_num )
 
-			if i==2 then
+			if i==bucket_selected then
 				surface.SetDrawColor( scheme["fg"] )
 				surface.DrawRect( bump + b + gap, b + gap, size_num - (gap*2), size_num - (gap*2) )
 
@@ -483,31 +490,36 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 				surface.DrawText( i )
 			end
 
-			if i!=2 then
+			local ybump = 0
+			if i!=bucket_selected then
 				for d, item in ipairs( bucket ) do
 					surface.SetDrawColor( scheme["bg"] )
-					surface.DrawRect( bump + b, (item_start+item_gap*(d-1)) + b, size_texty, size_texty )
+					surface.DrawRect( bump + b, (item_start+ybump) + b, size_texty, size_texty )
+					ybump = ybump + (item_gap)
 				end
 				bump = bump + (nextwe_no)
 			else
 				for d, item in ipairs( bucket ) do
-					local idata = WEAPONS[item.Class]
+					local idata = WEAPONS[inv[item].Class]
 					surface.SetDrawColor( scheme["bg"] )
-					surface.DrawRect( bump + b, (item_start+item_gap*(d-1)) + b, size_textx, size_texty )
-					if d==2 then
+					surface.DrawRect( bump + b, (item_start+ybump) + b, size_textx, size_texty )
+					local sel = d==item_selected
+					if sel then
 						surface.SetDrawColor( scheme["fg"] )
-						surface.DrawRect( bump + b + gap, (item_start+item_gap*(d-1)) + b + gap, size_textx - (gap*2), size_texty - (gap*2) )
+						surface.DrawRect( bump + b + gap, (item_start+ybump) + b + gap, size_textx - (gap*2), (sel and size_texty_sel or size_texty) - (gap*2) )
 
-						surface.SetFont( "Benny_12" )
 						surface.SetTextColor( scheme["bg"] )
-						surface.SetTextPos( bump + b + ss(3), (item_start+item_gap*(d-1)) + b + ss(1) )
-						surface.DrawText( idata.Name )
 					else
-						surface.SetFont( "Benny_12" )
 						surface.SetTextColor( scheme["fg"] )
-						surface.SetTextPos( bump + b + ss(3), (item_start+item_gap*(d-1)) + b + ss(1) )
-						surface.DrawText( idata.Name )
 					end
+					surface.SetFont( "Benny_12" )
+					surface.SetTextPos( bump + b + ss(3), (item_start+ybump) + b + ss(1) )
+					surface.DrawText( idata.Name )
+
+					surface.SetFont( "Benny_8" )
+					surface.SetTextPos( bump + b + size_textx - surface.GetTextSize(item) - ss(3), (item_start+ybump) + b + ss(1) )
+					surface.DrawText( item )
+					ybump = ybump + (d==item_selected and item_gap_sel or item_gap)
 				end
 				bump = bump + (nextwe)
 			end
@@ -583,3 +595,34 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 		end
 	end
 end )
+
+do
+	local qt = {
+		["invnext"] = function( ply )
+			bucket_selected = bucket_selected + 1
+			if bucket_selected > 4 then bucket_selected = 1 end
+		end,
+		["invprev"] = function( ply )
+			bucket_selected = bucket_selected - 1
+			if bucket_selected < 1 then bucket_selected = 4 end
+		end,
+		["slot1"] = function( ply )
+			bucket_selected = 1
+		end,
+		["slot2"] = function( ply )
+			bucket_selected = 2
+		end,
+		["slot3"] = function( ply )
+			bucket_selected = 3
+		end,
+		["slot4"] = function( ply )
+			bucket_selected = 4
+		end,
+	}
+	hook.Add( "PlayerBindPress", "inv", function( ply, bind, pressed, code )
+		if qt[bind] and pressed then
+			qt[bind]( ply )
+			return true
+		end
+	end)
+end
