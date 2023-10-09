@@ -322,10 +322,10 @@ hook.Add( "CalcView", "MyCalcView", function( ply, pos, ang, fov )
 		view.fov		= tonumber(st[7])
 	end
 
-	-- if globhit then
-	globhit:Set( view.origin )
-	globang:Set( view.angles )
-	-- end
+	if globhit then
+		globhit:Set( view.origin )
+		globang:Set( view.angles )
+	end
 
 	view.fov = Convert( view.fov, (ScrH()/ScrW())/(3/4) )
 	return view
