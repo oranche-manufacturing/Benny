@@ -445,6 +445,11 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 				pl_y = tr1f:ToScreen().y
 			end
 
+			pl_x = math.Round( pl_x )
+			pl_y = math.Round( pl_y )
+			ps_x = math.Round( ps_x )
+			ps_y = math.Round( ps_y )
+			
 			for i=1, 2 do
 				local cooler = i == 1 and touse2 or touse1
 				local poosx, poosy = i == 1 and ps_x or pl_x, i == 1 and ps_y or pl_y
