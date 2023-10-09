@@ -341,6 +341,67 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 
 				ind = ind + 1
 			end
+
+			-- local prog = {
+			-- 	{
+			-- 		Text = "SUPP. 09",
+			-- 		Bar = 0.7,
+			-- 		Icon = Material("benny/hud/atts/supp.png", ""),
+			-- 	},
+			-- 	{
+			-- 		Text = "LIGHT",
+			-- 		Bar = "ON",
+			-- 		Icon = Material("benny/hud/atts/light.png", ""),
+			-- 	},
+			-- 	{
+			-- 		Text = "ENERGY",
+			-- 		Bar = 0.2,
+			-- 		Icon = Material("benny/hud/atts/energy.png", ""),
+			-- 	},
+			-- }
+
+			-- Attachments?
+			if false then for i, v in ipairs( prog ) do
+				local ATTBOX = 24
+				local ATTLEN = 64
+				local bump = ss(2)
+				-- BG
+				surface.SetDrawColor( scheme["bg"] )
+				local x, y = sw - b - ss(w - ((ATTLEN+2)*(i-1))), sh - b - ss(BOXHEIGHT+ATTBOX+4)
+				surface.DrawRect( x, y, ss(ATTLEN), ss(ATTBOX) )
+	
+				-- Text bar
+				surface.SetDrawColor( scheme["fg"] )
+				surface.DrawRect( x+bump, y+bump, ss(ATTBOX-4), ss(ATTBOX-4) )
+
+				render.PushFilterMag( TEXFILTER.LINEAR )
+				render.PushFilterMin( TEXFILTER.LINEAR )
+					surface.SetMaterial( v.Icon )
+					surface.SetDrawColor( scheme["bg"] )
+					surface.DrawTexturedRect( x+bump, y+bump, ss(ATTBOX-4), ss(ATTBOX-4) )
+				render.PopFilterMag()
+				render.PopFilterMin()
+	
+				surface.SetFont( "Benny_8" )
+				surface.SetTextColor( scheme["fg"] )
+				surface.SetTextPos( x+bump + ss(ATTBOX-2), y+bump - ss(1) )
+				surface.DrawText( v.Text )
+
+				if isstring(v.Bar) then
+					surface.SetFont( "Benny_8" )
+					surface.SetTextColor( scheme["fg"] )
+					surface.SetTextPos( x+bump + ss(ATTBOX-2), y+bump - ss(1-7) )
+					surface.DrawText( v.Bar )
+				else
+					surface.DrawOutlinedRect( x+bump + ss(ATTBOX-2), y+bump - ss(1-7), ss(30), ss(6), ss(0.5) )
+					surface.DrawRect( x+bump + ss(ATTBOX-2), y+bump - ss(1-7), ss(30)*v.Bar, ss(6) )
+				end
+	
+				-- surface.SetFont( "Benny_12" )
+				-- surface.SetTextColor( scheme["fg"] )
+				-- surface.SetTextPos( x+bump + ss(ATTBOX-1), y+bump - ss(1) )
+				-- surface.DrawText( "10" )
+			end end
 		end
 		
 
