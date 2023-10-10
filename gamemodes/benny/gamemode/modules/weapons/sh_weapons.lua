@@ -223,6 +223,7 @@ wep.Name = "COBRA .45"
 wep.Description = "Hits hard. They don't make them like they used to!"
 wep.Type = "pistol"
 
+wep.Icon = Material( "benny/weapons/mk23.png", "smooth" )
 wep.WModel = "models/weapons/w_pist_usp.mdl"
 wep.Sound_Fire = "1911.Fire"
 wep.Sound_DryFire = "Common.Dryfire.Pistol"
@@ -241,6 +242,7 @@ wep.Name = "MK. 23"
 wep.Description = "If it works for hardasses around the world, it'll work for you."
 wep.Type = "pistol"
 
+wep.Icon = Material( "benny/weapons/mk23.png", "smooth" )
 wep.WModel = "models/weapons/w_pist_usp.mdl"
 wep.Sound_Fire = "USP.Fire"
 wep.Sound_DryFire = "Common.Dryfire.Pistol"
@@ -259,6 +261,7 @@ wep.Name = "GLOCK-18"
 wep.Description = "Bullet storm. Lasts about a second or so, just like you!"
 wep.Type = "pistol"
 
+wep.Icon = Material( "benny/weapons/mk23.png", "smooth" )
 wep.WModel = "models/weapons/w_pist_glock18.mdl"
 wep.Sound_Fire = "Glock.Fire"
 wep.Sound_DryFire = "Common.Dryfire.Pistol"
@@ -276,6 +279,7 @@ wep.Name = "NAMBU .38"
 wep.Description = "Eastern revolver that hits as hard as it costs."
 wep.Type = "pistol"
 
+wep.Icon = Material( "benny/weapons/mk23.png", "smooth" )
 wep.WModel = "models/weapons/w_pist_glock18.mdl"
 wep.Sound_Fire = "Nambu.Fire"
 wep.Sound_DryFire = "Common.Dryfire.Pistol"
@@ -293,6 +297,7 @@ wep.Name = "ANACONDA"
 wep.Description = "Precise and kicks like a mule."
 wep.Type = "pistol"
 
+wep.Icon = Material( "benny/weapons/mk23.png", "smooth" )
 wep.WModel = "models/weapons/w_pist_glock18.mdl"
 wep.Sound_Fire = "Anaconda.Fire"
 wep.Sound_DryFire = "Common.Dryfire.Pistol"
@@ -417,6 +422,7 @@ wep.Name = "FNC PARA"
 wep.Description = "meow"
 wep.Type = "rifle"
 
+wep.Icon = Material( "benny/weapons/fnc.png", "smooth" )
 wep.WModel = "models/weapons/w_crowbar.mdl"
 wep.Sound_Fire = "FNC.Fire"
 wep.Sound_MagOut = "FNC.MagOut" -- placeholder
@@ -434,6 +440,7 @@ wep.Name = "M16A2"
 wep.Description = "meow"
 wep.Type = "rifle"
 
+wep.Icon = Material( "benny/weapons/m16a2.png", "smooth" )
 wep.WModel = "models/weapons/w_crowbar.mdl"
 wep.Sound_Fire = "M16A2.Fire"
 wep.Sound_MagOut = "M16A2.MagOut" -- placeholder

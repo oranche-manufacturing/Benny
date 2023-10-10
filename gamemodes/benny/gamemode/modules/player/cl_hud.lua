@@ -229,12 +229,20 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 		local wep2c = wep:BClass( true )
 
 		local w, h = 150, 100
-		local BOXHEIGHT = 44
+		local BOXHEIGHT = 84--44
 
 		if wep1 then
 			-- BG
 			surface.SetDrawColor( scheme["bg"] )
 			surface.DrawRect( sw - b - ss(w), sh - b - ss(BOXHEIGHT), ss(w), ss(BOXHEIGHT) )
+			
+			if wep1c.Icon then
+				local gunsize = 128
+				surface.SetDrawColor( scheme["fg"] )
+				surface.SetMaterial( wep1c.Icon )
+				-- surface.DrawTexturedRectRotated( sw - b - ss(w/2), sh - b - ss(BOXHEIGHT/2), ss(32), ss(32), 0 )
+				surface.DrawTexturedRectUV( sw - b - ss(w/2 + gunsize/2), sh - b - ss(BOXHEIGHT/2 - 8 + gunsize/2/2), ss(gunsize), ss(gunsize/2), 1, 0, 0, 1 )
+			end
 
 			-- Text bar
 			surface.SetFont( "Benny_18" )
