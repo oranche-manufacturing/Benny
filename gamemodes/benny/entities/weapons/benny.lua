@@ -27,6 +27,8 @@ function SWEP:SetupDataTables()
 	self:NetworkVar( "String", 1, "Wep2" )
 	self:NetworkVar( "Int", 0, "Wep1Clip" )
 	self:NetworkVar( "Int", 1, "Wep2Clip" )
+	self:NetworkVar( "Int", 2, "Wep1Burst" )
+	self:NetworkVar( "Int", 3, "Wep2Burst" )
 end
 
 function SWEP:PrimaryAttack()
@@ -37,6 +39,9 @@ function SWEP:PrimaryAttack()
 		if self:BClass( false ).Fire( self, false ) then return end
 	end
 	if self:GetDelay1() > CurTime() then
+		return
+	end
+	if self:GetWep1Burst() >= self:B_Firemode( false ).Mode then
 		return
 	end
 	if self:Clip1() == 0 then
@@ -77,6 +82,7 @@ function SWEP:PrimaryAttack()
 	end
 
 	self:SetDelay1( CurTime() + self:BClass( false ).Delay )
+	self:SetWep1Burst( self:GetWep1Burst() + 1 )
 	return true
 end
 
@@ -125,14 +131,13 @@ function SWEP:SecondaryAttack()
 end
 
 function SWEP:Reload()
-	if self:BTable( false ) then
+	if self:BTable( false ) and self:GetOwner():KeyPressed( IN_RELOAD ) then
 		if self:BClass().Reload then
 			if self:BClass( false ).Reload( self, false ) then return end
 		end
 		if self:GetDelay1() > CurTime() then
 			return false
 		end
-		self:SetDelay1( CurTime() + 0.2 )
 
 		if self:GetWep1Clip() != 0 then
 			B_Sound( self, self:BClass().Sound_MagOut )
@@ -158,6 +163,10 @@ function SWEP:Think()
 	local p = self:GetOwner()
 
 	self:SetAim( math.Approach( self:GetAim(), p:KeyDown(IN_ATTACK2) and 1 or 0, FrameTime()/0.05 ) )
+
+	if !p:KeyDown( IN_ATTACK ) then
+		self:SetWep1Burst( 0 )
+	end
 
 	local ht = "normal"
 	if self:GetAim() > 0 then
