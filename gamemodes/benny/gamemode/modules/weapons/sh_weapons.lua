@@ -112,359 +112,378 @@ AddSound( "Common.Dryfire.Pistol", "benny/weapons/common/06-13.ogg", 70, 100, 0.
 AddSound( "Common.Dryfire.Rifle", "benny/weapons/common/06-12.ogg", 70, 100, 0.5, CHAN_STATIC )
 AddSound( "Common.NoAmmo", "benny/weapons/noammo.ogg", 70, 100, 0.5, CHAN_STATIC )
 
-local wep = {}
-WEAPONS["toolgun"] = wep
-wep.Name = "TOOL GUN"
-wep.Description = "Developer development device"
-wep.Type = "special"
+WEAPONS["toolgun"] = {
+	Name = "TOOL GUN",
+	Description = "Developer development device",
+	Type = "special",
 
-wep.WModel = "models/weapons/w_toolgun.mdl"
+	WModel = "models/weapons/w_toolgun.mdl",
 
-wep.Delay = (60/300)
-wep.Firemodes = FIREMODE_SEMI
-wep.Ammo = 0
-wep.Damage = 0
+	Delay = (60/300),
+	Firemodes = FIREMODE_SEMI,
+	Ammo = 0,
+	Damage = 0,
 
-function wep.Fire( self, slot )
-	if self:GetDelay1() > CurTime() then
+	Fire = function( self, slot )
+		if self:GetDelay1() > CurTime() then
+			return true
+		end
+		self:SetDelay1( CurTime() + 0.2 )
+	
+		local p = self:GetOwner()
+	
+		local tr = p:GetEyeTrace()
+		if SERVER then
+			local summon = ents.Create( "bnpc_human" )
+			-- summon:SetModel( "models/props_junk/cardboard_box001a.mdl" )
+			-- summon:Give( "weapon_stunstick")
+			summon:SetPos( tr.HitPos )
+			summon:Spawn()
+	
+		end
+	
+		if CLIENT and IsFirstTimePredicted() then
+			local vStart = self:GetAttachment( 1 ).Pos
+			local vPoint = tr.HitPos
+			local effectdata = EffectData()
+			effectdata:SetStart( vStart )
+			effectdata:SetOrigin( vPoint )
+			util.Effect( "ToolTracer", effectdata )
+		end
+	
+		-- Return true to skip weapon logic
 		return true
-	end
-	self:SetDelay1( CurTime() + 0.2 )
+	end,
+	
+	Reload = function( self, slot )
+		if self:GetOwner():KeyPressed( IN_RELOAD ) then
+			print( self )
+		end
+	
+		-- Return true to skip weapon logic
+		return true
+	end,
+}
 
-	local p = self:GetOwner()
+WEAPONS["melee_bat"] = {
+	Name = "BAT",
+	Description = "meow",
+	Type = "melee",
 
-	local tr = p:GetEyeTrace()
-	if SERVER then
-		local summon = ents.Create( "bnpc_human" )
-		-- summon:SetModel( "models/props_junk/cardboard_box001a.mdl" )
-		-- summon:Give( "weapon_stunstick")
-		summon:SetPos( tr.HitPos )
-		summon:Spawn()
+	WModel = "models/weapons/w_crowbar.mdl",
 
-	end
+	Delay = (60/300),
+	Firemodes = FIREMODE_SEMI,
+	Ammo = 0,
+	Damage = 0,
+}
 
-	if CLIENT and IsFirstTimePredicted() then
-		local vStart = self:GetAttachment( 1 ).Pos
-		local vPoint = tr.HitPos
-		local effectdata = EffectData()
-		effectdata:SetStart( vStart )
-		effectdata:SetOrigin( vPoint )
-		util.Effect( "ToolTracer", effectdata )
-	end
+WEAPONS["melee_baton"] = {
+	Name = "BATON",
+	Description = "meow",
+	Type = "melee",
 
-	-- Return true to skip weapon logic
-	return true
-end
+	WModel = "models/weapons/w_eq_tonfa.mdl",
 
-function wep.Reload( self, slot )
-	if self:GetOwner():KeyPressed( IN_RELOAD ) then
-		print( self )
-	end
+	Delay = (60/300),
+	Firemodes = FIREMODE_SEMI,
+	Ammo = 0,
+	Damage = 0,
+}
 
-	-- Return true to skip weapon logic
-	return true
-end
+WEAPONS["melee_knife"] = {
+	Name = "KNIFE",
+	Description = "meow",
+	Type = "melee",
 
-local wep = {}
-WEAPONS["melee_bat"] = wep
-wep.Name = "BAT"
-wep.Description = "meow"
-wep.Type = "melee"
+	WModel = "models/weapons/w_knife_ct.mdl",
 
-wep.WModel = "models/weapons/w_crowbar.mdl"
+	Delay = (60/300),
+	Firemodes = FIREMODE_SEMI,
+	Ammo = 0,
+	Damage = 0,
+}
 
-wep.Delay = (60/300)
-wep.Firemodes = FIREMODE_SEMI
-wep.Ammo = 0
-wep.Damage = 0
+WEAPONS["melee_machete"] = {
+	Name = "MACHETE",
+	Description = "meow",
+	Type = "melee",
 
-local wep = {}
-WEAPONS["melee_baton"] = wep
-wep.Name = "BATON"
-wep.Description = "meow"
-wep.Type = "melee"
+	WModel = "models/weapons/w_crowbar.mdl",
 
-wep.WModel = "models/weapons/w_crowbar.mdl"
+	Delay = (60/300),
+	Firemodes = FIREMODE_SEMI,
+	Ammo = 0,
+	Damage = 0,
+}
 
-wep.Delay = (60/300)
-wep.Firemodes = FIREMODE_SEMI
-wep.Ammo = 0
-wep.Damage = 0
+WEAPONS["1911"] = {
+	Name = "COBRA .45",
+	Description = "Hits hard. They don't make them like they used to!",
+	Type = "pistol",
 
-local wep = {}
-WEAPONS["melee_knife"] = wep
-wep.Name = "KNIFE"
-wep.Description = "meow"
-wep.Type = "melee"
+	Icon = Material( "benny/weapons/mk23.png", "smooth" ),
+	WModel = "models/weapons/w_colt.mdl",
+	Sound_Fire = "1911.Fire",
+	Sound_DryFire = "Common.Dryfire.Pistol",
+	Sound_Reload = "1911.Reload",
+	Sound_MagOut = "1911.MagOut",
+	Sound_MagIn = "1911.MagIn",
 
-wep.WModel = "models/weapons/w_crowbar.mdl"
+	Delay = (60/300),
+	Firemodes = FIREMODE_SEMI,
+	Ammo = 8,
+	Damage = 30,
+}
 
-wep.Delay = (60/300)
-wep.Firemodes = FIREMODE_SEMI
-wep.Ammo = 0
-wep.Damage = 0
+WEAPONS["usp"] = {
+	Name = "MK. 23",
+	Description = "If it works for hardasses around the world, it'll work for you.",
+	Type = "pistol",
 
-local wep = {}
-WEAPONS["melee_machete"] = wep
-wep.Name = "MACHETE"
-wep.Description = "meow"
-wep.Type = "melee"
+	Icon = Material( "benny/weapons/mk23.png", "smooth" ),
+	WModel = "models/weapons/w_pist_usp.mdl",
+	Sound_Fire = "USP.Fire",
+	Sound_DryFire = "Common.Dryfire.Pistol",
+	Sound_Reload = "USP.Reload",
+	Sound_MagOut = "USP.MagOut",
+	Sound_MagIn = "USP.MagIn",
 
-wep.WModel = "models/weapons/w_crowbar.mdl"
+	Delay = (60/300),
+	Firemodes = FIREMODE_SEMI,
+	Ammo = 12,
+	Damage = 30,
+}
 
-wep.Delay = (60/300)
-wep.Firemodes = FIREMODE_SEMI
-wep.Ammo = 0
-wep.Damage = 0
+WEAPONS["glock"] = {
+	Name = "GLOCK-18",
+	Description = "Bullet storm. Lasts about a second or so, just like you!",
+	Type = "pistol",
 
-local wep = {}
-WEAPONS["1911"] = wep
-wep.Name = "COBRA .45"
-wep.Description = "Hits hard. They don't make them like they used to!"
-wep.Type = "pistol"
+	Icon = Material( "benny/weapons/mk23.png", "smooth" ),
+	WModel = "models/weapons/w_pist_glock18.mdl",
+	Sound_Fire = "Glock.Fire",
+	Sound_DryFire = "Common.Dryfire.Pistol",
+	Sound_MagOut = "Glock.MagOut",
+	Sound_MagIn = "Glock.MagIn",
 
-wep.Icon = Material( "benny/weapons/mk23.png", "smooth" )
-wep.WModel = "models/weapons/w_pist_usp.mdl"
-wep.Sound_Fire = "1911.Fire"
-wep.Sound_DryFire = "Common.Dryfire.Pistol"
-wep.Sound_Reload = "1911.Reload" -- placeholder
-wep.Sound_MagOut = "1911.MagOut" -- placeholder
-wep.Sound_MagIn = "1911.MagIn" -- placeholder
+	Delay = (60/800),
+	Firemodes = FIREMODE_AUTOSEMI,
+	Ammo = 17,
+	Damage = 18,
+}
 
-wep.Delay = (60/300)
-wep.Firemodes = FIREMODE_SEMI
-wep.Ammo = 8
-wep.Damage = 30
+WEAPONS["nambu"] = {
+	Name = "NAMBU .38",
+	Description = "Eastern revolver that hits as hard as it costs.",
+	Type = "pistol",
 
-local wep = {}
-WEAPONS["usp"] = wep
-wep.Name = "MK. 23"
-wep.Description = "If it works for hardasses around the world, it'll work for you."
-wep.Type = "pistol"
+	Icon = Material( "benny/weapons/mk23.png", "smooth" ),
+	WModel = "models/weapons/w_pist_derringer.mdl",
+	Sound_Fire = "Nambu.Fire",
+	Sound_DryFire = "Common.Dryfire.Pistol",
+	Sound_MagOut = "Nambu.MagOut",
+	Sound_MagIn = "Nambu.MagIn",
 
-wep.Icon = Material( "benny/weapons/mk23.png", "smooth" )
-wep.WModel = "models/weapons/w_pist_usp.mdl"
-wep.Sound_Fire = "USP.Fire"
-wep.Sound_DryFire = "Common.Dryfire.Pistol"
-wep.Sound_Reload = "USP.Reload" -- placeholder
-wep.Sound_MagOut = "USP.MagOut" -- placeholder
-wep.Sound_MagIn = "USP.MagIn" -- placeholder
+	Delay = (60/180),
+	Firemodes = FIREMODE_SEMI,
+	Ammo = 6,
+	Damage = 26,
+}
 
-wep.Delay = (60/300)
-wep.Firemodes = FIREMODE_SEMI
-wep.Ammo = 12
-wep.Damage = 30
+WEAPONS["anaconda"] = {
+	Name = "ANACONDA",
+	Description = "Precise and kicks like a mule.",
+	Type = "pistol",
 
-local wep = {}
-WEAPONS["glock"] = wep
-wep.Name = "GLOCK-18"
-wep.Description = "Bullet storm. Lasts about a second or so, just like you!"
-wep.Type = "pistol"
+	Icon = Material( "benny/weapons/mk23.png", "smooth" ),
+	WModel = "models/weapons/w_357.mdl",
+	Sound_Fire = "Anaconda.Fire",
+	Sound_DryFire = "Common.Dryfire.Pistol",
+	Sound_MagOut = "Anaconda.MagOut",
+	Sound_MagIn = "Anaconda.MagIn",
 
-wep.Icon = Material( "benny/weapons/mk23.png", "smooth" )
-wep.WModel = "models/weapons/w_pist_glock18.mdl"
-wep.Sound_Fire = "Glock.Fire"
-wep.Sound_DryFire = "Common.Dryfire.Pistol"
-wep.Sound_MagOut = "Glock.MagOut" -- placeholder
-wep.Sound_MagIn = "Glock.MagIn" -- placeholder
+	Delay = (60/180),
+	Firemodes = FIREMODE_SEMI,
+	Ammo = 6,
+	Damage = 40,
+}
 
-wep.Delay = (60/800)
-wep.Firemodes = FIREMODE_AUTOSEMI
-wep.Ammo = 17
-wep.Damage = 18
+WEAPONS["tmp"] = {
+	Name = "TMP",
+	Description = "Small, compact, and fast.",
+	Type = "smg",
 
-local wep = {}
-WEAPONS["nambu"] = wep
-wep.Name = "NAMBU .38"
-wep.Description = "Eastern revolver that hits as hard as it costs."
-wep.Type = "pistol"
+	WModel = "models/weapons/w_smg_tmp_us.mdl",
+	HoldType = "rpg",
 
-wep.Icon = Material( "benny/weapons/mk23.png", "smooth" )
-wep.WModel = "models/weapons/w_pist_glock18.mdl"
-wep.Sound_Fire = "Nambu.Fire"
-wep.Sound_DryFire = "Common.Dryfire.Pistol"
-wep.Sound_MagOut = "Nambu.MagOut" -- placeholder
-wep.Sound_MagIn = "Nambu.MagIn" -- placeholder
+	Sound_Fire = "TMP.Fire",
+	Sound_DryFire = "Common.Dryfire.Rifle",
+	Sound_Reload = "TMP.Reload",
+	Sound_MagOut = "TMP.MagOut",
+	Sound_MagIn = "TMP.MagIn",
 
-wep.Delay = (60/180)
-wep.Firemodes = FIREMODE_SEMI
-wep.Ammo = 6
-wep.Damage = 26
+	Delay = (60/700),
+	Firemodes = FIREMODE_AUTOSEMI,
+	Ammo = 15,
+	Damage = 18,
+}
 
-local wep = {}
-WEAPONS["anaconda"] = wep
-wep.Name = "ANACONDA"
-wep.Description = "Precise and kicks like a mule."
-wep.Type = "pistol"
+WEAPONS["mp7"] = {
+	Name = "MP7",
+	Description = "Small, pistol-sized.",
+	Type = "smg",
 
-wep.Icon = Material( "benny/weapons/mk23.png", "smooth" )
-wep.WModel = "models/weapons/w_pist_glock18.mdl"
-wep.Sound_Fire = "Anaconda.Fire"
-wep.Sound_DryFire = "Common.Dryfire.Pistol"
-wep.Sound_MagOut = "Anaconda.MagOut" -- placeholder
-wep.Sound_MagIn = "Anaconda.MagIn" -- placeholder
+	WModel = "models/weapons/w_smg1.mdl",
+	HoldType = "rpg",
 
-wep.Delay = (60/180)
-wep.Firemodes = FIREMODE_SEMI
-wep.Ammo = 6
-wep.Damage = 40
+	Sound_Fire = "MP7.Fire",
+	Sound_DryFire = "Common.Dryfire.Rifle",
+	Sound_Reload = "MP7.Reload",
+	Sound_MagOut = "MP7.MagOut",
+	Sound_MagIn = "MP7.MagIn",
 
-local wep = {}
-WEAPONS["tmp"] = wep
-wep.Name = "TMP"
-wep.Description = "Precise and sharp, like a damn suit's pet."
-wep.Type = "smg"
+	Delay = (60/700),
+	Firemodes = FIREMODE_AUTOSEMI,
+	Ammo = 20,
+	Damage = 16,
+}
 
-wep.WModel = "models/weapons/w_pist_glock18.mdl"
-wep.Sound_Fire = "TMP.Fire"
-wep.Sound_DryFire = "Common.Dryfire.Rifle"
-wep.Sound_Reload = "TMP.Reload" -- placeholder
-wep.Sound_MagOut = "TMP.MagOut" -- placeholder
-wep.Sound_MagIn = "TMP.MagIn" -- placeholder
+WEAPONS["mp5k"] = {
+	Name = "MP5K",
+	Description = "Quality manufacturing, but cumbersome.",
+	Type = "smg",
 
-wep.Delay = (60/700)
-wep.Firemodes = FIREMODE_AUTOSEMI
-wep.Ammo = 15
-wep.Damage = 18
+	WModel = "models/weapons/w_smg_mp5k.mdl",
+	HoldType = "rpg",
 
-local wep = {}
-WEAPONS["mp7"] = wep
-wep.Name = "MP7"
-wep.Description = "Small, pistol-sized."
-wep.Type = "smg"
+	Sound_Fire = "MP5K.Fire",
+	Sound_DryFire = "Common.Dryfire.Rifle",
+	Sound_Reload = "MP5K.Reload",
+	Sound_MagOut = "MP5K.MagOut",
+	Sound_MagIn = "MP5K.MagIn",
 
-wep.WModel = "models/weapons/w_pist_glock18.mdl"
-wep.Sound_Fire = "MP7.Fire"
-wep.Sound_DryFire = "Common.Dryfire.Rifle"
-wep.Sound_Reload = "MP7.Reload" -- placeholder
-wep.Sound_MagOut = "MP7.MagOut" -- placeholder
-wep.Sound_MagIn = "MP7.MagIn" -- placeholder
+	Delay = (60/700),
+	Firemodes = FIREMODE_AUTOSEMI,
+	Ammo = 15,
+	Damage = 18,
+}
 
-wep.Delay = (60/700)
-wep.Firemodes = FIREMODE_AUTOSEMI
-wep.Ammo = 20
-wep.Damage = 16
+WEAPONS["mac11"] = {
+	Name = "MAC-11",
+	Description = "More fit for combat in a phone booth.",
+	Type = "smg",
 
-local wep = {}
-WEAPONS["mp5k"] = wep
-wep.Name = "MP5K"
-wep.Description = "Quality manufacturing, but cumbersome."
-wep.Type = "smg"
+	WModel = "models/weapons/w_smg_mac10.mdl",
+	HoldType = "revolver",
 
-wep.WModel = "models/weapons/w_pist_glock18.mdl"
-wep.Sound_Fire = "MP5K.Fire"
-wep.Sound_DryFire = "Common.Dryfire.Rifle"
-wep.Sound_Reload = "MP5K.Reload" -- placeholder
-wep.Sound_MagOut = "MP5K.MagOut" -- placeholder
-wep.Sound_MagIn = "MP5K.MagIn" -- placeholder
+	Sound_Fire = "MAC11.Fire",
+	Sound_DryFire = "Common.Dryfire.Rifle",
+	Sound_Reload = "MAC11.Reload",
+	Sound_MagOut = "MAC11.MagOut",
+	Sound_MagIn = "MAC11.MagIn",
 
-wep.Delay = (60/700)
-wep.Firemodes = FIREMODE_AUTOSEMI
-wep.Ammo = 15
-wep.Damage = 18
+	Delay = (60/800),
+	Firemodes = FIREMODE_AUTOSEMI,
+	Ammo = 16,
+	Damage = 16,
+}
 
-local wep = {}
-WEAPONS["mac11"] = wep
-wep.Name = "MAC-11"
-wep.Description = "More fit for combat in a phone booth."
-wep.Type = "smg"
+WEAPONS["bizon"] = {
+	Name = "BIZON",
+	Description = "Unwieldy bullet storm.",
+	Type = "smg",
 
-wep.WModel = "models/weapons/w_pist_glock18.mdl"
-wep.Sound_Fire = "MAC11.Fire"
-wep.Sound_DryFire = "Common.Dryfire.Rifle"
-wep.Sound_Reload = "MAC11.Reload" -- placeholder
-wep.Sound_MagOut = "MAC11.MagOut" -- placeholder
-wep.Sound_MagIn = "MAC11.MagIn" -- placeholder
+	WModel = "models/weapons/w_smg_bizon.mdl",
+	HoldType = "rpg",
 
-wep.Delay = (60/800)
-wep.Firemodes = FIREMODE_AUTOSEMI
-wep.Ammo = 16
-wep.Damage = 16
+	Sound_Fire = "Bizon.Fire",
+	Sound_DryFire = "Common.Dryfire.Rifle",
+	Sound_Reload = "Bizon.Reload",
+	Sound_MagOut = "Bizon.MagOut",
+	Sound_MagIn = "Bizon.MagIn",
 
-local wep = {}
-WEAPONS["bizon"] = wep
-wep.Name = "BIZON"
-wep.Description = "Unwieldy bullet storm."
-wep.Type = "smg"
-
-wep.WModel = "models/weapons/w_pist_glock18.mdl"
-wep.Sound_Fire = "Bizon.Fire"
-wep.Sound_DryFire = "Common.Dryfire.Rifle"
-wep.Sound_Reload = "Bizon.Reload" -- placeholder
-wep.Sound_MagOut = "Bizon.MagOut" -- placeholder
-wep.Sound_MagIn = "Bizon.MagIn" -- placeholder
-
-wep.Delay = (60/600)
-wep.Firemodes = FIREMODE_AUTOSEMI
-wep.Ammo = 40
-wep.Damage = 16
+	Delay = (60/600),
+	Firemodes = FIREMODE_AUTOSEMI,
+	Ammo = 40,
+	Damage = 16,
+}
 
 -- Shotguns
 
-local wep = {}
-WEAPONS["spas12"] = wep
-wep.Name = "SPAS-12"
-wep.Description = "meow"
-wep.Type = "shotgun"
+WEAPONS["spas12"] = {
+	Name = "SPAS-12",
+	Description = "meow",
+	Type = "shotgun",
 
-wep.WModel = "models/weapons/w_crowbar.mdl"
+	WModel = "models/weapons/w_shotgun.mdl",
+	HoldType = "rpg",
 
-wep.Delay = (60/600)
-wep.Firemodes = FIREMODE_AUTOSEMI
-wep.Ammo = 8
-wep.Damage = 2
+	Delay = (60/600),
+	Firemodes = FIREMODE_SEMI,
+	Ammo = 8,
+	Damage = 2,
+}
 
 -- Rifles
 
-local wep = {}
-WEAPONS["fnc"] = wep
-wep.Name = "FNC PARA"
-wep.Description = "meow"
-wep.Type = "rifle"
+WEAPONS["fnc"] = {
+	Name = "FNC PARA",
+	Description = "meow",
+	Type = "rifle",
 
-wep.Icon = Material( "benny/weapons/fnc.png", "smooth" )
-wep.WModel = "models/weapons/w_crowbar.mdl"
-wep.Sound_Fire = "FNC.Fire"
-wep.Sound_MagOut = "FNC.MagOut" -- placeholder
-wep.Sound_MagIn = "FNC.MagIn" -- placeholder
+	Icon = Material( "benny/weapons/fnc.png", "smooth" ),
+	WModel = "models/weapons/w_rif_ar556.mdl",
+	HoldType = "rpg",
 
+	Sound_Fire = "FNC.Fire",
+	Sound_MagOut = "FNC.MagOut",
+	Sound_MagIn = "FNC.MagIn",
 
-wep.Delay = (60/700)
-wep.Firemodes = FIREMODE_AUTOSEMI
-wep.Ammo = 30
-wep.Damage = 2
-
-local wep = {}
-WEAPONS["m16a2"] = wep
-wep.Name = "M16A2"
-wep.Description = "meow"
-wep.Type = "rifle"
-
-wep.Icon = Material( "benny/weapons/m16a2.png", "smooth" )
-wep.WModel = "models/weapons/w_crowbar.mdl"
-wep.Sound_Fire = "M16A2.Fire"
-wep.Sound_MagOut = "M16A2.MagOut" -- placeholder
-wep.Sound_MagIn = "M16A2.MagIn" -- placeholder
-
-wep.Delay = (60/1000)
-wep.Firemodes = {
-	{ Mode = 3 },
-	{ Mode = 1 },
+	Delay = (60/700),
+	Firemodes = FIREMODE_AUTOSEMI,
+	Ammo = 30,
+	Damage = 2,
 }
-wep.Ammo = 30
-wep.Damage = 2
+
+WEAPONS["m16a2"] = {
+	Name = "M16A2",
+	Description = "meow",
+	Type = "rifle",
+
+	Icon = Material( "benny/weapons/m16a2.png", "smooth" ),
+	WModel = "models/weapons/w_rif_m16a2.mdl",
+	HoldType = "rpg",
+
+	Sound_Fire = "M16A2.Fire",
+	Sound_MagOut = "M16A2.MagOut",
+	Sound_MagIn = "M16A2.MagIn",
+
+	Delay = (60/1000),
+	Firemodes = {
+		{ Mode = 3 },
+		{ Mode = 1 },
+	},
+	Ammo = 30,
+	Damage = 2,
+}
 
 -- Machine guns
 
-local wep = {}
-WEAPONS["stoner63"] = wep
-wep.Name = "STONER 63"
-wep.Description = "meow"
-wep.Type = "machinegun"
+WEAPONS["stoner63"] = {
+	Name = "STONER 63",
+	Description = "meow",
+	Type = "machinegun",
+	
+	WModel = "models/weapons/w_mach_hk21e.mdl",
+	HoldType = "rpg",
 
-wep.WModel = "models/weapons/w_crowbar.mdl"
-
-wep.Delay = (60/700)
-wep.Firemodes = FIREMODE_AUTOSEMI
-wep.Ammo = 100
-wep.Damage = 2
+	Sound_Fire = "FNC.Fire",
+	Sound_MagOut = "M16A2.MagOut",
+	Sound_MagIn = "M16A2.MagIn",
+	
+	Delay = (60/700),
+	Firemodes = FIREMODE_AUTOSEMI,
+	Ammo = 100,
+	Damage = 2,
+}
