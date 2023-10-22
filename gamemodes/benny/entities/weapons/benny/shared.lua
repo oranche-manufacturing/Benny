@@ -19,6 +19,9 @@ SWEP.Secondary.DefaultClip				= 0
 SWEP.Secondary.Automatic				= true
 SWEP.Secondary.Ammo						= "none"
 
+AddCSLuaFile( "sh_statregen.lua" )
+include		( "sh_statregen.lua" )
+
 function SWEP:SetupDataTables()
 	self:NetworkVar( "Float", 0, "Aim" )
 	self:NetworkVar( "Float", 1, "Delay1" )

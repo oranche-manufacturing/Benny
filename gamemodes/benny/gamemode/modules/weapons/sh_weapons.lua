@@ -134,10 +134,10 @@ WEAPONS["toolgun"] = {
 	
 		local tr = p:GetEyeTrace()
 		if SERVER then
-			local summon = ents.Create( "bnpc_human" )
+			local summon = ents.Create( "bitem_ammo" )
 			-- summon:SetModel( "models/props_junk/cardboard_box001a.mdl" )
 			-- summon:Give( "weapon_stunstick")
-			summon:SetPos( tr.HitPos )
+			summon:SetPos( tr.HitPos + tr.HitNormal )
 			summon:Spawn()
 	
 		end
