@@ -21,8 +21,8 @@ function ENT:RunBehaviour()
 		if pos then
 			self:StartActivity( ACT_WALK )
 			self:MoveToPos( pos )
-			self:StartActivity( ACT_IDLE )
 		end
+		self:StartActivity( ACT_IDLE )
 
 		coroutine.wait(1)
 
