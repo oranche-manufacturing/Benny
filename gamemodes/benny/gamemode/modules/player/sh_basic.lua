@@ -161,12 +161,17 @@ if CLIENT then
 
 		local itemlist = smenu:Add("DScrollPanel")
 		itemlist:Dock( FILL )
+
+		local List = vgui.Create( "DIconLayout", itemlist )
+		List:Dock( FILL )
+		List:SetSpaceX( 5 )
+		List:SetSpaceY( 5 )
 		
 		for ClassName, Class in SortedPairsByMemberValue( WEAPONS, "Name" ) do
 			local button = vgui.Create( "DButton" )
-			itemlist:AddItem( button )
-			button:SetSize( 1, ss(30) )
-			button:Dock( TOP )
+			List:Add( button )
+			button:SetSize( ss(96), ss(22) )
+			--button:Dock( TOP )
 			button:DockMargin( 0, 0, 0, ss(4) )
 
 			button.Text_Name = Class.Name
@@ -190,9 +195,9 @@ if CLIENT then
 				surface.SetTextPos( ss(4), ss(4) )
 				surface.DrawText( self.Text_Name )
 
-				surface.SetFont( "Benny_12" )
-				surface.SetTextPos( ss(4), ss(4 + 12) )
-				surface.DrawText( self.Text_Desc )
+				-- surface.SetFont( "Benny_10" )
+				-- surface.SetTextPos( ss(4), ss(4 + 12) )
+				-- surface.DrawText( self.Text_Desc )
 				return true
 			end
 		end
