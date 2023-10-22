@@ -17,10 +17,10 @@ hook.Add( "HUDShouldDraw", "HideHUD", function( name )
 	if ( hide[ name ] ) then return false end
 end )
 
-local HSCALE = CreateClientConVar( "benny_hud_scale", 1, true, false, "HUD scaling", 0, 4 )
+local HSCALE = CreateClientConVar( "benny_hud_scale", 2, true, false, "HUD scaling", 0, 4 )
 
 function ss( scale )
-	return math.Round( scale * ( ScrH() / 480 ) * HSCALE:GetFloat() )
+	return scale*HSCALE:GetInt()--math.Round( scale * ( ScrH() / 480 ) * HSCALE:GetFloat() )
 end
 
 local function genfonts()
@@ -173,8 +173,8 @@ local mat_long_s = Material("benny/hud/xhair/long_s.png", "mips smooth")
 local spacer_long = 2 -- screenscaled
 local gap = 24
 
-bucket_selected = 1
-item_selected = 1
+bucket_selected = bucket_selected or 1
+item_selected = item_selected or 1
 
 hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 	local sw, sh = ScrW(), ScrH()
@@ -228,7 +228,7 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 		local wep2 = wep:BTable( true )
 		local wep2c = wep:BClass( true )
 
-		local w, h = 150, 100
+		local w, h = 156, 100
 		local BOXHEIGHT = 84--44
 
 		if wep1 then
@@ -277,9 +277,9 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 			local size = ss(8)
 			if count>90 then
 				size = ss(2)
-				by = by - ss(8)
+				by = by - ss(9-3)
 			elseif count>60 then
-				size = ss(2)
+				size = ss(3)
 				by = by - ss(7)
 			elseif count>30 then
 				size = ss(3)
@@ -293,7 +293,7 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 				end
 				if i%30 == 0 then
 					if count>90 then
-						by = by + ss(2.5)
+						by = by + ss(3)
 					elseif count>60 then
 						by = by + ss(3)
 					else
@@ -657,20 +657,31 @@ do
 		["invnext"] = function( ply )
 			local buckets = ply:INV_Buckets()
 			item_selected = item_selected + 1
-			if item_selected > #buckets[bucket_selected] then
-				bucket_selected = bucket_selected + 1
-				item_selected = 1
+			for i=1, #buckets do
+				if item_selected > #buckets[bucket_selected] then
+					bucket_selected = bucket_selected + 1
+					item_selected = 1
+				end
+				if bucket_selected > #buckets then bucket_selected = 1 item_selected = 1 end
+				if buckets[bucket_selected][item_selected] then
+					Equip()
+					break
+				end
 			end
-			if bucket_selected > #buckets then bucket_selected = 1 item_selected = 1 end
-			Equip()
 		end,
 		["invprev"] = function( ply )
 			local buckets = ply:INV_Buckets()
 			item_selected = item_selected - 1
-			if item_selected < 1 then
-				bucket_selected = bucket_selected - 1
-				if bucket_selected < 1 then bucket_selected = #buckets end
-				item_selected = #buckets[bucket_selected]
+			for i=1, #buckets do
+				if item_selected < 1 then
+					bucket_selected = bucket_selected - 1
+					if bucket_selected < 1 then bucket_selected = #buckets end
+					item_selected = #buckets[bucket_selected]
+					if buckets[bucket_selected][item_selected] then
+						Equip()
+						break
+					end
+				end
 			end
 			Equip()
 		end,
