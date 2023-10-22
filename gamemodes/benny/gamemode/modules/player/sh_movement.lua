@@ -4,7 +4,8 @@
 local wa, wb = 0, 0
 
 local blop = Angle()
-TPSOverride = Angle()
+local lastmoveangle = 0
+TPSOverride = TPSOverride or Angle()
 hook.Add( "CreateMove", "CamFuck", function( cmd )
 	if false and BENNY_ACTIVECAMERA and LocalPlayer():GetMoveType() != MOVETYPE_NOCLIP then
 		local x, y = cmd:GetForwardMove(), cmd:GetSideMove()
@@ -54,36 +55,43 @@ hook.Add( "CreateMove", "CamFuck", function( cmd )
 
 	if true and LocalPlayer():GetMoveType() != MOVETYPE_NOCLIP then -- FPS cam
 		local p = LocalPlayer()
+		local w = p:GetActiveWeapon()
+		if !IsValid(w) then w = false end
+		local aimed = w and w:GetUserAim()
 
-		local opos, ang = p:EyePos(), TPSOverride
+		local opos, ang = p:CamSpot( TPSOverride )
 
 		ang:Add( Angle( cmd:GetMouseY()*0.022, -cmd:GetMouseX()*0.022, 0 ) )
 		ang:Normalize()
 
-		-- PROTO: These and the values in CalcView should use a common function
-		-- to get their position, and to allow easy shoulder switching or overhead.
-		opos:Add( 16 * ang:Right() )
-		opos:Add( -32 * ang:Forward() )
-		opos:Add( 0 * ang:Up() )
-		opos:Add( 16 * ang:Up() * (ang.p/90) )
 
-		local tr = util.TraceLine( {
-			start = opos,
-			endpos = opos+(ang:Forward()*(2^16)),
-			filter = p,
-			mask = MASK_SOLID,
-		} )
+		if aimed then
+			local tr = util.TraceLine( {
+				start = opos,
+				endpos = opos+(ang:Forward()*(2^16)),
+				filter = p,
+				mask = MASK_SOLID,
+			} )
 
-		local planner = (tr.HitPos-p:EyePos()):Angle()
-		planner:Normalize()
+			local planner = (tr.HitPos-p:EyePos()):Angle()
+			planner:Normalize()
+			cmd:SetViewAngles( planner )
+			lastmoveangle = planner.y
+		end
 
 		local moveintent = Vector( cmd:GetForwardMove(), cmd:GetSideMove(), 0 )
+
+		if !aimed then
+			if !moveintent:IsEqualTol( vector_origin, 1 ) then
+				lastmoveangle = ang.y - moveintent:Angle().y
+			end
+			cmd:SetViewAngles( Angle( ang.p, lastmoveangle, 0 ))
+		end
 
 		local fixang = Angle()
 		fixang.y = cmd:GetViewAngles().y - ang.y
 		moveintent:Rotate( fixang )
 
-		cmd:SetViewAngles( planner )
 
 		cmd:ClearMovement()
 		cmd:SetForwardMove( moveintent.x )

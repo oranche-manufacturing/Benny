@@ -269,17 +269,7 @@ function bennyfp( origin, angles, fov )
 	local ply = LocalPlayer()
 	if !IsValid( ply:GetActiveWeapon() ) then return origin, angles, fov end
 
-	local pos, ang = Vector(), Angle()
-
-	pos:Set( ply:GetPos() )
-	pos.z = pos.z + 64
-	ang:Set( TPSOverride )
-
-	pos:Add( 16 * ang:Right() )
-	pos:Add( -32 * ang:Forward() )
-	pos:Add( 0 * ang:Up() )
-
-	pos:Add( 16 * ang:Up() * (ang.p/90) )
+	local pos, ang = ply:CamSpot( TPSOverride )
 
 	return pos, ang, 90
 end
