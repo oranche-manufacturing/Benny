@@ -23,6 +23,7 @@ PLAYER.AvoidPlayers			= true
 PLAYER.UseVMHands			= true
 
 function PLAYER:SetupDataTables()
+	self.Player:NetworkVar( "Bool", 0, "Shoulder" )
 end
 
 player_manager.RegisterClass( "player_benny", PLAYER, "player_default" )
