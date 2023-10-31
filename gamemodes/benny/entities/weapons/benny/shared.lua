@@ -21,6 +21,8 @@ SWEP.Secondary.Ammo						= "none"
 
 AddCSLuaFile( "sh_statregen.lua" )
 include		( "sh_statregen.lua" )
+AddCSLuaFile( "sh_firing.lua" )
+include		( "sh_firing.lua" )
 
 function SWEP:SetupDataTables()
 	self:NetworkVar( "Float", 0, "Aim" )
@@ -54,36 +56,11 @@ function SWEP:PrimaryAttack()
 		return
 	end
 	
-	self:B_Ammo( false, self:Clip1() - 1 )
+	-- self:B_Ammo( false, self:Clip1() - 1 )
 
 	B_Sound( self, self:BClass( false ).Sound_Fire )
-	if CLIENT and IsFirstTimePredicted() then
-		local tr = self:GetOwner():GetEyeTrace()
-		do
-			local vStart = self.CWM:GetAttachment( 1 ).Pos
-			local vPoint = tr.HitPos
-			local effectdata = EffectData()
-			effectdata:SetStart( vStart )
-			effectdata:SetOrigin( vPoint )
-			effectdata:SetEntity( self )
-			effectdata:SetScale( 5000 )
-			effectdata:SetFlags( 1 )
-			util.Effect( "Tracer", effectdata )
-		end
-
-		-- util.DecalEx( Material( util.DecalMaterial( "Impact.Concrete" ) ), tr.Entity, tr.HitPos, tr.HitNormal, color_white, 1, 1 )
-
-		do
-			local effectdata = EffectData()
-			effectdata:SetOrigin( tr.HitPos )
-			effectdata:SetStart( tr.StartPos )
-			effectdata:SetSurfaceProp( tr.SurfaceProps )
-			effectdata:SetEntity( tr.Entity )
-			effectdata:SetDamageType( DMG_BULLET )
-			util.Effect( "Impact", effectdata )
-		end
-		
-	end
+	self:TPFire()
+	self:CallFire()
 
 	self:SetDelay1( CurTime() + self:BClass( false ).Delay )
 	self:SetWep1Burst( self:GetWep1Burst() + 1 )
@@ -159,6 +136,7 @@ function SWEP:Reload()
 			end
 			B_Sound( self, self:BClass().Sound_MagIn )
 		end
+		self:TPReload()
 	end
 	return true
 end
@@ -182,10 +160,16 @@ function SWEP:Think()
 	end
 
 	local ht = "normal"
-	if self:GetAim() > 0 then
+	if self:GetUserAim() then
 		if self:BClass( false ) then
 			ht = self:BClass( false ).HoldType or "revolver"
 		end
+	end
+
+	if ht == "normal" and self:GetHoldType() != "normal" then
+		self:TPHolster()
+	elseif ht != "normal" and self:GetHoldType() == "normal" then
+		self:TPDraw()
 	end
 
 	self:SetWeaponHoldType(ht)
@@ -200,6 +184,39 @@ end
 
 function SWEP:Holster()
 	return true
+end
+
+SWEP.GestureFire			= { ACT_HL2MP_GESTURE_RANGE_ATTACK_SHOTGUN, 0.85 }
+SWEP.GestureReload			= { ACT_FLINCH_STOMACH, 0.3 }
+SWEP.GestureDraw			= { ACT_GMOD_GESTURE_MELEE_SHOVE_1HAND, 0.75 }
+SWEP.GestureHolster			= { ACT_GMOD_GESTURE_MELEE_SHOVE_1HAND, 0.65 }
+function SWEP:TPFire()
+	local target = self:BClass( false ).GestureFire
+	if !target then
+		target = self.GestureFire
+	end
+	self:GetOwner():AddVCDSequenceToGestureSlot( GESTURE_SLOT_GRENADE, self:GetOwner():SelectWeightedSequence(target[1]), target[2], true )
+end
+function SWEP:TPReload()
+	local target = self:BClass( false ).GestureReload
+	if !target then
+		target = self.GestureReload
+	end
+	self:GetOwner():AddVCDSequenceToGestureSlot( GESTURE_SLOT_GRENADE, self:GetOwner():SelectWeightedSequence(target[1]), target[2], true )
+end
+function SWEP:TPDraw()
+	local target = self:BClass( false ).GestureDraw
+	if !target then
+		target = self.GestureDraw
+	end
+	self:GetOwner():AddVCDSequenceToGestureSlot( GESTURE_SLOT_GRENADE, self:GetOwner():SelectWeightedSequence(target[1]), target[2], true )
+end
+function SWEP:TPHolster()
+	local target = self:BClass( false ) and self:BClass( false ).GestureHolster
+	if !target then
+		target = self.GestureHolster
+	end
+	self:GetOwner():AddVCDSequenceToGestureSlot( GESTURE_SLOT_GRENADE, self:GetOwner():SelectWeightedSequence(target[1]), target[2], true )
 end
 
 if CLIENT then
@@ -241,7 +258,7 @@ if CLIENT then
 				-- wm:SetupBones()
 			-- end
 
-			wm:DrawModel()
+			if self:GetUserAim() then wm:DrawModel() end
 		end
 	end
 end

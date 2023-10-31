@@ -83,6 +83,14 @@ AddSound( "FNC.Fire", {
 	"benny/weapons/fnc/03.ogg",
 }, 140, 100, 0.5, CHAN_STATIC )
 
+AddSound( "AA12.Fire", "benny/weapons/aa12/01.ogg", 140, 100, 0.5, CHAN_STATIC )
+
+AddSound( "SPAS12.Fire", {
+	"benny/weapons/spas12/01.ogg",
+	"benny/weapons/spas12/02.ogg",
+	"benny/weapons/spas12/03.ogg",
+}, 140, 100, 0.5, CHAN_STATIC )
+
 AddSound( "MP5K.MagOut", "benny/weapons/mp5k/magout.ogg", 70, 100, 0.5, CHAN_STATIC )
 AddSound( "MP5K.MagIn", "benny/weapons/mp5k/magin.ogg", 70, 100, 0.5, CHAN_STATIC )
 AddSound( "MAC11.MagOut", "benny/weapons/mac11/magout.ogg", 70, 100, 0.5, CHAN_STATIC )
@@ -107,6 +115,14 @@ AddSound( "M16A2.MagOut", "benny/weapons/m16a2/magout.ogg", 70, 100, 0.5, CHAN_S
 AddSound( "M16A2.MagIn", "benny/weapons/m16a2/magin.ogg", 70, 100, 0.5, CHAN_STATIC )
 AddSound( "FNC.MagOut", "benny/weapons/fnc/magout.ogg", 70, 100, 0.5, CHAN_STATIC )
 AddSound( "FNC.MagIn", "benny/weapons/fnc/magin.ogg", 70, 100, 0.5, CHAN_STATIC )
+AddSound( "AA12.MagOut", "benny/weapons/aa12/magout.ogg", 70, 100, 0.5, CHAN_STATIC )
+AddSound( "AA12.MagIn", "benny/weapons/aa12/magin.ogg", 70, 100, 0.5, CHAN_STATIC )
+AddSound( "SPAS12.MagOut", {
+	"benny/weapons/spas12/magout-01.ogg",
+	"benny/weapons/spas12/magout-02.ogg",
+	"benny/weapons/spas12/magout-03.ogg",
+}, 70, 100, 0.5, CHAN_STATIC )
+AddSound( "SPAS12.MagIn", "benny/weapons/spas12/magin.ogg", 70, 100, 0.5, CHAN_STATIC )
 
 AddSound( "Common.Dryfire.Pistol", "benny/weapons/common/06-13.ogg", 70, 100, 0.5, CHAN_STATIC )
 AddSound( "Common.Dryfire.Rifle", "benny/weapons/common/06-12.ogg", 70, 100, 0.5, CHAN_STATIC )
@@ -118,6 +134,8 @@ WEAPONS["toolgun"] = {
 	Type = "special",
 
 	WModel = "models/weapons/w_toolgun.mdl",
+	HoldType = "revolver",
+	GestureDraw = { ACT_HL2MP_GESTURE_RELOAD_REVOLVER, 0.8 },
 
 	Delay = (60/300),
 	Firemodes = FIREMODE_SEMI,
@@ -165,12 +183,15 @@ WEAPONS["toolgun"] = {
 	end,
 }
 
+-- Melee
+
 WEAPONS["melee_bat"] = {
 	Name = "BAT",
 	Description = "meow",
 	Type = "melee",
 
 	WModel = "models/weapons/w_crowbar.mdl",
+	HoldType = "melee2",
 
 	Delay = (60/300),
 	Firemodes = FIREMODE_SEMI,
@@ -184,6 +205,7 @@ WEAPONS["melee_baton"] = {
 	Type = "melee",
 
 	WModel = "models/weapons/w_eq_tonfa.mdl",
+	HoldType = "knife",
 
 	Delay = (60/300),
 	Firemodes = FIREMODE_SEMI,
@@ -197,6 +219,7 @@ WEAPONS["melee_knife"] = {
 	Type = "melee",
 
 	WModel = "models/weapons/w_knife_ct.mdl",
+	HoldType = "knife",
 
 	Delay = (60/300),
 	Firemodes = FIREMODE_SEMI,
@@ -209,13 +232,16 @@ WEAPONS["melee_machete"] = {
 	Description = "meow",
 	Type = "melee",
 
-	WModel = "models/weapons/w_crowbar.mdl",
+	WModel = "models/props_canal/mattpipe.mdl",
+	HoldType = "melee2",
 
 	Delay = (60/300),
 	Firemodes = FIREMODE_SEMI,
 	Ammo = 0,
 	Damage = 0,
 }
+
+-- Handguns
 
 WEAPONS["1911"] = {
 	Name = "COBRA .45",
@@ -224,6 +250,10 @@ WEAPONS["1911"] = {
 
 	Icon = Material( "benny/weapons/mk23.png", "smooth" ),
 	WModel = "models/weapons/w_colt.mdl",
+	HoldType = "revolver",
+	GestureFire = { ACT_HL2MP_GESTURE_RANGE_ATTACK_PISTOL, 0.2 },
+	GestureDraw = { ACT_HL2MP_GESTURE_RELOAD_REVOLVER, 0.8 },
+
 	Sound_Fire = "1911.Fire",
 	Sound_DryFire = "Common.Dryfire.Pistol",
 	Sound_Reload = "1911.Reload",
@@ -243,6 +273,10 @@ WEAPONS["usp"] = {
 
 	Icon = Material( "benny/weapons/mk23.png", "smooth" ),
 	WModel = "models/weapons/w_pist_usp.mdl",
+	HoldType = "revolver",
+	GestureFire = { ACT_HL2MP_GESTURE_RANGE_ATTACK_PISTOL, 0.2 },
+	GestureDraw = { ACT_HL2MP_GESTURE_RELOAD_REVOLVER, 0.8 },
+
 	Sound_Fire = "USP.Fire",
 	Sound_DryFire = "Common.Dryfire.Pistol",
 	Sound_Reload = "USP.Reload",
@@ -262,6 +296,10 @@ WEAPONS["glock"] = {
 
 	Icon = Material( "benny/weapons/mk23.png", "smooth" ),
 	WModel = "models/weapons/w_pist_glock18.mdl",
+	HoldType = "revolver",
+	GestureFire = { ACT_HL2MP_GESTURE_RANGE_ATTACK_PISTOL, 0.25 },
+	GestureDraw = { ACT_HL2MP_GESTURE_RELOAD_REVOLVER, 0.8 },
+
 	Sound_Fire = "Glock.Fire",
 	Sound_DryFire = "Common.Dryfire.Pistol",
 	Sound_MagOut = "Glock.MagOut",
@@ -280,6 +318,10 @@ WEAPONS["nambu"] = {
 
 	Icon = Material( "benny/weapons/mk23.png", "smooth" ),
 	WModel = "models/weapons/w_pist_derringer.mdl",
+	HoldType = "revolver",
+	GestureFire = { ACT_HL2MP_GESTURE_RANGE_ATTACK_REVOLVER, 0.3 },
+	GestureDraw = { ACT_HL2MP_GESTURE_RELOAD_REVOLVER, 0.8 },
+
 	Sound_Fire = "Nambu.Fire",
 	Sound_DryFire = "Common.Dryfire.Pistol",
 	Sound_MagOut = "Nambu.MagOut",
@@ -298,6 +340,10 @@ WEAPONS["anaconda"] = {
 
 	Icon = Material( "benny/weapons/mk23.png", "smooth" ),
 	WModel = "models/weapons/w_357.mdl",
+	HoldType = "revolver",
+	GestureFire = { ACT_HL2MP_GESTURE_RANGE_ATTACK_REVOLVER, 0.1 },
+	GestureDraw = { ACT_HL2MP_GESTURE_RELOAD_REVOLVER, 0.8 },
+
 	Sound_Fire = "Anaconda.Fire",
 	Sound_DryFire = "Common.Dryfire.Pistol",
 	Sound_MagOut = "Anaconda.MagOut",
@@ -309,6 +355,8 @@ WEAPONS["anaconda"] = {
 	Damage = 40,
 }
 
+-- SMGs & PDWs
+
 WEAPONS["tmp"] = {
 	Name = "TMP",
 	Description = "Small, compact, and fast.",
@@ -316,6 +364,7 @@ WEAPONS["tmp"] = {
 
 	WModel = "models/weapons/w_smg_tmp_us.mdl",
 	HoldType = "rpg",
+	GestureFire = { ACT_HL2MP_GESTURE_RANGE_ATTACK_PISTOL, 0.3 },
 
 	Sound_Fire = "TMP.Fire",
 	Sound_DryFire = "Common.Dryfire.Rifle",
@@ -327,6 +376,7 @@ WEAPONS["tmp"] = {
 	Firemodes = FIREMODE_AUTOSEMI,
 	Ammo = 15,
 	Damage = 18,
+	Spread = 20/60,
 }
 
 WEAPONS["mp7"] = {
@@ -336,6 +386,7 @@ WEAPONS["mp7"] = {
 
 	WModel = "models/weapons/w_smg1.mdl",
 	HoldType = "rpg",
+	GestureFire = { ACT_HL2MP_GESTURE_RANGE_ATTACK_PISTOL, 0.3 },
 
 	Sound_Fire = "MP7.Fire",
 	Sound_DryFire = "Common.Dryfire.Rifle",
@@ -347,6 +398,7 @@ WEAPONS["mp7"] = {
 	Firemodes = FIREMODE_AUTOSEMI,
 	Ammo = 20,
 	Damage = 16,
+	Spread = 20/60,
 }
 
 WEAPONS["mp5k"] = {
@@ -356,6 +408,7 @@ WEAPONS["mp5k"] = {
 
 	WModel = "models/weapons/w_smg_mp5k.mdl",
 	HoldType = "rpg",
+	GestureFire = { ACT_HL2MP_GESTURE_RANGE_ATTACK_PISTOL, 0.3 },
 
 	Sound_Fire = "MP5K.Fire",
 	Sound_DryFire = "Common.Dryfire.Rifle",
@@ -367,6 +420,7 @@ WEAPONS["mp5k"] = {
 	Firemodes = FIREMODE_AUTOSEMI,
 	Ammo = 15,
 	Damage = 18,
+	Spread = 20/60,
 }
 
 WEAPONS["mac11"] = {
@@ -376,6 +430,7 @@ WEAPONS["mac11"] = {
 
 	WModel = "models/weapons/w_smg_mac10.mdl",
 	HoldType = "revolver",
+	GestureFire = { ACT_HL2MP_GESTURE_RANGE_ATTACK_PISTOL, 0.1 },
 
 	Sound_Fire = "MAC11.Fire",
 	Sound_DryFire = "Common.Dryfire.Rifle",
@@ -387,6 +442,7 @@ WEAPONS["mac11"] = {
 	Firemodes = FIREMODE_AUTOSEMI,
 	Ammo = 16,
 	Damage = 16,
+	Spread = 30/60,
 }
 
 WEAPONS["bizon"] = {
@@ -396,6 +452,7 @@ WEAPONS["bizon"] = {
 
 	WModel = "models/weapons/w_smg_bizon.mdl",
 	HoldType = "rpg",
+	GestureFire = { ACT_HL2MP_GESTURE_RANGE_ATTACK_REVOLVER, 0.34 },
 
 	Sound_Fire = "Bizon.Fire",
 	Sound_DryFire = "Common.Dryfire.Rifle",
@@ -407,6 +464,7 @@ WEAPONS["bizon"] = {
 	Firemodes = FIREMODE_AUTOSEMI,
 	Ammo = 40,
 	Damage = 16,
+	Spread = 40/60,
 }
 
 -- Shotguns
@@ -418,11 +476,41 @@ WEAPONS["spas12"] = {
 
 	WModel = "models/weapons/w_shotgun.mdl",
 	HoldType = "rpg",
+	GestureFire = { ACT_HL2MP_GESTURE_RANGE_ATTACK_CROSSBOW, 0.5 },
 
-	Delay = (60/600),
+	Sound_Fire = "SPAS12.Fire",
+	Sound_DryFire = "Common.Dryfire.Rifle",
+	Sound_MagOut = "SPAS12.MagOut",
+	Sound_MagIn = "SPAS12.MagIn",
+
+	Delay = (60/120),
 	Firemodes = FIREMODE_SEMI,
 	Ammo = 8,
-	Damage = 2,
+	Damage = 10,
+	Pellets = 8,
+	Spread = 150/60,
+}
+
+WEAPONS["aa12"] = {
+	Name = "AA-12",
+	Description = "meow",
+	Type = "shotgun",
+
+	WModel = "models/weapons/w_shot_br99.mdl",
+	HoldType = "rpg",
+	GestureFire = { ACT_HL2MP_GESTURE_RANGE_ATTACK_CROSSBOW, 0.5 },
+
+	Sound_Fire = "AA12.Fire",
+	Sound_DryFire = "Common.Dryfire.Rifle",
+	Sound_MagOut = "AA12.MagOut",
+	Sound_MagIn = "AA12.MagIn",
+
+	Delay = (60/180),
+	Firemodes = FIREMODE_AUTO,
+	Ammo = 8,
+	Damage = 8,
+	Pellets = 8,
+	Spread = 250/60,
 }
 
 -- Rifles
@@ -435,15 +523,17 @@ WEAPONS["fnc"] = {
 	Icon = Material( "benny/weapons/fnc.png", "smooth" ),
 	WModel = "models/weapons/w_rif_ar556.mdl",
 	HoldType = "rpg",
+	GestureFire = { ACT_HL2MP_GESTURE_RANGE_ATTACK_PISTOL, 0.3 },
 
 	Sound_Fire = "FNC.Fire",
+	Sound_DryFire = "Common.Dryfire.Rifle",
 	Sound_MagOut = "FNC.MagOut",
 	Sound_MagIn = "FNC.MagIn",
 
-	Delay = (60/700),
+	Delay = (60/680),
 	Firemodes = FIREMODE_AUTOSEMI,
 	Ammo = 30,
-	Damage = 2,
+	Damage = 10,
 }
 
 WEAPONS["m16a2"] = {
@@ -454,18 +544,20 @@ WEAPONS["m16a2"] = {
 	Icon = Material( "benny/weapons/m16a2.png", "smooth" ),
 	WModel = "models/weapons/w_rif_m16a2.mdl",
 	HoldType = "rpg",
+	GestureFire = { ACT_HL2MP_GESTURE_RANGE_ATTACK_PISTOL, 0.3 },
 
 	Sound_Fire = "M16A2.Fire",
+	Sound_DryFire = "Common.Dryfire.Rifle",
 	Sound_MagOut = "M16A2.MagOut",
 	Sound_MagIn = "M16A2.MagIn",
 
-	Delay = (60/1000),
+	Delay = (60/750),
 	Firemodes = {
 		{ Mode = 3 },
 		{ Mode = 1 },
 	},
 	Ammo = 30,
-	Damage = 2,
+	Damage = 10,
 }
 
 -- Machine guns
@@ -477,13 +569,15 @@ WEAPONS["stoner63"] = {
 	
 	WModel = "models/weapons/w_mach_hk21e.mdl",
 	HoldType = "rpg",
+	GestureFire = { ACT_HL2MP_GESTURE_RANGE_ATTACK_REVOLVER, 0.3 },
 
 	Sound_Fire = "FNC.Fire",
+	Sound_DryFire = "Common.Dryfire.Rifle",
 	Sound_MagOut = "M16A2.MagOut",
 	Sound_MagIn = "M16A2.MagIn",
 	
-	Delay = (60/700),
+	Delay = (60/580),
 	Firemodes = FIREMODE_AUTOSEMI,
 	Ammo = 100,
-	Damage = 2,
+	Damage = 10,
 }
