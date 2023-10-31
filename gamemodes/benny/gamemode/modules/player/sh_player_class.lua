@@ -6,8 +6,8 @@ local PLAYER = {}
 PLAYER.DisplayName			= "Benny Player Class"
 
 PLAYER.SlowWalkSpeed		= 200
-PLAYER.WalkSpeed			= 400
-PLAYER.RunSpeed				= 600
+PLAYER.WalkSpeed			= 250
+PLAYER.RunSpeed				= 280
 PLAYER.CrouchedWalkSpeed	= 0.3
 PLAYER.DuckSpeed			= 0.3
 PLAYER.UnDuckSpeed			= 0.3

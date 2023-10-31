@@ -2,8 +2,17 @@
 function GM:PlayerSpawn( ply )
 	player_manager.SetPlayerClass( ply, "player_benny" )
 	ply:SetModel( "models/player/combine_super_soldier.mdl" )
+	ply:SetViewOffset( Vector( 0, 0, 64 ) )
+	ply:SetViewOffsetDucked( Vector( 0, 0, 50 ) )
 	ply:SetPlayerColor( Vector( 0.275, 0.2, 0.145 ) )
 	ply:Give( "benny" )
+
+	ply:SetCrouchedWalkSpeed( 0.3 )
+	ply:SetDuckSpeed( 0.1 )
+	ply:SetUnDuckSpeed( 0.1 )
+	ply:SetSlowWalkSpeed( 100 )
+	ply:SetWalkSpeed( 160 )
+	ply:SetRunSpeed( 220 )
 end
 
 if SERVER then
