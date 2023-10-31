@@ -57,7 +57,7 @@ hook.Add( "CreateMove", "CamFuck", function( cmd )
 		local p = LocalPlayer()
 		local w = p:GetActiveWeapon()
 		if !IsValid(w) then w = false end
-		local aimed = w and w:GetUserAim()
+		local aimed = w and w:GetUserAim() or false
 
 		local opos, ang = p:CamSpot( TPSOverride )
 

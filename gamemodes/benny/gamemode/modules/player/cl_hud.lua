@@ -78,19 +78,19 @@ schemes = {
 	},
 	["nicky"] = {
 		fg = Color( 255, 174, 210 ),
-		bg = Color( 67, 32, 70 ),
+		bg = Color(37, 12, 40 ),
 		caption = Color( 255, 174, 210 ),
 		name = "NICKY",
 	},
 	["igor"] = {
-		fg = Color( 253, 168, 107 ),
-		bg = Color( 122, 34, 32 ),
+		fg = Color( 253, 208, 207 ),
+		bg = Color( 32, 14, 12 ),
 		caption = Color( 253, 78, 77 ),
 		name = "IGOR",
 	},
 	["yanghao"] = {
-		fg = Color( 87, 227, 253 ),
-		bg = Color( 2, 58, 51 ),
+		fg = Color( 157, 187, 253 ),
+		bg = Color( 19, 21, 28 ),
 		caption = Color( 87, 187, 253 ),
 		name = "YANG-HAO",
 	},
@@ -166,6 +166,7 @@ local col_1 = Color(255, 255, 255, 200)
 local col_2 = Color(0, 0, 0, 255)
 local col_3 = Color(255, 127, 127, 255)
 local col_4 = Color(255, 222, 222, 255)
+local heartbeatcol = Color(255, 255, 255, 255)
 local mat_dot = Material("benny/hud/xhair/dot.png", "mips smooth")
 local mat_long = Material("benny/hud/xhair/long.png", "mips smooth")
 local mat_dot_s = Material("benny/hud/xhair/dot_s.png", "mips smooth")
@@ -203,12 +204,8 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 		surface.SetDrawColor( scheme["fg"] )
 		surface.DrawRect( b + ss(4), sh - b - ss(22) + ss(4), ss((140*hp)-8), ss(14) )
 
-		local gcol = scheme["fg"]
-		local ch, cs, cl = gcol:ToHSL()
-		cl = ((cl*0.0) + (1)*hp)
-		gcol = HSLToColor( ch, cs, cl )
-		gcol.a = ((1-ti)*255*hp) + ((1-hp)*255)
-		surface.SetDrawColor( gcol )
+		heartbeatcol.a = math.ease.OutQuint(1-ti)*255
+		surface.SetDrawColor( heartbeatcol )
 		surface.SetMaterial( mat_grad )
 		surface.DrawTexturedRect( b + ss(4), sh - b - ss(22) + ss(4), ss((140*hp*ti)-8), ss(14) )
 
@@ -413,7 +410,7 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 		end
 		
 
-		do -- Crosshair
+		if wep:GetUserAim() then -- Crosshair
 			local s, w, h = ss, ScrW(), ScrH()
 			local pl_x, pl_y = w/2, h/2
 
@@ -490,6 +487,19 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 					surface.DrawTexturedRectRotated( poosx, poosy + gap, s(24), s(24), 0 )
 				end
 			end
+
+			local mow = math.Round( CurTime() % 2 )
+			local tex = mow == 0 and "NO AMMO" or mow == 1 and "LOW AMMO" or mow == 2 and "[R] RELOAD"
+
+			surface.SetFont( "Benny_16" )
+			local tox, toy = surface.GetTextSize( tex )
+			local box, boy = ss( 8 ) + tox, ss( 18 )
+			surface.SetDrawColor( scheme["bg"] )
+			-- surface.DrawRect( ps_x - box/2, ps_y + ss( 96 ) - boy/2 - ss( 2 ), box, boy )
+
+			surface.SetTextColor( scheme["fg"] )
+			surface.SetTextPos( ps_x - tox/2, ps_y + ss( 96 ) - toy/2 )
+			-- surface.DrawText( tex )
 		end
 	end
 
