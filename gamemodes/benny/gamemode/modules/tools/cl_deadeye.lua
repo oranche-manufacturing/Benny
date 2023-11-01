@@ -213,8 +213,13 @@ function OpenDeadeye()
 				draw.SimpleText( "fov: " .. math.Round( MODEL:GetFOV() ), "Trebuchet24", 8, 4+48, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP )
 			end
 
+			local MODELPSHEET = SIDE_MODEL:Add( "DPropertySheet" )
+			MODELPSHEET.Paint = QUICKDIRT
+
 			local MODELSETTINGS = SIDE_MODEL:Add( "DScrollPanel" )
 			MODELSETTINGS.Paint = QUICKDIRT
+
+			MODELPSHEET:AddSheet( "Actor Alyx", MODELSETTINGS )
 
 			local flexlist = {}
 			for i=0, MODEL.Entity:GetFlexNum()-1 do -- Model settings
@@ -247,7 +252,7 @@ function OpenDeadeye()
 			local DIVIDER = SIDE_MODEL:Add( "DHorizontalDivider" )
 			DIVIDER:Dock( FILL )
 			DIVIDER:SetLeft( MODEL )
-			DIVIDER:SetRight( MODELSETTINGS )
+			DIVIDER:SetRight( MODELPSHEET )
 			DIVIDER:SetDividerWidth( 8 )
 			DIVIDER:SetLeftMin( 20 )
 			DIVIDER:SetRightMin( 240 )
@@ -274,6 +279,16 @@ function OpenDeadeye()
 			SPEED:SetValue( 100 )
 			SPEED:SetDecimals( 0 )
 			SPEED.Paint = QUICKDIRT
+
+			do
+				local BLINKY = SIDE_CHOREO:Add( "DPanel" )
+				BLINKY:SetPos( 4, 4+4+20 )
+				BLINKY.Paint = QUICKDIRT
+				function BLINKY:PerformLayout( w, h )
+					local par = BLINKY:GetParent()
+					BLINKY:SetSize( par:GetWide() - 8, par:GetTall() - 20 - 12 )
+				end
+			end
 		end
 	end
 end
