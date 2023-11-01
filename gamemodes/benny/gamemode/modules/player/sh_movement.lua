@@ -88,6 +88,8 @@ hook.Add( "CreateMove", "CamFuck", function( cmd )
 			end
 			lastmoveangle_lerp = math.ApproachAngle( lastmoveangle_lerp or lastmoveangle, lastmoveangle, FrameTime() * 360 )
 			cmd:SetViewAngles( Angle( ang.p, lastmoveangle_lerp, 0 ) )
+		else
+			lastmoveangle_lerp = lastmoveangle
 		end
 
 		local fixang = Angle()
