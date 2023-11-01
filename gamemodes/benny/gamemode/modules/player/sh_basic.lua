@@ -145,6 +145,12 @@ function GM:ShowHelp( ply )
 	end
 end
 
+function GM:ShowTeam( ply )
+	if SERVER then
+		ply:SendLua( [[OpenDeadeye()]] )
+	end
+end
+
 -- Debug inv
 if CLIENT then
 	function GM:OnSpawnMenuOpen()
