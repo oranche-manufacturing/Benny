@@ -19,6 +19,46 @@ end
 local function QUICKNIL( self, w, h )
 end
 
+local SIDE = {
+	["left_cheek_puffer"] 			= 1,
+	["left_cheek_raiser"] 			= 1,
+	["left_corner_depressor"] 		= 1,
+	["left_corner_puller"] 			= 1,
+	["left_lid_closer"] 			= 1,
+	["left_lid_droop"] 				= 1,
+	["left_lid_raiser"] 			= 1,
+	["left_lid_tightener"] 			= 1,
+	["left_upper_raiser"] 			= 1,
+	["left_outer_raiser"] 			= 1,
+	["left_inner_raiser"] 			= 1,
+	["left_mouth_drop"] 			= 1,
+	["left_dimpler"] 				= 1,
+	["left_funneler"] 				= 1,
+	["left_part"] 					= 1,
+	["left_puckerer"] 				= 1,
+	["left_stretcher"] 				= 1,
+	["left_lowerer"] 				= 1,
+
+	["right_cheek_puffer"] 			= 2,
+	["right_cheek_raiser"] 			= 2,
+	["right_corner_depressor"] 		= 2,
+	["right_corner_puller"] 		= 2,
+	["right_lid_closer"] 			= 2,
+	["right_lid_droop"] 			= 2,
+	["right_lid_raiser"] 			= 2,
+	["right_lid_tightener"] 		= 2,
+	["right_upper_raiser"] 			= 2,
+	["right_outer_raiser"] 			= 2,
+	["right_inner_raiser"] 			= 2,
+	["right_mouth_drop"] 			= 2,
+	["right_dimpler"] 				= 2,
+	["right_funneler"] 				= 2,
+	["right_part"] 					= 2,
+	["right_puckerer"] 				= 2,
+	["right_stretcher"] 			= 2,
+	["right_lowerer"] 				= 2,
+}
+
 local PRETTY = {
 	["left_cheek_puffer"] 			= "Left Cheek Puffer",
 	["left_cheek_raiser"] 			= "Left Cheek Raiser",
@@ -140,78 +180,101 @@ function OpenDeadeye()
 		SIDEDIV:SetBottomMin( 240 )
 		SIDEDIV:SetTopHeight( 500 )
 
-		local MODEL = SIDE_MODEL:Add( "DAdjustableModelPanel" )
-		MODEL:SetFOV( 30 )
-		MODEL:SetModel( "models/alyx.mdl" )
-		MODEL:SetLookAng( Angle( 0, 180, 0 ) )
-		MODEL:SetCamPos( Vector( 64, 0, 64 ) )
-		function MODEL:LayoutEntity( Entity )
-			if DEADEYE_MEM.Flex then
-				for i=0, Entity:GetFlexNum()-1 do
-					if !DEADEYE_MEM.Flex[ Entity:GetFlexName( i ) ] then continue end
-					Entity:SetFlexWeight( i, DEADEYE_MEM.Flex[ Entity:GetFlexName( i ) ] )
-				end
-			else
-				DEADEYE_MEM.Flex = {}
-				for i=0, Entity:GetFlexNum()-1 do
-					DEADEYE_MEM.Flex[ Entity:GetFlexName( i ) ] = 0--Entity:GetFlexWeight( i )
-				end
-			end
-			self.Entity:SetEyeTarget( self:GetCamPos() )
-			return
-		end
-
-		function MODEL:PaintOver( w, h )
-			QUICKDIRT( self, w, h, true )
-
-			local fuckp, fucka = MODEL:GetCamPos(), MODEL:GetLookAng()
-			local PX, PY, PZ, AP, AY, AR = fuckp.x, fuckp.y, fuckp.z, fucka.p, fucka.y, fucka.r
-			PX, PY, PZ, AP, AY, AR = math.Round( PX ), math.Round( PY ), math.Round( PZ ), math.Round( AP ), math.Round( AY ), math.Round( AR )
-			draw.SimpleText( "pos: " .. PX .. " " .. PY .. " " .. PZ, "Trebuchet24", 8, 4, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP )
-			draw.SimpleText( "ang: " .. AP .. " " .. AY .. " " .. AR, "Trebuchet24", 8, 4+24, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP )
-		end
-
-		local MODELSETTINGS = SIDE_MODEL:Add( "DScrollPanel" )
-		MODELSETTINGS.Paint = QUICKDIRT
-
-		local flexlist = {}
-		for i=0, MODEL.Entity:GetFlexNum()-1 do -- Model settings
-			flexlist[MODEL.Entity:GetFlexName( i )] = true
-		end
-
-		for i, v in SortedPairs( flexlist ) do
-			local id = MODEL.Entity:GetFlexIDByName( i )
-			SLIDER = MODELSETTINGS:Add( "DNumSlider" )
-			SLIDER:SetText( MODEL.Entity:GetFlexName( id ) )
-			local min, max = MODEL.Entity:GetFlexBounds( id )
-			SLIDER:SetMin( min )
-			SLIDER:SetMax( max )
-			SLIDER:SetDecimals( 2 )
-			SLIDER:Dock( TOP )
-			SLIDER:DockMargin( 10, -5, 10, -5 )
-
-			print( MODEL.Entity:GetFlexName( id ) )
-
-			function SLIDER:OnValueChanged( val )
-				if !DEADEYE_MEM.Flex then DEADEYE_MEM.Flex = {} end
-				DEADEYE_MEM.Flex[ MODEL.Entity:GetFlexName( id ) ] = val
-			end
-
-			function SLIDER:Think()
+		do -- Model side (top)
+			local MODEL = SIDE_MODEL:Add( "DAdjustableModelPanel" )
+			MODEL:SetFOV( 30 )
+			MODEL:SetModel( "models/alyx.mdl" )
+			MODEL:SetLookAng( Angle( 0, 180, 0 ) )
+			MODEL:SetCamPos( Vector( 64, 0, 64 ) )
+			function MODEL:LayoutEntity( Entity )
 				if DEADEYE_MEM.Flex then
-					self:SetValue( DEADEYE_MEM.Flex[ MODEL.Entity:GetFlexName( id ) ] )
+					for i=0, Entity:GetFlexNum()-1 do
+						if !DEADEYE_MEM.Flex[ Entity:GetFlexName( i ) ] then continue end
+						Entity:SetFlexWeight( i, DEADEYE_MEM.Flex[ Entity:GetFlexName( i ) ] )
+					end
+				else
+					DEADEYE_MEM.Flex = {}
+					for i=0, Entity:GetFlexNum()-1 do
+						DEADEYE_MEM.Flex[ Entity:GetFlexName( i ) ] = 0--Entity:GetFlexWeight( i )
+					end
+				end
+				self.Entity:SetEyeTarget( self:GetCamPos() )
+				return
+			end
+
+			function MODEL:PaintOver( w, h )
+				QUICKDIRT( self, w, h, true )
+
+				local fuckp, fucka = MODEL:GetCamPos(), MODEL:GetLookAng()
+				local PX, PY, PZ, AP, AY, AR = fuckp.x, fuckp.y, fuckp.z, fucka.p, fucka.y, fucka.r
+				PX, PY, PZ, AP, AY, AR = math.Round( PX ), math.Round( PY ), math.Round( PZ ), math.Round( AP ), math.Round( AY ), math.Round( AR )
+				draw.SimpleText( "pos: " .. PX .. " " .. PY .. " " .. PZ, "Trebuchet24", 8, 4, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP )
+				draw.SimpleText( "ang: " .. AP .. " " .. AY .. " " .. AR, "Trebuchet24", 8, 4+24, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP )
+				draw.SimpleText( "fov: " .. math.Round( MODEL:GetFOV() ), "Trebuchet24", 8, 4+48, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP )
+			end
+
+			local MODELSETTINGS = SIDE_MODEL:Add( "DScrollPanel" )
+			MODELSETTINGS.Paint = QUICKDIRT
+
+			local flexlist = {}
+			for i=0, MODEL.Entity:GetFlexNum()-1 do -- Model settings
+				flexlist[MODEL.Entity:GetFlexName( i )] = true
+			end
+
+			for i, v in SortedPairs( flexlist ) do
+				local id = MODEL.Entity:GetFlexIDByName( i )
+				SLIDER = MODELSETTINGS:Add( "DNumSlider" )
+				SLIDER:SetText( PRETTY[ MODEL.Entity:GetFlexName( id ) ] or MODEL.Entity:GetFlexName( id ) )
+				local min, max = MODEL.Entity:GetFlexBounds( id )
+				SLIDER:SetMin( min )
+				SLIDER:SetMax( max )
+				SLIDER:SetDecimals( 2 )
+				SLIDER:Dock( TOP )
+				SLIDER:DockMargin( 10, -5, 10, -5 )
+
+				function SLIDER:OnValueChanged( val )
+					if !DEADEYE_MEM.Flex then DEADEYE_MEM.Flex = {} end
+					DEADEYE_MEM.Flex[ MODEL.Entity:GetFlexName( id ) ] = val
+				end
+
+				function SLIDER:Think()
+					if DEADEYE_MEM.Flex then
+						self:SetValue( DEADEYE_MEM.Flex[ MODEL.Entity:GetFlexName( id ) ] )
+					end
 				end
 			end
+
+			local DIVIDER = SIDE_MODEL:Add( "DHorizontalDivider" )
+			DIVIDER:Dock( FILL )
+			DIVIDER:SetLeft( MODEL )
+			DIVIDER:SetRight( MODELSETTINGS )
+			DIVIDER:SetDividerWidth( 8 )
+			DIVIDER:SetLeftMin( 20 )
+			DIVIDER:SetRightMin( 240 )
+			DIVIDER:SetLeftWidth( 800 )
 		end
 
-		local DIVIDER = SIDE_MODEL:Add( "DHorizontalDivider" )
-		DIVIDER:Dock( FILL )
-		DIVIDER:SetLeft( MODEL )
-		DIVIDER:SetRight( MODELSETTINGS )
-		DIVIDER:SetDividerWidth( 8 )
-		DIVIDER:SetLeftMin( 20 )
-		DIVIDER:SetRightMin( 240 )
-		DIVIDER:SetLeftWidth( 1000 )
+		do -- Choreo side (bottom)
+			local PLAY = SIDE_CHOREO:Add( "DButton" )
+			PLAY:SetPos( 4, 4 )
+			PLAY:SetSize( 80, 20 )
+			PLAY:SetText( "Play/Pause" )
+			PLAY.Paint = QUICKDIRT
+
+			local SPEED = SIDE_CHOREO:Add( "DNumSlider" )
+			SPEED:SetPos( 4+4+80, 4 )
+			SPEED:SetSize( 180, 20 )
+			SPEED:SetText( "Speed" )
+			SPEED.Label:SetWide( 0 )
+			function SPEED:PerformLayout()
+				return true
+			end
+			SPEED:SetMin( 0 )
+			SPEED:SetMax( 100 )
+			SPEED:SetValue( 100 )
+			SPEED:SetDecimals( 0 )
+			SPEED.Paint = QUICKDIRT
+		end
 	end
 end
 
