@@ -5,6 +5,7 @@ local wa, wb = 0, 0
 
 local blop = Angle()
 local lastmoveangle = 0
+local lastmoveangle_lerp
 TPSOverride = TPSOverride or Angle()
 hook.Add( "CreateMove", "CamFuck", function( cmd )
 	if false and BENNY_ACTIVECAMERA and LocalPlayer():GetMoveType() != MOVETYPE_NOCLIP then
@@ -85,7 +86,8 @@ hook.Add( "CreateMove", "CamFuck", function( cmd )
 			if !moveintent:IsEqualTol( vector_origin, 1 ) then
 				lastmoveangle = ang.y - moveintent:Angle().y
 			end
-			cmd:SetViewAngles( Angle( ang.p, lastmoveangle, 0 ))
+			lastmoveangle_lerp = math.ApproachAngle( lastmoveangle_lerp or lastmoveangle, lastmoveangle, FrameTime() * 360 )
+			cmd:SetViewAngles( Angle( ang.p, lastmoveangle_lerp, 0 ) )
 		end
 
 		local fixang = Angle()
