@@ -1,7 +1,7 @@
 
 function GM:PlayerSpawn( ply )
 	player_manager.SetPlayerClass( ply, "player_benny" )
-	ply:SetModel( "models/player/combine_super_soldier.mdl" )
+	ply:SetModel( "models/player/police.mdl" )
 	ply:SetViewOffset( Vector( 0, 0, 64 ) )
 	ply:SetViewOffsetDucked( Vector( 0, 0, 50 ) )
 	ply:SetPlayerColor( Vector( 0.275, 0.2, 0.145 ) )
