@@ -71,6 +71,18 @@ AddSound( "Glock.Fire", {
 	"benny/weapons/glock/03.ogg",
 }, 140, 100, 0.5, CHAN_STATIC )
 
+AddSound( "M92.Fire", {
+	"benny/weapons/m92/01.ogg",
+	"benny/weapons/m92/02.ogg",
+	"benny/weapons/m92/03.ogg",
+}, 140, 100, 0.5, CHAN_STATIC )
+
+AddSound( "P226.Fire", {
+	"benny/weapons/p226/01.ogg",
+	"benny/weapons/p226/02.ogg",
+	"benny/weapons/p226/03.ogg",
+}, 140, 100, 0.5, CHAN_STATIC )
+
 AddSound( "M16A2.Fire", {
 	"benny/weapons/m16a2/01.ogg",
 	"benny/weapons/m16a2/02.ogg",
@@ -105,6 +117,10 @@ AddSound( "Anaconda.MagOut", "benny/weapons/anaconda/magout.ogg", 70, 100, 0.5, 
 AddSound( "Anaconda.MagIn", "benny/weapons/anaconda/magin.ogg", 70, 100, 0.5, CHAN_STATIC )
 AddSound( "Nambu.MagOut", "benny/weapons/nambu/magout.ogg", 70, 100, 0.5, CHAN_STATIC )
 AddSound( "Nambu.MagIn", "benny/weapons/nambu/magin.ogg", 70, 100, 0.5, CHAN_STATIC )
+AddSound( "P226.MagOut", "benny/weapons/p226/magout.ogg", 70, 100, 0.5, CHAN_STATIC )
+AddSound( "P226.MagIn", "benny/weapons/p226/magin.ogg", 70, 100, 0.5, CHAN_STATIC )
+AddSound( "M92.MagOut", "benny/weapons/m92/magout.ogg", 70, 100, 0.5, CHAN_STATIC )
+AddSound( "M92.MagIn", "benny/weapons/m92/magin.ogg", 70, 100, 0.5, CHAN_STATIC )
 AddSound( "1911.MagOut", "benny/weapons/1911/magout.ogg", 70, 100, 0.5, CHAN_STATIC )
 AddSound( "1911.MagIn", "benny/weapons/1911/magin.ogg", 70, 100, 0.5, CHAN_STATIC )
 AddSound( "USP.MagOut", "benny/weapons/usp/magout.ogg", 70, 100, 0.5, CHAN_STATIC )
@@ -289,6 +305,52 @@ WEAPONS["usp"] = {
 	Damage = 30,
 }
 
+WEAPONS["m92"] = {
+	Name = "M92FS",
+	Description = "Accurate pistol, but low caliber won't do much against armor.",
+	Type = "pistol",
+
+	Icon = Material( "benny/weapons/mk23.png", "smooth" ),
+	WModel = "models/weapons/w_pist_elite_single.mdl",
+	HoldType = "revolver",
+	GestureFire = { ACT_HL2MP_GESTURE_RANGE_ATTACK_PISTOL, 0.2 },
+	GestureDraw = { ACT_HL2MP_GESTURE_RELOAD_REVOLVER, 0.8 },
+
+	Sound_Fire = "M92.Fire",
+	Sound_DryFire = "Common.Dryfire.Pistol",
+	Sound_Reload = "USP.Reload",
+	Sound_MagOut = "USP.MagOut",
+	Sound_MagIn = "USP.MagIn",
+
+	Delay = (60/400),
+	Firemodes = FIREMODE_SEMI,
+	Ammo = 15,
+	Damage = 30,
+}
+
+WEAPONS["p226"] = {
+	Name = "P226",
+	Description = "Special forces pistol in fast .357 ammo.",
+	Type = "pistol",
+
+	Icon = Material( "benny/weapons/mk23.png", "smooth" ),
+	WModel = "models/weapons/w_pist_p228.mdl",
+	HoldType = "revolver",
+	GestureFire = { ACT_HL2MP_GESTURE_RANGE_ATTACK_PISTOL, 0.2 },
+	GestureDraw = { ACT_HL2MP_GESTURE_RELOAD_REVOLVER, 0.8 },
+
+	Sound_Fire = "P226.Fire",
+	Sound_DryFire = "Common.Dryfire.Pistol",
+	Sound_Reload = "USP.Reload",
+	Sound_MagOut = "P226.MagOut",
+	Sound_MagIn = "P226.MagIn",
+
+	Delay = (60/350),
+	Firemodes = FIREMODE_SEMI,
+	Ammo = 13,
+	Damage = 30,
+}
+
 WEAPONS["glock"] = {
 	Name = "GLOCK-18",
 	Description = "Bullet storm. Lasts about a second or so, just like you!",
@@ -355,6 +417,28 @@ WEAPONS["anaconda"] = {
 	Damage = 40,
 }
 
+WEAPONS["deagle"] = {
+	Name = "DEAGLE",
+	Description = "Autoloading .50 caliber pistol.",
+	Type = "pistol",
+
+	Icon = Material( "benny/weapons/mk23.png", "smooth" ),
+	WModel = "models/weapons/w_pist_deagle.mdl",
+	HoldType = "revolver",
+	GestureFire = { ACT_HL2MP_GESTURE_RANGE_ATTACK_CROSSBOW, 0.5 },
+	GestureDraw = { ACT_HL2MP_GESTURE_RELOAD_REVOLVER, 0.8 },
+
+	Sound_Fire = "Anaconda.Fire",
+	Sound_DryFire = "Common.Dryfire.Pistol",
+	Sound_MagOut = "Anaconda.MagOut",
+	Sound_MagIn = "Anaconda.MagIn",
+
+	Delay = (60/180),
+	Firemodes = FIREMODE_SEMI,
+	Ammo = 7,
+	Damage = 40,
+}
+
 -- SMGs & PDWs
 
 WEAPONS["tmp"] = {
@@ -372,7 +456,7 @@ WEAPONS["tmp"] = {
 	Sound_MagOut = "TMP.MagOut",
 	Sound_MagIn = "TMP.MagIn",
 
-	Delay = (60/700),
+	Delay = (60/650),
 	Firemodes = FIREMODE_AUTOSEMI,
 	Ammo = 15,
 	Damage = 18,
@@ -438,7 +522,7 @@ WEAPONS["mac11"] = {
 	Sound_MagOut = "MAC11.MagOut",
 	Sound_MagIn = "MAC11.MagIn",
 
-	Delay = (60/800),
+	Delay = (60/770),
 	Firemodes = FIREMODE_AUTOSEMI,
 	Ammo = 16,
 	Damage = 16,
@@ -460,7 +544,7 @@ WEAPONS["bizon"] = {
 	Sound_MagOut = "Bizon.MagOut",
 	Sound_MagIn = "Bizon.MagIn",
 
-	Delay = (60/600),
+	Delay = (60/525),
 	Firemodes = FIREMODE_AUTOSEMI,
 	Ammo = 40,
 	Damage = 16,
@@ -530,7 +614,7 @@ WEAPONS["fnc"] = {
 	Sound_MagOut = "FNC.MagOut",
 	Sound_MagIn = "FNC.MagIn",
 
-	Delay = (60/680),
+	Delay = (60/600),
 	Firemodes = FIREMODE_AUTOSEMI,
 	Ammo = 30,
 	Damage = 10,
@@ -551,7 +635,7 @@ WEAPONS["m16a2"] = {
 	Sound_MagOut = "M16A2.MagOut",
 	Sound_MagIn = "M16A2.MagIn",
 
-	Delay = (60/750),
+	Delay = (60/700),
 	Firemodes = {
 		{ Mode = 3 },
 		{ Mode = 1 },
@@ -576,7 +660,7 @@ WEAPONS["stoner63"] = {
 	Sound_MagOut = "M16A2.MagOut",
 	Sound_MagIn = "M16A2.MagIn",
 	
-	Delay = (60/580),
+	Delay = (60/550),
 	Firemodes = FIREMODE_AUTOSEMI,
 	Ammo = 100,
 	Damage = 10,
