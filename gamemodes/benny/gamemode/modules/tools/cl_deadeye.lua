@@ -19,100 +19,156 @@ end
 local function QUICKNIL( self, w, h )
 end
 
-local SIDE = {
-	["left_cheek_puffer"] 			= 1,
-	["left_cheek_raiser"] 			= 1,
-	["left_corner_depressor"] 		= 1,
-	["left_corner_puller"] 			= 1,
-	["left_lid_closer"] 			= 1,
-	["left_lid_droop"] 				= 1,
-	["left_lid_raiser"] 			= 1,
-	["left_lid_tightener"] 			= 1,
-	["left_upper_raiser"] 			= 1,
-	["left_outer_raiser"] 			= 1,
-	["left_inner_raiser"] 			= 1,
-	["left_mouth_drop"] 			= 1,
-	["left_dimpler"] 				= 1,
-	["left_funneler"] 				= 1,
-	["left_part"] 					= 1,
-	["left_puckerer"] 				= 1,
-	["left_stretcher"] 				= 1,
-	["left_lowerer"] 				= 1,
+local FIRST = {
+	"left_lowerer",
+	"left_outer_raiser",
+	"left_inner_raiser",
+	"left_cheek_puffer",
+	"left_cheek_raiser",
+	"left_lid_closer",
+	"left_lid_droop",
+	"left_lid_raiser",
+	"left_lid_tightener",
+	"left_mouth_drop",
+	"left_upper_raiser",
+	"left_dimpler",
+	"left_funneler",
+	"left_part",
+	"left_puckerer",
+	"left_stretcher",
+	"left_corner_depressor",
+	"left_corner_puller",
+}
 
-	["right_cheek_puffer"] 			= 2,
-	["right_cheek_raiser"] 			= 2,
-	["right_corner_depressor"] 		= 2,
-	["right_corner_puller"] 		= 2,
-	["right_lid_closer"] 			= 2,
-	["right_lid_droop"] 			= 2,
-	["right_lid_raiser"] 			= 2,
-	["right_lid_tightener"] 		= 2,
-	["right_upper_raiser"] 			= 2,
-	["right_outer_raiser"] 			= 2,
-	["right_inner_raiser"] 			= 2,
-	["right_mouth_drop"] 			= 2,
-	["right_dimpler"] 				= 2,
-	["right_funneler"] 				= 2,
-	["right_part"] 					= 2,
-	["right_puckerer"] 				= 2,
-	["right_stretcher"] 			= 2,
-	["right_lowerer"] 				= 2,
+local SECOND = {
+	"jaw_clencher",
+	"jaw_drop",
+	"jaw_sideways",
+	
+	"lip_bite",
+	"lower_lip",
+	"presser",
+	"tightener",
+	"wrinkler",
+	"dilator",
+
+	"bite",
+	"blink",
+	"half_closed",
+	"chin_raiser",
+	"mouth_sideways",
+	"sneer_left",
+
+	"body_rightleft",
+	"chest_rightleft",
+	"eyes_rightleft",
+	"eyes_updown",
+	"gesture_rightleft",
+	"gesture_updown",
+	"head_forwardback",
+	"head_rightleft",
+	"head_tilt",
+	"head_updown",
+}
+
+local SIDE_L = {
+	["left_cheek_puffer"] 			= "right_cheek_puffer",
+	["left_cheek_raiser"] 			= "right_cheek_raiser",
+	["left_corner_depressor"] 		= "right_corner_depressor",
+	["left_corner_puller"] 			= "right_corner_puller",
+	["left_lid_closer"] 			= "right_lid_closer",
+	["left_lid_droop"] 				= "right_lid_droop",
+	["left_lid_raiser"] 			= "right_lid_raiser",
+	["left_lid_tightener"] 			= "right_lid_tightener",
+	["left_upper_raiser"] 			= "right_upper_raiser",
+	["left_outer_raiser"] 			= "right_outer_raiser",
+	["left_inner_raiser"] 			= "right_inner_raiser",
+	["left_mouth_drop"] 			= "right_mouth_drop",
+	["left_dimpler"] 				= "right_dimpler",
+	["left_funneler"] 				= "right_funneler",
+	["left_part"] 					= "right_part",
+	["left_puckerer"] 				= "right_puckerer",
+	["left_stretcher"] 				= "right_stretcher",
+	["left_lowerer"] 				= "right_lowerer",
+}
+
+local SIDE_R = {
+	["right_cheek_puffer"] 			= "left_cheek_puffer",
+	["right_cheek_raiser"] 			= "left_cheek_raiser",
+	["right_corner_depressor"] 		= "left_corner_depressor",
+	["right_corner_puller"] 		= "left_corner_puller",
+	["right_lid_closer"] 			= "left_lid_closer",
+	["right_lid_droop"] 			= "left_lid_droop",
+	["right_lid_raiser"] 			= "left_lid_raiser",
+	["right_lid_tightener"] 		= "left_lid_tightener",
+	["right_upper_raiser"] 			= "left_upper_raiser",
+	["right_outer_raiser"] 			= "left_outer_raiser",
+	["right_inner_raiser"] 			= "left_inner_raiser",
+	["right_mouth_drop"] 			= "left_mouth_drop",
+	["right_dimpler"] 				= "left_dimpler",
+	["right_funneler"] 				= "left_funneler",
+	["right_part"] 					= "left_part",
+	["right_puckerer"] 				= "left_puckerer",
+	["right_stretcher"] 			= "left_stretcher",
+	["right_lowerer"] 				= "left_lowerer",
 }
 
 local PRETTY = {
-	["left_cheek_puffer"] 			= "Left Cheek Puffer",
-	["left_cheek_raiser"] 			= "Left Cheek Raiser",
-	["left_corner_depressor"] 		= "Left Corner Depressor",
-	["left_corner_puller"] 			= "Left Corner Puller",
-	["left_lid_closer"] 			= "Left Lid Closer",
-	["left_lid_droop"] 				= "Left Lid Droop",
-	["left_lid_raiser"] 			= "Left Lid Raiser",
-	["left_lid_tightener"] 			= "Left Lid Tightener",
-	["left_upper_raiser"] 			= "Left Upper Raiser",
-	["left_outer_raiser"] 			= "Left Outer Raiser",
-	["left_inner_raiser"] 			= "Left Inner Raiser",
-	["left_mouth_drop"] 			= "Left Mouth Drop",
-	["left_dimpler"] 				= "Left Dimpler",
-	["left_funneler"] 				= "Left Funneler",
-	["left_part"] 					= "Left Part",
-	["left_puckerer"] 				= "Left Puckerer",
-	["left_stretcher"] 				= "Left Stretcher",
-	["left_lowerer"] 				= "Left Lowerer",
+	["left_outer_raiser"] 			= "Brow Outer Raiser",
+	["left_inner_raiser"] 			= "Brow Inner Raiser",
+	["left_lowerer"] 				= "Brow Lowerer",
+	["left_cheek_puffer"] 			= "Cheek Puffer",
+	["left_cheek_raiser"] 			= "Cheek Raiser",
+	["left_lid_closer"] 			= "Lid Closer",
+	["left_lid_droop"] 				= "Lid Droop",
+	["left_lid_raiser"] 			= "Lid Raiser",
+	["left_lid_tightener"] 			= "Lid Tightener",
+	["left_mouth_drop"] 			= "Mouth Drop",
+	["left_upper_raiser"] 			= "Lip Upper Raiser",
+	["left_dimpler"] 				= "Lip Dimpler",
+	["left_funneler"] 				= "Lip Funneler",
+	["left_part"] 					= "Lip Part",
+	["left_puckerer"] 				= "Lip Puckerer",
+	["left_stretcher"] 				= "Lip Stretcher",
+	["left_corner_depressor"] 		= "Lip Corner Depr.",
+	["left_corner_puller"] 			= "Lip Corner Puller",
 
-	["right_cheek_puffer"] 			= "Right Cheek Puffer",
-	["right_cheek_raiser"] 			= "Right Cheek Raiser",
-	["right_corner_depressor"] 		= "Right Corner Depressor",
-	["right_corner_puller"] 		= "Right Corner Puller",
-	["right_lid_closer"] 			= "Right Lid Closer",
-	["right_lid_droop"] 			= "Right Lid Droop",
-	["right_lid_raiser"] 			= "Right Lid Raiser",
-	["right_lid_tightener"] 		= "Right Lid Tightener",
-	["right_upper_raiser"] 			= "Right Upper Raiser",
-	["right_outer_raiser"] 			= "Right Outer Raiser",
-	["right_inner_raiser"] 			= "Right Inner Raiser",
-	["right_mouth_drop"] 			= "Right Mouth Drop",
-	["right_dimpler"] 				= "Right Dimpler",
-	["right_funneler"] 				= "Right Funneler",
-	["right_part"] 					= "Right Part",
-	["right_puckerer"] 				= "Right Puckerer",
-	["right_stretcher"] 			= "Right Stretcher",
-	["right_lowerer"] 				= "Right Lowerer",
+	["right_outer_raiser"] 			= "Brow Outer Raiser",
+	["right_inner_raiser"] 			= "Brow Inner Raiser",
+	["right_lowerer"] 				= "Brow Lowerer",
+	["right_cheek_puffer"] 			= "Cheek Puffer",
+	["right_cheek_raiser"] 			= "Cheek Raiser",
+	["right_lid_closer"] 			= "Lid Closer",
+	["right_lid_droop"] 			= "Lid Droop",
+	["right_lid_raiser"] 			= "Lid Raiser",
+	["right_lid_tightener"] 		= "Lid Tightener",
+	["right_mouth_drop"] 			= "Mouth Drop",
+	["right_upper_raiser"] 			= "Lip Upper Raiser",
+	["right_dimpler"] 				= "Lip Dimpler",
+	["right_funneler"] 				= "Lip Funneler",
+	["right_part"] 					= "Lip Part",
+	["right_puckerer"] 				= "Lip Puckerer",
+	["right_stretcher"] 			= "Lip Stretcher",
+	["right_corner_depressor"] 		= "Lip Corner Depr.",
+	["right_corner_puller"] 		= "Lip Corner Puller",
+
+	["jaw_clencher"] 				= "Jaw Clencher",
+	["jaw_drop"] 					= "Jaw Drop",
+	["jaw_sideways"] 				= "Jaw Sideways",
+	
+	["lip_bite"] 					= "Lip Bite",
+	["lower_lip"] 					= "Lip Lower Depr.",
+	["presser"] 					= "Lip Presser",
+	["tightener"] 					= "Lip Tightener",
+	["wrinkler"] 					= "Nose Wrinkler",
+	["dilator"] 					= "Nose Dilator",
 
 	["bite"] 						= "Bite",
 	["blink"] 						= "Blink",
 	["half_closed"] 				= "Half Closed",
 	["chin_raiser"] 				= "Chin Raiser",
-	["dilator"] 					= "Dilator",
-	["jaw_clencher"] 				= "Jaw Clencher",
-	["jaw_drop"] 					= "Jaw Drop",
-	["jaw_sideways"] 				= "Jaw Sideways",
-	["lip_bite"] 					= "Lip Bite",
-	["lower_lip"] 					= "Lower Lip",
 	["mouth_sideways"] 				= "Mouth Sideways",
-	["presser"] 					= "Presser",
 	["sneer_left"] 					= "Sneer Left",
-	["tightener"] 					= "Tightener",
-	["wrinkler"] 					= "Wrinkler",
 
 	["body_rightleft"] 				= "Body Rightleft",
 	["chest_rightleft"] 			= "Chest Rightleft",
@@ -125,6 +181,35 @@ local PRETTY = {
 	["head_tilt"] 					= "Head Tilt",
 	["head_updown"] 				= "Head Updown",
 }
+
+local function makeme( id, parent, ent, no_dock )
+	local SLIDER = parent:Add( "DNumSlider" )
+	SLIDER:SetText( PRETTY[ ent:GetFlexName( id ) ] or ent:GetFlexName( id ) )
+	local min, max = ent:GetFlexBounds( id )
+	SLIDER:SetMin( min )
+	SLIDER:SetMax( max )
+	SLIDER:SetDecimals( 2 )
+	SLIDER:SetTall( 18 )
+	if !no_dock then
+		SLIDER:Dock( TOP )
+		SLIDER:DockMargin( 10, 0, 10, 0 )
+	end
+
+	SLIDER.Label:SetWide( 90 )
+	function SLIDER:PerformLayout() return end
+
+	function SLIDER:OnValueChanged( val )
+		if !DEADEYE_MEM.Flex then DEADEYE_MEM.Flex = {} end
+		DEADEYE_MEM.Flex[ ent:GetFlexName( id ) ] = val
+	end
+
+	function SLIDER:Think()
+		if DEADEYE_MEM.Flex then
+			self:SetValue( DEADEYE_MEM.Flex[ ent:GetFlexName( id ) ] )
+		end
+	end
+	return SLIDER
+end
 
 DEADEYE_MEM = DEADEYE_MEM or {}
 
@@ -226,26 +311,57 @@ function OpenDeadeye()
 				flexlist[MODEL.Entity:GetFlexName( i )] = true
 			end
 
-			for i, v in SortedPairs( flexlist ) do
-				local id = MODEL.Entity:GetFlexIDByName( i )
-				SLIDER = MODELSETTINGS:Add( "DNumSlider" )
-				SLIDER:SetText( PRETTY[ MODEL.Entity:GetFlexName( id ) ] or MODEL.Entity:GetFlexName( id ) )
-				local min, max = MODEL.Entity:GetFlexBounds( id )
-				SLIDER:SetMin( min )
-				SLIDER:SetMax( max )
-				SLIDER:SetDecimals( 2 )
-				SLIDER:Dock( TOP )
-				SLIDER:DockMargin( 10, -5, 10, -5 )
+			local madelist = {}
 
-				function SLIDER:OnValueChanged( val )
-					if !DEADEYE_MEM.Flex then DEADEYE_MEM.Flex = {} end
-					DEADEYE_MEM.Flex[ MODEL.Entity:GetFlexName( id ) ] = val
+			
+			local MARKF = MODELSETTINGS:Add( "DHorizontalDivider" )
+			MARKF:Dock( TOP )
+			MARKF:DockMargin( 130, 0, -140, 0 )
+			MARKF:SetDividerWidth( 0 )
+			local LABELR = MODELSETTINGS:Add("DLabel")
+			LABELR:SetText( "Right" )
+			local LABELL = MODELSETTINGS:Add("DLabel")
+			LABELL:SetText( "Left" )
+			MARKF:SetLeft( LABELR )
+			MARKF:SetRight( LABELL )
+			local old = MARKF.PerformLayout
+			function MARKF:PerformLayout( w, h )
+				self:SetLeftWidth( w / 2 )
+				old( self, w, h )
+			end
+
+			for v, i in ipairs( FIRST ) do
+				local MARK = MODELSETTINGS:Add( "DHorizontalDivider" )
+				MARK:Dock( TOP )
+				MARK:DockMargin( 10, -4, 10, -4 )
+				MARK:SetDividerWidth( 0 )
+
+				local SLIDERA = makeme( MODEL.Entity:GetFlexIDByName( SIDE_L[i] ), MODELSETTINGS, MODEL.Entity, true )
+				local SLIDERB = makeme( MODEL.Entity:GetFlexIDByName( i ), MODELSETTINGS, MODEL.Entity, true )
+				madelist[SIDE_L[i]] = true
+				madelist[i] = true
+				MARK:SetLeft( SLIDERA )
+				MARK:SetRight( SLIDERB )
+				local old = MARK.PerformLayout
+				function MARK:PerformLayout( w, h )
+					self:SetLeftWidth( w / 2 )
+					old( self, w, h )
 				end
+			end
 
-				function SLIDER:Think()
-					if DEADEYE_MEM.Flex then
-						self:SetValue( DEADEYE_MEM.Flex[ MODEL.Entity:GetFlexName( id ) ] )
-					end
+			for v, i in SortedPairs( SECOND ) do
+				if !madelist[i] then
+					local id = MODEL.Entity:GetFlexIDByName( i )
+					makeme( id, MODELSETTINGS, MODEL.Entity )
+					madelist[i] = true
+				end
+			end
+
+			for i, v in SortedPairs( flexlist ) do
+				if !madelist[i] then
+					local id = MODEL.Entity:GetFlexIDByName( i )
+					makeme( id, MODELSETTINGS, MODEL.Entity )
+					madelist[i] = true
 				end
 			end
 
@@ -285,7 +401,7 @@ function OpenDeadeye()
 				BLINKY:SetPos( 4, 4+4+20 )
 				BLINKY.Paint = QUICKDIRT
 				function BLINKY:PerformLayout( w, h )
-					local par = BLINKY:GetParent()
+					local par = SIDE_CHOREO
 					BLINKY:SetSize( par:GetWide() - 8, par:GetTall() - 20 - 12 )
 				end
 			end
