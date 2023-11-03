@@ -551,6 +551,28 @@ WEAPONS["bizon"] = {
 	Spread = 40/60,
 }
 
+WEAPONS["chicom"] = {
+	Name = "QCW-CQB",
+	Description = "Subsonic bullpup SMG.",
+	Type = "smg",
+
+	WModel = "models/weapons/w_rif_famas.mdl",
+	HoldType = "rpg",
+	GestureFire = { ACT_HL2MP_GESTURE_RANGE_ATTACK_REVOLVER, 0.34 },
+
+	Sound_Fire = "M92.Fire",
+	Sound_DryFire = "Common.Dryfire.Rifle",
+	Sound_Reload = "Bizon.Reload",
+	Sound_MagOut = "Bizon.MagOut",
+	Sound_MagIn = "Bizon.MagIn",
+
+	Delay = (60/525),
+	Firemodes = FIREMODE_AUTOSEMI,
+	Ammo = 36,
+	Damage = 12,
+	Spread = 40/60,
+}
+
 -- Shotguns
 
 WEAPONS["spas12"] = {
@@ -620,6 +642,27 @@ WEAPONS["fnc"] = {
 	Damage = 10,
 }
 
+WEAPONS["qbz"] = {
+	Name = "QBZ-95",
+	Description = "Bullpup assault rifle.",
+	Type = "rifle",
+
+	Icon = Material( "benny/weapons/fnc.png", "smooth" ),
+	WModel = "models/weapons/w_rif_bakm.mdl",
+	HoldType = "rpg",
+	GestureFire = { ACT_HL2MP_GESTURE_RANGE_ATTACK_PISTOL, 0.3 },
+
+	Sound_Fire = "FNC.Fire",
+	Sound_DryFire = "Common.Dryfire.Rifle",
+	Sound_MagOut = "FNC.MagOut",
+	Sound_MagIn = "FNC.MagIn",
+
+	Delay = (60/600),
+	Firemodes = FIREMODE_AUTOSEMI,
+	Ammo = 30,
+	Damage = 10,
+}
+
 WEAPONS["m16a2"] = {
 	Name = "M16A2",
 	Description = "meow",
@@ -664,4 +707,86 @@ WEAPONS["stoner63"] = {
 	Firemodes = FIREMODE_AUTOSEMI,
 	Ammo = 100,
 	Damage = 10,
+}
+
+WEAPONS["qbblsw"] = {
+	Name = "QBB-LSW",
+	Description = "Bullpup light machine gun.",
+	Type = "machinegun",
+	
+	WModel = "models/weapons/w_mach_mg36.mdl",
+	HoldType = "rpg",
+	GestureFire = { ACT_HL2MP_GESTURE_RANGE_ATTACK_REVOLVER, 0.3 },
+
+	Sound_Fire = "FNC.Fire",
+	Sound_DryFire = "Common.Dryfire.Rifle",
+	Sound_MagOut = "M16A2.MagOut",
+	Sound_MagIn = "M16A2.MagIn",
+	
+	Delay = (60/550),
+	Firemodes = FIREMODE_AUTOSEMI,
+	Ammo = 100,
+	Damage = 10,
+}
+
+-- Grenades
+
+WEAPONS["g_frag"] = {
+	Name = "FRAG GRENADE",
+	Description = "Pull the pin and throw it the hell away!",
+	Type = "grenade",
+	
+	WModel = "models/weapons/w_eq_flashbang.mdl",
+
+	Features = "grenade", -- All weapons should have this?
+}
+
+WEAPONS["g_semtex"] = {
+	Name = "SEMTEX GRENADE",
+	Description = "Long, audible fuse, but sticks to whatever it touches.",
+	Type = "grenade",
+	
+	WModel = "models/weapons/w_eq_flashbang.mdl",
+
+	Features = "grenade", -- All weapons should have this?
+}
+
+WEAPONS["g_molotov"] = {
+	Name = "MOLOTOV COCKTAIL",
+	Description = "Alcoholic bottle of flame!",
+	Type = "grenade",
+	
+	WModel = "models/weapons/w_eq_flashbang.mdl",
+
+	Features = "grenade", -- All weapons should have this?
+}
+
+WEAPONS["g_tknife"] = {
+	Name = "THROWING KNIFE",
+	Description = "Lightweight knife weighted perfectly.",
+	Type = "grenade",
+	
+	WModel = "models/weapons/w_eq_flashbang.mdl",
+
+	Features = "grenade", -- All weapons should have this?
+}
+
+WEAPONS["g_smoke"] = {
+	Name = "SMOKE GRENADE",
+	Description = "Smoke bomb used to conceal your position.",
+	Type = "grenade",
+	
+	WModel = "models/weapons/w_eq_flashbang.mdl",
+
+	Features = "grenade", -- All weapons should have this?
+}
+
+WEAPONS["g_flashbang"] = {
+	Name = "FLASHBANG",
+	Description = "Stun grenade that gives off a bright flash and a loud 'bang'.",
+	Type = "grenade",
+	
+	WModel = "models/weapons/w_eq_flashbang.mdl",
+
+	Features = "grenade", -- All weapons should have this?
 }

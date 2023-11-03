@@ -44,9 +44,11 @@ do
 		["special"]		= { 1, 2 },
 		["pistol"]		= { 2, 1 },
 		["smg"]			= { 3, 1 },
-		["shotgun"]		= { 3, 2 },
-		["rifle"]		= { 4, 1 },
-		["machinegun"]		= { 4, 2 },
+		["shotgun"]		= { 4, 1 },
+		["rifle"]		= { 5, 1 },
+		["machinegun"]		= { 5, 2 },
+		["grenade"]		= { 6, 1 },
+		["utility"]		= { 6, 2 },
 	}
 
 	-- PROTO: Cache this!
@@ -56,6 +58,8 @@ do
 			[2] = {},
 			[3] = {},
 			[4] = {},
+			[5] = {},
+			[6] = {},
 		}
 		for i, bucket in ipairs( inventorylist ) do
 			local temp = {}

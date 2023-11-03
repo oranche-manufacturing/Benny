@@ -254,97 +254,100 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 			surface.SetDrawColor( scheme["fg"] )
 			surface.DrawRect( sw - b - ss(w-4), sh - b + ss(16) - ss(BOXHEIGHT-4), ss(fmpw), ss(10) )
 
-			surface.SetFont( "Benny_12" )
-			local str = wep:B_FiremodeName( false )
-			local tw = surface.GetTextSize( str )
-			surface.SetTextColor( scheme["bg"] )
-			surface.SetTextPos( sw - b - ss(w-19) - (tw/2), sh - b + ss(16) - ss(BOXHEIGHT-4) )
-			surface.DrawText( str )
+			-- PROTO: Make grenade/melee/firearm logic way way better.
+			if wep1c.Features != "grenade" then
+				surface.SetFont( "Benny_12" )
+				local str = wep:B_FiremodeName( false )
+				local tw = surface.GetTextSize( str )
+				surface.SetTextColor( scheme["bg"] )
+				surface.SetTextPos( sw - b - ss(w-19) - (tw/2), sh - b + ss(16) - ss(BOXHEIGHT-4) )
+				surface.DrawText( str )
 
-			surface.SetFont( "Benny_12" )
-			local text = wep:GetWep1Clip() == 0 and "---" or wep:Clip1()-- .. " - MAG " .. wep:GetWep1Clip()
-			local tw = surface.GetTextSize( text )
-			surface.SetTextColor( scheme["fg"] )
-			surface.SetTextPos( sw - b - ss(4) - tw, sh - b - ss(24) )
-			surface.DrawText( text )
+				surface.SetFont( "Benny_12" )
+				local text = wep:GetWep1Clip() == 0 and "---" or wep:Clip1()-- .. " - MAG " .. wep:GetWep1Clip()
+				local tw = surface.GetTextSize( text )
+				surface.SetTextColor( scheme["fg"] )
+				surface.SetTextPos( sw - b - ss(4) - tw, sh - b - ss(24) )
+				surface.DrawText( text )
 
-			local bx = 1
-			local by = 0
-			local count = math.max( wep:Clip1(), wep:BClass( false ).Ammo )
-			local size = ss(8)
-			if count>90 then
-				size = ss(2)
-				by = by - ss(9-3)
-			elseif count>60 then
-				size = ss(3)
-				by = by - ss(7)
-			elseif count>30 then
-				size = ss(3)
-				by = by - ss(5)
-			end
-			for i=1, count do
-				surface.SetDrawColor( scheme["fg"] )
-				surface.DrawOutlinedRect( sw - b - ss(3+4) - ( ss(5) * (bx-1) ), sh - b - ss(8+4) - by, ss(3), size, ss(0.5) )
-				if i <= wep:Clip1() then
-					surface.DrawRect( sw - b - ss(3+4) - ( ss(5) * (bx-1) ), sh - b - ss(8+4) - by, ss(3), size )
+				local bx = 1
+				local by = 0
+				local count = math.max( wep:Clip1(), wep:BClass( false ).Ammo )
+				local size = ss(8)
+				if count>90 then
+					size = ss(2)
+					by = by - ss(9-3)
+				elseif count>60 then
+					size = ss(3)
+					by = by - ss(7)
+				elseif count>30 then
+					size = ss(3)
+					by = by - ss(5)
 				end
-				if i%30 == 0 then
-					if count>90 then
-						by = by + ss(3)
-					elseif count>60 then
-						by = by + ss(3)
-					else
-						by = by + ss(5)
+				for i=1, count do
+					surface.SetDrawColor( scheme["fg"] )
+					surface.DrawOutlinedRect( sw - b - ss(3+4) - ( ss(5) * (bx-1) ), sh - b - ss(8+4) - by, ss(3), size, ss(0.5) )
+					if i <= wep:Clip1() then
+						surface.DrawRect( sw - b - ss(3+4) - ( ss(5) * (bx-1) ), sh - b - ss(8+4) - by, ss(3), size )
 					end
-					bx = 0
-				end
-				bx = bx + 1
-			end
-
-			local amlist = { wep:BTable( false )["Ammo" .. 1], wep:BTable( false )["Ammo" .. 2], wep:BTable( false )["Ammo" .. 3] }
-			local ind = 1
-			local bubby = ss(1)
-			local blen, bhei = 25, 10
-			for _, v in ipairs( amlist ) do
-				local active = wep:GetWep1Clip() == _
-				if v == 0 and !active then continue end
-				local perc = v / wep:BClass( false ).Ammo
-
-				local suuze = ss(blen*perc) - bubby*2*perc
-				if v != 0 then suuze = math.max( suuze, 1 ) end
-				surface.SetDrawColor( scheme["fg"] )
-				surface.DrawOutlinedRect( sw - b - ss(w-4-2) + ss(fmpw) + ( ss(blen+2) * (ind-1) ),
-				sh - b + ss(16) - ss(BOXHEIGHT-4),
-				ss(blen),
-				ss(bhei),
-				ss(0.5) )
-
-				if active then
-					surface.SetTextColor( scheme["fg"] )
-					surface.SetTextPos( sw - b - ss(w-4-2) + ss(fmpw/2) + ( ss(blen+2) * (ind) ) + bubby - ss(4),
-					sh - b + ss(16) - ss(BOXHEIGHT-4) + bubby - ss(2) )
-					surface.DrawText( "x" )
+					if i%30 == 0 then
+						if count>90 then
+							by = by + ss(3)
+						elseif count>60 then
+							by = by + ss(3)
+						else
+							by = by + ss(5)
+						end
+						bx = 0
+					end
+					bx = bx + 1
 				end
 
-				surface.SetDrawColor( scheme["fg"] )
-				surface.DrawRect( sw - b - ss(w-4-2) + ss(fmpw) + ( ss(blen+2) * (ind-1) ) + bubby,
-				sh - b + ss(16) - ss(BOXHEIGHT-4) + bubby,
-				suuze,
-				ss(bhei) - bubby*2 )
+				local amlist = { wep:BTable( false )["Ammo" .. 1], wep:BTable( false )["Ammo" .. 2], wep:BTable( false )["Ammo" .. 3] }
+				local ind = 1
+				local bubby = ss(1)
+				local blen, bhei = 25, 10
+				for _, v in ipairs( amlist ) do
+					local active = wep:GetWep1Clip() == _
+					if v == 0 and !active then continue end
+					local perc = v / wep:BClass( false ).Ammo
 
-				if active then
-					render.SetScissorRect( sw - b - ss(w-4-2) + ss(fmpw) + ( ss(blen+2) * (ind-1) ) + bubby,
+					local suuze = ss(blen*perc) - bubby*2*perc
+					if v != 0 then suuze = math.max( suuze, 1 ) end
+					surface.SetDrawColor( scheme["fg"] )
+					surface.DrawOutlinedRect( sw - b - ss(w-4-2) + ss(fmpw) + ( ss(blen+2) * (ind-1) ),
+					sh - b + ss(16) - ss(BOXHEIGHT-4),
+					ss(blen),
+					ss(bhei),
+					ss(0.5) )
+
+					if active then
+						surface.SetTextColor( scheme["fg"] )
+						surface.SetTextPos( sw - b - ss(w-4-2) + ss(fmpw/2) + ( ss(blen+2) * (ind) ) + bubby - ss(4),
+						sh - b + ss(16) - ss(BOXHEIGHT-4) + bubby - ss(2) )
+						surface.DrawText( "x" )
+					end
+
+					surface.SetDrawColor( scheme["fg"] )
+					surface.DrawRect( sw - b - ss(w-4-2) + ss(fmpw) + ( ss(blen+2) * (ind-1) ) + bubby,
 					sh - b + ss(16) - ss(BOXHEIGHT-4) + bubby,
-					sw - b - ss(w-4-2) + ss(fmpw) + ( ss(blen+2) * (ind-1) ) + bubby + suuze,
-					sh - b + ss(16) - ss(BOXHEIGHT-4) + bubby + (ss(bhei) - bubby*2), true )
-					surface.SetTextColor( scheme["bg"] )
-					surface.SetTextPos( sw - b - ss(w-4-2) + ss(fmpw/2) + ( ss(blen+2) * (ind) ) + bubby - ss(4),
-					sh - b + ss(16) - ss(BOXHEIGHT-4) + bubby - ss(2) )
-					surface.DrawText( "x" )
-					render.SetScissorRect( 0, 0, 0, 0, false )
-				end
+					suuze,
+					ss(bhei) - bubby*2 )
 
-				ind = ind + 1
+					if active then
+						render.SetScissorRect( sw - b - ss(w-4-2) + ss(fmpw) + ( ss(blen+2) * (ind-1) ) + bubby,
+						sh - b + ss(16) - ss(BOXHEIGHT-4) + bubby,
+						sw - b - ss(w-4-2) + ss(fmpw) + ( ss(blen+2) * (ind-1) ) + bubby + suuze,
+						sh - b + ss(16) - ss(BOXHEIGHT-4) + bubby + (ss(bhei) - bubby*2), true )
+						surface.SetTextColor( scheme["bg"] )
+						surface.SetTextPos( sw - b - ss(w-4-2) + ss(fmpw/2) + ( ss(blen+2) * (ind) ) + bubby - ss(4),
+						sh - b + ss(16) - ss(BOXHEIGHT-4) + bubby - ss(2) )
+						surface.DrawText( "x" )
+						render.SetScissorRect( 0, 0, 0, 0, false )
+					end
+
+					ind = ind + 1
+				end
 			end
 
 			-- local prog = {
@@ -663,6 +666,19 @@ do
 			RunConsoleCommand( "benny_inv_equip", buckets[bucket_selected][item_selected] )
 		end
 	end
+	local function Wrap( ply, num )
+		local buckets = ply:INV_Buckets()
+		if bucket_selected == num then
+			item_selected = item_selected + 1
+			if item_selected > #buckets[bucket_selected] then
+				item_selected = 1
+			end
+		else
+			bucket_selected = num
+			item_selected = 1
+		end
+		Equip()
+	end
 	local qt = {
 		["invnext"] = function( ply )
 			local buckets = ply:INV_Buckets()
@@ -696,56 +712,34 @@ do
 			Equip()
 		end,
 		["slot1"] = function( ply )
-			local buckets = ply:INV_Buckets()
-			if bucket_selected == 1 then
-				item_selected = item_selected + 1
-				if item_selected > #buckets[bucket_selected] then
-					item_selected = 1
-				end
-			else
-				bucket_selected = 1
-				item_selected = 1
-			end
-			Equip()
+			Wrap( ply, 1 )
 		end,
 		["slot2"] = function( ply )
-			local buckets = ply:INV_Buckets()
-			if bucket_selected == 2 then
-				item_selected = item_selected + 1
-				if item_selected > #buckets[bucket_selected] then
-					item_selected = 1
-				end
-			else
-				bucket_selected = 2
-				item_selected = 1
-			end
-			Equip()
+			Wrap( ply, 2 )
 		end,
 		["slot3"] = function( ply )
-			local buckets = ply:INV_Buckets()
-			if bucket_selected == 3 then
-				item_selected = item_selected + 1
-				if item_selected > #buckets[bucket_selected] then
-					item_selected = 1
-				end
-			else
-				bucket_selected = 3
-				item_selected = 1
-			end
-			Equip()
+			Wrap( ply, 3 )
 		end,
 		["slot4"] = function( ply )
-			local buckets = ply:INV_Buckets()
-			if bucket_selected == 4 then
-				item_selected = item_selected + 1
-				if item_selected > #buckets[bucket_selected] then
-					item_selected = 1
-				end
-			else
-				bucket_selected = 4
-				item_selected = 1
-			end
-			Equip()
+			Wrap( ply, 4 )
+		end,
+		["slot5"] = function( ply )
+			Wrap( ply, 5 )
+		end,
+		["slot6"] = function( ply )
+			-- Wrap( ply, 6 )
+		end,
+		["slot7"] = function( ply )
+			-- Wrap( ply, 7 )
+		end,
+		["slot8"] = function( ply )
+			-- Wrap( ply, 8 )
+		end,
+		["slot9"] = function( ply )
+			-- Wrap( ply, 9 )
+		end,
+		["slot0"] = function( ply )
+			-- Wrap( ply, 0 )
 		end,
 	}
 	hook.Add( "PlayerBindPress", "inv", function( ply, bind, pressed, code )

@@ -69,16 +69,20 @@ concommand.Add("benny_inv_equip", function( ply, cmd, args )
 	local inv = ply:INV_Get()
 	local wep = ply:GetActiveWeapon()
 	local item = inv[args[1]]
+	local class = WEAPONS[item.Class]
 	-- PROTO: Check that this is the correct 'benny' weapon.
 	assert( item, "That item doesn't exist. " .. tostring(item) )
 
 	wep:SetWep1( args[1] )
 	wep:SetWep1Clip( item.Loaded )
 	
-	if item.Loaded != 0 then
-		assert( item[ "Ammo" .. item.Loaded ], "That magazine doesn't exist." )
+	-- PROTO: Make grenade/melee/firearm logic way way better.
+	if class.Features != "grenade" then
+		if item.Loaded != 0 then
+			assert( item[ "Ammo" .. item.Loaded ], "That magazine doesn't exist." )
+		end
+		wep:SetClip1( item.Loaded == 0 and 0 or item[ "Ammo" .. item.Loaded ] )
 	end
-	wep:SetClip1( item.Loaded == 0 and 0 or item[ "Ammo" .. item.Loaded ] )
 end)
 
 concommand.Add("benny_inv_sync", function( ply, cmd, args )
@@ -177,45 +181,67 @@ if CLIENT then
 		local itemlist = smenu:Add("DScrollPanel")
 		itemlist:Dock( FILL )
 
-		local List = vgui.Create( "DIconLayout", itemlist )
-		List:Dock( FILL )
-		List:SetSpaceX( 5 )
-		List:SetSpaceY( 5 )
+		-- local List = vgui.Create( "DIconLayout", itemlist )
+		-- List:Dock( FILL )
+		-- List:SetSpaceX( 5 )
+		-- List:SetSpaceY( 5 )
+
+
+		local createlist = {}
 		
 		for ClassName, Class in SortedPairsByMemberValue( WEAPONS, "Name" ) do
-			local button = vgui.Create( "DButton" )
-			List:Add( button )
-			button:SetSize( ss(96), ss(22) )
-			--button:Dock( TOP )
-			button:DockMargin( 0, 0, 0, ss(4) )
-
-			button.Text_Name = Class.Name
-			button.Text_Desc = Class.Description
-
-			-- PROTO: These functions don't need to be remade over and over like this.
-			function button:DoClick()
-				RunConsoleCommand( "benny_debug_give", LocalPlayer():EntIndex(), 0, ClassName )
+			if !createlist[Class.Type] then
+				createlist[Class.Type] = {}
 			end
 
-			function button:DoRightClick()
-			end
+			table.insert( createlist[Class.Type], { ClassName = ClassName, Class = Class } )
+		end
 
-			function button:Paint( w, h )
-				surface.SetDrawColor( schemes["benny"]["fg"] )
-				surface.DrawRect( 0, 0, w, h )
-				
-				surface.SetTextColor( schemes["benny"]["bg"] )
 
-				surface.SetFont( "Benny_16" )
-				surface.SetTextPos( ss(4), ss(4) )
-				surface.DrawText( self.Text_Name )
+		for i, v in pairs( createlist ) do
+			local Collapse = itemlist:Add( "DCollapsibleCategory" )
+			Collapse:Dock( TOP )
+			Collapse:SetLabel( i )
+			local Lays = itemlist:Add( "DIconLayout" )
+			Collapse:SetContents( Lays )
+			Lays:Dock( FILL )
+			Lays:SetSpaceX( 2 )
+			Lays:SetSpaceY( 2 )
+			for Mew, New in ipairs( v ) do
+				local button = Lays:Add( "DButton" )
+				button:SetSize( ss(96), ss(22) )
+				--button:Dock( TOP )
+				button:DockMargin( 0, 0, 0, ss(4) )
 
-				-- surface.SetFont( "Benny_10" )
-				-- surface.SetTextPos( ss(4), ss(4 + 12) )
-				-- surface.DrawText( self.Text_Desc )
-				return true
+				button.Text_Name = New.Class.Name
+				button.Text_Desc = New.Class.Description
+
+				-- PROTO: These functions don't need to be remade over and over like this.
+				function button:DoClick()
+					RunConsoleCommand( "benny_debug_give", LocalPlayer():EntIndex(), 0, New.ClassName )
+				end
+
+				function button:DoRightClick()
+				end
+
+				function button:Paint( w, h )
+					surface.SetDrawColor( schemes["benny"]["fg"] )
+					surface.DrawRect( 0, 0, w, h )
+					
+					surface.SetTextColor( schemes["benny"]["bg"] )
+
+					surface.SetFont( "Benny_16" )
+					surface.SetTextPos( ss(4), ss(4) )
+					surface.DrawText( self.Text_Name )
+
+					-- surface.SetFont( "Benny_10" )
+					-- surface.SetTextPos( ss(4), ss(4 + 12) )
+					-- surface.DrawText( self.Text_Desc )
+					return true
+				end
 			end
 		end
+
 	end
 	local function regen_items( itemlist )
 		local ply = LocalPlayer()
