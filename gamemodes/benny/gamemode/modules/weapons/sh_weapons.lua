@@ -705,7 +705,7 @@ WEAPONS["stoner63"] = {
 	
 	Delay = (60/550),
 	Firemodes = FIREMODE_AUTOSEMI,
-	Ammo = 100,
+	Ammo = 75,
 	Damage = 10,
 }
 
@@ -725,7 +725,7 @@ WEAPONS["qbblsw"] = {
 	
 	Delay = (60/550),
 	Firemodes = FIREMODE_AUTOSEMI,
-	Ammo = 100,
+	Ammo = 70,
 	Damage = 10,
 }
 
