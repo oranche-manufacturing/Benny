@@ -143,6 +143,10 @@ if CLIENT then
 	end)
 end
 
+hook.Add( "PlayerDeathSound", "Benny_PlayerDeathSound", function( ply )
+	return true -- we don't want the default sound!
+end )
+
 function GM:ShowHelp( ply )
 	if SERVER then
 		ply:SendLua( [[OpenSMenu()]] )
