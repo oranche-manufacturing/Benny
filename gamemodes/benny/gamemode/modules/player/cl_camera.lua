@@ -274,7 +274,7 @@ function bennyfp( origin, angles, fov )
 	return pos, ang, 90
 end
 
-hook.Add( "CalcView", "MyCalcView", function( ply, pos, ang, fov )
+hook.Add( "CalcView", "Benny_CalcView", function( ply, pos, ang, fov )
 	if c_unlock:GetBool() then return end
 	if ply:GetMoveType() == MOVETYPE_NOCLIP then return end
 	decide_active()
@@ -292,8 +292,7 @@ hook.Add( "CalcView", "MyCalcView", function( ply, pos, ang, fov )
 		end
 	end
 		
-	-- PROTO: Add correct benny weapon check
-	if true or IsValid(ply:GetActiveWeapon()) and ply:GetActiveWeapon():GetAim() > 0 then
+	if ply:BennyCheck() then -- and ply:GetActiveWeapon():GetAim() > 0 then
 		view.drawviewer = true
 		view.origin, view.angles, view.fov = bennyfp( view.origin, view.angles, view.fov )
 	end

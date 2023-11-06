@@ -1,12 +1,16 @@
 
 local PT = FindMetaTable( "Player" )
 
+function PT:BennyCheck()
+	return ( self:GetActiveWeapon():IsValid() and self:GetActiveWeapon():GetClass() == "benny" and self:GetActiveWeapon().GetUserAim )
+end
+
 function PT:CamSpot( ang )
 	local w = self:GetActiveWeapon()
 	if !IsValid( w ) then w = false end
 
 	local aim = w and w:GetAim() or 0
-	aim = w:GetUserAim() and math.ease.OutCubic( aim ) or math.ease.InCubic( aim )
+	if w then aim = w:GetUserAim() and math.ease.OutCubic( aim ) or math.ease.InCubic( aim ) end
 
 	local pos = self:GetPos()
 

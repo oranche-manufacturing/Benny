@@ -13,7 +13,7 @@ local hide = {
 	["CHudZoom"] = true,
 }
 
-hook.Add( "HUDShouldDraw", "HideHUD", function( name )
+hook.Add( "HUDShouldDraw", "Benny_HUDShouldDraw", function( name )
 	if ( hide[ name ] ) then return false end
 end )
 
@@ -218,7 +218,10 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 	end
 
 	do -- Weapon
-		assert( IsValid(wep) and wep:GetClass() == "benny", "Failed to retrieve 'benny' weapon!" )
+		if !(IsValid(wep) and wep:GetClass() == "benny") then
+			print( "Failed to retrieve 'benny' weapon!" )
+			return
+		end
 		local inv = p:INV_Get()
 		local wep1 = wep:BTable( false )
 		local wep1c = wep:BClass( false )
@@ -278,8 +281,8 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 					size = ss(2)
 					by = by - ss(9-3)
 				elseif count>60 then
-					size = ss(3)
-					by = by - ss(7)
+					size = ss(2)
+					by = by - ss(6)
 				elseif count>30 then
 					size = ss(3)
 					by = by - ss(5)
@@ -662,12 +665,13 @@ do
 	local function Equip()
 		local ply = LocalPlayer()
 		local buckets = ply:INV_Buckets()
-		if buckets[bucket_selected][item_selected] then
+		if buckets[bucket_selected] and buckets[bucket_selected][item_selected] then
 			RunConsoleCommand( "benny_inv_equip", buckets[bucket_selected][item_selected] )
 		end
 	end
 	local function Wrap( ply, num )
 		local buckets = ply:INV_Buckets()
+		if !buckets[num] then return end
 		if bucket_selected == num then
 			item_selected = item_selected + 1
 			if item_selected > #buckets[bucket_selected] then
@@ -727,22 +731,22 @@ do
 			Wrap( ply, 5 )
 		end,
 		["slot6"] = function( ply )
-			-- Wrap( ply, 6 )
+			Wrap( ply, 6 )
 		end,
 		["slot7"] = function( ply )
-			-- Wrap( ply, 7 )
+			Wrap( ply, 7 )
 		end,
 		["slot8"] = function( ply )
-			-- Wrap( ply, 8 )
+			Wrap( ply, 8 )
 		end,
 		["slot9"] = function( ply )
-			-- Wrap( ply, 9 )
+			Wrap( ply, 9 )
 		end,
 		["slot0"] = function( ply )
-			-- Wrap( ply, 0 )
+			Wrap( ply, 0 )
 		end,
 	}
-	hook.Add( "PlayerBindPress", "inv", function( ply, bind, pressed, code )
+	hook.Add( "PlayerBindPress", "Benny_PlayerBindPress", function( ply, bind, pressed, code )
 		if qt[bind] and pressed then
 			qt[bind]( ply )
 			return true

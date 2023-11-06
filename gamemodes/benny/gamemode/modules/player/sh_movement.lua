@@ -7,7 +7,7 @@ local blop = Angle()
 local lastmoveangle = 0
 local lastmoveangle_lerp
 TPSOverride = TPSOverride or Angle()
-hook.Add( "CreateMove", "CamFuck", function( cmd )
+hook.Add( "CreateMove", "Benny_CreateMove", function( cmd )
 	if false and BENNY_ACTIVECAMERA and LocalPlayer():GetMoveType() != MOVETYPE_NOCLIP then
 		local x, y = cmd:GetForwardMove(), cmd:GetSideMove()
 
@@ -54,17 +54,15 @@ hook.Add( "CreateMove", "CamFuck", function( cmd )
 
 	end
 
-	if true and LocalPlayer():GetMoveType() != MOVETYPE_NOCLIP then -- FPS cam
-		local p = LocalPlayer()
-		local w = p:GetActiveWeapon()
-		if !IsValid(w) then w = false end
-		local aimed = w and w:GetUserAim() or false
+	local p = LocalPlayer()
+	local w = p:GetActiveWeapon()
+	if p:BennyCheck() and LocalPlayer():GetMoveType() != MOVETYPE_NOCLIP then -- FPS cam
+		local aimed = w:GetUserAim()
 
 		local opos, ang = p:CamSpot( TPSOverride )
 
 		ang:Add( Angle( cmd:GetMouseY()*0.022, -cmd:GetMouseX()*0.022, 0 ) )
 		ang:Normalize()
-
 
 		if aimed then
 			local tr = util.TraceLine( {
