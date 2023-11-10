@@ -171,7 +171,7 @@ if CLIENT then
 	function OpenSMenu()
 		if IsValid( smenu ) then smenu:Remove() return end
 		smenu = vgui.Create("DFrame")
-		smenu:SetSize( ss(400), ss(240) )
+		smenu:SetSize( ss(1+(96+2)*4), ss(360) )
 		smenu:MakePopup()
 		smenu:SetKeyboardInputEnabled( false )
 		smenu:Center()
@@ -193,7 +193,7 @@ if CLIENT then
 
 		local createlist = {}
 		
-		for ClassName, Class in SortedPairsByMemberValue( WEAPONS, "Name" ) do
+		for ClassName, Class in pairs( WEAPONS ) do
 			if !createlist[Class.Type] then
 				createlist[Class.Type] = {}
 			end
@@ -202,18 +202,18 @@ if CLIENT then
 		end
 
 
-		for i, v in pairs( createlist ) do
+		for i, v in SortedPairs( createlist ) do
 			local Collapse = itemlist:Add( "DCollapsibleCategory" )
 			Collapse:Dock( TOP )
 			Collapse:SetLabel( i )
 			local Lays = itemlist:Add( "DIconLayout" )
 			Collapse:SetContents( Lays )
 			Lays:Dock( FILL )
-			Lays:SetSpaceX( 2 )
-			Lays:SetSpaceY( 2 )
+			Lays:SetSpaceX( ss(1) )
+			Lays:SetSpaceY( ss(1) )
 			for Mew, New in ipairs( v ) do
 				local button = Lays:Add( "DButton" )
-				button:SetSize( ss(96), ss(22) )
+				button:SetSize( ss(96), ss(14) )
 				--button:Dock( TOP )
 				button:DockMargin( 0, 0, 0, ss(4) )
 
@@ -234,8 +234,8 @@ if CLIENT then
 					
 					surface.SetTextColor( schemes["benny"]["bg"] )
 
-					surface.SetFont( "Benny_16" )
-					surface.SetTextPos( ss(4), ss(4) )
+					surface.SetFont( "Benny_12" )
+					surface.SetTextPos( ss(2), ss(2) )
 					surface.DrawText( self.Text_Name )
 
 					-- surface.SetFont( "Benny_10" )
