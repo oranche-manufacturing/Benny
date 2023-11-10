@@ -730,6 +730,7 @@ WEAPONS["qbblsw"] = {
 }
 
 -- Grenades
+-- Nothing here is guaranteed.
 
 WEAPONS["g_frag"] = {
 	Name = "FRAG GRENADE",
@@ -763,7 +764,7 @@ WEAPONS["g_molotov"] = {
 
 WEAPONS["g_tknife"] = {
 	Name = "THROWING KNIFE",
-	Description = "Lightweight knife weighted perfectly.",
+	Description = "Lightweight knife to throw and pick back up.",
 	Type = "grenade",
 	
 	WModel = "models/weapons/w_eq_flashbang.mdl",
@@ -773,7 +774,7 @@ WEAPONS["g_tknife"] = {
 
 WEAPONS["g_smoke"] = {
 	Name = "SMOKE GRENADE",
-	Description = "Smoke bomb used to conceal your position.",
+	Description = "Smoke bomb used to conceal a position, and makes enemies cough.",
 	Type = "grenade",
 	
 	WModel = "models/weapons/w_eq_flashbang.mdl",
@@ -785,6 +786,188 @@ WEAPONS["g_flashbang"] = {
 	Name = "FLASHBANG",
 	Description = "Stun grenade that gives off a bright flash and a loud 'bang'.",
 	Type = "grenade",
+	
+	WModel = "models/weapons/w_eq_flashbang.mdl",
+
+	Features = "grenade", -- All weapons should have this?
+}
+
+WEAPONS["g_gas"] = {
+	Name = "GAS GRENADE",
+	Description = "Short burst of gas that slows and disorient targets.",
+	Type = "grenade",
+	
+	WModel = "models/weapons/w_eq_flashbang.mdl",
+
+	Features = "grenade", -- All weapons should have this?
+}
+
+WEAPONS["g_prox"] = {
+	Name = "PROXIMITY MINE",
+	Description = "Mine that bounces into the air.",
+	Type = "grenade",
+	
+	WModel = "models/weapons/w_eq_flashbang.mdl",
+
+	Features = "grenade", -- All weapons should have this?
+}
+
+WEAPONS["g_claymore"] = {
+	Name = "CLAYMORE",
+	Description = "Mine that shoots shrapnel in a cone.",
+	Type = "grenade",
+	
+	WModel = "models/weapons/w_eq_flashbang.mdl",
+
+	Features = "grenade", -- All weapons should have this?
+}
+
+WEAPONS["g_scrambler"] = {
+	Name = "SCRAMBLER",
+	Description = "Disrupts enemy radar based on proximity.",
+	Type = "grenade",
+	
+	WModel = "models/weapons/w_eq_flashbang.mdl",
+
+	Features = "grenade", -- All weapons should have this?
+}
+
+WEAPONS["g_emp"] = {
+	Name = "EMP NADE",
+	Description = "Disrupts enemy equipment based on proximity.",
+	Type = "grenade",
+	
+	WModel = "models/weapons/w_eq_flashbang.mdl",
+
+	Features = "grenade", -- All weapons should have this?
+}
+
+WEAPONS["g_shockcharge"] = {
+	Name = "SHOCK CHARGE",
+	Description = "Charge that stuns and forces enemies to fire their weapons.",
+	Type = "grenade",
+	
+	WModel = "models/weapons/w_eq_flashbang.mdl",
+
+	Features = "grenade", -- All weapons should have this?
+}
+
+-- Equipment
+
+WEAPONS["e_tacinsertion"] = {
+	Name = "TACTICAL INSERTION",
+	Description = "Flare that changes your deployment location.",
+	Type = "equipment",
+	
+	WModel = "models/weapons/w_eq_flashbang.mdl",
+
+	Features = "grenade", -- All weapons should have this?
+}
+
+WEAPONS["e_medkit"] = {
+	Name = "MEDKIT",
+	Description = "Station that regenerates a portion of health.",
+	Type = "equipment",
+	
+	WModel = "models/weapons/w_eq_flashbang.mdl",
+
+	Features = "grenade", -- All weapons should have this?
+}
+
+WEAPONS["e_ammo"] = {
+	Name = "AMMO CRATE",
+	Description = "Station that replenishes ammo.",
+	Type = "equipment",
+	
+	WModel = "models/weapons/w_eq_flashbang.mdl",
+
+	Features = "grenade", -- All weapons should have this?
+}
+
+WEAPONS["e_cover"] = {
+	Name = "DEPLOYABLE COVER",
+	Description = ".",
+	Type = "equipment",
+	
+	WModel = "models/weapons/w_eq_flashbang.mdl",
+
+	Features = "grenade", -- All weapons should have this?
+}
+
+WEAPONS["e_ddos"] = {
+	Name = "DDOS",
+	Description = ".",
+	Type = "equipment",
+	
+	WModel = "models/weapons/w_eq_flashbang.mdl",
+
+	Features = "grenade", -- All weapons should have this?
+}
+
+WEAPONS["e_trophysystem"] = {
+	Name = "TROPHY SYSTEM",
+	Description = "Disrupts enemy equipment.",
+	Type = "equipment",
+	
+	WModel = "models/weapons/w_eq_flashbang.mdl",
+
+	Features = "grenade", -- All weapons should have this?
+}
+
+WEAPONS["e_portableradar"] = {
+	Name = "PORTABLE RADAR",
+	Description = "Detects nearby enemies based on proximity.",
+	Type = "equipment",
+	
+	WModel = "models/weapons/w_eq_flashbang.mdl",
+
+	Features = "grenade", -- All weapons should have this?
+}
+
+WEAPONS["e_cameraspike"] = {
+	Name = "CAMERA SPIKE",
+	Description = "Mountable camera that gives you a live video feed.",
+	Type = "equipment",
+	
+	WModel = "models/weapons/w_eq_flashbang.mdl",
+
+	Features = "grenade", -- All weapons should have this?
+}
+
+WEAPONS["e_recondrone"] = {
+	Name = "RECON DRONE",
+	Description = "Pilotable hovering recon drone that automatically marks enemies.",
+	Type = "equipment",
+	
+	WModel = "models/weapons/w_eq_flashbang.mdl",
+
+	Features = "grenade", -- All weapons should have this?
+}
+
+WEAPONS["e_gasdrone"] = {
+	Name = "GAS DRONE",
+	Description = "Drone that dispenses toxic gas onto an area.",
+	Type = "equipment",
+	
+	WModel = "models/weapons/w_eq_flashbang.mdl",
+
+	Features = "grenade", -- All weapons should have this?
+}
+
+WEAPONS["e_suppressionmine"] = {
+	Name = "SUPPRESSION MINE",
+	Description = "Mine that detonates to dispense hard-to-see sleeping gas.",
+	Type = "equipment",
+	
+	WModel = "models/weapons/w_eq_flashbang.mdl",
+
+	Features = "grenade", -- All weapons should have this?
+}
+
+WEAPONS["e_antiarmor"] = {
+	Name = "ANTI-ARMOR ROUNDS",
+	Description = "Ammo crate that dispenses armor to disable vehicles.",
+	Type = "equipment",
 	
 	WModel = "models/weapons/w_eq_flashbang.mdl",
 
