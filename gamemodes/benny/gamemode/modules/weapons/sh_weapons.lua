@@ -197,6 +197,8 @@ WEAPONS["toolgun"] = {
 		-- Return true to skip weapon logic
 		return true
 	end,
+
+	Features = "firearm",
 }
 
 -- Melee
@@ -213,6 +215,8 @@ WEAPONS["melee_bat"] = {
 	Firemodes = FIREMODE_SEMI,
 	Ammo = 0,
 	Damage = 0,
+
+	Features = "melee",
 }
 
 WEAPONS["melee_baton"] = {
@@ -227,6 +231,8 @@ WEAPONS["melee_baton"] = {
 	Firemodes = FIREMODE_SEMI,
 	Ammo = 0,
 	Damage = 0,
+
+	Features = "melee",
 }
 
 WEAPONS["melee_knife"] = {
@@ -241,6 +247,8 @@ WEAPONS["melee_knife"] = {
 	Firemodes = FIREMODE_SEMI,
 	Ammo = 0,
 	Damage = 0,
+
+	Features = "melee",
 }
 
 WEAPONS["melee_machete"] = {
@@ -255,6 +263,8 @@ WEAPONS["melee_machete"] = {
 	Firemodes = FIREMODE_SEMI,
 	Ammo = 0,
 	Damage = 0,
+
+	Features = "melee",
 }
 
 -- Handguns
@@ -280,6 +290,8 @@ WEAPONS["1911"] = {
 	Firemodes = FIREMODE_SEMI,
 	Ammo = 8,
 	Damage = 30,
+
+	Features = "firearm",
 }
 
 WEAPONS["usp"] = {
@@ -303,6 +315,8 @@ WEAPONS["usp"] = {
 	Firemodes = FIREMODE_SEMI,
 	Ammo = 12,
 	Damage = 30,
+
+	Features = "firearm",
 }
 
 WEAPONS["m92"] = {
@@ -326,6 +340,8 @@ WEAPONS["m92"] = {
 	Firemodes = FIREMODE_SEMI,
 	Ammo = 15,
 	Damage = 30,
+
+	Features = "firearm",
 }
 
 WEAPONS["p226"] = {
@@ -349,6 +365,8 @@ WEAPONS["p226"] = {
 	Firemodes = FIREMODE_SEMI,
 	Ammo = 13,
 	Damage = 30,
+
+	Features = "firearm",
 }
 
 WEAPONS["glock"] = {
@@ -371,6 +389,8 @@ WEAPONS["glock"] = {
 	Firemodes = FIREMODE_AUTOSEMI,
 	Ammo = 17,
 	Damage = 18,
+
+	Features = "firearm",
 }
 
 WEAPONS["nambu"] = {
@@ -393,6 +413,8 @@ WEAPONS["nambu"] = {
 	Firemodes = FIREMODE_SEMI,
 	Ammo = 6,
 	Damage = 26,
+
+	Features = "firearm",
 }
 
 WEAPONS["anaconda"] = {
@@ -415,6 +437,8 @@ WEAPONS["anaconda"] = {
 	Firemodes = FIREMODE_SEMI,
 	Ammo = 6,
 	Damage = 40,
+
+	Features = "firearm",
 }
 
 WEAPONS["deagle"] = {
@@ -437,6 +461,8 @@ WEAPONS["deagle"] = {
 	Firemodes = FIREMODE_SEMI,
 	Ammo = 7,
 	Damage = 40,
+
+	Features = "firearm",
 }
 
 -- SMGs & PDWs
@@ -461,6 +487,8 @@ WEAPONS["tmp"] = {
 	Ammo = 15,
 	Damage = 18,
 	Spread = 20/60,
+
+	Features = "firearm",
 }
 
 WEAPONS["mp7"] = {
@@ -483,6 +511,8 @@ WEAPONS["mp7"] = {
 	Ammo = 20,
 	Damage = 16,
 	Spread = 20/60,
+
+	Features = "firearm",
 }
 
 WEAPONS["mp5k"] = {
@@ -505,6 +535,8 @@ WEAPONS["mp5k"] = {
 	Ammo = 15,
 	Damage = 18,
 	Spread = 20/60,
+
+	Features = "firearm",
 }
 
 WEAPONS["mac11"] = {
@@ -527,6 +559,8 @@ WEAPONS["mac11"] = {
 	Ammo = 16,
 	Damage = 16,
 	Spread = 30/60,
+
+	Features = "firearm",
 }
 
 WEAPONS["bizon"] = {
@@ -549,6 +583,8 @@ WEAPONS["bizon"] = {
 	Ammo = 40,
 	Damage = 16,
 	Spread = 40/60,
+
+	Features = "firearm",
 }
 
 WEAPONS["chicom"] = {
@@ -571,6 +607,8 @@ WEAPONS["chicom"] = {
 	Ammo = 36,
 	Damage = 12,
 	Spread = 40/60,
+
+	Features = "firearm",
 }
 
 -- Shotguns
@@ -595,6 +633,8 @@ WEAPONS["spas12"] = {
 	Damage = 10,
 	Pellets = 8,
 	Spread = 150/60,
+
+	Features = "firearm",
 }
 
 WEAPONS["aa12"] = {
@@ -617,6 +657,8 @@ WEAPONS["aa12"] = {
 	Damage = 8,
 	Pellets = 8,
 	Spread = 250/60,
+
+	Features = "firearm",
 }
 
 -- Rifles
@@ -640,6 +682,8 @@ WEAPONS["fnc"] = {
 	Firemodes = FIREMODE_AUTOSEMI,
 	Ammo = 30,
 	Damage = 10,
+
+	Features = "firearm",
 }
 
 WEAPONS["qbz"] = {
@@ -661,6 +705,8 @@ WEAPONS["qbz"] = {
 	Firemodes = FIREMODE_AUTOSEMI,
 	Ammo = 30,
 	Damage = 10,
+
+	Features = "firearm",
 }
 
 WEAPONS["m16a2"] = {
@@ -685,6 +731,8 @@ WEAPONS["m16a2"] = {
 	},
 	Ammo = 30,
 	Damage = 10,
+
+	Features = "firearm",
 }
 
 -- Machine guns
@@ -707,6 +755,8 @@ WEAPONS["stoner63"] = {
 	Firemodes = FIREMODE_AUTOSEMI,
 	Ammo = 75,
 	Damage = 10,
+
+	Features = "firearm",
 }
 
 WEAPONS["qbblsw"] = {
@@ -727,19 +777,33 @@ WEAPONS["qbblsw"] = {
 	Firemodes = FIREMODE_AUTOSEMI,
 	Ammo = 70,
 	Damage = 10,
+
+	Features = "firearm",
 }
 
 -- Grenades
 -- Nothing here is guaranteed.
 
+local function GrenadeFire()
+	print("yay")
+	return true
+end
+
+local function GrenadeThink()
+	-- print("yay")
+	return true
+end
+
 WEAPONS["g_frag"] = {
 	Name = "FRAG GRENADE",
 	Description = "Pull the pin and throw it the hell away!",
 	Type = "grenade",
+
+	Fire = GrenadeFire,
 	
 	WModel = "models/weapons/w_eq_flashbang.mdl",
 
-	Features = "grenade", -- All weapons should have this?
+	Features = "grenade",
 }
 
 WEAPONS["g_semtex"] = {
@@ -749,7 +813,7 @@ WEAPONS["g_semtex"] = {
 	
 	WModel = "models/weapons/w_eq_flashbang.mdl",
 
-	Features = "grenade", -- All weapons should have this?
+	Features = "grenade",
 }
 
 WEAPONS["g_molotov"] = {
@@ -759,7 +823,7 @@ WEAPONS["g_molotov"] = {
 	
 	WModel = "models/weapons/w_eq_flashbang.mdl",
 
-	Features = "grenade", -- All weapons should have this?
+	Features = "grenade",
 }
 
 WEAPONS["g_tknife"] = {
@@ -769,7 +833,7 @@ WEAPONS["g_tknife"] = {
 	
 	WModel = "models/weapons/w_eq_flashbang.mdl",
 
-	Features = "grenade", -- All weapons should have this?
+	Features = "grenade",
 }
 
 WEAPONS["g_smoke"] = {
@@ -779,7 +843,7 @@ WEAPONS["g_smoke"] = {
 	
 	WModel = "models/weapons/w_eq_flashbang.mdl",
 
-	Features = "grenade", -- All weapons should have this?
+	Features = "grenade",
 }
 
 WEAPONS["g_flashbang"] = {
@@ -789,7 +853,7 @@ WEAPONS["g_flashbang"] = {
 	
 	WModel = "models/weapons/w_eq_flashbang.mdl",
 
-	Features = "grenade", -- All weapons should have this?
+	Features = "grenade",
 }
 
 WEAPONS["g_gas"] = {
@@ -799,7 +863,7 @@ WEAPONS["g_gas"] = {
 	
 	WModel = "models/weapons/w_eq_flashbang.mdl",
 
-	Features = "grenade", -- All weapons should have this?
+	Features = "grenade",
 }
 
 WEAPONS["g_prox"] = {
@@ -809,7 +873,7 @@ WEAPONS["g_prox"] = {
 	
 	WModel = "models/weapons/w_eq_flashbang.mdl",
 
-	Features = "grenade", -- All weapons should have this?
+	Features = "grenade",
 }
 
 WEAPONS["g_claymore"] = {
@@ -819,7 +883,7 @@ WEAPONS["g_claymore"] = {
 	
 	WModel = "models/weapons/w_eq_flashbang.mdl",
 
-	Features = "grenade", -- All weapons should have this?
+	Features = "grenade",
 }
 
 WEAPONS["g_scrambler"] = {
@@ -829,7 +893,7 @@ WEAPONS["g_scrambler"] = {
 	
 	WModel = "models/weapons/w_eq_flashbang.mdl",
 
-	Features = "grenade", -- All weapons should have this?
+	Features = "grenade",
 }
 
 WEAPONS["g_emp"] = {
@@ -839,7 +903,7 @@ WEAPONS["g_emp"] = {
 	
 	WModel = "models/weapons/w_eq_flashbang.mdl",
 
-	Features = "grenade", -- All weapons should have this?
+	Features = "grenade",
 }
 
 WEAPONS["g_shockcharge"] = {
@@ -849,7 +913,7 @@ WEAPONS["g_shockcharge"] = {
 	
 	WModel = "models/weapons/w_eq_flashbang.mdl",
 
-	Features = "grenade", -- All weapons should have this?
+	Features = "grenade",
 }
 
 -- Equipment
@@ -861,7 +925,7 @@ WEAPONS["e_tacinsertion"] = {
 	
 	WModel = "models/weapons/w_eq_flashbang.mdl",
 
-	Features = "grenade", -- All weapons should have this?
+	Features = "grenade",
 }
 
 WEAPONS["e_medkit"] = {
@@ -871,7 +935,7 @@ WEAPONS["e_medkit"] = {
 	
 	WModel = "models/weapons/w_eq_flashbang.mdl",
 
-	Features = "grenade", -- All weapons should have this?
+	Features = "grenade",
 }
 
 WEAPONS["e_ammo"] = {
@@ -881,7 +945,7 @@ WEAPONS["e_ammo"] = {
 	
 	WModel = "models/weapons/w_eq_flashbang.mdl",
 
-	Features = "grenade", -- All weapons should have this?
+	Features = "grenade",
 }
 
 WEAPONS["e_cover"] = {
@@ -891,7 +955,7 @@ WEAPONS["e_cover"] = {
 	
 	WModel = "models/weapons/w_eq_flashbang.mdl",
 
-	Features = "grenade", -- All weapons should have this?
+	Features = "grenade",
 }
 
 WEAPONS["e_ddos"] = {
@@ -901,7 +965,7 @@ WEAPONS["e_ddos"] = {
 	
 	WModel = "models/weapons/w_eq_flashbang.mdl",
 
-	Features = "grenade", -- All weapons should have this?
+	Features = "grenade",
 }
 
 WEAPONS["e_trophysystem"] = {
@@ -911,7 +975,7 @@ WEAPONS["e_trophysystem"] = {
 	
 	WModel = "models/weapons/w_eq_flashbang.mdl",
 
-	Features = "grenade", -- All weapons should have this?
+	Features = "grenade",
 }
 
 WEAPONS["e_portableradar"] = {
@@ -921,7 +985,7 @@ WEAPONS["e_portableradar"] = {
 	
 	WModel = "models/weapons/w_eq_flashbang.mdl",
 
-	Features = "grenade", -- All weapons should have this?
+	Features = "grenade",
 }
 
 WEAPONS["e_cameraspike"] = {
@@ -931,7 +995,7 @@ WEAPONS["e_cameraspike"] = {
 	
 	WModel = "models/weapons/w_eq_flashbang.mdl",
 
-	Features = "grenade", -- All weapons should have this?
+	Features = "grenade",
 }
 
 WEAPONS["e_recondrone"] = {
@@ -941,7 +1005,7 @@ WEAPONS["e_recondrone"] = {
 	
 	WModel = "models/weapons/w_eq_flashbang.mdl",
 
-	Features = "grenade", -- All weapons should have this?
+	Features = "grenade",
 }
 
 WEAPONS["e_gasdrone"] = {
@@ -951,7 +1015,7 @@ WEAPONS["e_gasdrone"] = {
 	
 	WModel = "models/weapons/w_eq_flashbang.mdl",
 
-	Features = "grenade", -- All weapons should have this?
+	Features = "grenade",
 }
 
 WEAPONS["e_suppressionmine"] = {
@@ -961,7 +1025,7 @@ WEAPONS["e_suppressionmine"] = {
 	
 	WModel = "models/weapons/w_eq_flashbang.mdl",
 
-	Features = "grenade", -- All weapons should have this?
+	Features = "grenade",
 }
 
 WEAPONS["e_antiarmor"] = {
@@ -971,5 +1035,5 @@ WEAPONS["e_antiarmor"] = {
 	
 	WModel = "models/weapons/w_eq_flashbang.mdl",
 
-	Features = "grenade", -- All weapons should have this?
+	Features = "grenade",
 }

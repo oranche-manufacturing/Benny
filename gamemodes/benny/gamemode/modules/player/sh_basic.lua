@@ -77,7 +77,7 @@ concommand.Add("benny_inv_equip", function( ply, cmd, args )
 	wep:SetWep1Clip( item.Loaded )
 	
 	-- PROTO: Make grenade/melee/firearm logic way way better.
-	if class.Features != "grenade" then
+	if class.Features == "firearm" then
 		if item.Loaded != 0 then
 			assert( item[ "Ammo" .. item.Loaded ], "That magazine doesn't exist." )
 		end

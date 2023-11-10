@@ -258,7 +258,7 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 			surface.DrawRect( sw - b - ss(w-4), sh - b + ss(16) - ss(BOXHEIGHT-4), ss(fmpw), ss(10) )
 
 			-- PROTO: Make grenade/melee/firearm logic way way better.
-			if wep1c.Features != "grenade" then
+			if wep1c.Features == "firearm" then
 				surface.SetFont( "Benny_12" )
 				local str = wep:B_FiremodeName( false )
 				local tw = surface.GetTextSize( str )
