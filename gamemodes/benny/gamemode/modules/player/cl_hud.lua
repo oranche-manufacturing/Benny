@@ -46,6 +46,15 @@ local function genfonts()
 			weight = 0,
 		} )
 	end
+	for _, size in pairs(sizes) do
+		surface.CreateFont( "BennyS_" .. size, {
+			font = "Carbon Plus Bold",
+			size = ss(size),
+			weight = 0,
+			scanlines = ss(1),
+			blursize = ss(3),
+		} )
+	end
 	local sizes = {
 		8,
 		9,
@@ -77,11 +86,11 @@ schemes = {
 		caption = Color( 255, 238, 169 ),
 		name = "BENNY",
 	},
-	["nicky"] = {
+	["nikki"] = {
 		fg = Color( 255, 174, 210 ),
 		bg = Color(37, 12, 40 ),
 		caption = Color( 255, 174, 210 ),
-		name = "NICKY",
+		name = "NIKKI",
 	},
 	["igor"] = {
 		fg = Color( 253, 208, 207 ),
@@ -95,6 +104,42 @@ schemes = {
 		caption = Color( 87, 187, 253 ),
 		name = "YANG-HAO",
 	},
+	["mp_cia"] = {
+		fg = Color( 93, 118, 215 ),
+		bg = Color( 25, 23, 47 ),
+		caption = Color( 87, 187, 253 ),
+		name = "CIA",
+	},
+	["mp_plasof"] = {
+		fg = Color( 255, 103, 103 ),
+		bg = Color( 35, 25, 20 ),
+		caption = Color( 87, 187, 253 ),
+		name = "PLASOF",
+	},
+	["mp_militia"] = {
+		fg = Color( 255, 199, 133 ),
+		bg = Color( 33, 18, 18 ),
+		caption = Color( 87, 187, 253 ),
+		name = "MILITIA",
+	},
+	["mp_natguard"] = {
+		fg = Color( 208, 226, 132 ),
+		bg = Color( 23, 25, 23 ),
+		caption = Color( 87, 187, 253 ),
+		name = "ARNG",
+	},
+	["mp_viper"] = {
+		fg = Color( 255, 230, 245 ),
+		bg = Color( 40, 30, 30 ),
+		caption = Color( 87, 187, 253 ),
+		name = "VIPER",
+	},
+	["mp_halo"] = {
+		fg = Color( 200, 255, 246 ),
+		bg = Color( 30, 40, 38 ),
+		caption = Color( 87, 187, 253 ),
+		name = "HALO",
+	},
 	["enemy"] = {
 		caption = Color( 199, 0, 0 ),
 		name = "ENEMY",
@@ -104,6 +149,10 @@ schemes = {
 		name = "PISTOL",
 	}
 }
+
+function schema( i1, i2, alpha )
+	return schemes[i1][i2].r, schemes[i1][i2].g, schemes[i1][i2].b, alpha*255
+end
 
 captions = {
 	--{
@@ -178,6 +227,8 @@ local gap = 24
 bucket_selected = bucket_selected or 1
 item_selected = item_selected or 1
 
+CreateClientConVar( "benny_hud_tempactive", "benny", true, false )
+
 hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 	local sw, sh = ScrW(), ScrH()
 	local b = ss(20)
@@ -185,7 +236,8 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 	-- PROTO: Make sure this is the 'benny' weapon.
 	local wep = p:GetActiveWeapon()
 
-	local scheme = schemes["benny"]
+	local active = GetConVar("benny_hud_tempactive"):GetString()
+	local scheme = schemes[active]
 
 	do -- Health
 		-- BG
@@ -271,9 +323,10 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 				local text = wep:GetWep1Clip() == 0 and "---" or wep:Clip1()-- .. " - MAG " .. wep:GetWep1Clip()
 				local tw = surface.GetTextSize( text )
 				surface.SetTextColor( scheme["fg"] )
-				surface.SetTextPos( sw - b - ss(4) - tw, sh - b - ss(24) )
+				surface.SetTextPos( sw - b - ss(4) - tw, sh - b - ss(25) )
 				surface.DrawText( text )
 
+				surface.SetFont( "Benny_12" )
 				local bx = 1
 				local count = math.max( wep:Clip1(), wep:BClass( false ).Ammo )
 				local size = ss(10)
@@ -703,14 +756,29 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 				d1 = d1 .. "."
 			end
 			
-			surface.SetTextColor( scheme["fg"] )
 			surface.SetFont( "Benny_36")
-			surface.SetTextPos( ib + r_x + ss( 24 ) - surface.GetTextSize( d1 ), r_y )
+			local tx = surface.GetTextSize( d1 )
+
+			local c1, c2, c3, c4 = schema( active, "fg", ((tt.ms/100)%1))
+
+			surface.SetTextColor( c1, c2, c3, c4 )
+			surface.SetTextPos( ib + r_x + ss( 24 ) - tx, r_y )
+			surface.SetFont( "BennyS_36")
 			surface.DrawText( d1 )
 
 			surface.SetTextColor( scheme["fg"] )
-			surface.SetFont( "Benny_28")
+			surface.SetTextPos( ib + r_x + ss( 24 ) - tx, r_y )
+			surface.SetFont( "Benny_36")
+			surface.DrawText( d1 )
+
+			surface.SetTextColor( c1, c2, c3, c4 )
 			surface.SetTextPos( ib + r_x + ss( 24 ), r_y + ss(5) )
+			surface.SetFont( "BennyS_28")
+			surface.DrawText( d2 )
+
+			surface.SetTextColor( scheme["fg"] )
+			surface.SetTextPos( ib + r_x + ss( 24 ), r_y + ss(5) )
+			surface.SetFont( "Benny_28")
 			surface.DrawText( d2 )
 		end
 		do -- Score
