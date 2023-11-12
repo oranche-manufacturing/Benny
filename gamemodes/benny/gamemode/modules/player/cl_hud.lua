@@ -275,32 +275,41 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 				surface.DrawText( text )
 
 				local bx = 1
-				local by = 0
 				local count = math.max( wep:Clip1(), wep:BClass( false ).Ammo )
-				local size = ss(8)
+				local size = ss(10)
+				local by = ss(2)
 				if count>90 then
 					size = ss(2)
-					by = by - ss(9-3)
+					by = -ss(6)
 				elseif count>60 then
 					size = ss(2)
-					by = by - ss(6)
+					by = -ss(6)
 				elseif count>30 then
-					size = ss(3)
-					by = by - ss(5)
+					size = ss(4)
+					by = -ss(4)
 				end
 				for i=1, count do
 					surface.SetDrawColor( scheme["fg"] )
-					surface.DrawOutlinedRect( sw - b - ss(3+4) - ( ss(5) * (bx-1) ), sh - b - ss(8+4) - by, ss(3), size, ss(0.5) )
+					local a_x, a_y = sw - b - ss(3+4) - ( ss(5) * (bx-1) ), sh - b - ss(8+4) - by, ss(3)
+					if count>90 then
+						-- surface.DrawLine( a_x, a_y, a_x, a_y + size )
+						surface.DrawLine( a_x, a_y, a_x, a_y + size )
+						surface.DrawLine( a_x + ss(2)+1, a_y, a_x + ss(2)+1, a_y + size )
+					else
+						surface.DrawOutlinedRect( a_x, a_y, ss(3), size, ss(0.5) )
+					end
 					if i <= wep:Clip1() then
-						surface.DrawRect( sw - b - ss(3+4) - ( ss(5) * (bx-1) ), sh - b - ss(8+4) - by, ss(3), size )
+						surface.DrawRect( a_x, a_y, ss(3), size )
 					end
 					if i%30 == 0 then
 						if count>90 then
 							by = by + ss(3)
 						elseif count>60 then
-							by = by + ss(3)
+							by = by + ss(4)
+						elseif count>30 then
+							by = by + ss(6)
 						else
-							by = by + ss(5)
+							by = by + ss(10)
 						end
 						bx = 0
 					end
@@ -670,7 +679,7 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 		surface.DrawRect( r_x, r_y, r_w, r_h )
 
 		do -- Time
-			local tt = string.FormattedTime( (CurTime() % 60) )
+			local tt = string.FormattedTime( 60-(CurTime() % 60) )
 			local d1, d2
 			if tt.m > 0 then
 				d1 = tt.m -- .. ":"
@@ -680,7 +689,7 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 				end
 			else
 				d1 = tt.s -- .. "."
-				d2 = math.Round( tt.ms )
+				d2 = math.floor( tt.ms )
 			end
 
 			d1 = string.format( "%02i", d1 )
@@ -720,9 +729,9 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 
 				surface.SetFont( "Benny_12")
 				surface.SetTextPos( s_x + ss(2), s_y + ss(1) )
-				surface.DrawText( i==1 and "PLASOF" or "CIA" )
+				surface.DrawText( i==1 and "HALO" or "CIA" )
 
-				local score = "12000"
+				local score = i==1 and "100" or "12000"
 				surface.SetTextPos( s_x + s_w - surface.GetTextSize( score ) - ss(2), s_y + ss(1) )
 				surface.DrawText( score )
 			end
