@@ -637,6 +637,54 @@ WEAPONS["spas12"] = {
 	Features = "firearm",
 }
 
+WEAPONS["cqb70"] = {
+	Name = "CQB-70",
+	Description = "meow",
+	Type = "shotgun",
+
+	WModel = "models/weapons/w_shot_cs3.mdl",
+	HoldType = "rpg",
+	GestureFire = { ACT_HL2MP_GESTURE_RANGE_ATTACK_CROSSBOW, 0.5 },
+
+	Sound_Fire = "AA12.Fire",
+	Sound_DryFire = "Common.Dryfire.Rifle",
+	Sound_MagOut = "AA12.MagOut",
+	Sound_MagIn = "AA12.MagIn",
+
+	Delay = (60/120),
+	Firemodes = FIREMODE_SEMI,
+	Ammo = 4,
+	Damage = 10,
+	Pellets = 8,
+	Spread = 150/60,
+
+	Features = "firearm",
+}
+
+WEAPONS["m12ak"] = {
+	Name = "M12AK",
+	Description = "meow",
+	Type = "shotgun",
+
+	WModel = "models/weapons/w_shot_saiga.mdl",
+	HoldType = "rpg",
+	GestureFire = { ACT_HL2MP_GESTURE_RANGE_ATTACK_CROSSBOW, 0.5 },
+
+	Sound_Fire = "AA12.Fire",
+	Sound_DryFire = "Common.Dryfire.Rifle",
+	Sound_MagOut = "AA12.MagOut",
+	Sound_MagIn = "AA12.MagIn",
+
+	Delay = (60/160),
+	Firemodes = FIREMODE_SEMI,
+	Ammo = 5,
+	Damage = 10,
+	Pellets = 8,
+	Spread = 150/60,
+
+	Features = "firearm",
+}
+
 WEAPONS["aa12"] = {
 	Name = "AA-12",
 	Description = "meow",
@@ -784,8 +832,31 @@ WEAPONS["qbblsw"] = {
 -- Grenades
 -- Nothing here is guaranteed.
 
-local function GrenadeFire()
-	print("yay")
+local function GrenadeFire( self )
+	local p = self:GetOwner()
+	if self:GetDelay1() > CurTime() then
+		return true
+	end
+	self:SetDelay1( CurTime() + 0.1 )
+
+	self:TPFire()
+
+	-- PROTO: See to getting this done better. Maybe it's spawned while priming the nade for low CL-SV/phys delay?
+	if SERVER then 
+		local GENT = ents.Create( "bgrenade_frag" )
+		GENT:SetOwner( p )
+		GENT:SetPos( p:EyePos() + (p:EyeAngles():Forward()*16) )
+		GENT:SetAngles( p:EyeAngles() + Angle( 0, 0, -90 ) )
+		GENT.Fuse = CurTime() + 4
+		GENT:Spawn()
+
+		local velocity = p:EyeAngles():Forward() * 1500
+		velocity:Mul( Lerp( math.TimeFraction( 90, 0, p:EyeAngles().p ), 0, 1 ) )
+		-- velocity:Add( p:EyeAngles():Up() * 500 * Lerp( math.TimeFraction( 0, -90, p:EyeAngles().p ), 0, 1 ) )
+
+		GENT:GetPhysicsObject():SetVelocity( velocity )
+	end
+
 	return true
 end
 
@@ -802,6 +873,8 @@ WEAPONS["g_frag"] = {
 	Fire = GrenadeFire,
 	
 	WModel = "models/weapons/w_eq_flashbang.mdl",
+	HoldType = "grenade",
+	GestureFire = { ACT_HL2MP_GESTURE_RANGE_ATTACK_GRENADE, 0 },
 
 	Features = "grenade",
 }
