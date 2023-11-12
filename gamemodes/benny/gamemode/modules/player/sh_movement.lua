@@ -13,6 +13,7 @@ hook.Add( "PlayerNoClip", "Benny_PlayerNoClip", function( ply, desiredNoClipStat
 		if desiredNoClipState then
 			LocalPlayer():SetEyeAngles( TPSOverride )
 		else
+			TPSOverride:Set( LocalPlayer():EyeAngles() )
 			lastmoveangle = LocalPlayer():EyeAngles().y
 			lastmoveangle_lerp = LocalPlayer():EyeAngles().y
 		end
