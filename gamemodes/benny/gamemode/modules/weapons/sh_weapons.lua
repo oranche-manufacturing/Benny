@@ -150,14 +150,14 @@ do -- Toolgun
 	local ToolGunTools = {
 		["ammocrate"] = function( self, p, tr )
 			if SERVER then
-				local summon = ents.Create( "bitem_ammo" )
+				local summon = ents.Create( "benny_equipment_ammo" )
 				summon:SetPos( tr.HitPos + tr.HitNormal )
 				summon:Spawn()
 			end
 		end,
 		["summon_human"] = function( self, p, tr )
 			if SERVER then
-				local summon = ents.Create( "bnpc_human" )
+				local summon = ents.Create( "benny_npc_human" )
 				summon:SetPos( tr.HitPos + tr.HitNormal )
 				summon:Spawn()
 			end
@@ -882,7 +882,7 @@ end
 
 do -- Grenades, nothing here is guaranteed.
 
-	local function GrenadeFire( self )
+	local function GrenadeFire( self, class, table )
 		local p = self:GetOwner()
 		if self:GetDelay1() > CurTime() then
 			return true
@@ -893,15 +893,17 @@ do -- Grenades, nothing here is guaranteed.
 
 		-- PROTO: See to getting this done better. Maybe it's spawned while priming the nade for low CL-SV/phys delay?
 		if SERVER then 
-			local GENT = ents.Create( "bgrenade_frag" )
+			local GENT = ents.Create( class.GrenadeEnt )
 			GENT:SetOwner( p )
-			GENT:SetPos( p:EyePos() + (p:EyeAngles():Forward()*16) )
-			GENT:SetAngles( p:EyeAngles() + Angle( 0, 0, -90 ) )
-			GENT.Fuse = CurTime() + 4
+			local ang = p:EyeAngles()
+			ang.p = ang.p - 5
+			GENT:SetPos( p:EyePos() + (ang:Forward()*16) )
+			GENT:SetAngles( ang + Angle( 0, 0, -90 ) )
+			GENT.Fuse = CurTime() + class.GrenadeFuse
 			GENT:Spawn()
 
-			local velocity = p:EyeAngles():Forward() * 1500
-			velocity:Mul( Lerp( math.TimeFraction( 90, 0, p:EyeAngles().p ), 0, 1 ) )
+			local velocity = ang:Forward() * 1500
+			velocity:Mul( Lerp( math.TimeFraction( 90, 0, ang.p ), 0, 1 ) )
 			-- velocity:Add( p:EyeAngles():Up() * 500 * Lerp( math.TimeFraction( 0, -90, p:EyeAngles().p ), 0, 1 ) )
 
 			GENT:GetPhysicsObject():SetVelocity( velocity )
@@ -910,8 +912,11 @@ do -- Grenades, nothing here is guaranteed.
 		return true
 	end
 
-	local function GrenadeThink()
-		-- print("yay")
+	local function GrenadeReload( self, class )
+		return true
+	end
+
+	local function GrenadeThink( self, class )
 		return true
 	end
 
@@ -921,8 +926,13 @@ do -- Grenades, nothing here is guaranteed.
 		Type = "grenade",
 
 		Fire = GrenadeFire,
+		Reload = GrenadeReload,
+		Think = GrenadeThink,
+		GrenadeEnt = "benny_grenade_frag",
+		GrenadeFuse = 4,
+		GrenadeCharge = true,
 		
-		WModel = "models/weapons/w_eq_flashbang.mdl",
+		WModel = "models/weapons/w_eq_fraggrenade.mdl",
 		HoldType = "grenade",
 		GestureFire = { ACT_HL2MP_GESTURE_RANGE_ATTACK_GRENADE, 0 },
 
@@ -933,8 +943,17 @@ do -- Grenades, nothing here is guaranteed.
 		Name = "SEMTEX GRENADE",
 		Description = "Long, audible fuse, but sticks to whatever it touches.",
 		Type = "grenade",
+
+		Fire = GrenadeFire,
+		Reload = GrenadeReload,
+		Think = GrenadeThink,
+		GrenadeEnt = "benny_grenade_semtex",
+		GrenadeFuse = 4,
+		GrenadeCharge = true,
 		
 		WModel = "models/weapons/w_eq_flashbang.mdl",
+		HoldType = "grenade",
+		GestureFire = { ACT_HL2MP_GESTURE_RANGE_ATTACK_GRENADE, 0 },
 
 		Features = "grenade",
 	}
@@ -943,8 +962,17 @@ do -- Grenades, nothing here is guaranteed.
 		Name = "MOLOTOV COCKTAIL",
 		Description = "Alcoholic bottle of flame!",
 		Type = "grenade",
+
+		Fire = GrenadeFire,
+		Reload = GrenadeReload,
+		Think = GrenadeThink,
+		GrenadeEnt = "benny_grenade_molotov",
+		GrenadeFuse = 4,
+		GrenadeCharge = true,
 		
 		WModel = "models/weapons/w_eq_flashbang.mdl",
+		HoldType = "grenade",
+		GestureFire = { ACT_HL2MP_GESTURE_RANGE_ATTACK_GRENADE, 0 },
 
 		Features = "grenade",
 	}
@@ -953,8 +981,17 @@ do -- Grenades, nothing here is guaranteed.
 		Name = "THROWING KNIFE",
 		Description = "Lightweight knife to throw and pick back up.",
 		Type = "grenade",
+
+		Fire = GrenadeFire,
+		Reload = GrenadeReload,
+		Think = GrenadeThink,
+		GrenadeEnt = "benny_grenade_tknife",
+		GrenadeFuse = 4,
+		GrenadeCharge = true,
 		
 		WModel = "models/weapons/w_eq_flashbang.mdl",
+		HoldType = "grenade",
+		GestureFire = { ACT_HL2MP_GESTURE_RANGE_ATTACK_GRENADE, 0 },
 
 		Features = "grenade",
 	}
@@ -963,8 +1000,17 @@ do -- Grenades, nothing here is guaranteed.
 		Name = "SMOKE GRENADE",
 		Description = "Smoke bomb used to conceal a position, and makes enemies cough.",
 		Type = "grenade",
+
+		Fire = GrenadeFire,
+		Reload = GrenadeReload,
+		Think = GrenadeThink,
+		GrenadeEnt = "benny_grenade_smoke",
+		GrenadeFuse = 4,
+		GrenadeCharge = true,
 		
 		WModel = "models/weapons/w_eq_flashbang.mdl",
+		HoldType = "grenade",
+		GestureFire = { ACT_HL2MP_GESTURE_RANGE_ATTACK_GRENADE, 0 },
 
 		Features = "grenade",
 	}
@@ -973,8 +1019,17 @@ do -- Grenades, nothing here is guaranteed.
 		Name = "FLASHBANG",
 		Description = "Stun grenade that gives off a bright flash and a loud 'bang'.",
 		Type = "grenade",
+
+		Fire = GrenadeFire,
+		Reload = GrenadeReload,
+		Think = GrenadeThink,
+		GrenadeEnt = "benny_grenade_flashbang",
+		GrenadeFuse = 2,
+		GrenadeCharge = false,
 		
 		WModel = "models/weapons/w_eq_flashbang.mdl",
+		HoldType = "grenade",
+		GestureFire = { ACT_HL2MP_GESTURE_RANGE_ATTACK_GRENADE, 0 },
 
 		Features = "grenade",
 	}
@@ -983,8 +1038,17 @@ do -- Grenades, nothing here is guaranteed.
 		Name = "GAS GRENADE",
 		Description = "Short burst of gas that slows and disorient targets.",
 		Type = "grenade",
+
+		Fire = GrenadeFire,
+		Reload = GrenadeReload,
+		Think = GrenadeThink,
+		GrenadeEnt = "benny_grenade_gas",
+		GrenadeFuse = 4,
+		GrenadeCharge = true,
 		
 		WModel = "models/weapons/w_eq_flashbang.mdl",
+		HoldType = "grenade",
+		GestureFire = { ACT_HL2MP_GESTURE_RANGE_ATTACK_GRENADE, 0 },
 
 		Features = "grenade",
 	}
@@ -993,8 +1057,17 @@ do -- Grenades, nothing here is guaranteed.
 		Name = "PROXIMITY MINE",
 		Description = "Mine that bounces into the air.",
 		Type = "grenade",
+
+		Fire = GrenadeFire,
+		Reload = GrenadeReload,
+		Think = GrenadeThink,
+		GrenadeEnt = "benny_grenade_prox",
+		GrenadeFuse = 4,
+		GrenadeCharge = true,
 		
 		WModel = "models/weapons/w_eq_flashbang.mdl",
+		HoldType = "grenade",
+		GestureFire = { ACT_HL2MP_GESTURE_RANGE_ATTACK_GRENADE, 0 },
 
 		Features = "grenade",
 	}
@@ -1003,8 +1076,17 @@ do -- Grenades, nothing here is guaranteed.
 		Name = "CLAYMORE",
 		Description = "Mine that shoots shrapnel in a cone.",
 		Type = "grenade",
+
+		Fire = GrenadeFire,
+		Reload = GrenadeReload,
+		Think = GrenadeThink,
+		GrenadeEnt = "benny_grenade_claymore",
+		GrenadeFuse = 4,
+		GrenadeCharge = true,
 		
 		WModel = "models/weapons/w_eq_flashbang.mdl",
+		HoldType = "grenade",
+		GestureFire = { ACT_HL2MP_GESTURE_RANGE_ATTACK_GRENADE, 0 },
 
 		Features = "grenade",
 	}
@@ -1013,8 +1095,17 @@ do -- Grenades, nothing here is guaranteed.
 		Name = "SCRAMBLER",
 		Description = "Disrupts enemy radar based on proximity.",
 		Type = "grenade",
+
+		Fire = GrenadeFire,
+		Reload = GrenadeReload,
+		Think = GrenadeThink,
+		GrenadeEnt = "benny_grenade_scrambler",
+		GrenadeFuse = 4,
+		GrenadeCharge = true,
 		
 		WModel = "models/weapons/w_eq_flashbang.mdl",
+		HoldType = "grenade",
+		GestureFire = { ACT_HL2MP_GESTURE_RANGE_ATTACK_GRENADE, 0 },
 
 		Features = "grenade",
 	}
@@ -1023,8 +1114,17 @@ do -- Grenades, nothing here is guaranteed.
 		Name = "EMP NADE",
 		Description = "Disrupts enemy equipment based on proximity.",
 		Type = "grenade",
+
+		Fire = GrenadeFire,
+		Reload = GrenadeReload,
+		Think = GrenadeThink,
+		GrenadeEnt = "benny_grenade_emp",
+		GrenadeFuse = 4,
+		GrenadeCharge = true,
 		
 		WModel = "models/weapons/w_eq_flashbang.mdl",
+		HoldType = "grenade",
+		GestureFire = { ACT_HL2MP_GESTURE_RANGE_ATTACK_GRENADE, 0 },
 
 		Features = "grenade",
 	}
@@ -1033,8 +1133,36 @@ do -- Grenades, nothing here is guaranteed.
 		Name = "SHOCK CHARGE",
 		Description = "Charge that stuns and forces enemies to fire their weapons.",
 		Type = "grenade",
+
+		Fire = GrenadeFire,
+		Reload = GrenadeReload,
+		Think = GrenadeThink,
+		GrenadeEnt = "benny_grenade_shockcharge",
+		GrenadeFuse = 4,
+		GrenadeCharge = true,
 		
 		WModel = "models/weapons/w_eq_flashbang.mdl",
+		HoldType = "grenade",
+		GestureFire = { ACT_HL2MP_GESTURE_RANGE_ATTACK_GRENADE, 0 },
+
+		Features = "grenade",
+	}
+
+	WEAPONS["g_thermobaric"] = {
+		Name = "THERMOBARIC GRENADE",
+		Description = "Burns through armor.",
+		Type = "grenade",
+
+		Fire = GrenadeFire,
+		Reload = GrenadeReload,
+		Think = GrenadeThink,
+		GrenadeEnt = "benny_grenade_thermobaric",
+		GrenadeFuse = 4,
+		GrenadeCharge = true,
+		
+		WModel = "models/weapons/w_eq_flashbang.mdl",
+		HoldType = "grenade",
+		GestureFire = { ACT_HL2MP_GESTURE_RANGE_ATTACK_GRENADE, 0 },
 
 		Features = "grenade",
 	}

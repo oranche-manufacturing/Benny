@@ -2,13 +2,14 @@ AddCSLuaFile()
 
 ENT.Type = "anim"
 
+ENT.Model = "models/weapons/w_eq_fraggrenade_thrown.mdl"
 ENT.Fuse = 0
 
 local size = Vector( 4, 4, 4 )
 local sizem = -size
 
 function ENT:Initialize()
-	self:SetModel( "models/weapons/w_eq_fraggrenade_thrown.mdl" )
+	self:SetModel( self.Model )
 	if SERVER then
 		self:PhysicsInitBox( sizem, size, SOLID_VPHYSICS )
 		self:SetMoveType( MOVETYPE_VPHYSICS )
@@ -27,25 +28,14 @@ end
 function ENT:Think()
 	if SERVER and self.Fuse <= CurTime() then
 		self:Explode()
-		self:Remove()
 	end
 	return
 end
 
 local explosionflags = 0x2 + 0x4 + 0x80
 function ENT:Explode()
-	local effectdata = EffectData()
-	effectdata:SetOrigin( self:GetPos() )
-	effectdata:SetFlags( explosionflags )
-	util.Effect( "Explosion", effectdata )
-
-	local dmg = DamageInfo()
-	dmg:SetDamage( 125 )
-	dmg:SetAttacker( self:GetOwner() )
-	util.BlastDamageInfo( dmg, self:GetPos(), 140 )
-	return
 end
 
 function ENT:PhysicsCollide( data, phys )
-	if ( data.Speed > 100 ) then phys:SetVelocity( data.OurNewVelocity/2 ) end
+	if ( data.Speed > 100 ) then phys:SetVelocity( (-data.HitNormal * data.OurNewVelocity:Length()) * 0.25 + (data.OurNewVelocity*0.5) ) phys:SetAngleVelocity( phys:GetAngleVelocity()*0.5 ) end
 end

@@ -42,7 +42,7 @@ function SWEP:PrimaryAttack()
 		return
 	end
 	if self:BClass().Fire then
-		if self:BClass( false ).Fire( self, false ) then return end
+		if self:BClass( false ).Fire( self, self:BClass( false ), self:BTable( false ) ) then return end
 	end
 	if self:GetDelay1() > CurTime() then
 		return
@@ -114,7 +114,7 @@ end
 function SWEP:Reload()
 	if self:BTable( false ) and self:GetOwner():KeyPressed( IN_RELOAD ) then
 		if self:BClass().Reload then
-			if self:BClass( false ).Reload( self, false ) then return end
+			if self:BClass( false ).Reload( self, self:BClass( false ), self:BTable( false ) ) then return end
 		end
 		if self:GetDelay1() > CurTime() then
 			return false
@@ -170,6 +170,12 @@ function SWEP:Think()
 		self:TPHolster()
 	elseif ht != "normal" and self:GetHoldType() == "normal" then
 		self:TPDraw()
+	end
+	
+	if self:BClass( false ) then
+		if self:BClass( false ).Think then
+			self:BClass( false ).Think( self, self:BClass( false ), self:BTable( false ) )
+		end
 	end
 
 	self:SetWeaponHoldType(ht)
