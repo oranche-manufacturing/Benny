@@ -53,6 +53,7 @@ do
 		["machinegun"]		= { 5, 2 },
 		["grenade"]		= { 6, 1 },
 		["utility"]		= { 6, 2 },
+		["equipment"]		= { 7, 1 },
 	}
 
 	-- PROTO: Cache this!
@@ -64,6 +65,7 @@ do
 			[4] = {},
 			[5] = {},
 			[6] = {},
+			[7] = {},
 		}
 		for i, bucket in ipairs( inventorylist ) do
 			local temp = {}
