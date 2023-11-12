@@ -7,6 +7,25 @@ local blop = Angle()
 local lastmoveangle = 0
 local lastmoveangle_lerp
 TPSOverride = TPSOverride or Angle()
+
+hook.Add( "PlayerNoClip", "Benny_PlayerNoClip", function( ply, desiredNoClipState )
+	if CLIENT then
+		if desiredNoClipState then
+			LocalPlayer():SetEyeAngles( TPSOverride )
+		else
+			lastmoveangle = LocalPlayer():EyeAngles().y
+			lastmoveangle_lerp = LocalPlayer():EyeAngles().y
+		end
+	end
+end)
+
+hook.Add( "InputMouseApply", "Benny_InputMouseApply", function( cmd, x, y, ang )
+	if LocalPlayer():BennyCheck() and LocalPlayer():GetMoveType() != MOVETYPE_NOCLIP then
+		TPSOverride:Add( Angle( y*0.022, -x*0.022, 0 ) )
+		return true
+	end
+end)
+
 hook.Add( "CreateMove", "Benny_CreateMove", function( cmd )
 	if false and BENNY_ACTIVECAMERA and LocalPlayer():GetMoveType() != MOVETYPE_NOCLIP then
 		local x, y = cmd:GetForwardMove(), cmd:GetSideMove()
@@ -78,7 +97,7 @@ hook.Add( "CreateMove", "Benny_CreateMove", function( cmd )
 		dir_y = dir_y and -1 or 1
 		local look_p, look_y = dir_p * math.ease.InCirc( math.abs(lr) ), dir_y * math.ease.InCirc( math.abs(lu) )
 
-		ang:Add( Angle( cmd:GetMouseY()*0.022, -cmd:GetMouseX()*0.022, 0 ) )
+		-- ang:Add( Angle( cmd:GetMouseY()*0.022, -cmd:GetMouseX()*0.022, 0 ) )
 		ang:Add( Angle( look_p * 180 * 0.5 * FrameTime(), look_y * 180 * FrameTime(), 0 ) )
 		ang.p = math.Clamp( ang.p, -89.9, 89.9 )
 		ang:Normalize()
