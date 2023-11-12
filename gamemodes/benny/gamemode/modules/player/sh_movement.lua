@@ -58,10 +58,29 @@ hook.Add( "CreateMove", "Benny_CreateMove", function( cmd )
 	local w = p:GetActiveWeapon()
 	if p:BennyCheck() and LocalPlayer():GetMoveType() != MOVETYPE_NOCLIP then -- FPS cam
 		local aimed = w:GetUserAim()
-
 		local opos, ang = p:CamSpot( TPSOverride )
 
+		local lx=input.GetAnalogValue(ANALOG_JOY_X) // Left X Axis: left -, right +
+		local ly=input.GetAnalogValue(ANALOG_JOY_Y) // Left Y Axis: up -, bottom +
+		local lr=input.GetAnalogValue(ANALOG_JOY_R) // Right X Axis: left -, right +
+		local lu=input.GetAnalogValue(ANALOG_JOY_U) // Right Y Axis: up -, bottom +
+		lx=lx/32768; ly=ly/32768; lr=lr/32768; lu=lu/32768; // Conversion to floats -1.0 - 1.0
+
+		local moveintent
+		if lx != 0 or ly != 0 then
+			moveintent = Vector( ly * -320, lx * 320, 0 )
+		else
+			moveintent = Vector( cmd:GetForwardMove(), cmd:GetSideMove(), 0 )
+		end
+
+		local dir_p, dir_y = lr>0, lu>0
+		dir_p = dir_p and 1 or -1
+		dir_y = dir_y and -1 or 1
+		local look_p, look_y = dir_p * math.ease.InCirc( math.abs(lr) ), dir_y * math.ease.InCirc( math.abs(lu) )
+
 		ang:Add( Angle( cmd:GetMouseY()*0.022, -cmd:GetMouseX()*0.022, 0 ) )
+		ang:Add( Angle( look_p * 180 * 0.5 * FrameTime(), look_y * 180 * FrameTime(), 0 ) )
+		ang.p = math.Clamp( ang.p, -89.9, 89.9 )
 		ang:Normalize()
 
 		if aimed then
@@ -77,8 +96,6 @@ hook.Add( "CreateMove", "Benny_CreateMove", function( cmd )
 			cmd:SetViewAngles( planner )
 			lastmoveangle = planner.y
 		end
-
-		local moveintent = Vector( cmd:GetForwardMove(), cmd:GetSideMove(), 0 )
 
 		if !aimed then
 			if !moveintent:IsEqualTol( vector_origin, 1 ) then
