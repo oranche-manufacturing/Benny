@@ -56,7 +56,7 @@ function SWEP:PrimaryAttack()
 		return
 	end
 	
-	-- self:B_Ammo( false, self:Clip1() - 1 )
+	self:B_Ammo( false, self:Clip1() - 1 )
 
 	B_Sound( self, self:BClass( false ).Sound_Fire )
 	self:TPFire()
