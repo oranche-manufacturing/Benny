@@ -170,6 +170,7 @@ if CLIENT then
 	
 	function OpenSMenu()
 		if IsValid( smenu ) then smenu:Remove() return end
+		local active = GetConVar("benny_hud_tempactive"):GetString()
 		smenu = vgui.Create("DFrame")
 		smenu:SetSize( ss(1+(96+2)*4), ss(360) )
 		smenu:MakePopup()
@@ -177,7 +178,7 @@ if CLIENT then
 		smenu:Center()
 
 		function smenu:Paint( w, h )
-			surface.SetDrawColor( schemes["benny"]["bg"] )
+			surface.SetDrawColor( schemes[active]["bg"] )
 			surface.DrawRect( 0, 0, w, h )
 			return true
 		end
@@ -229,10 +230,10 @@ if CLIENT then
 				end
 
 				function button:Paint( w, h )
-					surface.SetDrawColor( schemes["benny"]["fg"] )
+					surface.SetDrawColor( schemes[active]["fg"] )
 					surface.DrawRect( 0, 0, w, h )
 					
-					surface.SetTextColor( schemes["benny"]["bg"] )
+					surface.SetTextColor( schemes[active]["bg"] )
 
 					surface.SetFont( "Benny_12" )
 					surface.SetTextPos( ss(2), ss(2) )
@@ -249,6 +250,7 @@ if CLIENT then
 	end
 	local function regen_items( itemlist )
 		local ply = LocalPlayer()
+		local active = GetConVar("benny_hud_tempactive"):GetString()
 		itemlist:Clear()
 
 		for i, v in pairs( ply:INV_Get() ) do
@@ -275,10 +277,10 @@ if CLIENT then
 			end
 
 			function button:Paint( w, h )
-				surface.SetDrawColor( schemes["benny"]["fg"] )
+				surface.SetDrawColor( schemes[active]["fg"] )
 				surface.DrawRect( 0, 0, w, h )
 				
-				surface.SetTextColor( schemes["benny"]["bg"] )
+				surface.SetTextColor( schemes[active]["bg"] )
 
 				surface.SetFont( "Benny_16" )
 				surface.SetTextPos( ss(4), ss(4) )
