@@ -224,6 +224,10 @@ local mat_long_s = Material("benny/hud/xhair/long_s.png", "mips smooth")
 local spacer_long = 2 -- screenscaled
 local gap = 24
 
+local trash_vec, trash_ang = Vector(), Angle()
+local vaultsave = false
+local nextvaultrecheck = 0
+
 bucket_selected = bucket_selected or 1
 item_selected = item_selected or 1
 
@@ -268,6 +272,41 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 		render.SetScissorRect( b + ss(4), sh - b - ss(22) + ss(4), b + ss(4) + ss((140*hp)-8), sh - b - ss(22) + ss(4) + ss(14), true ) -- Enable the rect
 			surface.DrawText( scheme["name"] )
 		render.SetScissorRect( 0, 0, 0, 0, false ) -- Disable after you are done
+	end
+
+	do -- Vaulting
+		if nextvaultrecheck <= CurTime() then
+			local forback, leright = 0, 0
+			forback = forback + (p:KeyDown( IN_FORWARD ) and 1 or 0)
+			forback = forback - (p:KeyDown( IN_BACK ) and 1 or 0)
+			leright = leright + (p:KeyDown( IN_MOVELEFT ) and 1 or 0)
+			leright = leright - (p:KeyDown( IN_MOVERIGHT ) and 1 or 0)
+			trash_vec.x = forback
+			trash_vec.y = leright
+			trash_vec.z = 0
+			trash_ang.p = 0
+			trash_ang.y = TPSOverride.y
+			trash_ang.z = 0
+			trash_vec:Rotate( trash_ang )
+
+			vaultsave = VaultReady( p, p:GetPos(), p:EyeAngles(), trash_vec.x, trash_vec.y )
+			nextvaultrecheck = CurTime() + (0.1)
+		end
+
+		if vaultsave then
+			local tex = "[SPACE] VAULT OVER"
+
+			surface.SetFont( "Benny_16" )
+			local tox, toy = surface.GetTextSize( tex )
+			local box, boy = ss( 8 ) + tox, ss( 18 )
+			surface.SetDrawColor( scheme["bg"] )
+			surface.DrawRect( sw/2 - box/2, sh/2 + ss( 96 ) - boy/2 - ss( 2 ), box, boy )
+
+			surface.SetTextColor( scheme["fg"] )
+			surface.SetTextPos( sw/2 - tox/2, sh/2 + ss( 96 ) - toy/2 )
+			surface.DrawText( tex )
+
+		end
 	end
 
 	do -- Weapon
@@ -556,19 +595,6 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 					surface.DrawTexturedRectRotated( poosx, poosy + gap, s(24), s(24), 0 )
 				end
 			end
-
-			local mow = math.Round( CurTime() % 2 )
-			local tex = mow == 0 and "NO AMMO" or mow == 1 and "LOW AMMO" or mow == 2 and "[R] RELOAD"
-
-			surface.SetFont( "Benny_16" )
-			local tox, toy = surface.GetTextSize( tex )
-			local box, boy = ss( 8 ) + tox, ss( 18 )
-			surface.SetDrawColor( scheme["bg"] )
-			-- surface.DrawRect( ps_x - box/2, ps_y + ss( 96 ) - boy/2 - ss( 2 ), box, boy )
-
-			surface.SetTextColor( scheme["fg"] )
-			surface.SetTextPos( ps_x - tox/2, ps_y + ss( 96 ) - toy/2 )
-			-- surface.DrawText( tex )
 		end
 	end
 
