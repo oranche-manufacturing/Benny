@@ -253,7 +253,7 @@ local function decide_active()
 		for name, camera in pairs( tempmapcameras[ game.GetMap() ] ) do
 			if camera.Checks then
 				for i, v in ipairs(camera.Checks) do
-					debugoverlay.Box( vector_origin, v[1], v[2], 0, debugcolor )
+					-- debugoverlay.Box( vector_origin, v[1], v[2], 0, debugcolor )
 					if LocalPlayer():GetPos():WithinAABox( v[1], v[2] ) then
 						BENNY_ACTIVECAMERA = camera
 						return true
