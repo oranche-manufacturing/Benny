@@ -823,7 +823,7 @@ WEAPONS["qbblsw"] = {
 	
 	Delay = (60/550),
 	Firemodes = FIREMODE_AUTOSEMI,
-	Ammo = 70,
+	Ammo = 60,
 	Damage = 10,
 
 	Features = "firearm",
