@@ -32,6 +32,7 @@ local function genfonts()
 		16,
 		18,
 		24,
+		28,
 		32,
 		36,
 		48,
@@ -322,7 +323,7 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 					sh - b + ss(16) - ss(BOXHEIGHT-4),
 					ss(blen),
 					ss(bhei),
-					ss(0.5) )
+					math.max(ss(0.5), 1) )
 
 					if active then
 						surface.SetTextColor( scheme["fg"] )
@@ -657,6 +658,74 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 			surface.SetTextPos( b + ss(4 + 4), b + ss(4 + 3 + 8 + 8) + gap )
 			-- surface.DrawText( active )
 			gap = gap + ss(30+4)
+		end
+	end
+
+	local arena = true
+	if arena then
+		surface.SetDrawColor( scheme["bg"] )
+
+		local r_x, r_y, r_w, r_h = sw/2 - ss(180/2), b, ss(180), ss(30)
+		local ib, ic = ss(20), ss(2)
+		surface.DrawRect( r_x, r_y, r_w, r_h )
+
+		do -- Time
+			local tt = string.FormattedTime( (CurTime() % 60) )
+			local d1, d2
+			if tt.m > 0 then
+				d1 = tt.m -- .. ":"
+				d2 = tt.s
+				if tt.h > 0 then
+					-- d1 = tt.h .. ":" .. d1
+				end
+			else
+				d1 = tt.s -- .. "."
+				d2 = math.Round( tt.ms )
+			end
+
+			d1 = string.format( "%02i", d1 )
+			d2 = string.format( "%02i", d2 )
+
+			if tt.h > 0 then
+				d1 = tt.h .. ":" .. d1 .. ":"
+			elseif tt.m > 0 then
+				d1 = d1 .. ":"
+			else
+				d1 = d1 .. "."
+			end
+			
+			surface.SetTextColor( scheme["fg"] )
+			surface.SetFont( "Benny_36")
+			surface.SetTextPos( ib + r_x + ss( 24 ) - surface.GetTextSize( d1 ), r_y )
+			surface.DrawText( d1 )
+
+			surface.SetTextColor( scheme["fg"] )
+			surface.SetFont( "Benny_28")
+			surface.SetTextPos( ib + r_x + ss( 24 ), r_y + ss(5) )
+			surface.DrawText( d2 )
+		end
+		do -- Score
+			for i=0, 1 do
+				local s_w, s_h = ss(100), ss(12)
+				local s_x, s_y = r_x + r_w - ic - s_w, ic + r_y + (s_h*i) + (ss(2*i))
+
+				surface.SetDrawColor( scheme["fg"] )
+				if i==1 then -- Losing
+					surface.DrawOutlinedRect( s_x, s_y, s_w, s_h, math.max( ss(0.5), 1 ) )
+					surface.SetTextColor( scheme["fg"] )
+				else
+					surface.DrawRect( s_x, s_y, s_w, s_h )
+					surface.SetTextColor( scheme["bg"] )
+				end
+
+				surface.SetFont( "Benny_12")
+				surface.SetTextPos( s_x + ss(2), s_y + ss(1) )
+				surface.DrawText( i==1 and "PLASOF" or "CIA" )
+
+				local score = "12000"
+				surface.SetTextPos( s_x + s_w - surface.GetTextSize( score ) - ss(2), s_y + ss(1) )
+				surface.DrawText( score )
+			end
 		end
 	end
 end )
