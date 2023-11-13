@@ -44,15 +44,15 @@ end
 
 do
 	local translat = {
-		["melee"]		= { 1, 1 },
-		["special"]		= { 1, 2 },
-		["pistol"]		= { 2, 1 },
-		["smg"]			= { 3, 1 },
-		["shotgun"]		= { 4, 1 },
-		["rifle"]		= { 5, 1 },
+		["melee"]			= { 1, 1 },
+		["special"]			= { 1, 2 },
+		["pistol"]			= { 2, 1 },
+		["smg"]				= { 3, 1 },
+		["shotgun"]			= { 4, 1 },
+		["rifle"]			= { 5, 1 },
 		["machinegun"]		= { 5, 2 },
-		["grenade"]		= { 6, 1 },
-		["utility"]		= { 6, 2 },
+		["grenade"]			= { 6, 1 },
+		["utility"]			= { 6, 2 },
 		["equipment"]		= { 7, 1 },
 	}
 
@@ -67,9 +67,10 @@ do
 			[6] = {},
 			[7] = {},
 		}
+		local inv = self:INV_Get()
 		for i, bucket in ipairs( inventorylist ) do
 			local temp = {}
-			for id, data in pairs( self:INV_Get() ) do
+			for id, data in pairs( inv ) do
 				local idata = WEAPONS[data.Class]
 				local translated = translat[idata.Type]
 
@@ -77,7 +78,7 @@ do
 					table.insert( temp, { id, translated[2] } )
 				end
 			end
-			table.sort( temp, function(a, b) return b[2] > a[2] end )
+			table.sort( temp, function(a, b) return (inv[b[1]]["Acquisition"] + (b[2]*10000)) > (inv[a[1]]["Acquisition"] + (a[2]*10000)) end )
 			for i, v in ipairs( temp ) do
 				table.insert( bucket, v[1] )
 			end

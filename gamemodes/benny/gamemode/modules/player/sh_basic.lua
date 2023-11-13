@@ -40,6 +40,7 @@ concommand.Add("benny_debug_give", function(ply, cmd, args)
 		Ammo1 = class.Ammo,
 		Ammo2 = class.Ammo,
 		Ammo3 = class.Ammo,
+		Acquisition = CurTime(),
 	}
 
 	inv[str] = item
