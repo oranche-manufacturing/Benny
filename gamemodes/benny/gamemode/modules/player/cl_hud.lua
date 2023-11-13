@@ -223,8 +223,6 @@ local spacer_long = 2 -- screenscaled
 local gap = 24
 
 local trash_vec, trash_ang = Vector(), Angle()
-local vaultsave = false
-local nextvaultrecheck = 0
 
 bucket_selected = bucket_selected or 1
 item_selected = item_selected or 1
@@ -273,24 +271,6 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 	end
 
 	do -- Vaulting
-		if nextvaultrecheck <= CurTime() then
-			local forback, leright = 0, 0
-			forback = forback + (p:KeyDown( IN_FORWARD ) and 1 or 0)
-			forback = forback - (p:KeyDown( IN_BACK ) and 1 or 0)
-			leright = leright + (p:KeyDown( IN_MOVELEFT ) and 1 or 0)
-			leright = leright - (p:KeyDown( IN_MOVERIGHT ) and 1 or 0)
-			trash_vec.x = forback
-			trash_vec.y = leright
-			trash_vec.z = 0
-			trash_ang.p = 0
-			trash_ang.y = TPSOverride.y
-			trash_ang.z = 0
-			trash_vec:Rotate( trash_ang )
-
-			vaultsave = VaultReady( p, p:GetPos(), p:EyeAngles(), trash_vec.x, trash_vec.y )
-			nextvaultrecheck = CurTime() + (0.1)
-		end
-
 		if vaultsave then
 			local tex = "[SPACE] VAULT OVER"
 

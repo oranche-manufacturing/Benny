@@ -13,7 +13,7 @@ function GM:PlayerSpawn( ply )
 	ply:SetSlowWalkSpeed( 100 )
 	ply:SetWalkSpeed( 160 )
 	ply:SetRunSpeed( 220 )
-	ply:SetStepSize( 8 )
+	ply:SetStepSize( 16 )
 end
 
 if SERVER then

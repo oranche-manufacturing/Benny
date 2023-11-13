@@ -2,7 +2,7 @@
 local small = Vector( 1, 1, 1 )
 local smale = -small
 
-local moe = Vector( 0, 0, 8 )
+local moe = Vector( 0, 0, 1/16 )
 
 local dmaxs = Vector( 16, 16, 48 )
 local dmins = Vector( -16, -16, 0 )
@@ -19,15 +19,17 @@ end)
 function VaultReady( ply, pos, ang, forw, side )
 	local wantdir = Vector( forw, -side, 0 ):GetNormalized()
 	wantdir:Rotate( Angle( 0, ang.y, 0 ) )
-	local cum = pos + wantdir*8
+	local cum = pos + wantdir*16
 
-	local ts, te = cum + Vector( 0, 0, 24 ), cum + Vector( 0, 0, 65 )
+	local ts, te = cum + Vector( 0, 0, 22 ), cum + Vector( 0, 0, 65 )
+	local bottom, top = ply:GetHull()
+	if ply:Crouching() then bottom, top = ply:GetHullDuck() end
 	local tr = util.TraceHull( {
 		start = ts,
 		endpos = te,
-		mins = dmins,
-		maxs = dmaxs,
-		filter = ply
+		mins = bottom,
+		maxs = top,
+		filter = ply,
 	} )
 
 	return (ply:GetVaultDebuff() == 0 and tr.Hit and tr.StartSolid and !tr.AllSolid and tr.FractionLeftSolid>0) and tr, ts, te or false
@@ -50,10 +52,27 @@ hook.Add( "Move", "Benny_Move", function( ply, mv )
 	mv:SetMaxClientSpeed( speed )
 
 	local vault, v2, v3 = VaultReady( ply, pos, ang, mv:GetForwardSpeed(), mv:GetSideSpeed() )
-	if mv:KeyDown( IN_JUMP ) and vault then
+	if CLIENT then vaultsave = false end
+	if vault then
 		local epic = LerpVector( vault.FractionLeftSolid, v2, v3 )
-		mv:SetOrigin( epic + Vector(0, 0, 1/16) )
-		mv:SetVelocity( Vector( 0, 0, -100 ) )
-		ply:SetVaultDebuff( 1 )
+		epic:Add( moe )
+		
+		local bottom, top = ply:GetHull()
+		if ply:Crouching() then bottom, top = ply:GetHullDuck() end
+		local tr = util.TraceHull( {
+			start = epic,
+			endpos = epic,
+			mins = bottom,
+			maxs = top,
+			filter = ply,
+		} )
+		if !tr.AllSolid then
+			if CLIENT then vaultsave = true end
+			if mv:KeyDown( IN_JUMP ) then
+				mv:SetOrigin( epic )
+				mv:SetVelocity( Vector( 0, 0, -100 ) )
+				ply:SetVaultDebuff( 1 )
+			end
+		end
 	end
 end)
