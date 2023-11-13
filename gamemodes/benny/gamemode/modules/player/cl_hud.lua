@@ -820,8 +820,28 @@ do
 			RunConsoleCommand( "benny_inv_equip", buckets[bucket_selected][item_selected] )
 		end
 	end
+	local function Locate( ply, buckets, id )
+		for i, v in ipairs( buckets ) do
+			for a, b in ipairs( v ) do
+				if b == id then
+					-- print( "Found it" )
+					return i, a
+				end
+			end
+		end
+		-- print( "Didn't find it" )
+		return false
+	end
 	local function Wrap( ply, num )
 		local buckets = ply:INV_Buckets()
+		local currsel = ply:GetActiveWeapon():GetWep1()
+
+		local lb, li = Locate( ply, buckets, currsel )
+		if lb then
+			bucket_selected = lb
+			item_selected = li
+		end
+
 		if !buckets[num] then return end
 		if bucket_selected == num then
 			item_selected = item_selected + 1
@@ -836,7 +856,16 @@ do
 	end
 	local qt = {
 		["invnext"] = function( ply )
+			if !ply:BennyCheck() then return end
 			local buckets = ply:INV_Buckets()
+			local currsel = ply:GetActiveWeapon():GetWep1()
+
+			local lb, li = Locate( ply, buckets, currsel )
+			if lb then
+				bucket_selected = lb
+				item_selected = li
+			end
+
 			item_selected = item_selected + 1
 			for i=1, #buckets do
 				if item_selected > #buckets[bucket_selected] then
@@ -852,6 +881,14 @@ do
 		end,
 		["invprev"] = function( ply )
 			local buckets = ply:INV_Buckets()
+			local currsel = ply:GetActiveWeapon():GetWep1()
+
+			local lb, li = Locate( ply, buckets, currsel )
+			if lb then
+				bucket_selected = lb
+				item_selected = li
+			end
+
 			item_selected = item_selected - 1
 			for i=1, #buckets do
 				if item_selected < 1 then
