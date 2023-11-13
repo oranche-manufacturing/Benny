@@ -728,7 +728,7 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 		end
 	end
 
-	local arena = true
+	local arena = false
 	if arena then
 		surface.SetDrawColor( scheme["bg"] )
 
@@ -809,6 +809,16 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 				surface.DrawText( score )
 			end
 		end
+	end
+
+	if true then
+		local bx, by = sw/2, sh*(0.75)
+		local mx = 50
+		draw.SimpleText( "Clip1: " .. wep:Clip1(), "Trebuchet24", bx-mx, by+24*0, color_white, TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP )
+		draw.SimpleText( "ID1: " .. wep:GetWep1(), "Trebuchet24", bx-mx, by+24*1, color_white, TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP )
+
+		draw.SimpleText( "Clip2: " .. wep:Clip2(), "Trebuchet24", bx+mx, by+24*0, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP )
+		draw.SimpleText( "ID2: " .. wep:GetWep2(), "Trebuchet24", bx+mx, by+24*1, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP )
 	end
 end )
 

@@ -68,23 +68,12 @@ end)
 
 -- PROTO: Move this all into weapon code.
 concommand.Add("benny_inv_equip", function( ply, cmd, args )
-	local inv = ply:INV_Get()
-	local wep = ply:GetActiveWeapon()
-	local item = inv[args[1]]
-	local class = WEAPONS[item.Class]
-	-- PROTO: Check that this is the correct 'benny' weapon.
-	assert( item, "That item doesn't exist. " .. tostring(item) )
+	if ply:BennyCheck() then ply:GetActiveWeapon():BDeploy( false, args[1] ) end
+end)
 
-	wep:SetWep1( args[1] )
-	wep:SetWep1Clip( item.Loaded )
-	
-	-- PROTO: Make grenade/melee/firearm logic way way better.
-	if class.Features == "firearm" then
-		if item.Loaded != 0 then
-			assert( item[ "Ammo" .. item.Loaded ], "That magazine doesn't exist." )
-		end
-		wep:SetClip1( item.Loaded == 0 and 0 or item[ "Ammo" .. item.Loaded ] )
-	end
+-- PROTO: Move this all into weapon code.
+concommand.Add("benny_inv_holster", function( ply, cmd, args )
+	if ply:BennyCheck() then ply:GetActiveWeapon():BHolster( false ) end
 end)
 
 concommand.Add("benny_inv_sync", function( ply, cmd, args )
@@ -158,6 +147,12 @@ end
 function GM:ShowTeam( ply )
 	if SERVER then
 		ply:SendLua( [[OpenDeadeye()]] )
+	end
+end
+
+function GM:ShowSpare1( ply )
+	if SERVER then
+		ply:ConCommand( "benny_inv_holster" )
 	end
 end
 
