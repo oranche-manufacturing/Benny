@@ -191,16 +191,14 @@ function AddCaption( name, color, text, time_to_type, lifetime )
 	if captions[#captions] and captions[#captions].name == name then
 		local weh = captions[#captions]
 		local wehlast = weh.lines[#weh.lines]
-		local patty = string.gsub(wehlast.text, " %((x%d+)%)", "")
-		if patty == text then
-			wehlast.repeated = (wehlast.repeated or 1) + 1
-			wehlast.text = patty .. " (x" .. wehlast.repeated .. ")"
+		if wehlast.text == text then
+			wehlast.repeated = wehlast.repeated + 1
 		else
-			table.insert( weh.lines, { text = text, time_to_type=time_to_type, starttime=CurTime() } )
+			table.insert( weh.lines, { text = text, time_to_type=time_to_type, starttime=CurTime(), repeated = 1 } )
 		end
 		weh.lifetime = math.max( CurTime() + lifetime, weh.lifetime )
 	else
-		table.insert( captions, { name = name, color=color, lifetime=CurTime()+lifetime, lines = { { text=text, time_to_type=time_to_type, starttime=CurTime() } } })
+		table.insert( captions, { name = name, color=color, lifetime=CurTime()+lifetime, lines = { { text=text, time_to_type=time_to_type, starttime=CurTime(), repeated = 1 } } })
 	end
 end
 
@@ -305,7 +303,6 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 			surface.SetTextColor( scheme["fg"] )
 			surface.SetTextPos( sw/2 - tox/2, sh/2 + ss( 96 ) - toy/2 )
 			surface.DrawText( tex )
-
 		end
 	end
 
@@ -690,7 +687,8 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 			surface.SetFont("Benny_Caption_9")
 			local tw = 0
 			for i, v in pairs( caption.lines ) do
-				tw = math.max( tw, surface.GetTextSize( v.text ) )
+				local repeater = ( v.repeated > 1 and (" (x" .. v.repeated .. ")") or "" )
+				tw = math.max( tw, surface.GetTextSize( v.text .. repeater ) )
 			end
 			surface.SetFont("Benny_10")
 			tw = math.max( tw, surface.GetTextSize( caption.name ) )
@@ -702,6 +700,7 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 			
 			-- PROTO: Would be nice to be able to change italics or bold inline.
 			for i, v in SortedPairsByMemberValue( caption.lines, "starttime" ) do
+				local repeater = ( v.repeated > 1 and (" (x" .. v.repeated .. ")") or "" )
 				surface.SetFont("Benny_Caption_9I")
 				surface.SetTextColor( color_white )
 				surface.SetTextPos( (sw/2) - (tw/2), sh - space + ss(10) + (ss(8)*(i-1)) )
@@ -709,7 +708,7 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 				for i=1, #v.text do
 					waah = waah .. ( ((i-1)/#v.text) <= math.TimeFraction( v.starttime, v.starttime + v.time_to_type, CurTime() ) and v.text[i] or " ")
 				end
-				surface.DrawText( waah )
+				surface.DrawText( waah .. repeater )
 			end
 
 			surface.SetTextColor( caption.color )
