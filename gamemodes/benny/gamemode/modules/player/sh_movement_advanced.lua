@@ -70,7 +70,7 @@ hook.Add( "Move", "Benny_Move", function( ply, mv )
 			if CLIENT then vaultsave = true end
 			if mv:KeyDown( IN_JUMP ) then
 				mv:SetOrigin( epic )
-				mv:SetVelocity( Vector( 0, 0, -100 ) )
+				mv:SetVelocity( Vector( 0, 0, 0 ) )
 				ply:SetVaultDebuff( 1 )
 			end
 		end
