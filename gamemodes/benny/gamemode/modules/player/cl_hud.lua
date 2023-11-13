@@ -737,7 +737,7 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 		surface.DrawRect( r_x, r_y, r_w, r_h )
 
 		do -- Time
-			local tt = string.FormattedTime( 60-(CurTime() % 60) )
+			local tt = string.FormattedTime( (60*15)-(CurTime() % 60) )
 			local d1, d2
 			if tt.m > 0 then
 				d1 = tt.m -- .. ":"
