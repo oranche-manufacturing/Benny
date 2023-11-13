@@ -664,7 +664,7 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 			if #caption.lines == 0 then captions[aaa] = nil end
 		end
 		for aaa, caption in SortedPairsByMemberValue(captions, "starttime", false) do
-			surface.SetFont("Benny_Caption_9")
+			surface.SetFont("Benny_Caption_9I")
 			local tw = 0
 			for i, v in pairs( caption.lines ) do
 				local repeater = ( v.repeated > 1 and (" (x" .. v.repeated .. ")") or "" )
