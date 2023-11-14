@@ -10,7 +10,7 @@ if easyway then
 			Player(data.userid).CheckerReady = true
 		end )
 
-		local checkerinterval = 1
+		local checkerinterval = 12
 		util.AddNetworkString( "Benny_Checker" )
 
 		hook.Add( "PlayerTick", "Benny_Checker", function( ply )
