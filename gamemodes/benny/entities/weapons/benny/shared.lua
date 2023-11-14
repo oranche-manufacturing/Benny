@@ -37,8 +37,13 @@ function SWEP:SetupDataTables()
 	self:NetworkVar( "Int", 1, "Wep2Clip" )
 	self:NetworkVar( "Int", 2, "Wep1Burst" )
 	self:NetworkVar( "Int", 3, "Wep2Burst" )
+	self:NetworkVar( "Int", 4, "Wep1_Firemode" )
+	self:NetworkVar( "Int", 5, "Wep2_Firemode" )
 	self:NetworkVar( "Bool", 0, "UserAim" )
 	self:NetworkVar( "Bool", 1, "GrenadeDown" )
+
+	self:SetWep1_Firemode( 1 )
+	self:SetWep2_Firemode( 1 )
 end
 
 function SWEP:PrimaryAttack()
@@ -97,7 +102,7 @@ function SWEP:B_Ammo( alt, value )
 end
 
 function SWEP:B_Firemode( alt )
-	return self:BClass( alt ).Firemodes[1]
+	return self:BClass( alt ).Firemodes[ self:DGetFiremode( alt ) ]
 end
 
 function SWEP:B_FiremodeName( alt )
@@ -116,32 +121,35 @@ function SWEP:SecondaryAttack()
 end
 
 function SWEP:Reload()
-	if self:BTable( false ) and self:GetOwner():KeyPressed( IN_RELOAD ) then
-		if self:BClass().Reload then
-			if self:BClass( false ).Reload( self, self:BTable( false ) ) then return end
-		end
-		if self:GetDelay1() > CurTime() then
-			return false
-		end
-
-		if self:GetWep1Clip() != 0 then
-			B_Sound( self, self:BClass().Sound_MagOut )
-			self:SetClip1( 0 )
-			self:SetWep1Clip( 0 )
-			self:BTable().Loaded = 0
-		else
-			local maglist = { self:BTable( false ).Ammo1, self:BTable( false ).Ammo2, self:BTable( false ).Ammo3 }
-			for i, v in SortedPairsByValue( maglist, true ) do
-				if v == 0 then B_Sound( self, "Common.NoAmmo" ) return end
-				self:BTable().Loaded = i
-				self:SetWep1Clip( i )
-				self:SetClip1( v )
-				break
+	if self:GetOwner():KeyPressed( IN_RELOAD ) then for i=1, 2 do
+		local hand = i==2
+		if self:BTable( hand ) then
+			if self:BClass( hand ).Reload then
+				if self:BClass( hand ).Reload( self, self:BTable( hand ) ) then return end
 			end
-			B_Sound( self, self:BClass().Sound_MagIn )
+			if self:DGetDelay( hand ) > CurTime() then
+				return false
+			end
+
+			if self:DGetClip( hand ) != 0 then
+				B_Sound( self, self:BClass( hand ).Sound_MagOut )
+				self:DSetClip( hand, 0 )
+				self:DSetWepClip( hand, 0 )
+				self:BTable( hand ).Loaded = 0
+			else
+				local maglist = { self:BTable( hand ).Ammo1, self:BTable( hand ).Ammo2, self:BTable( hand ).Ammo3 }
+				for i, v in SortedPairsByValue( maglist, true ) do
+					if v == 0 then B_Sound( self, "Common.NoAmmo" ) return end
+					self:BTable( hand ).Loaded = i
+					self:DSetClip( hand, v )
+					self:DSetWepClip( hand, i )
+					break
+				end
+				B_Sound( self, self:BClass( hand ).Sound_MagIn )
+			end
+			self:TPReload()
 		end
-		self:TPReload()
-	end
+	end end
 	return true
 end
 

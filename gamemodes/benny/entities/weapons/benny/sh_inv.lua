@@ -8,6 +8,24 @@ function SWEP:DSetWep( hand, value )
 	return hand and self:SetWep2( value ) or self:SetWep1( value )
 end
 
+-- Weapon Firemode
+function SWEP:DGetFiremode( hand )
+	return hand and self:GetWep2_Firemode() or self:GetWep1_Firemode()
+end
+
+function SWEP:DSetFiremode( hand, value )
+	return hand and self:SetWep2_Firemode( value ) or self:SetWep1_Firemode( value )
+end
+
+-- Internal SWEP Delay
+function SWEP:DGetDelay( hand )
+	return hand and self:Clip2() or self:Clip1()
+end
+
+function SWEP:DSetDelay( hand, value )
+	return hand and self:SetDelay2( value ) or self:SetDelay1( value )
+end
+
 -- Internal SWEP Clip
 function SWEP:DGetClip( hand )
 	return hand and self:Clip2() or self:Clip1()

@@ -14,6 +14,7 @@ function GM:PlayerSpawn( ply )
 	ply:SetWalkSpeed( 160 )
 	ply:SetRunSpeed( 220 )
 	ply:SetStepSize( 16 )
+	ply:SetCanZoom( false )
 end
 
 if SERVER then

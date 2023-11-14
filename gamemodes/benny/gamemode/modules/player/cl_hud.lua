@@ -293,217 +293,55 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 		local wep2 = wep:BTable( true )
 		local wep2c = wep:BClass( true )
 
-		local w, h = 156, 100
-		local BOXHEIGHT = 84--44
 
-		if wep1 then
-			-- BG
+		if wep1 then -- New Weapon HUD
+			local p_w, p_h = ss(156), ss(64)
+			local p_x, p_y = sw - b - p_w, sh - b - p_h
+			local pb = ss(4)
+			local pb2 = pb*2
+
 			surface.SetDrawColor( scheme["bg"] )
-			surface.DrawRect( sw - b - ss(w), sh - b - ss(BOXHEIGHT), ss(w), ss(BOXHEIGHT) )
-			
-			if wep1c.Icon then
-				local gunsize = 128
+			surface.DrawRect( p_x, p_y, p_w, p_h )
+
+			do -- Name tag
+				local t_h = ss(15)
 				surface.SetDrawColor( scheme["fg"] )
-				surface.SetMaterial( wep1c.Icon )
-				-- surface.DrawTexturedRectRotated( sw - b - ss(w/2), sh - b - ss(BOXHEIGHT/2), ss(32), ss(32), 0 )
-				surface.DrawTexturedRectUV( sw - b - ss(w/2 + gunsize/2), sh - b - ss(BOXHEIGHT/2 - 8 + gunsize/2/2), ss(gunsize), ss(gunsize/2), 1, 0, 0, 1 )
-			end
+				surface.DrawRect( p_x+pb, p_y+pb, p_w-pb2, t_h )
 
-			-- Text bar
-			surface.SetFont( "Benny_18" )
-			surface.SetDrawColor( scheme["fg"] )
-			surface.DrawRect( sw - b - ss(w-4), sh - b - ss(BOXHEIGHT-4), ss(w-8), ss(14) )
+				draw.SimpleText( wep1c.Name, "Benny_16", p_x+ss(6), p_y+ss(5), scheme["bg"], TEXT_ALIGN_TOP, TEXT_ALIGN_LEFT )
 
-			surface.SetTextColor( scheme["bg"] )
-			surface.SetTextPos( sw - b - ss(w-6), sh - b - ss(BOXHEIGHT-3) )
-			surface.DrawText( wep1c.Name or "???" )
-
-			-- PROTO: Make grenade/melee/firearm logic way way better.
-			if wep1c.Features == "grenade" then
-				if wep:GetGrenadeDown() then
-					local perc = math.TimeFraction( wep:GetGrenadeDownStart(), wep:GetGrenadeDownStart()+wep1c.GrenadeFuse, CurTime() )
-					perc = 1-math.Clamp( perc, 0, 1 )
+				if wep:BClass( false ).Firemodes then -- Firemode
 					surface.SetDrawColor( scheme["fg"] )
-					local spruce = (w-127)
-					for i=0, math.Round(spruce) do
-						if (i/spruce) < perc then
-							surface.DrawRect( sw - b - ss(w-4) + ss(5*i), sh - b - ss(10+4), ss(3), ss(10) )
-						else
-							surface.DrawOutlinedRect( sw - b - ss(w-4) + ss(5*i), sh - b - ss(10+4), ss(3), ss(10), ss(0.5) )
+					surface.DrawRect( p_x+pb, p_y + pb + t_h + ss(2), ss(30), ss(10) )
+
+					draw.SimpleText( wep:B_FiremodeName( false ), "Benny_12", p_x + pb + ss(14.5), p_y + pb + t_h + ss(8), scheme["bg"], TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER )
+					-- draw.SimpleText( "[AMMO TYPE]", "Benny_10", p_x + pb + ss(30+4), p_y + pb + t_h + ss(8), scheme["fg"], TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER )
+				end
+				if wep:BClass( false ).Ammo then -- Ammo
+					local b_w, b_h = ss(3), ss(10)
+					local lw, lh = ss(2), ss(2)
+					surface.SetDrawColor( scheme["fg"] )
+
+					local ammo = math.max( wep:Clip1(), wep:BClass( false ).Ammo )
+					if ammo>30 then b_w, b_h = ss(3), ss(4) end
+					local offset = b_h
+					local count = 1
+					for i=1, ammo do
+						local thefunk = surface.DrawRect
+						if i > wep:Clip1() then
+							thefunk = surface.DrawOutlinedRect
+						end
+						thefunk( p_x + p_w - b_w - pb - ((count-1)*(b_w+lw)), p_y + p_h - offset - pb, b_w, b_h, ss(0.5) )
+						count = count + 1
+
+						if i%30 == 0 then
+							count = 1
+							offset = offset + b_h + lh
 						end
 					end
 				end
-			elseif wep1c.Features == "firearm" then
-				local fmpw = 30
-				surface.SetDrawColor( scheme["fg"] )
-				surface.DrawRect( sw - b - ss(w-4), sh - b + ss(16) - ss(BOXHEIGHT-4), ss(fmpw), ss(10) )
-
-				surface.SetFont( "Benny_12" )
-				local str = wep:B_FiremodeName( false )
-				local tw = surface.GetTextSize( str )
-				surface.SetTextColor( scheme["bg"] )
-				surface.SetTextPos( sw - b - ss(w-19) - (tw/2), sh - b + ss(16) - ss(BOXHEIGHT-4) )
-				surface.DrawText( str )
-
-				surface.SetFont( "Benny_12" )
-				local text = wep:GetWep1Clip() == 0 and "---" or wep:Clip1()-- .. " - MAG " .. wep:GetWep1Clip()
-				local tw = surface.GetTextSize( text )
-				surface.SetTextColor( scheme["fg"] )
-				surface.SetTextPos( sw - b - ss(4) - tw, sh - b - ss(25) )
-				surface.DrawText( text )
-
-				surface.SetFont( "Benny_12" )
-				local bx = 1
-				local count = math.max( wep:Clip1(), wep:BClass( false ).Ammo )
-				local size = ss(10)
-				local by = ss(2)
-				if count>90 then
-					size = ss(2)
-					by = -ss(6)
-				elseif count>60 then
-					size = ss(2)
-					by = -ss(6)
-				elseif count>30 then
-					size = ss(4)
-					by = -ss(4)
-				end
-				for i=1, count do
-					surface.SetDrawColor( scheme["fg"] )
-					local a_x, a_y = sw - b - ss(3+4) - ( ss(5) * (bx-1) ), sh - b - ss(8+4) - by, ss(3)
-					if count>90 then
-						-- surface.DrawLine( a_x, a_y, a_x, a_y + size )
-						surface.DrawLine( a_x, a_y, a_x, a_y + size )
-						surface.DrawLine( a_x + ss(2)+1, a_y, a_x + ss(2)+1, a_y + size )
-					else
-						surface.DrawOutlinedRect( a_x, a_y, ss(3), size, ss(0.5) )
-					end
-					if i <= wep:Clip1() then
-						surface.DrawRect( a_x, a_y, ss(3), size )
-					end
-					if i%30 == 0 then
-						if count>90 then
-							by = by + ss(3)
-						elseif count>60 then
-							by = by + ss(4)
-						elseif count>30 then
-							by = by + ss(6)
-						else
-							by = by + ss(10)
-						end
-						bx = 0
-					end
-					bx = bx + 1
-				end
-
-				local amlist = { wep:BTable( false )["Ammo" .. 1], wep:BTable( false )["Ammo" .. 2], wep:BTable( false )["Ammo" .. 3] }
-				local ind = 1
-				local bubby = ss(1)
-				local blen, bhei = 25, 10
-				for _, v in ipairs( amlist ) do
-					local active = wep:GetWep1Clip() == _
-					if v == 0 and !active then continue end
-					local perc = v / wep:BClass( false ).Ammo
-
-					local suuze = ss(blen*perc) - bubby*2*perc
-					if v != 0 then suuze = math.max( suuze, 1 ) end
-					surface.SetDrawColor( scheme["fg"] )
-					surface.DrawOutlinedRect( sw - b - ss(w-4-2) + ss(fmpw) + ( ss(blen+2) * (ind-1) ),
-					sh - b + ss(16) - ss(BOXHEIGHT-4),
-					ss(blen),
-					ss(bhei),
-					math.max(ss(0.5), 1) )
-
-					if active then
-						surface.SetTextColor( scheme["fg"] )
-						surface.SetTextPos( sw - b - ss(w-4-2) + ss(fmpw/2) + ( ss(blen+2) * (ind) ) + bubby - ss(4),
-						sh - b + ss(16) - ss(BOXHEIGHT-4) + bubby - ss(2) )
-						surface.DrawText( "x" )
-					end
-
-					surface.SetDrawColor( scheme["fg"] )
-					surface.DrawRect( sw - b - ss(w-4-2) + ss(fmpw) + ( ss(blen+2) * (ind-1) ) + bubby,
-					sh - b + ss(16) - ss(BOXHEIGHT-4) + bubby,
-					suuze,
-					ss(bhei) - bubby*2 )
-
-					if active then
-						render.SetScissorRect( sw - b - ss(w-4-2) + ss(fmpw) + ( ss(blen+2) * (ind-1) ) + bubby,
-						sh - b + ss(16) - ss(BOXHEIGHT-4) + bubby,
-						sw - b - ss(w-4-2) + ss(fmpw) + ( ss(blen+2) * (ind-1) ) + bubby + suuze,
-						sh - b + ss(16) - ss(BOXHEIGHT-4) + bubby + (ss(bhei) - bubby*2), true )
-						surface.SetTextColor( scheme["bg"] )
-						surface.SetTextPos( sw - b - ss(w-4-2) + ss(fmpw/2) + ( ss(blen+2) * (ind) ) + bubby - ss(4),
-						sh - b + ss(16) - ss(BOXHEIGHT-4) + bubby - ss(2) )
-						surface.DrawText( "x" )
-						render.SetScissorRect( 0, 0, 0, 0, false )
-					end
-
-					ind = ind + 1
-				end
 			end
-
-			-- local prog = {
-			-- 	{
-			-- 		Text = "SUPP. 09",
-			-- 		Bar = 0.7,
-			-- 		Icon = Material("benny/hud/atts/supp.png", ""),
-			-- 	},
-			-- 	{
-			-- 		Text = "LIGHT",
-			-- 		Bar = "ON",
-			-- 		Icon = Material("benny/hud/atts/light.png", ""),
-			-- 	},
-			-- 	{
-			-- 		Text = "ENERGY",
-			-- 		Bar = 0.2,
-			-- 		Icon = Material("benny/hud/atts/energy.png", ""),
-			-- 	},
-			-- }
-
-			-- Attachments?
-			if false then for i, v in ipairs( prog ) do
-				local ATTBOX = 24
-				local ATTLEN = 64
-				local bump = ss(2)
-				-- BG
-				surface.SetDrawColor( scheme["bg"] )
-				local x, y = sw - b - ss(w - ((ATTLEN+2)*(i-1))), sh - b - ss(BOXHEIGHT+ATTBOX+4)
-				surface.DrawRect( x, y, ss(ATTLEN), ss(ATTBOX) )
-	
-				-- Text bar
-				surface.SetDrawColor( scheme["fg"] )
-				surface.DrawRect( x+bump, y+bump, ss(ATTBOX-4), ss(ATTBOX-4) )
-
-				render.PushFilterMag( TEXFILTER.LINEAR )
-				render.PushFilterMin( TEXFILTER.LINEAR )
-					surface.SetMaterial( v.Icon )
-					surface.SetDrawColor( scheme["bg"] )
-					surface.DrawTexturedRect( x+bump, y+bump, ss(ATTBOX-4), ss(ATTBOX-4) )
-				render.PopFilterMag()
-				render.PopFilterMin()
-	
-				surface.SetFont( "Benny_8" )
-				surface.SetTextColor( scheme["fg"] )
-				surface.SetTextPos( x+bump + ss(ATTBOX-2), y+bump - ss(1) )
-				surface.DrawText( v.Text )
-
-				if isstring(v.Bar) then
-					surface.SetFont( "Benny_8" )
-					surface.SetTextColor( scheme["fg"] )
-					surface.SetTextPos( x+bump + ss(ATTBOX-2), y+bump - ss(1-7) )
-					surface.DrawText( v.Bar )
-				else
-					surface.DrawOutlinedRect( x+bump + ss(ATTBOX-2), y+bump - ss(1-7), ss(30), ss(6), ss(0.5) )
-					surface.DrawRect( x+bump + ss(ATTBOX-2), y+bump - ss(1-7), ss(30)*v.Bar, ss(6) )
-				end
-	
-				-- surface.SetFont( "Benny_12" )
-				-- surface.SetTextColor( scheme["fg"] )
-				-- surface.SetTextPos( x+bump + ss(ATTBOX-1), y+bump - ss(1) )
-				-- surface.DrawText( "10" )
-			end end
 		end
-		
 
 		if wep:GetUserAim() then -- Crosshair
 			local s, w, h = ss, ScrW(), ScrH()
@@ -585,7 +423,7 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 		end
 	end
 
-	do -- Quickinv
+	if false then -- Quickinv
 
 		local inv = p:INV_Get()
 		local gap = ss(1)
