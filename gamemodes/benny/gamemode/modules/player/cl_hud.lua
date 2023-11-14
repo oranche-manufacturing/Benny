@@ -709,6 +709,11 @@ do
 			bucket_selected = num
 			item_selected = 1
 		end
+		if buckets[bucket_selected] and buckets[bucket_selected][item_selected] then
+			ply:EmitSound( "benny/hud/hud-02.ogg", 0, 100, 0.75, CHAN_STATIC )
+		else
+			ply:EmitSound( "benny/hud/hud-01.ogg", 0, 100, 0.75, CHAN_STATIC )
+		end
 		Equip()
 	end
 	local qt = {
@@ -731,6 +736,7 @@ do
 				end
 				if bucket_selected > #buckets then bucket_selected = 1 item_selected = 1 end
 				if buckets[bucket_selected][item_selected] then
+					ply:EmitSound( "benny/hud/hud-02.ogg", 0, 100, 0.75, CHAN_STATIC )
 					Equip()
 					return
 				end
@@ -753,6 +759,7 @@ do
 					if bucket_selected < 1 then bucket_selected = #buckets end
 					item_selected = #buckets[bucket_selected]
 					if buckets[bucket_selected][item_selected] then
+						ply:EmitSound( "benny/hud/hud-02.ogg", 0, 100, 0.75, CHAN_STATIC )
 						Equip()
 						return
 					end
