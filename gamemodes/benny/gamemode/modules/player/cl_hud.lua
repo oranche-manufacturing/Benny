@@ -423,7 +423,7 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 		end
 	end
 
-	if false then -- Quickinv
+	do -- Quickinv
 
 		local inv = p:INV_Get()
 		local gap = ss(1)
