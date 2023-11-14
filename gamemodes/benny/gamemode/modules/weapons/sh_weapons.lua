@@ -924,6 +924,8 @@ do -- Grenades, nothing here is guaranteed.
 		if self:GetGrenadeDown() then
 			if !p:KeyDown( IN_ATTACK ) or ( CurTime() >= (self:GetGrenadeDownStart() + class.GrenadeFuse) ) then
 				self:SetGrenadeDown( false )
+				-- TEMP: Do this right!
+				if !class.GrenadeCharge then self:SetGrenadeDownStart( CurTime() ) end
 				self:TPFire()
 				if SERVER then GrenadeThrow( self, data ) end
 			end
