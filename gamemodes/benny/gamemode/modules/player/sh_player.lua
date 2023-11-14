@@ -48,6 +48,18 @@ function PT:INV_Discard( id )
 	end
 end
 
+function PT:INV_Find( class )
+	local inv = self:INV_Get()
+	local results = {}
+	for i, v in pairs( inv ) do
+		if v.Class == class then
+			table.insert( results, i )
+		end
+	end
+	table.sort( results, function( a, b ) return inv[b]["Acquisition"] > inv[a]["Acquisition"] end)
+	return results
+end
+
 do
 	local translat = {
 		["melee"]			= { 1, 1 },

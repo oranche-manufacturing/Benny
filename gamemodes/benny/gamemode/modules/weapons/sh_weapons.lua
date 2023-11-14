@@ -898,7 +898,7 @@ do -- Grenades, nothing here is guaranteed.
 		return true
 	end
 
-	local function GrenadeThrow( self, data )
+	local function GrenadeCreate( self, data )
 		-- PROTO: See to getting this done better. Maybe it's spawned while priming the nade for low CL-SV/phys delay?
 		local p = self:GetOwner()
 		local class = WEAPONS[data.Class]
@@ -918,19 +918,31 @@ do -- Grenades, nothing here is guaranteed.
 		GENT:GetPhysicsObject():SetVelocity( velocity )
 	end
 
+	local function GrenadeThrow( self, data )
+		local p = self:GetOwner()
+		local class = WEAPONS[data.Class]
+		self:SetGrenadeDown( false )
+		-- TEMP: Do this right!
+		if !class.GrenadeCharge then self:SetGrenadeDownStart( CurTime() ) end
+		--
+		self:TPFire()
+		if SERVER then GrenadeCreate( self, data ) end
+		local id = self:D_GetID( false )
+		self:BHolster( false )
+		p:INV_Discard( id )
+
+		local subsequent = p:INV_Find( data.Class )[1]
+		if subsequent then
+			self:BDeploy( false, subsequent )
+		end
+	end
+
 	local function GrenadeThink( self, data )
 		local p = self:GetOwner()
 		local class = WEAPONS[data.Class]
 		if self:GetGrenadeDown() then
 			if !p:KeyDown( IN_ATTACK ) or ( CurTime() >= (self:GetGrenadeDownStart() + class.GrenadeFuse) ) then
-				self:SetGrenadeDown( false )
-				-- TEMP: Do this right!
-				if !class.GrenadeCharge then self:SetGrenadeDownStart( CurTime() ) end
-				self:TPFire()
-				if SERVER then GrenadeThrow( self, data ) end
-				local id = self:D_GetID( false )
-				self:BHolster( false )
-				p:INV_Discard( id )
+				GrenadeThrow( self, data )
 			end
 		end
 		return true
@@ -938,12 +950,7 @@ do -- Grenades, nothing here is guaranteed.
 
 	local function GrenadeHolster( self, data )
 		if self:GetGrenadeDown() then
-			self:SetGrenadeDown( false )
-			self:TPFire()
-			if SERVER then GrenadeThrow( self, data ) end
-			local id = self:D_GetID( false )
-			self:BHolster( false )
-			p:INV_Discard( id )
+			GrenadeThrow( self, data )
 		end
 		return true
 	end
