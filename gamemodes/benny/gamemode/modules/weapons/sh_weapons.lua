@@ -928,6 +928,9 @@ do -- Grenades, nothing here is guaranteed.
 				if !class.GrenadeCharge then self:SetGrenadeDownStart( CurTime() ) end
 				self:TPFire()
 				if SERVER then GrenadeThrow( self, data ) end
+				local id = self:D_GetID( false )
+				self:BHolster( false )
+				p:INV_Discard( id )
 			end
 		end
 		return true
@@ -938,6 +941,9 @@ do -- Grenades, nothing here is guaranteed.
 			self:SetGrenadeDown( false )
 			self:TPFire()
 			if SERVER then GrenadeThrow( self, data ) end
+			local id = self:D_GetID( false )
+			self:BHolster( false )
+			p:INV_Discard( id )
 		end
 		return true
 	end

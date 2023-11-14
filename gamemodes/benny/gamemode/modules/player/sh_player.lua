@@ -42,6 +42,12 @@ function PT:INV_Get()
 	return self.INV
 end
 
+function PT:INV_Discard( id )
+	if self:INV_Get()[ id ] then
+		self:INV_Get()[ id ] = nil
+	end
+end
+
 do
 	local translat = {
 		["melee"]			= { 1, 1 },
