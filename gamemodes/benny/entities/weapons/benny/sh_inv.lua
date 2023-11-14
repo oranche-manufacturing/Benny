@@ -45,6 +45,8 @@ function SWEP:D_SetClip( hand, value )
 end
 
 function SWEP:BDeploy( hand, id )
+	assert( isbool(hand), "You forgot the hand." )
+	assert( isstring(id), "You forgot the ID." )
 	if self:D_GetID( hand ) == id then
 		return -- PROTO: If you're in the middle of holstering, cancel it
 	elseif self:D_GetID( hand ) != "" then
