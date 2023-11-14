@@ -286,11 +286,7 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 		end
 	end
 
-	do -- Weapon
-		if !(IsValid(wep) and wep:GetClass() == "benny") then
-			print( "Failed to retrieve 'benny' weapon!" )
-			return
-		end
+	if p:BennyCheck() then -- Weapon
 		local inv = p:INV_Get()
 		local wep1 = wep:BTable( false )
 		local wep1c = wep:BClass( false )
@@ -728,8 +724,7 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 		end
 	end
 
-	local arena = false
-	if arena then
+	if false then -- MP / Arena UI
 		surface.SetDrawColor( scheme["bg"] )
 
 		local r_x, r_y, r_w, r_h = sw/2 - ss(180/2), b, ss(180), ss(30)
@@ -737,7 +732,7 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 		surface.DrawRect( r_x, r_y, r_w, r_h )
 
 		do -- Time
-			local tt = string.FormattedTime( (60*15)-(CurTime() % 60) )
+			local tt = string.FormattedTime( (60*1)-(CurTime() % 60) )
 			local d1, d2
 			if tt.m > 0 then
 				d1 = tt.m -- .. ":"
@@ -804,14 +799,14 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 				surface.SetTextPos( s_x + ss(2), s_y + ss(1) )
 				surface.DrawText( i==1 and "HALO" or "CIA" )
 
-				local score = i==1 and "100" or "12000"
+				local score = i==1 and "100" or "1200"
 				surface.SetTextPos( s_x + s_w - surface.GetTextSize( score ) - ss(2), s_y + ss(1) )
 				surface.DrawText( score )
 			end
 		end
 	end
 
-	if true then
+	if false and p:BennyCheck() then
 		local bx, by = sw/2, sh*(0.75)
 		local mx = 50
 		draw.SimpleText( "Clip1: " .. wep:Clip1(), "Trebuchet24", bx-mx, by+24*0, color_white, TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP )
