@@ -78,17 +78,13 @@ function SWEP:BHolster( hand )
 		return -- What the hell are you holstering..?
 	end
 	local p = self:GetOwner()
-	local inv = p:INV_Get()
 
-	local item = inv[hand and self:GetWep2() or self:GetWep1()]
-	local class = WEAPONS[item.Class]
-
-	if class.Holster then class.Holster( self, self:BTable( false ) ) end
+	local item = p:INV_Get()[ self:D_GetID( hand ) ]
+	if item then
+		local class = WEAPONS[item.Class]
+		if class.Holster then class.Holster( self, self:BTable( hand ) ) end
+	end
 
 	self:D_SetID( hand, "" )
-
-	-- PROTO: Make grenade/melee/firearm logic way way better.
-	if class.Features == "firearm" then
-		self:D_SetClip( hand, 0 )
-	end
+	self:D_SetClip( hand, 0 )
 end
