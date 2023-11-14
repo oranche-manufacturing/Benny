@@ -25,6 +25,10 @@ PLAYER.UseVMHands			= true
 function PLAYER:SetupDataTables()
 	self.Player:NetworkVar( "Bool", 0, "Shoulder" )
 	self.Player:NetworkVar( "Float", 0, "VaultDebuff" )
+	
+	self.Player:NetworkVar( "Float", 1, "VaultTransition" )
+	self.Player:NetworkVar( "Vector", 0, "VaultPos1")
+	self.Player:NetworkVar( "Vector", 1, "VaultPos2")
 end
 
 player_manager.RegisterClass( "player_benny", PLAYER, "player_default" )

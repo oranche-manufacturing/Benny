@@ -34,6 +34,10 @@ function PT:CamSpot( ang )
 	return tr.HitPos, ang, 90
 end
 
+function PT:NoclippingAndNotVaulting()
+	return (self:GetMoveType() == MOVETYPE_NOCLIP and self:GetVaultTransition() == 0)
+end
+
 function PT:INV_Get()
 	if !self.INV then
 		print( "Inventory created")

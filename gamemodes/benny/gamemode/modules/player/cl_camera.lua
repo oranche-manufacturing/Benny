@@ -276,7 +276,7 @@ end
 
 hook.Add( "CalcView", "Benny_CalcView", function( ply, pos, ang, fov )
 	if c_unlock:GetBool() then return end
-	if ply:GetMoveType() == MOVETYPE_NOCLIP then return end
+	if ply:NoclippingAndNotVaulting() then return end
 	decide_active()
 	local camera = BENNY_ACTIVECAMERA
 	local view = {}

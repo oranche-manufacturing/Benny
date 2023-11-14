@@ -11,7 +11,7 @@ TPSOverride = TPSOverride or Angle()
 hook.Add( "PlayerNoClip", "Benny_PlayerNoClip", function( ply, desiredNoClipState )
 	if CLIENT then
 		if desiredNoClipState then
-			LocalPlayer():SetEyeAngles( TPSOverride )
+			ply:SetEyeAngles( TPSOverride )
 		else
 			TPSOverride:Set( LocalPlayer():EyeAngles() )
 			lastmoveangle = LocalPlayer():EyeAngles().y
@@ -21,14 +21,14 @@ hook.Add( "PlayerNoClip", "Benny_PlayerNoClip", function( ply, desiredNoClipStat
 end)
 
 hook.Add( "InputMouseApply", "Benny_InputMouseApply", function( cmd, x, y, ang )
-	if LocalPlayer():BennyCheck() and LocalPlayer():GetMoveType() != MOVETYPE_NOCLIP then
+	if LocalPlayer():BennyCheck() and !LocalPlayer():NoclippingAndNotVaulting() then
 		TPSOverride:Add( Angle( y*0.022, -x*0.022, 0 ) )
 		return true
 	end
 end)
 
 hook.Add( "CreateMove", "Benny_CreateMove", function( cmd )
-	if false and BENNY_ACTIVECAMERA and LocalPlayer():GetMoveType() != MOVETYPE_NOCLIP then
+	if false and BENNY_ACTIVECAMERA and !LocalPlayer():NoclippingAndNotVaulting() then
 		local x, y = cmd:GetForwardMove(), cmd:GetSideMove()
 
 		local lx=input.GetAnalogValue(ANALOG_JOY_X) // Left X Axis: left -, right +
@@ -76,7 +76,7 @@ hook.Add( "CreateMove", "Benny_CreateMove", function( cmd )
 
 	local p = LocalPlayer()
 	local w = p:GetActiveWeapon()
-	if p:BennyCheck() and LocalPlayer():GetMoveType() != MOVETYPE_NOCLIP then -- FPS cam
+	if p:BennyCheck() and !LocalPlayer():NoclippingAndNotVaulting() then -- FPS cam
 		local aimed = w:GetUserAim()
 		local opos, ang = p:CamSpot( TPSOverride )
 
