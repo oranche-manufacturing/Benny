@@ -30,6 +30,7 @@ function SWEP:SetupDataTables()
 	self:NetworkVar( "Float", 0, "Aim" )
 	self:NetworkVar( "Float", 1, "Delay1" )
 	self:NetworkVar( "Float", 2, "Delay2" )
+	self:NetworkVar( "Float", 3, "GrenadeDownStart" )
 	self:NetworkVar( "String", 0, "Wep1" )
 	self:NetworkVar( "String", 1, "Wep2" )
 	self:NetworkVar( "Int", 0, "Wep1Clip" )
@@ -37,6 +38,7 @@ function SWEP:SetupDataTables()
 	self:NetworkVar( "Int", 2, "Wep1Burst" )
 	self:NetworkVar( "Int", 3, "Wep2Burst" )
 	self:NetworkVar( "Bool", 0, "UserAim" )
+	self:NetworkVar( "Bool", 1, "GrenadeDown" )
 end
 
 function SWEP:PrimaryAttack()
@@ -44,7 +46,7 @@ function SWEP:PrimaryAttack()
 		return
 	end
 	if self:BClass().Fire then
-		if self:BClass( false ).Fire( self, self:BClass( false ), self:BTable( false ) ) then return end
+		if self:BClass( false ).Fire( self, self:BTable( false ) ) then return end
 	end
 	if self:GetDelay1() > CurTime() then
 		return
@@ -116,7 +118,7 @@ end
 function SWEP:Reload()
 	if self:BTable( false ) and self:GetOwner():KeyPressed( IN_RELOAD ) then
 		if self:BClass().Reload then
-			if self:BClass( false ).Reload( self, self:BClass( false ), self:BTable( false ) ) then return end
+			if self:BClass( false ).Reload( self, self:BTable( false ) ) then return end
 		end
 		if self:GetDelay1() > CurTime() then
 			return false
@@ -176,7 +178,7 @@ function SWEP:Think()
 	
 	if self:BClass( false ) then
 		if self:BClass( false ).Think then
-			self:BClass( false ).Think( self, self:BClass( false ), self:BTable( false ) )
+			self:BClass( false ).Think( self, self:BTable( false ) )
 		end
 	end
 

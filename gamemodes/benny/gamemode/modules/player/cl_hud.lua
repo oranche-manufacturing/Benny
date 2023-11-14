@@ -318,12 +318,26 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 			surface.SetTextPos( sw - b - ss(w-6), sh - b - ss(BOXHEIGHT-3) )
 			surface.DrawText( wep1c.Name or "???" )
 
-			local fmpw = 30
-			surface.SetDrawColor( scheme["fg"] )
-			surface.DrawRect( sw - b - ss(w-4), sh - b + ss(16) - ss(BOXHEIGHT-4), ss(fmpw), ss(10) )
-
 			-- PROTO: Make grenade/melee/firearm logic way way better.
-			if wep1c.Features == "firearm" then
+			if wep1c.Features == "grenade" then
+				if wep:GetGrenadeDown() then
+					local perc = math.TimeFraction( wep:GetGrenadeDownStart(), wep:GetGrenadeDownStart()+wep1c.GrenadeFuse, CurTime() )
+					perc = 1-math.Clamp( perc, 0, 1 )
+					surface.SetDrawColor( scheme["fg"] )
+					local spruce = (w-127)
+					for i=0, math.Round(spruce) do
+						if (i/spruce) < perc then
+							surface.DrawRect( sw - b - ss(w-4) + ss(5*i), sh - b - ss(10+4), ss(3), ss(10) )
+						else
+							surface.DrawOutlinedRect( sw - b - ss(w-4) + ss(5*i), sh - b - ss(10+4), ss(3), ss(10), ss(0.5) )
+						end
+					end
+				end
+			elseif wep1c.Features == "firearm" then
+				local fmpw = 30
+				surface.SetDrawColor( scheme["fg"] )
+				surface.DrawRect( sw - b - ss(w-4), sh - b + ss(16) - ss(BOXHEIGHT-4), ss(fmpw), ss(10) )
+
 				surface.SetFont( "Benny_12" )
 				local str = wep:B_FiremodeName( false )
 				local tw = surface.GetTextSize( str )
@@ -880,7 +894,7 @@ do
 				if bucket_selected > #buckets then bucket_selected = 1 item_selected = 1 end
 				if buckets[bucket_selected][item_selected] then
 					Equip()
-					break
+					return
 				end
 			end
 		end,
@@ -902,7 +916,7 @@ do
 					item_selected = #buckets[bucket_selected]
 					if buckets[bucket_selected][item_selected] then
 						Equip()
-						break
+						return
 					end
 				end
 			end

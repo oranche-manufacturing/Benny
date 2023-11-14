@@ -22,6 +22,9 @@ function ENT:Initialize()
 	else
 		self:SetModelScale( 2 )
 	end
+	timer.Simple( 0, function()
+		self:Think()
+	end)
 	return
 end
 
@@ -29,7 +32,8 @@ function ENT:Think()
 	if SERVER and self.Fuse <= CurTime() then
 		self:Explode()
 	end
-	return
+	self:NextThink( CurTime() )
+	return true
 end
 
 local explosionflags = 0x2 + 0x4 + 0x80

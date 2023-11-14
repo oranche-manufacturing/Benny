@@ -65,7 +65,7 @@ function SWEP:BHolster( hand )
 	local item = inv[hand and self:GetWep2() or self:GetWep1()]
 	local class = WEAPONS[item.Class]
 
-	if class.Holster then class.Holster( self ) end
+	if class.Holster then class.Holster( self, self:BTable( false ) ) end
 
 	self:DSetWep( hand, "" )
 

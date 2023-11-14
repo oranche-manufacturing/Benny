@@ -201,7 +201,7 @@ do -- Toolgun
 		Ammo = 0,
 		Damage = 0,
 
-		Fire = function( self, slot )
+		Fire = function( self, data )
 			if self:GetDelay1() > CurTime() then
 				return true
 			end
@@ -226,7 +226,7 @@ do -- Toolgun
 			return true
 		end,
 		
-		Reload = function( self, slot )
+		Reload = function( self, data )
 			if CLIENT and self:GetOwner():KeyPressed( IN_RELOAD ) then
 				CreateSelect()
 			end
@@ -882,41 +882,61 @@ end
 
 do -- Grenades, nothing here is guaranteed.
 
-	local function GrenadeFire( self, class, table )
+	local function GrenadeFire( self, data )
 		local p = self:GetOwner()
-		if self:GetDelay1() > CurTime() then
+		if self:GetGrenadeDown() then
 			return true
 		end
-		self:SetDelay1( CurTime() + 0.1 )
 
-		self:TPFire()
+		self:SetGrenadeDown( true )
+		self:SetGrenadeDownStart( CurTime() )
 
+		return true
+	end
+
+	local function GrenadeReload( self, data )
+		return true
+	end
+
+	local function GrenadeThrow( self, data )
 		-- PROTO: See to getting this done better. Maybe it's spawned while priming the nade for low CL-SV/phys delay?
-		if SERVER then 
-			local GENT = ents.Create( class.GrenadeEnt )
-			GENT:SetOwner( p )
-			local ang = p:EyeAngles()
-			ang.p = ang.p - 5
-			GENT:SetPos( p:EyePos() + (ang:Forward()*16) )
-			GENT:SetAngles( ang + Angle( 0, 0, -90 ) )
-			GENT.Fuse = CurTime() + class.GrenadeFuse
-			GENT:Spawn()
+		local p = self:GetOwner()
+		local class = WEAPONS[data.Class]
+		local GENT = ents.Create( class.GrenadeEnt )
+		GENT:SetOwner( p )
+		local ang = p:EyeAngles()
+		ang.p = ang.p - 5
+		GENT:SetPos( p:EyePos() + (ang:Forward()*16) )
+		GENT:SetAngles( ang + Angle( 0, 0, -90 ) )
+		GENT.Fuse = self:GetGrenadeDownStart() + class.GrenadeFuse
+		GENT:Spawn()
 
-			local velocity = ang:Forward() * 1500
-			velocity:Mul( Lerp( math.TimeFraction( 90, 0, ang.p ), 0, 1 ) )
-			-- velocity:Add( p:EyeAngles():Up() * 500 * Lerp( math.TimeFraction( 0, -90, p:EyeAngles().p ), 0, 1 ) )
+		local velocity = ang:Forward() * 1500
+		velocity:Mul( Lerp( math.TimeFraction( 90, 0, ang.p ), 0, 1 ) )
+		-- velocity:Add( p:EyeAngles():Up() * 500 * Lerp( math.TimeFraction( 0, -90, p:EyeAngles().p ), 0, 1 ) )
 
-			GENT:GetPhysicsObject():SetVelocity( velocity )
+		GENT:GetPhysicsObject():SetVelocity( velocity )
+	end
+
+	local function GrenadeThink( self, data )
+		local p = self:GetOwner()
+		local class = WEAPONS[data.Class]
+		if self:GetGrenadeDown() then
+			if !p:KeyDown( IN_ATTACK ) or ( CurTime() >= (self:GetGrenadeDownStart() + class.GrenadeFuse) ) then
+				self:SetGrenadeDown( false )
+				self:TPFire()
+				if SERVER then GrenadeThrow( self, data ) end
+			end
 		end
-
 		return true
 	end
 
-	local function GrenadeReload( self, class )
-		return true
-	end
-
-	local function GrenadeThink( self, class )
+	local function GrenadeHolster( self, data )
+		if self:GetGrenadeDown() then
+			self:SetGrenadeDown( false )
+			self:TPFire()
+			if SERVER then GrenadeThrow( self, data ) end
+		end
 		return true
 	end
 
@@ -928,6 +948,7 @@ do -- Grenades, nothing here is guaranteed.
 		Fire = GrenadeFire,
 		Reload = GrenadeReload,
 		Think = GrenadeThink,
+		Holster = GrenadeHolster,
 		GrenadeEnt = "benny_grenade_frag",
 		GrenadeFuse = 4,
 		GrenadeCharge = true,
