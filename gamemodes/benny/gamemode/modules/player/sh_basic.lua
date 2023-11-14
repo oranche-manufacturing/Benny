@@ -265,12 +265,13 @@ if CLIENT then
 			-- PROTO: These functions don't need to be remade over and over like this.
 			function button:DoClick()
 				RunConsoleCommand("benny_inv_equip", button.ID)
-				timer.Simple( 0.1, function() if IsValid( itemlist ) then regen_items( itemlist ) end end )
+				-- timer.Simple( 0.1, function() if IsValid( itemlist ) then regen_items( itemlist ) end end )
 			end
 
 			function button:DoRightClick()
 				RunConsoleCommand("benny_inv_discard", button.ID)
-				timer.Simple( 0.1, function() if IsValid( itemlist ) then regen_items( itemlist ) end end )
+				self:Remove()
+				-- timer.Simple( 0.1, function() if IsValid( itemlist ) then regen_items( itemlist ) end end )
 			end
 
 			function button:Paint( w, h )
