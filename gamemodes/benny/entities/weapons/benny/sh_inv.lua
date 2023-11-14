@@ -1,53 +1,53 @@
 
 -- Weapon ID
-function SWEP:DGetWep( hand )
+function SWEP:D_GetID( hand )
 	return hand and self:GetWep2() or self:GetWep1()
 end
 
-function SWEP:DSetWep( hand, value )
+function SWEP:D_SetID( hand, value )
 	return hand and self:SetWep2( value ) or self:SetWep1( value )
 end
 
+-- Wep. Clip ID
+function SWEP:D_GetMagID( hand )
+	return hand and self:GetWep1Clip() or self:GetWep1Clip()
+end
+
+function SWEP:D_SetMagID( hand, value )
+	return hand and self:SetWep1Clip( value ) or self:SetWep1Clip( value )
+end
+
 -- Weapon Firemode
-function SWEP:DGetFiremode( hand )
+function SWEP:D_GetFiremode( hand )
 	return hand and self:GetWep2_Firemode() or self:GetWep1_Firemode()
 end
 
-function SWEP:DSetFiremode( hand, value )
+function SWEP:D_SetFiremode( hand, value )
 	return hand and self:SetWep2_Firemode( value ) or self:SetWep1_Firemode( value )
 end
 
 -- Internal SWEP Delay
-function SWEP:DGetDelay( hand )
+function SWEP:D_GetDelay( hand )
 	return hand and self:Clip2() or self:Clip1()
 end
 
-function SWEP:DSetDelay( hand, value )
+function SWEP:D_SetDelay( hand, value )
 	return hand and self:SetDelay2( value ) or self:SetDelay1( value )
 end
 
 -- Internal SWEP Clip
-function SWEP:DGetClip( hand )
+function SWEP:D_GetClip( hand )
 	return hand and self:Clip2() or self:Clip1()
 end
 
-function SWEP:DSetClip( hand, value )
+function SWEP:D_SetClip( hand, value )
 	return hand and self:SetClip2( value ) or self:SetClip1( value )
 end
 
--- Wep. Clip ID
-function SWEP:DGetWepClip( hand )
-	return hand and self:GetWep1Clip() or self:GetWep1Clip()
-end
-
-function SWEP:DSetWepClip( hand, value )
-	return hand and self:SetWep1Clip( value ) or self:SetWep1Clip( value )
-end
-
 function SWEP:BDeploy( hand, id )
-	if self:DGetWep( hand ) == id then
+	if self:D_GetWep( hand ) == id then
 		return -- PROTO: If you're in the middle of holstering, cancel it
-	elseif self:DGetWep( hand ) != "" then
+	elseif self:D_GetWep( hand ) != "" then
 		self:BHolster( hand )
 	end
 	local p = self:GetOwner()
@@ -58,8 +58,8 @@ function SWEP:BDeploy( hand, id )
 
 	assert( item, "That item doesn't exist. " .. tostring(item) )
 
-	self:DSetWep( hand, id )
-	self:DSetWepClip( hand, item.Loaded )
+	self:D_SetWep( hand, id )
+	self:D_SetMagID( hand, item.Loaded )
 	
 	-- PROTO: Make grenade/melee/firearm logic way way better.
 	if class.Features == "firearm" then
@@ -67,14 +67,14 @@ function SWEP:BDeploy( hand, id )
 			assert( item[ "Ammo" .. item.Loaded ], "That magazine doesn't exist." )
 		end
 			
-		self:DSetClip( hand, item.Loaded == 0 and 0 or item[ "Ammo" .. item.Loaded ] )
+		self:D_SetClip( hand, item.Loaded == 0 and 0 or item[ "Ammo" .. item.Loaded ] )
 	else
-		self:DSetClip( hand, 0 )
+		self:D_SetClip( hand, 0 )
 	end
 end
 
 function SWEP:BHolster( hand )
-	if self:DGetWep( hand ) == "" then
+	if self:D_GetWep( hand ) == "" then
 		return -- What the hell are you holstering..?
 	end
 	local p = self:GetOwner()
@@ -85,10 +85,10 @@ function SWEP:BHolster( hand )
 
 	if class.Holster then class.Holster( self, self:BTable( false ) ) end
 
-	self:DSetWep( hand, "" )
+	self:D_SetWep( hand, "" )
 
 	-- PROTO: Make grenade/melee/firearm logic way way better.
 	if class.Features == "firearm" then
-		self:DSetClip( hand, 0 )
+		self:D_SetClip( hand, 0 )
 	end
 end

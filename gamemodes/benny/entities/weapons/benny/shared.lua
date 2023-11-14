@@ -102,7 +102,7 @@ function SWEP:B_Ammo( alt, value )
 end
 
 function SWEP:B_Firemode( alt )
-	return self:BClass( alt ).Firemodes[ self:DGetFiremode( alt ) ]
+	return self:BClass( alt ).Firemodes[ self:D_GetFiremode( alt ) ]
 end
 
 function SWEP:B_FiremodeName( alt )
@@ -127,22 +127,22 @@ function SWEP:Reload()
 			if self:BClass( hand ).Reload then
 				if self:BClass( hand ).Reload( self, self:BTable( hand ) ) then return end
 			end
-			if self:DGetDelay( hand ) > CurTime() then
+			if self:D_GetDelay( hand ) > CurTime() then
 				return false
 			end
 
-			if self:DGetWepClip( hand ) != 0 then
+			if self:D_GetMagID( hand ) != 0 then
 				B_Sound( self, self:BClass( hand ).Sound_MagOut )
-				self:DSetClip( hand, 0 )
-				self:DSetWepClip( hand, 0 )
+				self:D_SetClip( hand, 0 )
+				self:D_SetMagID( hand, 0 )
 				self:BTable( hand ).Loaded = 0
 			else
 				local maglist = { self:BTable( hand ).Ammo1, self:BTable( hand ).Ammo2, self:BTable( hand ).Ammo3 }
 				for i, v in SortedPairsByValue( maglist, true ) do
 					if v == 0 then B_Sound( self, "Common.NoAmmo" ) return end
 					self:BTable( hand ).Loaded = i
-					self:DSetClip( hand, v )
-					self:DSetWepClip( hand, i )
+					self:D_SetClip( hand, v )
+					self:D_SetMagID( hand, i )
 					break
 				end
 				B_Sound( self, self:BClass( hand ).Sound_MagIn )
