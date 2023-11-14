@@ -27,8 +27,8 @@ PERKS[CAT_PHYSICAL]["tacticalgloves"]		= 2 -- Switch weapons faster
 PERKS[CAT_PHYSICAL]["platecarrier"]			= 3 -- More inventory slots (+2?)
 PERKS[CAT_PHYSICAL]["lightweight"]			= 3 -- Aim down sights faster.
 
-PERKS[CAT_TRAINING]["freerunner"]			= 1 -- Faster vaulting of kinds
-PERKS[CAT_TRAINING]["legday"]				= 1 -- Higher vaulting
+PERKS[CAT_TRAINING]["freerunner"]			= 1 -- Faster movement, shorter cooldowns, quicker movement actions.
+PERKS[CAT_TRAINING]["legday"]				= 1 -- Higher vaulting & jumping.
 PERKS[CAT_TRAINING]["readyup"]				= 1 -- Weapon is ready faster after sprinting
 PERKS[CAT_TRAINING]["hitman"]				= 2 -- Take down enemies without revealing their location
 PERKS[CAT_TRAINING]["athletic"]				= 2 -- Infinite sprint
