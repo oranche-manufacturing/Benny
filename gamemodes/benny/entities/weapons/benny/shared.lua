@@ -22,8 +22,8 @@ SWEP.Secondary.Ammo						= "none"
 AddCSLuaFile( "sh_statregen.lua" )
 include		( "sh_statregen.lua" )
 AddCSLuaFile( "sh_firing.lua" )
-AddCSLuaFile( "sh_firing.lua" )
-include		( "sh_inv.lua" )
+include		( "sh_firing.lua" )
+AddCSLuaFile( "sh_inv.lua" )
 include		( "sh_inv.lua" )
 
 function SWEP:SetupDataTables()
