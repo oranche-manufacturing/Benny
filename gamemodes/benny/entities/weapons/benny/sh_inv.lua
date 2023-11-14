@@ -27,6 +27,11 @@ function SWEP:DSetWepClip( hand, value )
 end
 
 function SWEP:BDeploy( hand, id )
+	if self:DGetWep( hand ) == id then
+		return -- PROTO: If you're in the middle of holstering, cancel it
+	elseif self:DGetWep( hand ) != "" then
+		self:BHolster( hand )
+	end
 	local p = self:GetOwner()
 	local inv = p:INV_Get()
 
@@ -45,10 +50,15 @@ function SWEP:BDeploy( hand, id )
 		end
 			
 		self:DSetClip( hand, item.Loaded == 0 and 0 or item[ "Ammo" .. item.Loaded ] )
+	else
+		self:DSetClip( hand, 0 )
 	end
 end
 
 function SWEP:BHolster( hand )
+	if self:DGetWep( hand ) == "" then
+		return -- What the hell are you holstering..?
+	end
 	local p = self:GetOwner()
 	local inv = p:INV_Get()
 
