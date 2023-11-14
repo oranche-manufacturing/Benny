@@ -131,7 +131,7 @@ function SWEP:Reload()
 				return false
 			end
 
-			if self:DGetClip( hand ) != 0 then
+			if self:DGetWepClip( hand ) != 0 then
 				B_Sound( self, self:BClass( hand ).Sound_MagOut )
 				self:DSetClip( hand, 0 )
 				self:DSetWepClip( hand, 0 )

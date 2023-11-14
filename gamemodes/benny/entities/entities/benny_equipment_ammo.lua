@@ -24,5 +24,6 @@ function ENT:Use( activator )
 				wep:BSend( { "Ammo" .. i, false, bc.Ammo } )
 			end
 		end
+		self:EmitSound( "benny/weapons/mp5k/boltdrop.ogg", 70, 100, 0.5 )
 	end
 end
