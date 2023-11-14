@@ -758,11 +758,11 @@ do
 					bucket_selected = bucket_selected - 1
 					if bucket_selected < 1 then bucket_selected = #buckets end
 					item_selected = #buckets[bucket_selected]
-					if buckets[bucket_selected][item_selected] then
-						ply:EmitSound( "benny/hud/hud-02.ogg", 0, 100, 0.75, CHAN_STATIC )
-						Equip()
-						return
-					end
+				end
+				if buckets[bucket_selected][item_selected] then
+					ply:EmitSound( "benny/hud/hud-02.ogg", 0, 100, 0.75, CHAN_STATIC )
+					Equip()
+					return
 				end
 			end
 			Equip()
