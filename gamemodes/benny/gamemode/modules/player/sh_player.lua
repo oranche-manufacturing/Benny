@@ -64,7 +64,9 @@ function PT:INV_Find( class )
 			table.insert( results, i )
 		end
 	end
-	table.sort( results, SORTS["Acquisition"] )
+	-- PROTO: HOLY SHIT THIS SUCKS, MAKES A FUNCTION EVERY FRAME, AND MIGHT RUN EVERY FRAME!!!
+	table.sort( results, function( a, b ) return inv[b]["Acquisition"] > inv[a]["Acquisition"] end )
+	-- table.sort( results, SORTS["Acquisition"] )
 	return results
 end
 
@@ -93,6 +95,7 @@ do
 			[6] = {},
 			[7] = {},
 		}
+		-- PROTO: HOLY SHIT THIS SUCKS, MAKES A FUNCTION EVERY FRAME, AND RUNS EVERY FRAME!!!
 		local inv = self:INV_Get()
 		local function BucketSorter(a, b)
 			return (inv[b[1]]["Acquisition"] + (b[2]*10000)) > (inv[a[1]]["Acquisition"] + (a[2]*10000))
