@@ -22,20 +22,27 @@ function VaultReady( ply, pos, ang, forw, side )
 	if ply:NoclippingAndNotVaulting() then return false end
 	local wantdir = Vector( forw, -side, 0 ):GetNormalized()
 	wantdir:Rotate( Angle( 0, ang.y, 0 ) )
-	local cum = pos + wantdir*16
 
-	local ts, te = cum + Vector( 0, 0, 22 ), cum + Vector( 0, 0, 65 )
-	local bottom, top = ply:GetHull()
-	if ply:Crouching() then bottom, top = ply:GetHullDuck() end
-	local tr = util.TraceHull( {
-		start = ts,
-		endpos = te,
-		mins = bottom,
-		maxs = top,
-		filter = ply,
-	} )
+	for i=1, 2 do
+		local cum = pos + wantdir*(((2-i)/2)*14)
 
-	return (ply:GetVaultDebuff() == 0 and tr.Hit and tr.StartSolid and !tr.AllSolid and tr.FractionLeftSolid>0) and tr, ts, te or false
+		local ts, te = cum + Vector( 0, 0, 22 ), cum + Vector( 0, 0, 65 )
+		local bottom, top = ply:GetHull()
+		if ply:Crouching() then bottom, top = ply:GetHullDuck() end
+		local tr = util.TraceHull( {
+			start = ts,
+			endpos = te,
+			mins = bottom,
+			maxs = top,
+			filter = ply,
+		} )
+		local accept = (ply:GetVaultDebuff() == 0 and tr.Hit and tr.StartSolid and !tr.AllSolid and tr.FractionLeftSolid>0)
+		if accept then
+			return tr, ts, te
+		end
+	end
+
+	return false
 end
 
 hook.Add( "SetupMove", "Benny_SetupMove", function( ply, mv, cmd )
