@@ -52,6 +52,10 @@ function PT:INV_Discard( id )
 	end
 end
 
+SORTS = {
+	["Acquisition"] = function( a, b ) return inv[b]["Acquisition"] > inv[a]["Acquisition"] end,
+}
+
 function PT:INV_Find( class )
 	local inv = self:INV_Get()
 	local results = {}
@@ -60,7 +64,7 @@ function PT:INV_Find( class )
 			table.insert( results, i )
 		end
 	end
-	table.sort( results, function( a, b ) return inv[b]["Acquisition"] > inv[a]["Acquisition"] end)
+	table.sort( results, SORTS["Acquisition"] )
 	return results
 end
 
@@ -90,6 +94,9 @@ do
 			[7] = {},
 		}
 		local inv = self:INV_Get()
+		local function BucketSorter(a, b)
+			return (inv[b[1]]["Acquisition"] + (b[2]*10000)) > (inv[a[1]]["Acquisition"] + (a[2]*10000))
+		end
 		for i, bucket in ipairs( inventorylist ) do
 			local temp = {}
 			for id, data in pairs( inv ) do
@@ -100,7 +107,7 @@ do
 					table.insert( temp, { id, translated[2] } )
 				end
 			end
-			table.sort( temp, function(a, b) return (inv[b[1]]["Acquisition"] + (b[2]*10000)) > (inv[a[1]]["Acquisition"] + (a[2]*10000)) end )
+			table.sort( temp, BucketSorter )
 			for i, v in ipairs( temp ) do
 				table.insert( bucket, v[1] )
 			end
