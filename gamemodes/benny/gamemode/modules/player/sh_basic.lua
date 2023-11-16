@@ -7,18 +7,15 @@ end
 
 concommand.Add("benny_debug_give", function(ply, cmd, args)
 	assert(SERVER, "not server")
-	-- PROTO: Check for the correct 'benny' weapon.
-	local ply = Entity( args[1] )
-	local wep = ply:GetActiveWeapon()
 	local inv = ply:INV_Get()
 	local str = UUID_generate()
 
-	local class = WEAPONS[args[3]]
+	local class = WEAPONS[args[1]]
 
 	assert(class, "Invalid Class.")
 
 	local item = {
-		Class = args[3],
+		Class = args[1],
 		Loaded = 1,
 		Ammo1 = class.Ammo,
 		Ammo2 = class.Ammo,
@@ -33,21 +30,17 @@ concommand.Add("benny_debug_give", function(ply, cmd, args)
 		net.WriteString( str )
 		net.WriteTable( item )
 	net.Send( ply )
-
-	local slot = tonumber(args[2])
-
-	if slot == 1 then
-		wep:SetWep1( str )
-		wep:SetWep1Clip( item.Loaded )
-		wep:SetClip1( item[ "Ammo" .. item.Loaded ] )
-	elseif slot == 2 then
-		wep:SetWep2( str )
-		wep:SetWep2Clip( item.Loaded )
-		wep:SetClip2( item[ "Ammo" .. item.Loaded ] )
-	else
-		
+end,
+function(cmd, args)
+	args = string.Trim(args:lower())
+	local meow = {}
+	for i, v in SortedPairs( WEAPONS ) do
+		if string.lower(i):find(args) then
+			table.insert( meow, cmd .. " " .. i )
+		end
 	end
-end)
+	return meow
+end, "arg 1: player ent index, arg 2: classname")
 
 -- PROTO: Move this all into weapon code.
 concommand.Add("benny_inv_equip", function( ply, cmd, args )
@@ -203,7 +196,7 @@ if CLIENT then
 
 				-- PROTO: These functions don't need to be remade over and over like this.
 				function button:DoClick()
-					RunConsoleCommand( "benny_debug_give", LocalPlayer():EntIndex(), 0, New.ClassName )
+					RunConsoleCommand( "benny_debug_give", New.ClassName )
 				end
 
 				function button:DoRightClick()
