@@ -273,6 +273,7 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 	do -- Vaulting
 		if vaultsave then
 			local tex = "[SPACE] VAULT OVER"
+			if vaultsave == 2 then tex = "[SPACE] MANTLE OVER" end
 
 			surface.SetFont( "Benny_16" )
 			local tox, toy = surface.GetTextSize( tex )
@@ -440,8 +441,11 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 		local item_gap_sel = ss(36+2)
 
 		local inventorylist = p:INV_Buckets()
-
 		local bump = 0
+
+		-- PROTO: Maybe check this every 10hz instead
+
+
 		for i, bucket in ipairs( inventorylist ) do
 			surface.SetDrawColor( scheme["bg"] )
 			surface.DrawRect( bump + b, b, size_num, size_num )
