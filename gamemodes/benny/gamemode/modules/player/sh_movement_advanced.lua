@@ -76,8 +76,6 @@ hook.Add( "Move", "Benny_Move", function( ply, mv )
 		maxs = bb,
 		filter = ply,
 	} )
-	debugoverlay.Line( T1.StartPos, T1.HitPos, 0, T1.Hit and CR or color_white )
-
 	if CLIENT then vaultsave = false end
 	if T1.Hit then -- A challenger approaches
 
@@ -104,7 +102,7 @@ hook.Add( "Move", "Benny_Move", function( ply, mv )
 		local VertClearance = T3.HitPos.z - T3.StartPos.z
 
 		-- If we try to go so high and it's TOO high then give up
-		if VertClearance != MAXVAULTHEIGHT then
+		if VertClearance > ply:GetStepSize() and VertClearance != MAXVAULTHEIGHT then
 			-- Trace from clearance to final
 			local T4 = util.TraceHull( {
 				start = T3.HitPos,
