@@ -234,7 +234,7 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 	local b = ss(20)
 	local p = LocalPlayer()
 	-- PROTO: Make sure this is the 'benny' weapon.
-	local wep = p:GetActiveWeapon()
+	local wep = p:BennyCheck()
 
 	local active = GetConVar("benny_hud_tempactive"):GetString()
 	local scheme = schemes[active]
@@ -287,7 +287,7 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 		end
 	end
 
-	if p:BennyCheck() then -- Weapon
+	if wep then -- Weapon
 		local inv = p:INV_Get()
 		local wep1 = wep:BTable( false )
 		local wep1c = wep:BClass( false )
@@ -309,7 +309,9 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 				surface.SetDrawColor( scheme["fg"] )
 				surface.DrawRect( p_x+pb, p_y+pb, p_w-pb2, t_h )
 
-				draw.SimpleText( wep1c.Name, "Benny_16", p_x+ss(6), p_y+ss(5), scheme["bg"], TEXT_ALIGN_TOP, TEXT_ALIGN_LEFT )
+				draw.SimpleText( wep1c.Name, "Benny_16", p_x+ss(6), p_y+ss(5), scheme["bg"], TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP )
+				
+				draw.SimpleText( wep:D_GetID( false ), "Benny_10", p_x+p_w-pb2, p_y+ss(7), scheme["bg"], TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP )
 
 				if wep:BClass( false ).Firemodes then -- Firemode
 					surface.SetDrawColor( scheme["fg"] )
@@ -444,7 +446,19 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 		local bump = 0
 
 		-- PROTO: Maybe check this every 10hz instead
+		do
+			-- local flipped = table.Flip( Entity(1):INV_ListFromBuckets() )
+			-- local id = flipped[ Entity(1):GetActiveWeapon():D_GetID( false ) ]
 
+			for n, bucket in ipairs( inventorylist ) do
+				for i, v in ipairs( bucket ) do
+					if v == wep:D_GetID( false ) then
+						bucket_selected = n
+						item_selected = i
+					end
+				end
+			end
+		end
 
 		for i, bucket in ipairs( inventorylist ) do
 			surface.SetDrawColor( scheme["bg"] )
@@ -476,7 +490,7 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 			else
 				for d, item in ipairs( bucket ) do
 					local idata = WEAPONS[inv[item].Class]
-					local sel = d==item_selected
+					local sel = item==wep:D_GetID( false )--d==item_selected
 					surface.SetDrawColor( scheme["bg"] )
 					surface.DrawRect( bump + b, (item_start+ybump) + b, size_textx, (sel and size_texty_sel or size_texty) )
 					if sel then
@@ -678,7 +692,9 @@ do
 		local ply = LocalPlayer()
 		local buckets = ply:INV_Buckets()
 		if buckets[bucket_selected] and buckets[bucket_selected][item_selected] then
-			RunConsoleCommand( "benny_inv_equip", buckets[bucket_selected][item_selected] )
+			ply.CLIENTDESIRE = buckets[bucket_selected][item_selected]
+
+			--RunConsoleCommand( "benny_inv_equip", buckets[bucket_selected][item_selected] )
 		end
 	end
 	local function Locate( ply, buckets, id )

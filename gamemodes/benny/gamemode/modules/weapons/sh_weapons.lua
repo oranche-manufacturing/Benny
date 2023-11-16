@@ -929,7 +929,10 @@ do -- Grenades, nothing here is guaranteed.
 		if SERVER then GrenadeCreate( self, data ) end
 		local id = self:D_GetID( false )
 		self:BHolster( false )
-		p:INV_Discard( id )
+
+		if SERVER or (CLIENT and IsFirstTimePredicted()) then
+			p:INV_Discard( id )
+		end
 
 		local subsequent = p:INV_Find( data.Class )[1]
 		if subsequent then

@@ -48,7 +48,8 @@ function SWEP:BDeploy( hand, id )
 	assert( isbool(hand), "You forgot the hand." )
 	assert( isstring(id), "You forgot the ID." )
 	if self:D_GetID( hand ) == id then
-		return -- PROTO: If you're in the middle of holstering, cancel it
+		-- This breaks prediction somewhat!!
+		-- return -- PROTO: If you're in the middle of holstering, cancel it
 	elseif self:D_GetID( hand ) != "" then
 		self:BHolster( hand )
 	end
@@ -88,5 +89,6 @@ function SWEP:BHolster( hand )
 	end
 
 	self:D_SetID( hand, "" )
+	self:D_SetMagID( hand, 0 )
 	self:D_SetClip( hand, 0 )
 end

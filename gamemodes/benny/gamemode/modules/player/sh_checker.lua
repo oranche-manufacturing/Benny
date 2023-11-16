@@ -83,9 +83,9 @@ if SERVER then
 					table.insert( regenlist, id )
 				else
 					-- Punish
-					print( "The item the client requested didn't exist. Malicious? Not supporting for 30 seconds." )
-					ply.CheckerRequestBan = CurTime() + 30
-					return
+					print( ply, "The item the client requested, '" .. tostring(id) .."' didn't exist. Malicious?") -- Matters in public servers!! -- Not supporting for 5 seconds." )
+					-- ply.CheckerRequestBan = CurTime() + 5
+					-- return
 				end
 			end
 

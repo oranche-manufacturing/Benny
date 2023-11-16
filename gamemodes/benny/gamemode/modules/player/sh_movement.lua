@@ -61,7 +61,7 @@ hook.Add( "CreateMove", "Benny_CreateMove", function( cmd )
 		-- ad:Normalize()
 		-- ad:Mul(320)
 
-		cmd:ClearMovement()
+		--cmd:ClearMovement()
 		cmd:SetForwardMove( ad.x )
 		cmd:SetSideMove( ad.y )
 
@@ -132,7 +132,7 @@ hook.Add( "CreateMove", "Benny_CreateMove", function( cmd )
 		moveintent:Rotate( fixang )
 
 
-		cmd:ClearMovement()
+		-- cmd:ClearMovement()
 		cmd:SetForwardMove( moveintent.x )
 		cmd:SetSideMove( moveintent.y )
 	end

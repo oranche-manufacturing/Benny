@@ -21,7 +21,7 @@ local PT = FindMetaTable( "Player" )
 
 function PT:BennyCheck()
 	local wep = self:GetActiveWeapon()
-	return ( wep:IsValid() and wep:GetClass() == "benny" and wep.GetUserAim )
+	return ( wep:IsValid() and wep:GetClass() == "benny" and wep.GetUserAim ) and wep or false
 end
 
 function PT:CamSpot( ang )
@@ -136,4 +136,56 @@ do
 		end
 		return inventorylist
 	end
+	-- PROTO: I am on an outdated version of GMod.
+	function table.Flip( tab )
+		local res = {}
+	
+		for k, v in pairs( tab ) do
+			res[ v ] = k
+		end
+	
+		return res
+	end
+	function PT:INV_ListFromBuckets()
+		local buckets = self:INV_Buckets()
+
+		local complete = {}
+		for n, bucket in ipairs( buckets ) do
+			for i, v in ipairs( bucket ) do
+				table.insert( complete, v )
+			end 
+		end
+
+		return complete
+	end
 end
+
+-- weapon select
+
+hook.Add("StartCommand", "Benny_INV_StartCommand", function( ply, cmd )
+	local wep = ply:BennyCheck()
+	if wep then
+		local inv = ply:INV_Get()
+		local inv_bucketlist = ply:INV_ListFromBuckets()
+		local inv_bucketlist_flipped = table.Flip( inv_bucketlist )
+		if CLIENT and ply.CLIENTDESIRE and inv[ply.CLIENTDESIRE ] and inv_bucketlist_flipped[ ply.CLIENTDESIRE ] then
+			cmd:SetUpMove( inv_bucketlist_flipped[ ply.CLIENTDESIRE ] )
+		end
+		local id = cmd:GetUpMove()
+
+		if id > 0 and inv_bucketlist[id] and inv[inv_bucketlist[id]] then
+			wep:BDeploy( false, inv_bucketlist[ id ] )
+			if CLIENT and IsFirstTimePredicted() and wep:D_GetID( false ) == inv_bucketlist[ply.CLIENTDESIRE] then
+				ply.CLIENTDESIRE = 0
+			end
+		end
+
+	end
+end)
+
+
+-- cmd:KeyDown( IN_WEAPON1 )
+-- cmd:KeyDown( IN_WEAPON2 )
+-- cmd:KeyDown( IN_BULLRUSH )
+-- cmd:KeyDown( IN_GRENADE1 )
+-- cmd:KeyDown( IN_GRENADE2 )
