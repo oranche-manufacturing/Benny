@@ -209,6 +209,7 @@ SWEP.GestureReload			= { ACT_FLINCH_STOMACH, 0.3 }
 SWEP.GestureDraw			= { ACT_GMOD_GESTURE_MELEE_SHOVE_1HAND, 0.75 }
 SWEP.GestureHolster			= { ACT_GMOD_GESTURE_MELEE_SHOVE_1HAND, 0.65 }
 function SWEP:TPFire()
+	if CLIENT and !IsFirstTimePredicted() then return end
 	local target = self:BClass( false ).GestureFire
 	if !target then
 		target = self.GestureFire
@@ -216,6 +217,7 @@ function SWEP:TPFire()
 	self:GetOwner():AddVCDSequenceToGestureSlot( GESTURE_SLOT_GRENADE, self:GetOwner():SelectWeightedSequence(target[1]), target[2], true )
 end
 function SWEP:TPReload()
+	if CLIENT and !IsFirstTimePredicted() then return end
 	local target = self:BClass( false ).GestureReload
 	if !target then
 		target = self.GestureReload
@@ -223,6 +225,7 @@ function SWEP:TPReload()
 	self:GetOwner():AddVCDSequenceToGestureSlot( GESTURE_SLOT_GRENADE, self:GetOwner():SelectWeightedSequence(target[1]), target[2], true )
 end
 function SWEP:TPDraw()
+	if CLIENT and !IsFirstTimePredicted() then return end
 	local target = self:BClass( false ).GestureDraw
 	if !target then
 		target = self.GestureDraw
@@ -230,6 +233,7 @@ function SWEP:TPDraw()
 	self:GetOwner():AddVCDSequenceToGestureSlot( GESTURE_SLOT_GRENADE, self:GetOwner():SelectWeightedSequence(target[1]), target[2], true )
 end
 function SWEP:TPHolster()
+	if CLIENT and !IsFirstTimePredicted() then return end
 	local target = self:BClass( false ) and self:BClass( false ).GestureHolster
 	if !target then
 		target = self.GestureHolster
