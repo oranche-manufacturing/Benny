@@ -75,17 +75,30 @@ SORTS = {
 	["Acquisition"] = function( a, b ) return inv[b]["Acquisition"] > inv[a]["Acquisition"] end,
 }
 
-function PT:INV_Find( class )
+function PT:INV_Find( class, exclude )
 	local inv = self:INV_Get()
 	local results = {}
 	for i, v in pairs( inv ) do
-		if v.Class == class then
+		if v.Class == class and i != (exclude or "") then
 			table.insert( results, i )
 		end
 	end
-	-- PROTO: HOLY SHIT THIS SUCKS, MAKES A FUNCTION EVERY FRAME, AND MIGHT RUN EVERY FRAME!!!
+	-- PROTO: HOLY SHIT THIS SUCKS, MAKES A FUNCTION AND MIGHT RUN EVERY FRAME!!!
 	table.sort( results, function( a, b ) return inv[b]["Acquisition"] > inv[a]["Acquisition"] end )
 	-- table.sort( results, SORTS["Acquisition"] )
+	return results
+end
+
+function PT:INV_FindMag( class, exclude )
+	local inv = self:INV_Get()
+	local results = {}
+	for i, v in pairs( inv ) do
+		if v.Class == class and i != (exclude or "") then
+			table.insert( results, i )
+		end
+	end
+	-- PROTO: HOLY SHIT THIS SUCKS, MAKES A FUNCTION AND MIGHT RUN EVERY FRAME!!!
+	table.sort( results, function( a, b ) return (inv[b]["Ammo"] - (inv[b]["Acquisition"]/(2^16))) < (inv[a]["Ammo"] - (inv[a]["Acquisition"]/(2^16))) end )
 	return results
 end
 
@@ -101,6 +114,7 @@ do
 		["grenade"]			= { 6, 1 },
 		["utility"]			= { 6, 2 },
 		["equipment"]		= { 7, 1 },
+		["magazine"]		= { 8, 1 },
 	}
 
 	-- PROTO: Cache this!
@@ -113,6 +127,7 @@ do
 			[5] = {},
 			[6] = {},
 			[7] = {},
+			[8] = {},
 		}
 		-- PROTO: HOLY SHIT THIS SUCKS, MAKES A FUNCTION EVERY FRAME, AND RUNS EVERY FRAME!!!
 		local inv = self:INV_Get()
@@ -175,10 +190,13 @@ hook.Add("StartCommand", "Benny_INV_StartCommand", function( ply, cmd )
 
 		if id > 0 and inv_bucketlist[id] and inv[inv_bucketlist[id]] then
 			wep:BDeploy( false, inv_bucketlist[ id ] )
-			if CLIENT and IsFirstTimePredicted() and wep:D_GetID( false ) == inv_bucketlist[ply.CLIENTDESIRE] then
+			if CLIENT and (wep:D_GetID( false ) == ply.CLIENTDESIRE) then
 				ply.CLIENTDESIRE = 0
+				print("Fixed")
 			end
 		end
+
+		wep:SetTempHandedness( cmd:KeyDown( IN_ZOOM ) )
 
 	end
 end)

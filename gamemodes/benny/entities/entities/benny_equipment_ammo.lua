@@ -19,10 +19,10 @@ function ENT:Use( activator )
 		local wep = activator:GetActiveWeapon()
 		local bt, bc = wep:BTable(), wep:BClass()
 		for i=1, 3 do
-			if bt["Ammo" .. i] and bt.Loaded != i then
-				bt["Ammo" .. i] = bc.Ammo
-				wep:BSend( { "Ammo" .. i, false, bc.Ammo } )
-			end
+			-- if bt["Ammo" .. i] and bt.Loaded != i then
+			-- 	bt["Ammo" .. i] = bc.Ammo
+			-- 	wep:BSend( { "Ammo" .. i, false, bc.Ammo } )
+			-- end
 		end
 		self:EmitSound( "benny/weapons/mp5k/boltdrop.ogg", 70, 100, 0.5 )
 	end

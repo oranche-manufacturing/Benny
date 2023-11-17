@@ -25,6 +25,13 @@ AddCSLuaFile( "sh_firing.lua" )
 include		( "sh_firing.lua" )
 AddCSLuaFile( "sh_inv.lua" )
 include		( "sh_inv.lua" )
+AddCSLuaFile( "sh_holdtypes.lua" )
+include		( "sh_holdtypes.lua" )
+
+AddCSLuaFile( "cl_wm.lua" )
+if CLIENT then
+	include		( "cl_wm.lua" )
+end
 
 function SWEP:SetupDataTables()
 	self:NetworkVar( "Float", 0, "Aim" )
@@ -33,46 +40,22 @@ function SWEP:SetupDataTables()
 	self:NetworkVar( "Float", 3, "GrenadeDownStart" )
 	self:NetworkVar( "String", 0, "Wep1" )
 	self:NetworkVar( "String", 1, "Wep2" )
-	self:NetworkVar( "Int", 0, "Wep1Clip" )
-	self:NetworkVar( "Int", 1, "Wep2Clip" )
-	self:NetworkVar( "Int", 2, "Wep1Burst" )
-	self:NetworkVar( "Int", 3, "Wep2Burst" )
-	self:NetworkVar( "Int", 4, "Wep1_Firemode" )
-	self:NetworkVar( "Int", 5, "Wep2_Firemode" )
+	self:NetworkVar( "String", 2, "Wep1_Clip" )
+	self:NetworkVar( "String", 3, "Wep2_Clip" )
+	self:NetworkVar( "Int", 0, "Wep1_Burst" )
+	self:NetworkVar( "Int", 1, "Wep2_Burst" )
+	self:NetworkVar( "Int", 2, "Wep1_Firemode" )
+	self:NetworkVar( "Int", 3, "Wep2_Firemode" )
 	self:NetworkVar( "Bool", 0, "UserAim" )
 	self:NetworkVar( "Bool", 1, "GrenadeDown" )
+	self:NetworkVar( "Bool", 2, "TempHandedness" )
 
 	self:SetWep1_Firemode( 1 )
 	self:SetWep2_Firemode( 1 )
 end
 
 function SWEP:PrimaryAttack()
-	if !self:BTable() then
-		return
-	end
-	if self:BClass().Fire then
-		if self:BClass( false ).Fire( self, self:BTable( false ) ) then return end
-	end
-	if self:GetDelay1() > CurTime() then
-		return
-	end
-	if self:GetWep1Burst() >= self:B_Firemode( false ).Mode then
-		return
-	end
-	if self:Clip1() == 0 then
-		B_Sound( self, self:BClass( false ).Sound_DryFire )
-		self:SetDelay1( CurTime() + 0.2 )
-		return
-	end
-	
-	self:B_Ammo( false, self:Clip1() - 1 )
-
-	B_Sound( self, self:BClass( false ).Sound_Fire )
-	self:TPFire()
-	self:CallFire()
-
-	self:SetDelay1( CurTime() + self:BClass( false ).Delay )
-	self:SetWep1Burst( self:GetWep1Burst() + 1 )
+	self:BFire( self:GetTempHandedness() )
 	return true
 end
 
@@ -90,15 +73,12 @@ function SWEP:BClass( alt )
 	end
 end
 
-function SWEP:B_Ammo( alt, value )
-	local clip = (alt and self:GetWep2Clip() or self:GetWep1Clip())
-	assert( clip > 0, "You cannot mess with an EMPTY magazine!")
-	if alt then
-		self:SetClip2( value )
-	else
-		self:SetClip1( value )
-	end
-	self:BTable( alt )["Ammo" .. clip] = value
+function SWEP:B_Ammo( hand, value )
+	local p = self:GetOwner()
+	local inv = p:INV_Get()
+	self:D_SetClip( hand, value )
+	assert( self:D_GetMagID( hand ) != "", "There is no magazine loaded!" )
+	inv[ self:D_GetMagID( hand ) ].Ammo = value
 end
 
 function SWEP:B_Firemode( alt )
@@ -121,35 +101,54 @@ function SWEP:SecondaryAttack()
 end
 
 function SWEP:Reload()
-	if self:GetOwner():KeyPressed( IN_RELOAD ) then for i=1, 2 do
-		local hand = i==2
-		if self:BTable( hand ) then
-			if self:BClass( hand ).Reload then
-				if self:BClass( hand ).Reload( self, self:BTable( hand ) ) then return end
-			end
-			if self:D_GetDelay( hand ) > CurTime() then
-				return false
-			end
-
-			if self:D_GetMagID( hand ) != 0 then
-				B_Sound( self, self:BClass( hand ).Sound_MagOut )
-				self:D_SetClip( hand, 0 )
-				self:D_SetMagID( hand, 0 )
-				self:BTable( hand ).Loaded = 0
-			else
-				local maglist = { self:BTable( hand ).Ammo1, self:BTable( hand ).Ammo2, self:BTable( hand ).Ammo3 }
-				for i, v in SortedPairsByValue( maglist, true ) do
-					if v == 0 then B_Sound( self, "Common.NoAmmo" ) return end
-					self:BTable( hand ).Loaded = i
-					self:D_SetClip( hand, v )
-					self:D_SetMagID( hand, i )
-					break
+	local p = self:GetOwner()
+	local inv = p:INV_Get()
+	if p:KeyPressed( IN_RELOAD ) then
+		for i=1, 2 do
+			local hand = i==2
+			local wep_table = self:BTable( hand )
+			local wep_class = self:BClass( hand )
+			if wep_table then
+				print( "First Test: ", i, wep_table, WEAPONS[wep_table.Class].Name )
+				if wep_class.Reload then
+					if wep_class.Reload( self, wep_table ) then return end
 				end
-				B_Sound( self, self:BClass( hand ).Sound_MagIn )
+				if self:D_GetDelay( hand ) > CurTime() then
+					return false
+				end
+
+				local mid = self:D_GetMagID( hand )
+				assert( mid == "" or inv[mid], "That magazine doesn't exist." )
+				if mid != "" then
+					B_Sound( self, wep_class.Sound_MagOut )
+
+					if inv[mid].Ammo == 0 then
+						if SERVER or (CLIENT and IsFirstTimePredicted()) then
+							p:INV_Discard( mid )
+						end
+					end
+
+					self:D_SetClip( hand, 0 )
+					self:D_SetMagID( hand, "" )
+					wep_table.Loaded = ""
+				else
+					local maglist = p:INV_FindMag( "mag_" .. wep_table.Class )
+					PrintTable( maglist )
+					local mag = maglist[1]
+					-- print(hand, i, mag, wep_class.Name)
+					if mag then
+						wep_table.Loaded = mag
+						self:D_SetMagID( hand, mag )
+						self:D_SetClip( hand, inv[mag].Ammo )
+						-- B_Sound( self, wep_class.Sound_MagIn )
+					else
+						-- B_Sound( self, "Common.NoAmmo" )
+					end
+				end
+				self:TPReload()
 			end
-			self:TPReload()
 		end
-	end end
+	end
 	return true
 end
 
@@ -168,13 +167,18 @@ function SWEP:Think()
 	self:SetAim( math.Approach( self:GetAim(), self:GetUserAim() and 1 or 0, FrameTime()/0.2 ) )
 
 	if !p:KeyDown( IN_ATTACK ) then
-		self:SetWep1Burst( 0 )
+		self:SetWep1_Burst( 0 )
+		self:SetWep2_Burst( 0 )
 	end
 
 	local ht = "normal"
 	if self:GetUserAim() then
 		if self:BClass( false ) then
-			ht = self:BClass( false ).HoldType or "revolver"
+			if self:BClass( true ) then
+				ht = "duel"
+			else
+				ht = self:BClass( false ).HoldType or "revolver"
+			end
 		end
 	end
 
@@ -202,193 +206,4 @@ end
 
 function SWEP:Holster()
 	return true
-end
-
-SWEP.GestureFire			= { ACT_HL2MP_GESTURE_RANGE_ATTACK_SHOTGUN, 0.85 }
-SWEP.GestureReload			= { ACT_FLINCH_STOMACH, 0.3 }
-SWEP.GestureDraw			= { ACT_GMOD_GESTURE_MELEE_SHOVE_1HAND, 0.75 }
-SWEP.GestureHolster			= { ACT_GMOD_GESTURE_MELEE_SHOVE_1HAND, 0.65 }
-function SWEP:TPFire()
-	if CLIENT and !IsFirstTimePredicted() then return end
-	local target = self:BClass( false ).GestureFire
-	if !target then
-		target = self.GestureFire
-	end
-	self:GetOwner():AddVCDSequenceToGestureSlot( GESTURE_SLOT_GRENADE, self:GetOwner():SelectWeightedSequence(target[1]), target[2], true )
-end
-function SWEP:TPReload()
-	if CLIENT and !IsFirstTimePredicted() then return end
-	local target = self:BClass( false ).GestureReload
-	if !target then
-		target = self.GestureReload
-	end
-	self:GetOwner():AddVCDSequenceToGestureSlot( GESTURE_SLOT_GRENADE, self:GetOwner():SelectWeightedSequence(target[1]), target[2], true )
-end
-function SWEP:TPDraw()
-	if CLIENT and !IsFirstTimePredicted() then return end
-	local target = self:BClass( false ).GestureDraw
-	if !target then
-		target = self.GestureDraw
-	end
-	self:GetOwner():AddVCDSequenceToGestureSlot( GESTURE_SLOT_GRENADE, self:GetOwner():SelectWeightedSequence(target[1]), target[2], true )
-end
-function SWEP:TPHolster()
-	if CLIENT and !IsFirstTimePredicted() then return end
-	local target = self:BClass( false ) and self:BClass( false ).GestureHolster
-	if !target then
-		target = self.GestureHolster
-	end
-	self:GetOwner():AddVCDSequenceToGestureSlot( GESTURE_SLOT_GRENADE, self:GetOwner():SelectWeightedSequence(target[1]), target[2], true )
-end
-
-if CLIENT then
-
-	function SWEP:DrawWorldModel()
-		local p = self:GetOwner()
-		local wm = self.CWM
-		local class = self:BClass( false )
-		if class then
-			if !IsValid(wm) then
-				wm = ClientsideModel( class.WModel )
-				self.CWM = wm
-			end
-			wm:SetModel( class.WModel )
-			wm:SetNoDraw( true )
-			wm:AddEffects( EF_BONEMERGE )
-			wm:SetParent( p )
-
-			-- if IsValid(p) then
-			-- 	-- Specify a good position
-			-- 	local offsetVec = Vector(12.8, -1.4, 2.6)
-			-- 	local offsetAng = Angle(180 - 10, 180, 0)
-			-- 	
-			-- 	local boneid = p:LookupBone("ValveBiped.Bip01_R_Hand") -- Right Hand
-			-- 	if !boneid then return end
-
-			-- 	local matrix = p:GetBoneMatrix(boneid)
-			-- 	if !matrix then return end
- 
-			-- 	local newPos, newAng = LocalToWorld(offsetVec, offsetAng, matrix:GetTranslation(), matrix:GetAngles())
-
-			-- 	wm:SetPos(newPos)
-			-- 	wm:SetAngles(newAng)
-
-			-- 	wm:SetupBones()
-			-- else
-				-- wm:SetPos(self:GetPos())
-				-- wm:SetAngles(self:GetAngles())
-				-- wm:SetupBones()
-			-- end
-
-			if self:GetUserAim() then wm:DrawModel() end
-		end
-	end
-end
-
--- Holdtype thingys
-do
-	local ActIndex = {
-		[ "pistol" ]		= ACT_HL2MP_IDLE_PISTOL,
-		[ "smg" ]			= ACT_HL2MP_IDLE_SMG1,
-		[ "grenade" ]		= ACT_HL2MP_IDLE_GRENADE,
-		[ "ar2" ]			= ACT_HL2MP_IDLE_AR2,
-		[ "shotgun" ]		= ACT_HL2MP_IDLE_SHOTGUN,
-		[ "rpg" ]			= ACT_HL2MP_IDLE_RPG,
-		[ "physgun" ]		= ACT_HL2MP_IDLE_PHYSGUN,
-		[ "crossbow" ]		= ACT_HL2MP_IDLE_CROSSBOW,
-		[ "melee" ]			= ACT_HL2MP_IDLE_MELEE,
-		[ "slam" ]			= ACT_HL2MP_IDLE_SLAM,
-		[ "normal" ]		= ACT_HL2MP_IDLE,
-		[ "fist" ]			= ACT_HL2MP_IDLE_FIST,
-		[ "melee2" ]		= ACT_HL2MP_IDLE_MELEE2,
-		[ "passive" ]		= ACT_HL2MP_IDLE_PASSIVE,
-		[ "knife" ]			= ACT_HL2MP_IDLE_KNIFE,
-		[ "duel" ]			= ACT_HL2MP_IDLE_DUEL,
-		[ "camera" ]		= ACT_HL2MP_IDLE_CAMERA,
-		[ "magic" ]			= ACT_HL2MP_IDLE_MAGIC,
-		[ "revolver" ]		= ACT_HL2MP_IDLE_REVOLVER,
-
-		[ "suitcase" ]		= ACT_HL2MP_IDLE,
-		[ "melee_angry" ]		= ACT_HL2MP_IDLE_MELEE_ANGRY,
-		[ "angry" ]		= ACT_HL2MP_IDLE_ANGRY,
-		[ "scared" ]		= ACT_HL2MP_IDLE_SCARED,
-		[ "zombie" ]		= ACT_HL2MP_IDLE_ZOMBIE,
-		[ "cower" ]		= ACT_HL2MP_IDLE_COWER,
-	}
-
-	--[[---------------------------------------------------------
-		Name: SetWeaponHoldType
-		Desc: Sets up the translation table, to translate from normal
-				standing idle pose, to holding weapon pose.
-	-----------------------------------------------------------]]
-	function SWEP:SetWeaponHoldType( t )
-
-		t = string.lower( t )
-		local index = ActIndex[ t ]
-
-		if ( index == nil ) then
-			Msg( "SWEP:SetWeaponHoldType - ActIndex[ \"" .. t .. "\" ] isn't set! (defaulting to normal)\n" )
-			t = "normal"
-			index = ActIndex[ t ]
-		end
-
-		self.ActivityTranslate = {}
-		self.ActivityTranslate[ ACT_MP_STAND_IDLE ]					= index
-		self.ActivityTranslate[ ACT_MP_WALK ]						= index + 1
-		self.ActivityTranslate[ ACT_MP_RUN ]						= index + 2
-		self.ActivityTranslate[ ACT_MP_CROUCH_IDLE ]				= index + 3
-		self.ActivityTranslate[ ACT_MP_CROUCHWALK ]					= index + 4
-		self.ActivityTranslate[ ACT_MP_ATTACK_STAND_PRIMARYFIRE ]	= index + 5
-		self.ActivityTranslate[ ACT_MP_ATTACK_CROUCH_PRIMARYFIRE ]	= index + 5
-		self.ActivityTranslate[ ACT_MP_RELOAD_STAND ]				= index + 6
-		self.ActivityTranslate[ ACT_MP_RELOAD_CROUCH ]				= index + 6
-		self.ActivityTranslate[ ACT_MP_JUMP ]						= index + 7
-		self.ActivityTranslate[ ACT_RANGE_ATTACK1 ]					= index + 8
-		self.ActivityTranslate[ ACT_MP_SWIM ]						= index + 9
-
-		-- "normal" jump animation doesn't exist
-		if ( t == "normal" ) then
-			self.ActivityTranslate[ ACT_MP_JUMP ] = ACT_HL2MP_JUMP_SLAM
-		end
-
-		if ( t == "suitcase" ) then
-			self.ActivityTranslate[ ACT_MP_STAND_IDLE ] = ACT_HL2MP_IDLE_SUITCASE
-			self.ActivityTranslate[ ACT_MP_WALK ] = ACT_HL2MP_WALK_SUITCASE
-			self.ActivityTranslate[ ACT_MP_JUMP ] = ACT_HL2MP_JUMP_SLAM
-		end
-
-		if ( t == "rpg" ) then
-			self.ActivityTranslate[ ACT_MP_CROUCH_IDLE ] = ACT_HL2MP_IDLE_CROUCH_AR2
-			self.ActivityTranslate[ ACT_MP_CROUCHWALK ] = ACT_HL2MP_WALK_CROUCH_AR2
-		end
-
-		--self:SetupWeaponHoldTypeForAI( t )
-
-	end
-
-	-- Default hold pos is the pistol
-	SWEP:SetWeaponHoldType( "pistol" )
-
-	--[[---------------------------------------------------------
-		Name: weapon:TranslateActivity()
-		Desc: Translate a player's Activity into a weapon's activity
-				So for example, ACT_HL2MP_RUN becomes ACT_HL2MP_RUN_PISTOL
-				Depending on how you want the player to be holding the weapon
-	-----------------------------------------------------------]]
-	function SWEP:TranslateActivity( act )
-
-		if ( self.Owner:IsNPC() ) then
-			if ( self.ActivityTranslateAI[ act ] ) then
-				return self.ActivityTranslateAI[ act ]
-			end
-			return -1
-		end
-
-		if ( self.ActivityTranslate[ act ] != nil ) then
-			return self.ActivityTranslate[ act ]
-		end
-
-		return -1
-
-	end
 end

@@ -294,52 +294,104 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 		local wep2 = wep:BTable( true )
 		local wep2c = wep:BClass( true )
 
+		for i=1, 2 do
+			local hand = i==2
+			if wep:BTable( hand ) then -- New Weapon HUD
+				local wep_table = wep:BTable( hand )
+				local wep_class = wep:BClass( hand )
 
-		if wep1 then -- New Weapon HUD
-			local p_w, p_h = ss(156), ss(64)
-			local p_x, p_y = sw - b - p_w, sh - b - p_h
-			local pb = ss(4)
-			local pb2 = pb*2
+				local p_w, p_h = ss(156), ss(64)
+				local p_x, p_y = sw - b - p_w, sh - b - p_h
+				if hand then p_y = p_y - p_h - ss(20+4+4) end
+				local pb = ss(4)
+				local pb2 = pb*2
 
-			surface.SetDrawColor( scheme["bg"] )
-			surface.DrawRect( p_x, p_y, p_w, p_h )
+				surface.SetDrawColor( scheme["bg"] )
+				surface.DrawRect( p_x, p_y, p_w, p_h )
 
-			do -- Name tag
-				local t_h = ss(15)
-				surface.SetDrawColor( scheme["fg"] )
-				surface.DrawRect( p_x+pb, p_y+pb, p_w-pb2, t_h )
-
-				draw.SimpleText( wep1c.Name, "Benny_16", p_x+ss(6), p_y+ss(5), scheme["bg"], TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP )
-				
-				draw.SimpleText( wep:D_GetID( false ), "Benny_10", p_x+p_w-pb2, p_y+ss(7), scheme["bg"], TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP )
-
-				if wep:BClass( false ).Firemodes then -- Firemode
+				do -- Name tag
+					local t_h = ss(15)
 					surface.SetDrawColor( scheme["fg"] )
-					surface.DrawRect( p_x+pb, p_y + pb + t_h + ss(2), ss(30), ss(10) )
+					surface.DrawRect( p_x+pb, p_y+pb, p_w-pb2, t_h )
 
-					draw.SimpleText( wep:B_FiremodeName( false ), "Benny_12", p_x + pb + ss(14.5), p_y + pb + t_h + ss(8), scheme["bg"], TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER )
-					-- draw.SimpleText( "[AMMO TYPE]", "Benny_10", p_x + pb + ss(30+4), p_y + pb + t_h + ss(8), scheme["fg"], TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER )
-				end
-				if wep:BClass( false ).Ammo then -- Ammo
-					local b_w, b_h = ss(3), ss(10)
-					local lw, lh = ss(2), ss(2)
-					surface.SetDrawColor( scheme["fg"] )
+					draw.SimpleText( wep_class.Name, "Benny_16", p_x+ss(6), p_y+ss(5), scheme["bg"], TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP )
+					
+					draw.SimpleText( wep:D_GetID( hand ), "Benny_10", p_x+p_w-pb2, p_y+ss(7), scheme["bg"], TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP )
 
-					local ammo = math.max( wep:Clip1(), wep:BClass( false ).Ammo )
-					if ammo>30 then b_w, b_h = ss(3), ss(4) end
-					local offset = b_h
-					local count = 1
-					for i=1, ammo do
-						local thefunk = surface.DrawRect
-						if i > wep:Clip1() then
-							thefunk = surface.DrawOutlinedRect
+					if wep_class.Firemodes then -- Firemode
+						surface.SetDrawColor( scheme["fg"] )
+						surface.DrawRect( p_x+pb, p_y + pb + t_h + ss(2), ss(30), ss(10) )
+
+						draw.SimpleText( wep:B_FiremodeName( hand ), "Benny_12", p_x + pb + ss(14.5), p_y + pb + t_h + ss(8), scheme["bg"], TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER )
+						-- draw.SimpleText( "[AMMO TYPE]", "Benny_10", p_x + pb + ss(30+4), p_y + pb + t_h + ss(8), scheme["fg"], TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER )
+					end
+					if wep_class.Ammo then -- Ammo
+						local b_w, b_h = ss(3), ss(10)
+						local lw, lh = ss(2), ss(2)
+						surface.SetDrawColor( scheme["fg"] )
+
+						local ammo = math.max( wep:D_GetClip( hand ), wep_class.Ammo )
+						if ammo>30 then b_w, b_h = ss(3), ss(4) end
+
+						local offset = b_h
+						local count = 1
+						for i=1, ammo do
+							local thefunk = surface.DrawRect
+							if i > wep:D_GetClip( hand ) then
+								thefunk = surface.DrawOutlinedRect
+							end
+							if i!=1 and i%30 == 1 then
+								count = 1
+								offset = offset + b_h + lh
+							end
+							thefunk( p_x + p_w - b_w - pb - ((count-1)*(b_w+lw)), p_y + p_h - offset - pb, b_w, b_h, ss(0.5) )
+							count = count + 1
 						end
-						thefunk( p_x + p_w - b_w - pb - ((count-1)*(b_w+lw)), p_y + p_h - offset - pb, b_w, b_h, ss(0.5) )
-						count = count + 1
+						draw.SimpleText( wep:D_GetClip( hand ), "Benny_12", p_x + p_w - pb - ss(1), p_y + p_h - offset - ss(12+3), scheme["fg"], TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP )
+					end
+					if wep_class.Ammo then -- Magazines
+						local m_w, m_h = ss( 14 ), ss( 24 )
+						local m_x, m_y = p_x + p_w - m_w, p_y - m_h - ss(1)--p_x - m_w, p_y + p_h - m_h
+						local bb = ss( 1 )
+						local b2 = ss( 2 )
+						local b3 = ss( 3 )
+						local b4 = ss( 4 )
+						local maglist = p:INV_FindMag( "mag_" .. wep_table.Class, wep:D_GetMagID( hand ) )
 
-						if i%30 == 0 then
-							count = 1
-							offset = offset + b_h + lh
+						local newmaglist = {}
+						if wep:D_GetMagID( hand ) != "" then
+							table.insert( newmaglist, wep:D_GetMagID( hand ) )
+						end
+						for i, v in ipairs( maglist ) do
+							table.insert( newmaglist, v )
+						end
+						for id, tag in ipairs( newmaglist ) do
+							assert( inv[tag], "That magazine doesn't exist." )
+							local chunk = ((ss(1)+m_w)*(id-1))
+							surface.SetDrawColor( scheme["bg"] )
+							surface.DrawRect( m_x - chunk, m_y, m_w, m_h )
+
+							surface.SetDrawColor( scheme["fg"] )
+							surface.DrawOutlinedRect( m_x + bb - chunk, m_y + bb, m_w - b2, m_h - b2, ss( 0.5 ) )
+
+							local perc = math.abs( math.cos( CurTime() ) )
+
+							local s1 = (m_h - b2 - b2)
+							local s2 = (m_h - b2 - b2) * ( inv[tag].Ammo / WEAPONS[inv[tag].Class].Ammo )
+							local s3 = math.floor( s2 - s1 )
+
+							local m1, m2, m3, m4 = m_x + bb + bb - chunk, m_y + bb + bb - s3, m_w - b2 - b2, s2
+							local active = tag == wep:D_GetMagID( hand )
+							if active then
+								draw.SimpleText( "x", "Benny_10", m_x + (m_w/2) - chunk, m_y + (m_h/2), scheme["fg"], TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER )
+							end
+							surface.DrawRect( m1, m2, m3, m4 )
+
+							if active then
+								render.SetScissorRect( m1, m2, m1 + m3, m2 + m4, true )
+								draw.SimpleText( "x", "Benny_10", m_x + (m_w/2) - chunk, m_y + (m_h/2), scheme["bg"], TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER )
+								render.SetScissorRect( 0, 0, 0, 0, false )
+							end
 						end
 					end
 				end
@@ -426,8 +478,7 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 		end
 	end
 
-	do -- Quickinv
-
+	if wep then -- Quickinv
 		local inv = p:INV_Get()
 		local gap = ss(1)
 		local size_textx = ss(96)
@@ -676,14 +727,27 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 		end
 	end
 
-	if false and p:BennyCheck() then
+	if true and p:BennyCheck() then
 		local bx, by = sw/2, sh*(0.75)
 		local mx = 50
-		draw.SimpleText( "Clip1: " .. wep:Clip1(), "Trebuchet24", bx-mx, by+24*0, color_white, TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP )
-		draw.SimpleText( "ID1: " .. wep:GetWep1(), "Trebuchet24", bx-mx, by+24*1, color_white, TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP )
 
-		draw.SimpleText( "Clip2: " .. wep:Clip2(), "Trebuchet24", bx+mx, by+24*0, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP )
-		draw.SimpleText( "ID2: " .. wep:GetWep2(), "Trebuchet24", bx+mx, by+24*1, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP )
+		local wep1_table, wep1_class = wep:BTable( false ), wep:BClass( false )
+		if wep1_table then
+			draw.SimpleText( wep1_class.Name, 						"Trebuchet24", bx-mx, by+24*-1, color_white, TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP )
+			draw.SimpleText( "Clip1: " .. wep:Clip1(),				"Trebuchet24", bx-mx, by+24*0, color_white, TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP )
+			draw.SimpleText( "ID1: " .. wep:GetWep1(),				"Trebuchet24", bx-mx, by+24*1, color_white, TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP )
+			draw.SimpleText( "MagID1: " .. wep:D_GetMagID( false ),	"Trebuchet24", bx-mx, by+24*2, color_white, TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP )
+			draw.SimpleText( "T_MagID1: " .. wep1_table.Loaded,		"Trebuchet24", bx-mx, by+24*3, color_white, TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP )
+		end
+
+		local wep2_table, wep2_class = wep:BTable( true ), wep:BClass( true )
+		if wep2_table then
+			draw.SimpleText( wep2_class.Name,						"Trebuchet24", bx+mx, by+24*-1, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP )
+			draw.SimpleText( "Clip2: " .. wep:Clip2(),				"Trebuchet24", bx+mx, by+24*0, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP )
+			draw.SimpleText( "ID2: " .. wep:GetWep2(),				"Trebuchet24", bx+mx, by+24*1, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP )
+			draw.SimpleText( "MagID2: " .. wep:D_GetMagID( true ),	"Trebuchet24", bx+mx, by+24*2, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP )
+			draw.SimpleText( "T_MagID2: " .. wep1_table.Loaded,		"Trebuchet24", bx+mx, by+24*3, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP )
+		end
 	end
 end )
 

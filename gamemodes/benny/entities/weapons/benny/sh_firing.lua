@@ -1,6 +1,39 @@
 
-function SWEP:CallFire()
-	local class = self:BClass( false )
+function SWEP:BFire( hand )
+	if self:BTable( hand ) then
+		local wep_table = self:BTable( hand )
+		local wep_class = self:BClass( hand )
+
+		if wep_class.Fire then
+			if wep_class.Fire( self, wep_table ) then return end
+		end
+		if self:D_GetDelay( hand ) > CurTime() then
+			return
+		end
+		if self:D_GetBurst( hand ) >= self:B_Firemode( hand ).Mode then
+			return
+		end
+		if self:D_GetClip( hand ) == 0 then
+			B_Sound( self, wep_class.Sound_DryFire )
+			self:D_SetDelay( hand, CurTime() + 0.2 )
+			return
+		end
+		
+		self:B_Ammo( hand, self:D_GetClip( hand ) - 1 )
+
+		B_Sound( self, wep_class.Sound_Fire )
+		self:TPFire()
+		self:CallFire( hand )
+
+		self:D_SetDelay( hand, CurTime() + wep_class.Delay )
+		self:D_SetBurst( hand, self:D_GetBurst( hand ) + 1 )
+
+	end
+end
+
+function SWEP:CallFire( hand )
+	local p = self:GetOwner()
+	local class = self:BClass( hand )
 	local spread = class.Spread or 0
 	for i=1, class.Pellets or 1 do
 		local dir = self:GetOwner():EyeAngles()
@@ -12,18 +45,18 @@ function SWEP:CallFire()
 		dir:RotateAroundAxis( dir:Up(), spread * radius * math.cos( circ ) )
 		dir:RotateAroundAxis( dir:Forward(), 0 )
 		local tr = util.TraceLine( {
-			start = self:GetOwner():EyePos(),
-			endpos = self:GetOwner():EyePos() + dir:Forward() * 8192,
-			filter = self:GetOwner()
+			start = p:EyePos(),
+			endpos = p:EyePos() + dir:Forward() * 8192,
+			filter = p
 		} )
 
 		self:FireBullets( {
-			Attacker = self:GetOwner(),
-			Damage = self:BClass( false ).Damage,
-			Force = self:BClass( false ).Damage/10,
-			Src = self:GetOwner():EyePos(),
+			Attacker = p,
+			Damage = class.Damage,
+			Force = class.Damage/10,
+			Src = p:EyePos(),
 			Dir = dir:Forward(),
-			IgnoreEntity = self:GetOwner(),
+			IgnoreEntity = p,
 			Callback = self.BulletCallback,
 		} )
 

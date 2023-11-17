@@ -1331,3 +1331,22 @@ do -- Equipment, nothing here is guaranteed.
 	}
 
 end
+
+-- Ammo generator
+
+for class, data in pairs( WEAPONS ) do
+	if data.Features == "firearm" then
+		WEAPONS["mag_" .. class] = {
+			Name = "MAG: " .. WEAPONS[class].Name,
+			Description = "Magazine for the " .. WEAPONS[class].Name .. ".",
+			Type = "magazine",
+
+			WModel = "models/weapons/w_pist_glock18.mdl",
+			HoldType = "slam",
+
+			Ammo = WEAPONS[class].Ammo,
+
+			Features = "magazine",
+		}
+	end
+end

@@ -16,12 +16,14 @@ concommand.Add("benny_debug_give", function(ply, cmd, args)
 
 	local item = {
 		Class = args[1],
-		Loaded = 1,
-		Ammo1 = class.Ammo,
-		Ammo2 = class.Ammo,
-		Ammo3 = class.Ammo,
 		Acquisition = CurTime(),
 	}
+
+	if class.Features == "firearm" then
+		item.Loaded = ""
+	elseif class.Features == "magazine" then
+		item.Ammo = class.Ammo
+	end
 
 	inv[str] = item
 
@@ -44,8 +46,18 @@ end, "arg 1: player ent index, arg 2: classname")
 
 -- PROTO: Move this all into weapon code.
 concommand.Add("benny_inv_equip", function( ply, cmd, args )
-	if ply:BennyCheck() then ply:GetActiveWeapon():BDeploy( false, args[1] ) end
-end)
+	if ply:BennyCheck() then ply:GetActiveWeapon():BDeploy( args[2] and true or false, args[1] ) end
+end,
+function(cmd, args)
+	args = string.Trim(args:lower())
+	local meow = {}
+	for i, v in SortedPairs( Entity(1):INV_Get() ) do
+		if string.lower(i):find(args) then
+			table.insert( meow, cmd .. " " .. i )
+		end
+	end
+	return meow
+end, "arg 1: item id, arg 2 does offhand")
 
 -- PROTO: Move this all into weapon code.
 concommand.Add("benny_inv_holster", function( ply, cmd, args )
@@ -200,6 +212,7 @@ if CLIENT then
 				end
 
 				function button:DoRightClick()
+					RunConsoleCommand( "benny_debug_give", "mag_" .. New.ClassName )
 				end
 
 				function button:Paint( w, h )
