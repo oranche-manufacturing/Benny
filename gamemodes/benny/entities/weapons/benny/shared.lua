@@ -118,7 +118,6 @@ function SWEP:Reload()
 				end
 
 				local mid = self:D_GetMagID( hand )
-				assert( mid == "" or inv[mid], "That magazine doesn't exist." )
 				if mid != "" then
 					B_Sound( self, wep_class.Sound_MagOut )
 
@@ -135,14 +134,13 @@ function SWEP:Reload()
 					local maglist = p:INV_FindMag( "mag_" .. wep_table.Class )
 					PrintTable( maglist )
 					local mag = maglist[1]
-					-- print(hand, i, mag, wep_class.Name)
 					if mag then
 						wep_table.Loaded = mag
 						self:D_SetMagID( hand, mag )
 						self:D_SetClip( hand, inv[mag].Ammo )
-						-- B_Sound( self, wep_class.Sound_MagIn )
+						B_Sound( self, wep_class.Sound_MagIn )
 					else
-						-- B_Sound( self, "Common.NoAmmo" )
+						B_Sound( self, "Common.NoAmmo" )
 					end
 				end
 				self:TPReload()

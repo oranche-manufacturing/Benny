@@ -79,7 +79,6 @@ function SWEP:BDeploy( hand, id )
 
 	assert( item, "That item doesn't exist. " .. tostring(item) )
 
-	print(debug.Trace())
 	self:D_SetID( hand, id )
 	if item.Loaded then
 		local mid = inv[ item.Loaded ]
