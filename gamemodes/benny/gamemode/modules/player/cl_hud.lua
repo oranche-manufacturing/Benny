@@ -746,7 +746,7 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 			draw.SimpleText( "Clip2: " .. wep:Clip2(),				"Trebuchet24", bx+mx, by+24*0, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP )
 			draw.SimpleText( "ID2: " .. wep:GetWep2(),				"Trebuchet24", bx+mx, by+24*1, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP )
 			draw.SimpleText( "MagID2: " .. wep:D_GetMagID( true ),	"Trebuchet24", bx+mx, by+24*2, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP )
-			draw.SimpleText( "T_MagID2: " .. wep1_table.Loaded,		"Trebuchet24", bx+mx, by+24*3, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP )
+			draw.SimpleText( "T_MagID2: " .. wep2_table.Loaded,		"Trebuchet24", bx+mx, by+24*3, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP )
 		end
 	end
 end )

@@ -77,6 +77,7 @@ function SWEP:B_Ammo( hand, value )
 	local p = self:GetOwner()
 	local inv = p:INV_Get()
 	self:D_SetClip( hand, value )
+	print( hand, value )
 	assert( self:D_GetMagID( hand ) != "", "There is no magazine loaded!" )
 	inv[ self:D_GetMagID( hand ) ].Ammo = value
 end
@@ -104,8 +105,8 @@ function SWEP:Reload()
 	local p = self:GetOwner()
 	local inv = p:INV_Get()
 	if p:KeyPressed( IN_RELOAD ) then
-		for i=1, 2 do
-			local hand = i==2
+		-- for i=1, 2 do
+			local hand = self:GetTempHandedness()--true--i==2
 			local wep_table = self:BTable( hand )
 			local wep_class = self:BClass( hand )
 			if wep_table then
@@ -135,9 +136,18 @@ function SWEP:Reload()
 					PrintTable( maglist )
 					local mag = maglist[1]
 					if mag then
-						wep_table.Loaded = mag
-						self:D_SetMagID( hand, mag )
-						self:D_SetClip( hand, inv[mag].Ammo )
+						if hand then
+							self:SetWep2_Clip( mag )
+							self:SetClip2( inv[mag].Ammo )
+							inv[self:GetWep2()].Loaded = mag
+						else
+							self:SetWep1_Clip( mag )
+							self:SetClip1( inv[mag].Ammo )
+							inv[self:GetWep1()].Loaded = mag
+						end
+						-- wep_table.Loaded = mag
+						-- self:D_SetMagID( hand, mag )
+						-- self:D_SetClip( hand, inv[mag].Ammo )
 						B_Sound( self, wep_class.Sound_MagIn )
 					else
 						B_Sound( self, "Common.NoAmmo" )
@@ -145,7 +155,7 @@ function SWEP:Reload()
 				end
 				self:TPReload()
 			end
-		end
+		-- end
 	end
 	return true
 end
@@ -162,6 +172,11 @@ function SWEP:Think()
 	else
 		self:SetUserAim( p:KeyDown( IN_ATTACK2 ) )
 	end
+
+	if p:KeyPressed( IN_ZOOM ) and (SERVER or (CLIENT and IsFirstTimePredicted())) then
+		self:SetTempHandedness( !self:GetTempHandedness() )
+	end
+
 	self:SetAim( math.Approach( self:GetAim(), self:GetUserAim() and 1 or 0, FrameTime()/0.2 ) )
 
 	if !p:KeyDown( IN_ATTACK ) then

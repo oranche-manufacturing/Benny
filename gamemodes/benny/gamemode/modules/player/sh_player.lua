@@ -196,8 +196,6 @@ hook.Add("StartCommand", "Benny_INV_StartCommand", function( ply, cmd )
 			end
 		end
 
-		wep:SetTempHandedness( cmd:KeyDown( IN_ZOOM ) )
-
 	end
 end)
 
