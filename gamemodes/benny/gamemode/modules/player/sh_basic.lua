@@ -61,7 +61,7 @@ end, "arg 1: item id, arg 2 does offhand")
 
 -- PROTO: Move this all into weapon code.
 concommand.Add("benny_inv_holster", function( ply, cmd, args )
-	if ply:BennyCheck() then ply:GetActiveWeapon():BHolster( false ) end
+	if ply:BennyCheck() then ply:GetActiveWeapon():BHolster( ply:GetActiveWeapon():GetTempHandedness() ) end
 end)
 
 concommand.Add("benny_inv_sync", function( ply, cmd, args )

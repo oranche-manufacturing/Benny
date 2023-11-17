@@ -503,7 +503,7 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 
 			for n, bucket in ipairs( inventorylist ) do
 				for i, v in ipairs( bucket ) do
-					if v == wep:D_GetID( false ) then
+					if v == wep:D_GetID( wep:GetTempHandedness() ) then
 						bucket_selected = n
 						item_selected = i
 					end
@@ -541,7 +541,7 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 			else
 				for d, item in ipairs( bucket ) do
 					local idata = WEAPONS[inv[item].Class]
-					local sel = item==wep:D_GetID( false )--d==item_selected
+					local sel = item==wep:D_GetID( wep:GetTempHandedness() )--d==item_selected
 					surface.SetDrawColor( scheme["bg"] )
 					surface.DrawRect( bump + b, (item_start+ybump) + b, size_textx, (sel and size_texty_sel or size_texty) )
 					if sel then
@@ -727,7 +727,7 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 		end
 	end
 
-	if true and p:BennyCheck() then
+	if false and p:BennyCheck() then
 		local bx, by = sw/2, sh*(0.75)
 		local mx = 50
 
@@ -804,7 +804,7 @@ do
 		["invnext"] = function( ply )
 			if !ply:BennyCheck() then return end
 			local buckets = ply:INV_Buckets()
-			local currsel = ply:GetActiveWeapon():GetWep1()
+			local currsel = ply:GetActiveWeapon():D_GetID( ply:GetActiveWeapon():GetTempHandedness() )
 
 			local lb, li = Locate( ply, buckets, currsel )
 			if lb then
@@ -828,7 +828,7 @@ do
 		end,
 		["invprev"] = function( ply )
 			local buckets = ply:INV_Buckets()
-			local currsel = ply:GetActiveWeapon():GetWep1()
+			local currsel = ply:GetActiveWeapon():D_GetID( ply:GetActiveWeapon():GetTempHandedness() )
 
 			local lb, li = Locate( ply, buckets, currsel )
 			if lb then

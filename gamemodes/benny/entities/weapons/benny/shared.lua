@@ -153,7 +153,7 @@ function SWEP:Reload()
 						B_Sound( self, "Common.NoAmmo" )
 					end
 				end
-				self:TPReload()
+				self:TPReload( self:GetTempHandedness() )
 			end
 		-- end
 	end
@@ -196,9 +196,9 @@ function SWEP:Think()
 	end
 
 	if ht == "normal" and self:GetHoldType() != "normal" then
-		self:TPHolster()
+		self:TPHolster( self:GetTempHandedness() )
 	elseif ht != "normal" and self:GetHoldType() == "normal" then
-		self:TPDraw()
+		self:TPDraw( self:GetTempHandedness() )
 	end
 	
 	if self:BClass( false ) then

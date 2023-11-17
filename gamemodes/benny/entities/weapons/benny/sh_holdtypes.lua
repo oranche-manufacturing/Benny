@@ -112,33 +112,33 @@ SWEP.GestureFire			= { ACT_HL2MP_GESTURE_RANGE_ATTACK_SHOTGUN, 0.85 }
 SWEP.GestureReload			= { ACT_FLINCH_STOMACH, 0.3 }
 SWEP.GestureDraw			= { ACT_GMOD_GESTURE_MELEE_SHOVE_1HAND, 0.75 }
 SWEP.GestureHolster			= { ACT_GMOD_GESTURE_MELEE_SHOVE_1HAND, 0.65 }
-function SWEP:TPFire()
+function SWEP:TPFire( hand )
 	if CLIENT and !IsFirstTimePredicted() then return end
-	local target = self:BClass( false ).GestureFire
+	local target = self:BClass( hand ) and self:BClass( hand ).GestureFire
 	if !target then
 		target = self.GestureFire
 	end
 	self:GetOwner():AddVCDSequenceToGestureSlot( GESTURE_SLOT_GRENADE, self:GetOwner():SelectWeightedSequence(target[1]), target[2], true )
 end
-function SWEP:TPReload()
+function SWEP:TPReload( hand )
 	if CLIENT and !IsFirstTimePredicted() then return end
-	local target = self:BClass( false ).GestureReload
+	local target = self:BClass( hand ) and self:BClass( hand ).GestureReload
 	if !target then
 		target = self.GestureReload
 	end
 	self:GetOwner():AddVCDSequenceToGestureSlot( GESTURE_SLOT_GRENADE, self:GetOwner():SelectWeightedSequence(target[1]), target[2], true )
 end
-function SWEP:TPDraw()
+function SWEP:TPDraw( hand )
 	if CLIENT and !IsFirstTimePredicted() then return end
-	local target = self:BClass( false ).GestureDraw
+	local target = self:BClass( hand ) and self:BClass( hand ).GestureDraw
 	if !target then
 		target = self.GestureDraw
 	end
 	self:GetOwner():AddVCDSequenceToGestureSlot( GESTURE_SLOT_GRENADE, self:GetOwner():SelectWeightedSequence(target[1]), target[2], true )
 end
-function SWEP:TPHolster()
+function SWEP:TPHolster( hand )
 	if CLIENT and !IsFirstTimePredicted() then return end
-	local target = self:BClass( false ) and self:BClass( false ).GestureHolster
+	local target = self:BClass( hand ) and self:BClass( hand ).GestureHolster
 	if !target then
 		target = self.GestureHolster
 	end

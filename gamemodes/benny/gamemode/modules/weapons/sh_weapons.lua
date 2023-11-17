@@ -925,7 +925,7 @@ do -- Grenades, nothing here is guaranteed.
 		-- TEMP: Do this right!
 		if !class.GrenadeCharge then self:SetGrenadeDownStart( CurTime() ) end
 		--
-		self:TPFire()
+		self:TPFire( self:GetTempHandedness() )
 		if SERVER then GrenadeCreate( self, data ) end
 		local id = self:D_GetID( false )
 		self:BHolster( false )

@@ -22,7 +22,7 @@ function SWEP:BFire( hand )
 		self:B_Ammo( hand, self:D_GetClip( hand ) - 1 )
 
 		B_Sound( self, wep_class.Sound_Fire )
-		self:TPFire()
+		self:TPFire( self:GetTempHandedness() )
 		self:CallFire( hand )
 
 		self:D_SetDelay( hand, CurTime() + wep_class.Delay )

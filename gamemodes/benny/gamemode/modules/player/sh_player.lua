@@ -187,10 +187,10 @@ hook.Add("StartCommand", "Benny_INV_StartCommand", function( ply, cmd )
 			cmd:SetUpMove( inv_bucketlist_flipped[ ply.CLIENTDESIRE ] )
 		end
 		local id = cmd:GetUpMove()
-
+		local hand = wep:GetTempHandedness()
 		if id > 0 and inv_bucketlist[id] and inv[inv_bucketlist[id]] then
-			wep:BDeploy( false, inv_bucketlist[ id ] )
-			if CLIENT and (wep:D_GetID( false ) == ply.CLIENTDESIRE) then
+			wep:BDeploy( hand, inv_bucketlist[ id ] )
+			if CLIENT and (wep:D_GetID( hand ) == ply.CLIENTDESIRE) then
 				ply.CLIENTDESIRE = 0
 				print("Fixed")
 			end
