@@ -48,9 +48,7 @@ end, "arg 1: player ent index, arg 2: classname")
 concommand.Add("benny_inv_equip", function( ply, cmd, args )
 	local wep = ply:BennyCheck()
 	if wep then
-		print(args[2])
 		local hand = args[2]!=nil and tobool(args[2]) or wep:GetTempHandedness()
-		print(hand)
 		local id = args[1]
 		local swap_or_replace = tobool(args[3])
 

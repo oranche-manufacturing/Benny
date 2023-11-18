@@ -272,10 +272,19 @@ do -- Toolgun
 			-- Return true to skip weapon logic
 			return true
 		end,
+		
+		Custom_DisableSpecialMovement = function( self, data )
+			-- Return true to skip weapon logic
+			if self:GetUserAim() then
+				return true
+			end
+		end,
 
 		Custom_CalcView = function( self, data )
 			if self:GetUserAim() and GetConVar("benny_cam_override"):GetString() == "" then
 				data.drawviewer = false
+				data.origin = self:GetOwner():EyePos()
+				data.angles = self:GetOwner():EyeAngles()
 				return true -- Return true to halt
 			end
 

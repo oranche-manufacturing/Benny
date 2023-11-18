@@ -21,7 +21,14 @@ hook.Add( "PlayerNoClip", "Benny_PlayerNoClip", function( ply, desiredNoClipStat
 end)
 
 hook.Add( "InputMouseApply", "Benny_InputMouseApply", function( cmd, x, y, ang )
-	if LocalPlayer():BennyCheck() and !LocalPlayer():NoclippingAndNotVaulting() and GetConVar("benny_cam_override"):GetString() == "" then
+	local p = LocalPlayer()
+	local w = p:BennyCheck()
+	local cdis = false
+	if w and w:BClass( false ) and w:BClass( false ).Custom_DisableSpecialMovement and w:BClass( false ).Custom_DisableSpecialMovement( w ) then cdis = true end
+	if w and w:BClass( true ) and w:BClass( true ).Custom_DisableSpecialMovement and w:BClass( true ).Custom_DisableSpecialMovement( w ) then cdis = true end
+	if GetConVar("benny_cam_override"):GetString() != "" then cdis = true end
+	if p:NoclippingAndNotVaulting() then cdis = true end
+	if w and !cdis then
 		TPSOverride:Add( Angle( y*0.022, -x*0.022, 0 ) )
 		return true
 	end
@@ -75,8 +82,13 @@ hook.Add( "CreateMove", "Benny_CreateMove", function( cmd )
 	end
 
 	local p = LocalPlayer()
-	local w = p:GetActiveWeapon()
-	if p:BennyCheck() and !LocalPlayer():NoclippingAndNotVaulting() and GetConVar("benny_cam_override"):GetString() == "" then -- FPS cam
+	local w = p:BennyCheck()
+	local cdis = false
+	if w:BClass( false ) and w:BClass( false ).Custom_DisableSpecialMovement and w:BClass( false ).Custom_DisableSpecialMovement( w ) then cdis = true end
+	if w:BClass( true ) and w:BClass( true ).Custom_DisableSpecialMovement and w:BClass( true ).Custom_DisableSpecialMovement( w ) then cdis = true end
+	if GetConVar("benny_cam_override"):GetString() != "" then cdis = true end
+	if LocalPlayer():NoclippingAndNotVaulting() then cdis = true end
+	if w and !cdis then -- FPS cam
 		local aimed = w:GetUserAim()
 		local opos, ang = p:CamSpot( TPSOverride )
 
