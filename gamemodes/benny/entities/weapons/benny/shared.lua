@@ -54,11 +54,6 @@ function SWEP:SetupDataTables()
 	self:SetWep2_Firemode( 1 )
 end
 
-function SWEP:PrimaryAttack()
-	self:BFire( self:GetTempHandedness() )
-	return true
-end
-
 -- BENNY shit
 function SWEP:BTable( alt )
 	return self:GetOwner():INV_Get()[ alt and self:GetWep2() or self:GetWep1() ]
@@ -96,10 +91,6 @@ function SWEP:B_FiremodeName( alt )
 	end
 end
 
-function SWEP:SecondaryAttack()
-	return true
-end
-
 function SWEP:Reload()
 	local p = self:GetOwner()
 	local inv = p:INV_Get()
@@ -108,8 +99,8 @@ function SWEP:Reload()
 		local wep_table = self:BTable( hand )
 		local wep_class = self:BClass( hand )
 		if wep_table then
-			if wep_class.Reload then
-				if wep_class.Reload( self, wep_table ) then return end
+			if wep_class.Custom_Reload then
+				if wep_class.Custom_Reload( self, wep_table ) then return end
 			end
 			if self:D_GetDelay( hand ) > CurTime() then
 				return false
@@ -167,16 +158,38 @@ end
 
 CreateClientConVar( "benny_toggleaim", 0, true, true )
 
+hook.Add( "PlayerButtonDown", "Benny_PlayerButtonDown_TempForAim", function( ply, button )
+	local wep = ply:BennyCheck()
+
+	if button == KEY_F then
+		if tobool(ply:GetInfoNum("benny_toggleaim", 0)) then
+			wep:SetUserAim( !wep:GetUserAim() )
+		else
+			wep:SetUserAim( true )
+		end
+	end
+end)
+
+hook.Add( "PlayerButtonUp", "Benny_PlayerButtonUp_TempForAim", function( ply, button )
+	local wep = ply:BennyCheck()
+
+	if button == KEY_F then
+		if !tobool(ply:GetInfoNum("benny_toggleaim", 0)) then
+			wep:SetUserAim( false )
+		end
+	end
+end)
+
 function SWEP:Think()
 	local p = self:GetOwner()
 
-	if tobool(p:GetInfoNum("benny_toggleaim", 0)) then
-		if p:KeyPressed( IN_ATTACK2 ) then
-			self:SetUserAim( !self:GetUserAim() )
-		end
-	else
-		self:SetUserAim( p:KeyDown( IN_ATTACK2 ) )
-	end
+	--if tobool(p:GetInfoNum("benny_toggleaim", 0)) then
+	--	if p:KeyPressed( IN_ATTACK2 ) then
+	--		self:SetUserAim( !self:GetUserAim() )
+	--	end
+	--else
+	--	self:SetUserAim( p:KeyDown( IN_ATTACK2 ) )
+	--end
 
 	if p:KeyPressed( IN_ZOOM ) and (SERVER or (CLIENT and IsFirstTimePredicted())) then
 		self:SetTempHandedness( !self:GetTempHandedness() )
@@ -207,8 +220,8 @@ function SWEP:Think()
 	end
 	
 	if self:BClass( false ) then
-		if self:BClass( false ).Think then
-			self:BClass( false ).Think( self, self:BTable( false ) )
+		if self:BClass( false ).Custom_Think then
+			self:BClass( false ).Custom_Think( self, self:BTable( false ) )
 		end
 	end
 

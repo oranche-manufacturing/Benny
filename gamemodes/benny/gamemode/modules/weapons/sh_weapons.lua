@@ -198,10 +198,8 @@ do -- Toolgun
 
 		Delay = (60/300),
 		Firemodes = FIREMODE_SEMI,
-		Ammo = 0,
-		Damage = 0,
 
-		Fire = function( self, data )
+		Custom_Fire = function( self, data )
 			if self:GetDelay1() > CurTime() then
 				return true
 			end
@@ -226,7 +224,7 @@ do -- Toolgun
 			return true
 		end,
 		
-		Reload = function( self, data )
+		Custom_Reload = function( self, data )
 			if CLIENT and self:GetOwner():KeyPressed( IN_RELOAD ) then
 				CreateSelect()
 			end
@@ -238,6 +236,53 @@ do -- Toolgun
 		Features = "firearm",
 	}
 
+	
+	WEAPONS["camera"] = {
+		Name = "DIRECTOR'S CAMERA",
+		Description = "Developer development device",
+		Type = "special",
+
+		WModel = "models/maxofs2d/camera.mdl",
+		HoldType = "camera",
+		GestureDraw = { ACT_HL2MP_GESTURE_RELOAD_REVOLVER, 0.8 },
+
+		Delay = (60/300),
+		Firemodes = FIREMODE_SEMI,
+
+		Custom_Fire = function( self, data )
+			if self:GetDelay1() > CurTime() then
+				return true
+			end
+			self:SetDelay1( CurTime() + 0.2 )
+		
+			local p = self:GetOwner()
+
+			if CLIENT and IsFirstTimePredicted() then
+				local zp, za, zf = p:EyePos(), p:EyeAngles(), 90
+				RunConsoleCommand( "benny_cam_override", zp.x .. " " .. zp.y .. " " .. zp.z .. " " .. za.p .. " " .. za.y .. " " .. za.r .. " " .. zf )
+			end
+		
+			-- Return true to skip weapon logic
+			return true
+		end,
+		
+		Custom_Reload = function( self, data )
+			RunConsoleCommand( "benny_cam_override", "" )
+			
+			-- Return true to skip weapon logic
+			return true
+		end,
+
+		Custom_CalcView = function( self, data )
+			if self:GetUserAim() and GetConVar("benny_cam_override"):GetString() == "" then
+				data.drawviewer = false
+				return true -- Return true to halt
+			end
+
+		end,
+
+		Features = "firearm",
+	}
 end
 
 do -- Melee
@@ -1011,10 +1056,10 @@ do -- Grenades, nothing here is guaranteed.
 		Description = "Pull the pin and throw it the hell away!",
 		Type = "grenade",
 
-		Fire = GrenadeFire,
-		Reload = GrenadeReload,
-		Think = GrenadeThink,
-		Holster = GrenadeHolster,
+		Custom_Fire = GrenadeFire,
+		Custom_Reload = GrenadeReload,
+		Custom_Think = GrenadeThink,
+		Custom_Holster = GrenadeHolster,
 		GrenadeEnt = "benny_grenade_frag",
 		GrenadeFuse = 4,
 		GrenadeCharge = true,
@@ -1031,9 +1076,10 @@ do -- Grenades, nothing here is guaranteed.
 		Description = "Long, audible fuse, but sticks to whatever it touches.",
 		Type = "grenade",
 
-		Fire = GrenadeFire,
-		Reload = GrenadeReload,
-		Think = GrenadeThink,
+		Custom_Fire = GrenadeFire,
+		Custom_Reload = GrenadeReload,
+		Custom_Think = GrenadeThink,
+		Custom_Holster = GrenadeHolster,
 		GrenadeEnt = "benny_grenade_semtex",
 		GrenadeFuse = 4,
 		GrenadeCharge = true,
@@ -1050,9 +1096,10 @@ do -- Grenades, nothing here is guaranteed.
 		Description = "Alcoholic bottle of flame!",
 		Type = "grenade",
 
-		Fire = GrenadeFire,
-		Reload = GrenadeReload,
-		Think = GrenadeThink,
+		Custom_Fire = GrenadeFire,
+		Custom_Reload = GrenadeReload,
+		Custom_Think = GrenadeThink,
+		Custom_Holster = GrenadeHolster,
 		GrenadeEnt = "benny_grenade_molotov",
 		GrenadeFuse = 4,
 		GrenadeCharge = true,
@@ -1069,9 +1116,10 @@ do -- Grenades, nothing here is guaranteed.
 		Description = "Lightweight knife to throw and pick back up.",
 		Type = "grenade",
 
-		Fire = GrenadeFire,
-		Reload = GrenadeReload,
-		Think = GrenadeThink,
+		Custom_Fire = GrenadeFire,
+		Custom_Reload = GrenadeReload,
+		Custom_Think = GrenadeThink,
+		Custom_Holster = GrenadeHolster,
 		GrenadeEnt = "benny_grenade_tknife",
 		GrenadeFuse = 4,
 		GrenadeCharge = true,
@@ -1088,9 +1136,10 @@ do -- Grenades, nothing here is guaranteed.
 		Description = "Smoke bomb used to conceal a position, and makes enemies cough.",
 		Type = "grenade",
 
-		Fire = GrenadeFire,
-		Reload = GrenadeReload,
-		Think = GrenadeThink,
+		Custom_Fire = GrenadeFire,
+		Custom_Reload = GrenadeReload,
+		Custom_Think = GrenadeThink,
+		Custom_Holster = GrenadeHolster,
 		GrenadeEnt = "benny_grenade_smoke",
 		GrenadeFuse = 4,
 		GrenadeCharge = true,
@@ -1107,9 +1156,10 @@ do -- Grenades, nothing here is guaranteed.
 		Description = "Stun grenade that gives off a bright flash and a loud 'bang'.",
 		Type = "grenade",
 
-		Fire = GrenadeFire,
-		Reload = GrenadeReload,
-		Think = GrenadeThink,
+		Custom_Fire = GrenadeFire,
+		Custom_Reload = GrenadeReload,
+		Custom_Think = GrenadeThink,
+		Custom_Holster = GrenadeHolster,
 		GrenadeEnt = "benny_grenade_flashbang",
 		GrenadeFuse = 2,
 		GrenadeCharge = false,
@@ -1126,9 +1176,10 @@ do -- Grenades, nothing here is guaranteed.
 		Description = "Short burst of gas that slows and disorient targets.",
 		Type = "grenade",
 
-		Fire = GrenadeFire,
-		Reload = GrenadeReload,
-		Think = GrenadeThink,
+		Custom_Fire = GrenadeFire,
+		Custom_Reload = GrenadeReload,
+		Custom_Think = GrenadeThink,
+		Custom_Holster = GrenadeHolster,
 		GrenadeEnt = "benny_grenade_gas",
 		GrenadeFuse = 4,
 		GrenadeCharge = true,
@@ -1145,9 +1196,10 @@ do -- Grenades, nothing here is guaranteed.
 		Description = "Mine that bounces into the air.",
 		Type = "grenade",
 
-		Fire = GrenadeFire,
-		Reload = GrenadeReload,
-		Think = GrenadeThink,
+		Custom_Fire = GrenadeFire,
+		Custom_Reload = GrenadeReload,
+		Custom_Think = GrenadeThink,
+		Custom_Holster = GrenadeHolster,
 		GrenadeEnt = "benny_grenade_prox",
 		GrenadeFuse = 4,
 		GrenadeCharge = true,
@@ -1164,9 +1216,10 @@ do -- Grenades, nothing here is guaranteed.
 		Description = "Mine that shoots shrapnel in a cone.",
 		Type = "grenade",
 
-		Fire = GrenadeFire,
-		Reload = GrenadeReload,
-		Think = GrenadeThink,
+		Custom_Fire = GrenadeFire,
+		Custom_Reload = GrenadeReload,
+		Custom_Think = GrenadeThink,
+		Custom_Holster = GrenadeHolster,
 		GrenadeEnt = "benny_grenade_claymore",
 		GrenadeFuse = 4,
 		GrenadeCharge = true,
@@ -1183,9 +1236,10 @@ do -- Grenades, nothing here is guaranteed.
 		Description = "Disrupts enemy radar based on proximity.",
 		Type = "grenade",
 
-		Fire = GrenadeFire,
-		Reload = GrenadeReload,
-		Think = GrenadeThink,
+		Custom_Fire = GrenadeFire,
+		Custom_Reload = GrenadeReload,
+		Custom_Think = GrenadeThink,
+		Custom_Holster = GrenadeHolster,
 		GrenadeEnt = "benny_grenade_scrambler",
 		GrenadeFuse = 4,
 		GrenadeCharge = true,
@@ -1202,9 +1256,10 @@ do -- Grenades, nothing here is guaranteed.
 		Description = "Disrupts enemy equipment based on proximity.",
 		Type = "grenade",
 
-		Fire = GrenadeFire,
-		Reload = GrenadeReload,
-		Think = GrenadeThink,
+		Custom_Fire = GrenadeFire,
+		Custom_Reload = GrenadeReload,
+		Custom_Think = GrenadeThink,
+		Custom_Holster = GrenadeHolster,
 		GrenadeEnt = "benny_grenade_emp",
 		GrenadeFuse = 4,
 		GrenadeCharge = true,
@@ -1221,9 +1276,10 @@ do -- Grenades, nothing here is guaranteed.
 		Description = "Charge that stuns and forces enemies to fire their weapons.",
 		Type = "grenade",
 
-		Fire = GrenadeFire,
-		Reload = GrenadeReload,
-		Think = GrenadeThink,
+		Custom_Fire = GrenadeFire,
+		Custom_Reload = GrenadeReload,
+		Custom_Think = GrenadeThink,
+		Custom_Holster = GrenadeHolster,
 		GrenadeEnt = "benny_grenade_shockcharge",
 		GrenadeFuse = 4,
 		GrenadeCharge = true,
@@ -1240,9 +1296,10 @@ do -- Grenades, nothing here is guaranteed.
 		Description = "Burns through armor.",
 		Type = "grenade",
 
-		Fire = GrenadeFire,
-		Reload = GrenadeReload,
-		Think = GrenadeThink,
+		Custom_Fire = GrenadeFire,
+		Custom_Reload = GrenadeReload,
+		Custom_Think = GrenadeThink,
+		Custom_Holster = GrenadeHolster,
 		GrenadeEnt = "benny_grenade_thermobaric",
 		GrenadeFuse = 4,
 		GrenadeCharge = true,

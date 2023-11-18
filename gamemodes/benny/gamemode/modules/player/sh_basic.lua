@@ -232,12 +232,13 @@ if CLIENT then
 			Collapse:SetLabel( i )
 			local Lays = itemlist:Add( "DIconLayout" )
 			Collapse:SetContents( Lays )
+			Collapse:SetExpanded( false )
 			Lays:Dock( FILL )
 			Lays:SetSpaceX( ss(1) )
 			Lays:SetSpaceY( ss(1) )
 			for Mew, New in ipairs( v ) do
 				local button = Lays:Add( "DButton" )
-				button:SetSize( ss(96), ss(14) )
+				button:SetSize( ss(95), ss(14) )
 				--button:Dock( TOP )
 				button:DockMargin( 0, 0, 0, ss(4) )
 

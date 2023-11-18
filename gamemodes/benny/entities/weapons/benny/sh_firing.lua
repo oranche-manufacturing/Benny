@@ -1,11 +1,23 @@
 
+
+function SWEP:PrimaryAttack()
+	self:BFire( false )-- self:GetTempHandedness() )
+	return true
+end
+
+function SWEP:SecondaryAttack()
+	self:BFire( true )-- self:GetTempHandedness() )
+	return true
+end
+
 function SWEP:BFire( hand )
 	if self:BTable( hand ) then
+		local p = self:GetOwner()
 		local wep_table = self:BTable( hand )
 		local wep_class = self:BClass( hand )
 
-		if wep_class.Fire then
-			if wep_class.Fire( self, wep_table ) then return end
+		if wep_class.Custom_Fire then
+			if wep_class.Custom_Fire( self, wep_table, wep_class, hand ) then return end
 		end
 		if self:D_GetDelay( hand ) > CurTime() then
 			return
@@ -28,6 +40,15 @@ function SWEP:BFire( hand )
 		self:D_SetDelay( hand, CurTime() + wep_class.Delay )
 		self:D_SetBurst( hand, self:D_GetBurst( hand ) + 1 )
 
+		
+		if CLIENT and IsFirstTimePredicted() then
+			local vStart = self:GetAttachment( 1 ).Pos
+			local vPoint = p:GetEyeTrace().HitPos
+			local effectdata = EffectData()
+			effectdata:SetStart( vStart )
+			effectdata:SetOrigin( vPoint )
+			util.Effect( "ToolTracer", effectdata )
+		end
 	end
 end
 

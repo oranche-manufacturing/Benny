@@ -89,12 +89,12 @@ function SWEP:BHolster( hand )
 	if self:D_GetID( hand ) == "" then
 		return -- What the hell are you holstering..?
 	end
-	local p = self:GetOwner()
 
-	local item = p:INV_Get()[ self:D_GetID( hand ) ]
+	local p = self:GetOwner()
+	local item = self:BTable( hand )
 	if item then
 		local class = WEAPONS[item.Class]
-		if class.Holster then class.Holster( self, self:BTable( hand ) ) end
+		if class.Custom_Holster then class.Custom_Holster( self, item, class, hand ) end
 	end
 
 	self:D_SetID( hand, "" )

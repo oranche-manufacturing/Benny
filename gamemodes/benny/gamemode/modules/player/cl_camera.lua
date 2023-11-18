@@ -292,9 +292,17 @@ hook.Add( "CalcView", "Benny_CalcView", function( ply, pos, ang, fov )
 		end
 	end
 		
-	if ply:BennyCheck() then -- and ply:GetActiveWeapon():GetAim() > 0 then
-		view.drawviewer = true
-		view.origin, view.angles, view.fov = bennyfp( view.origin, view.angles, view.fov )
+	local wep = ply:BennyCheck()
+	if wep then -- and ply:GetActiveWeapon():GetAim() > 0 then
+		local cv = wep:BClass( true ) and wep:BClass( true ).Custom_CalcView or wep:BClass( false ) and wep:BClass( false ).Custom_CalcView
+		local halt = false
+		if cv then
+			halt = cv( wep, view, view.origin, view.angles, view.fov )
+		end
+		if !halt then
+			view.drawviewer = true
+			view.origin, view.angles, view.fov = bennyfp( view.origin, view.angles, view.fov )
+		end
 	end
 
 	local st = c_over:GetString()
