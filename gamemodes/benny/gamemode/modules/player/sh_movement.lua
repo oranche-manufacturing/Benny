@@ -21,7 +21,7 @@ hook.Add( "PlayerNoClip", "Benny_PlayerNoClip", function( ply, desiredNoClipStat
 end)
 
 hook.Add( "InputMouseApply", "Benny_InputMouseApply", function( cmd, x, y, ang )
-	if LocalPlayer():BennyCheck() and !LocalPlayer():NoclippingAndNotVaulting() and GetConVar("benny_cam_override"):GetBool() == "" then
+	if LocalPlayer():BennyCheck() and !LocalPlayer():NoclippingAndNotVaulting() and GetConVar("benny_cam_override"):GetString() == "" then
 		TPSOverride:Add( Angle( y*0.022, -x*0.022, 0 ) )
 		return true
 	end
@@ -76,7 +76,7 @@ hook.Add( "CreateMove", "Benny_CreateMove", function( cmd )
 
 	local p = LocalPlayer()
 	local w = p:GetActiveWeapon()
-	if p:BennyCheck() and !LocalPlayer():NoclippingAndNotVaulting() and GetConVar("benny_cam_override"):GetBool() == "" then -- FPS cam
+	if p:BennyCheck() and !LocalPlayer():NoclippingAndNotVaulting() and GetConVar("benny_cam_override"):GetString() == "" then -- FPS cam
 		local aimed = w:GetUserAim()
 		local opos, ang = p:CamSpot( TPSOverride )
 
