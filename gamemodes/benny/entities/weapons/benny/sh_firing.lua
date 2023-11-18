@@ -42,12 +42,20 @@ function SWEP:BFire( hand )
 
 		
 		if CLIENT and IsFirstTimePredicted() then
-			local vStart = self:GetAttachment( 1 ).Pos
-			local vPoint = p:GetEyeTrace().HitPos
-			local effectdata = EffectData()
-			effectdata:SetStart( vStart )
-			effectdata:SetOrigin( vPoint )
-			util.Effect( "ToolTracer", effectdata )
+			if IsValid(self.CWM) then
+				local vStart = self.CWM:GetAttachment( 1 ).Pos
+				--local vPoint = p:GetEyeTrace().HitPos
+				--local effectdata = EffectData()
+				--effectdata:SetStart( vStart )
+				--effectdata:SetOrigin( vPoint )
+				--util.Effect( "ToolTracer", effectdata )
+				local ed = EffectData()
+				ed:SetOrigin( vStart )
+				--ed:SetAngles( Angle() )
+				ed:SetEntity( self )
+				ed:SetAttachment( 1 )
+				util.Effect( "benny_muzzleflash", ed )
+			end
 		end
 	end
 end
