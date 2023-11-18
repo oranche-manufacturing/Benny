@@ -289,7 +289,7 @@ do -- Melee
 
 	WEAPONS["melee_bat"] = {
 		Name = "BAT",
-		Description = "meow",
+		Description = "Aluminum bat. Home run!",
 		Type = "melee",
 
 		WModel = "models/weapons/w_crowbar.mdl",
@@ -305,7 +305,7 @@ do -- Melee
 
 	WEAPONS["melee_baton"] = {
 		Name = "BATON",
-		Description = "meow",
+		Description = "Weighty beating stick.",
 		Type = "melee",
 
 		WModel = "models/weapons/w_eq_tonfa.mdl",
@@ -321,7 +321,7 @@ do -- Melee
 
 	WEAPONS["melee_knife"] = {
 		Name = "KNIFE",
-		Description = "meow",
+		Description = "Makes for a great entrée and dessert.",
 		Type = "melee",
 
 		WModel = "models/weapons/w_knife_ct.mdl",
@@ -337,7 +337,7 @@ do -- Melee
 
 	WEAPONS["melee_machete"] = {
 		Name = "MACHETE",
-		Description = "meow",
+		Description = "Cut up foliage and people!",
 		Type = "melee",
 
 		WModel = "models/props_canal/mattpipe.mdl",
@@ -557,7 +557,7 @@ do -- SMGs & PDWs
 
 	WEAPONS["tmp"] = {
 		Name = "TMP",
-		Description = "Small, compact, and fast.",
+		Description = "Small, compact, and favored by private security.",
 		Type = "smg",
 
 		WModel = "models/weapons/w_smg_tmp_us.mdl",
@@ -581,7 +581,7 @@ do -- SMGs & PDWs
 
 	WEAPONS["mp7"] = {
 		Name = "MP7",
-		Description = "Small, pistol-sized.",
+		Description = "Small, pistol-sized, goes through kevlar like a knife.",
 		Type = "smg",
 
 		WModel = "models/weapons/w_smg1.mdl",
@@ -605,7 +605,7 @@ do -- SMGs & PDWs
 
 	WEAPONS["mp5k"] = {
 		Name = "MP5K",
-		Description = "Quality manufacturing, but cumbersome.",
+		Description = "Quality manufacturing, but a cumbersome reload.",
 		Type = "smg",
 
 		WModel = "models/weapons/w_smg_mp5k.mdl",
@@ -676,7 +676,7 @@ do -- SMGs & PDWs
 	}
 
 	WEAPONS["chicom"] = {
-		Name = "QCW-CQB",
+		Name = "QCW-CQB-21",
 		Description = "Subsonic bullpup SMG.",
 		Type = "smg",
 
@@ -950,7 +950,7 @@ do -- Machine guns
 	}
 
 	WEAPONS["qbblsw"] = {
-		Name = "QBB-LSW",
+		Name = "QBB-LSW-42",
 		Description = "Bullpup light machine gun.",
 		Type = "machinegun",
 		
