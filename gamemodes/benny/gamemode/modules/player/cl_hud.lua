@@ -231,9 +231,13 @@ CreateClientConVar( "benny_hud_tempactive", "benny", true, false )
 
 hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 	local sw, sh = ScrW(), ScrH()
-	local b = ss(20)
+	local Wb = ss(20)
+	local Hb = ss(20)
+
+	-- Wb = (sh*(4/3))
+	-- Wb = (sw-Wb)/2
+
 	local p = LocalPlayer()
-	-- PROTO: Make sure this is the 'benny' weapon.
 	local wep = p:BennyCheck()
 
 	local active = GetConVar("benny_hud_tempactive"):GetString()
@@ -245,7 +249,7 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 		local b_bh2 = ss(8)
 		local b_s = ss(4)
 		local b_s2 = b_s*2
-		local b_x, b_y = b, sh - b - b_h
+		local b_x, b_y = Wb, sh - Hb - b_h
 		-- BG
 		surface.SetDrawColor( scheme["bg"] )
 		surface.DrawRect( b_x, b_y, b_w, b_h )
@@ -286,11 +290,14 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 				surface.DrawRect( b_x + b_s + ((i-1)*ss(32+2)) + ss(1), b_y + b_bh + ss(4+2) + ss(1), ss(32*localperc) - ss(2), b_bh2 - ss(2) )
 			end
 		end
-		if wep and wep:GetTempHandedness() then
-			surface.SetDrawColor( scheme["bg"] )
-			surface.DrawRect( b_x, b_y - ss( 12+3 ), ss( 86 ), ss( 12 ) )
-			draw.SimpleText( "LEFT-HANDED MODE", "Benny_12", b_x + ss( 2 ), b_y - ss( 12+2 ), scheme["fg"], TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP )
-		end
+	end
+
+	if wep and wep:GetTempHandedness() then
+		local t_w, t_h = ss( 90 ), ss( 14 )
+		local t_x, t_y = sw/2 - t_w/2, sh - Hb - t_h
+		surface.SetDrawColor( scheme["bg"] )
+		surface.DrawRect( t_x, t_y, t_w, t_h )
+		draw.SimpleText( "LEFT-HANDED MODE", "Benny_12", t_x + t_w/2, t_y + t_h/2 + ss(1), scheme["fg"], TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER )
 	end
 
 	do -- Vaulting
@@ -324,8 +331,8 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 				local wep_class = wep:BClass( hand )
 
 				local p_w, p_h = ss(156), ss(64)
-				local p_x, p_y = sw - b - p_w, sh - b - p_h
-				if hand then p_y = p_y - p_h - ss(20+4+4) end
+				local p_x, p_y = sw - Wb - p_w, sh - Hb - p_h
+				if hand then p_y = p_y - p_h - ss(20 + 2) end
 				local pb = ss(4)
 				local pb2 = pb*2
 
@@ -382,7 +389,7 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 						end
 					end
 					if wep_class.Ammo then -- Magazines
-						local m_w, m_h = ss( 14 ), ss( 24 )
+						local m_w, m_h = ss( 12 ), ss( 20 )
 						local m_x, m_y = p_x + p_w - m_w, p_y - m_h - ss(1)--p_x - m_w, p_y + p_h - m_h
 						local bb = ss( 1 )
 						local b2 = ss( 2 )
@@ -549,20 +556,20 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 
 		for i, bucket in ipairs( inventorylist ) do
 			surface.SetDrawColor( scheme["bg"] )
-			surface.DrawRect( bump + b, b, size_num, size_num )
+			surface.DrawRect( bump + Wb, Hb, size_num, size_num )
 
 			if i==bucket_selected then
 				surface.SetDrawColor( scheme["fg"] )
-				surface.DrawRect( bump + b + gap, b + gap, size_num - (gap*2), size_num - (gap*2) )
+				surface.DrawRect( bump + Wb + gap, Hb + gap, size_num - (gap*2), size_num - (gap*2) )
 
 				surface.SetFont( "Benny_12" )
 				surface.SetTextColor( scheme["bg"] )
-				surface.SetTextPos( bump + b + ss(3), b + ss(1) )
+				surface.SetTextPos( bump + Wb + ss(3), Hb + ss(1) )
 				surface.DrawText( i )
 			else
 				surface.SetFont( "Benny_12" )
 				surface.SetTextColor( scheme["fg"] )
-				surface.SetTextPos( bump + b + ss(3), b + ss(1) )
+				surface.SetTextPos( bump + Wb + ss(3), Hb + ss(1) )
 				surface.DrawText( i )
 			end
 
@@ -570,7 +577,7 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 			if i!=bucket_selected then
 				for d, item in ipairs( bucket ) do
 					surface.SetDrawColor( scheme["bg"] )
-					surface.DrawRect( bump + b, (item_start+ybump) + b, size_texty, size_texty )
+					surface.DrawRect( bump + Wb, (item_start+ybump) + Hb, size_texty, size_texty )
 					ybump = ybump + (item_gap)
 				end
 				bump = bump + (nextwe_no)
@@ -579,17 +586,17 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 					local idata = WEAPONS[inv[item].Class]
 					local sel = item==wep:D_GetID( wep:GetTempHandedness() )--d==item_selected
 					surface.SetDrawColor( scheme["bg"] )
-					surface.DrawRect( bump + b, (item_start+ybump) + b, size_textx, (sel and size_texty_sel or size_texty) )
+					surface.DrawRect( bump + Wb, (item_start+ybump) + Hb, size_textx, (sel and size_texty_sel or size_texty) )
 					if sel then
 						surface.SetDrawColor( scheme["fg"] )
-						surface.DrawRect( bump + b + gap, (item_start+ybump) + b + gap, size_textx - (gap*2), (sel and size_texty_sel or size_texty) - (gap*2) )
+						surface.DrawRect( bump + Wb + gap, (item_start+ybump) + Hb + gap, size_textx - (gap*2), (sel and size_texty_sel or size_texty) - (gap*2) )
 
 						surface.SetTextColor( scheme["bg"] )
 						-- PROTO: This is just useful information for me.
 						surface.SetFont( "Benny_8" )
 						local num = 0
 						for i, v in pairs( inv[item] ) do
-							surface.SetTextPos( bump + b + ss(3), (item_start+ybump) + b + ss(1+6+(4*num)) )
+							surface.SetTextPos( bump + Wb + ss(3), (item_start+ybump) + Hb + ss(1+6+(4*num)) )
 							surface.DrawText( i .. " : " .. v )
 							num = num +1
 						end
@@ -597,11 +604,11 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 						surface.SetTextColor( scheme["fg"] )
 					end
 					surface.SetFont( "Benny_12" )
-					surface.SetTextPos( bump + b + ss(3), (item_start+ybump) + b + ss(1) )
+					surface.SetTextPos( bump + Wb + ss(3), (item_start+ybump) + Hb + ss(1) )
 					surface.DrawText( idata.Name )
 
 					surface.SetFont( "Benny_8" )
-					surface.SetTextPos( bump + b + size_textx - surface.GetTextSize(item) - ss(3), (item_start+ybump) + b + ss(1) )
+					surface.SetTextPos( bump + Wb + size_textx - surface.GetTextSize(item) - ss(3), (item_start+ybump) + Hb + ss(1) )
 					surface.DrawText( item )
 					ybump = ybump + (d==item_selected and item_gap_sel or item_gap)
 				end
@@ -611,7 +618,7 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 	end
 
 	do -- Captions
-		local space = b
+		local space = Hb
 		for aaa, caption in pairs(captions) do
 			if caption.lifetime <= CurTime() then captions[aaa] = nil end
 			if #caption.lines == 0 then captions[aaa] = nil end
@@ -763,7 +770,7 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 		end
 	end
 
-	if true and p:BennyCheck() then
+	if false and p:BennyCheck() then
 		local bx, by = sw/2, sh*(0.75)
 		local mx = 50
 
