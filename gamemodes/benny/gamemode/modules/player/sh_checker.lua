@@ -10,7 +10,7 @@ if easyway then
 			Player(data.userid).CheckerReady = true
 		end )
 
-		local checkerinterval = 12
+		local checkerinterval = 1
 		util.AddNetworkString( "Benny_Checker" )
 
 		hook.Add( "PlayerTick", "Benny_Checker", function( ply )
@@ -23,7 +23,7 @@ if easyway then
 							net.WriteString( i )
 							net.WriteTable( v )
 						end
-					print( net.BytesWritten() )
+					print( ply, net.BytesWritten() )
 					net.Send( ply )
 					ply.CheckerLast = CurTime()
 				end
@@ -62,6 +62,9 @@ if SERVER then
 					net.WriteUInt( table.Count(inv), UINTBITS )
 					for i, v in pairs( inv ) do
 						net.WriteString( i )
+
+						net.WriteBool( v.Loaded )
+						if v.Loaded then net.WriteString( v.Loaded ) end
 					end
 				net.Send( ply )
 				ply.CheckerLast = CurTime()
@@ -108,7 +111,13 @@ else
 		local amt = net.ReadUInt( UINTBITS )
 		local evallist = {}
 		for i=1, amt do
-			evallist[net.ReadString()] = true
+			local id = net.ReadString()
+			local loaded_exists = net.ReadBool()
+			local loaded = nil
+			if loaded_exists then
+				loaded = net.ReadString()
+			end
+			evallist[id] = loaded or true
 		end
 
 		local inv = ply:INV_Get()
@@ -118,6 +127,9 @@ else
 		for i, v in pairs( evallist ) do
 			if inv[i] then
 				-- Success
+				if isstring(v) then
+					inv[i].Loaded = v
+				end
 			else
 				missinglist[i] = true
 			end

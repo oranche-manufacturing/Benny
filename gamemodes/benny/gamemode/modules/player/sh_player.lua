@@ -178,25 +178,24 @@ end
 -- weapon select
 
 hook.Add("StartCommand", "Benny_INV_StartCommand", function( ply, cmd )
-	local wep = ply:BennyCheck()
-	if wep then
-		local inv = ply:INV_Get()
-		local inv_bucketlist = ply:INV_ListFromBuckets()
-		local inv_bucketlist_flipped = table.Flip( inv_bucketlist )
-		if CLIENT and ply.CLIENTDESIRE and inv[ply.CLIENTDESIRE ] and inv_bucketlist_flipped[ ply.CLIENTDESIRE ] then
-			cmd:SetUpMove( inv_bucketlist_flipped[ ply.CLIENTDESIRE ] )
-		end
-		local id = cmd:GetUpMove()
-		local hand = wep:GetTempHandedness()
-		if id > 0 and inv_bucketlist[id] and inv[inv_bucketlist[id]] then
-			wep:BDeploy( hand, inv_bucketlist[ id ] )
-			if CLIENT and (wep:D_GetID( hand ) == ply.CLIENTDESIRE) then
-				ply.CLIENTDESIRE = 0
-				print("Fixed")
-			end
-		end
-
-	end
+	-- local wep = ply:BennyCheck()
+	-- if wep then
+	-- 	local hand = wep:GetTempHandedness()
+	-- 	local inv = ply:INV_Get()
+	-- 	local inv_bucketlist = ply:INV_ListFromBuckets()
+	-- 	local inv_bucketlist_flipped = table.Flip( inv_bucketlist )
+	-- 	if CLIENT and ply.CLIENTDESIRE and inv[ply.CLIENTDESIRE ] and inv_bucketlist_flipped[ ply.CLIENTDESIRE ] then
+	-- 		cmd:SetUpMove( inv_bucketlist_flipped[ ply.CLIENTDESIRE ] )
+	-- 	end
+	-- 	if CLIENT and (wep:D_GetID( hand ) == ply.CLIENTDESIRE) then
+	-- 		ply.CLIENTDESIRE = 0
+	-- 		print("Fixed")
+	-- 	end
+	-- 	local id = cmd:GetUpMove()
+	-- 	if id > 0 and inv_bucketlist[id] and inv[inv_bucketlist[id]] then
+	-- 		wep:BDeploy( hand, inv_bucketlist[ id ] )
+	-- 	end
+	-- end
 end)
 
 

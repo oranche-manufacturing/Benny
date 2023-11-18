@@ -71,23 +71,14 @@ function SWEP:BDeploy( hand, id )
 	assert( item, "That item doesn't exist. " .. tostring(item) )
 
 	self:D_SetID( hand, id )
+	self:D_SetMagID( hand, "" )
+	self:D_SetClip( hand, 0 )
 	if item.Loaded then
-		local mid = inv[ item.Loaded ]
-		if mid then
-			self:D_SetMagID( hand, item.Loaded )
-			self:D_SetClip( hand, mid.Ammo )
-		end
-	end
-	
-	-- PROTO: Make grenade/melee/firearm logic way way better.
-	if class.Features == "firearm" then
-		-- if item.Loaded != "" then
-		-- 	assert( inv[ item.Loaded ], "That magazine doesn't exist." )
-		-- end
-			
-		-- self:D_SetClip( hand, item.Loaded == "" and 0 or inv[ "Ammo" .. item.Loaded ] )
-	else
-		self:D_SetClip( hand, 0 )
+		local mid = item.Loaded
+		local midi = inv[ mid ]
+		assert( midi, "Deploy: Magazine doesn't exist in the inventory!! " .. tostring(item.Loaded) )
+		self:D_SetMagID( hand, mid )
+		self:D_SetClip( hand, midi.Ammo )
 	end
 end
 

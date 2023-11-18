@@ -46,7 +46,8 @@ end, "arg 1: player ent index, arg 2: classname")
 
 -- PROTO: Move this all into weapon code.
 concommand.Add("benny_inv_equip", function( ply, cmd, args )
-	if ply:BennyCheck() then ply:GetActiveWeapon():BDeploy( args[2] and true or false, args[1] ) end
+	local wep = ply:BennyCheck()
+	if wep then wep:BDeploy( wep:GetTempHandedness(), args[1] ) end
 end,
 function(cmd, args)
 	args = string.Trim(args:lower())
@@ -61,7 +62,8 @@ end, "arg 1: item id, arg 2 does offhand")
 
 -- PROTO: Move this all into weapon code.
 concommand.Add("benny_inv_holster", function( ply, cmd, args )
-	if ply:BennyCheck() then ply:GetActiveWeapon():BHolster( ply:GetActiveWeapon():GetTempHandedness() ) end
+	local wep = ply:BennyCheck()
+	if wep then wep:BHolster( wep:GetTempHandedness() ) end
 end)
 
 concommand.Add("benny_inv_sync", function( ply, cmd, args )
@@ -91,12 +93,12 @@ concommand.Add("benny_inv_discard", function( ply, cmd, args )
 
 	if wep:GetWep1() == args[1] then
 		wep:SetWep1( "" )
-		wep:SetWep1Clip( 0 )
+		wep:SetWep1_Clip( "" )
 		wep:SetClip1( 0 )
 	end
 	if wep:GetWep2() == args[1] then
 		wep:SetWep2( "" )
-		wep:SetWep2Clip( 0 )
+		wep:SetWep2_Clip( "" )
 		wep:SetClip2( 0 )
 	end
 end)

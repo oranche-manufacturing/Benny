@@ -77,7 +77,6 @@ function SWEP:B_Ammo( hand, value )
 	local p = self:GetOwner()
 	local inv = p:INV_Get()
 	self:D_SetClip( hand, value )
-	print( hand, value )
 	assert( self:D_GetMagID( hand ) != "", "There is no magazine loaded!" )
 	inv[ self:D_GetMagID( hand ) ].Ammo = value
 end
@@ -105,57 +104,45 @@ function SWEP:Reload()
 	local p = self:GetOwner()
 	local inv = p:INV_Get()
 	if p:KeyPressed( IN_RELOAD ) then
-		-- for i=1, 2 do
-			local hand = self:GetTempHandedness()--true--i==2
-			local wep_table = self:BTable( hand )
-			local wep_class = self:BClass( hand )
-			if wep_table then
-				print( "First Test: ", i, wep_table, WEAPONS[wep_table.Class].Name )
-				if wep_class.Reload then
-					if wep_class.Reload( self, wep_table ) then return end
-				end
-				if self:D_GetDelay( hand ) > CurTime() then
-					return false
-				end
+		local hand = self:GetTempHandedness()
+		local wep_table = self:BTable( hand )
+		local wep_class = self:BClass( hand )
+		if wep_table then
+			if wep_class.Reload then
+				if wep_class.Reload( self, wep_table ) then return end
+			end
+			if self:D_GetDelay( hand ) > CurTime() then
+				return false
+			end
 
-				local mid = self:D_GetMagID( hand )
+			local mid = self:D_GetMagID( hand )
+			if SERVER or (CLIENT and IsFirstTimePredicted()) then
 				if mid != "" then
-					B_Sound( self, wep_class.Sound_MagOut )
-
 					if inv[mid].Ammo == 0 then
 						if SERVER or (CLIENT and IsFirstTimePredicted()) then
 							p:INV_Discard( mid )
 						end
 					end
 
-					self:D_SetClip( hand, 0 )
 					self:D_SetMagID( hand, "" )
+					self:D_SetClip( hand, 0 )
+					B_Sound( self, wep_class.Sound_MagOut )
 					wep_table.Loaded = ""
 				else
 					local maglist = p:INV_FindMag( "mag_" .. wep_table.Class )
-					PrintTable( maglist )
 					local mag = maglist[1]
 					if mag then
-						if hand then
-							self:SetWep2_Clip( mag )
-							self:SetClip2( inv[mag].Ammo )
-							inv[self:GetWep2()].Loaded = mag
-						else
-							self:SetWep1_Clip( mag )
-							self:SetClip1( inv[mag].Ammo )
-							inv[self:GetWep1()].Loaded = mag
-						end
-						-- wep_table.Loaded = mag
-						-- self:D_SetMagID( hand, mag )
-						-- self:D_SetClip( hand, inv[mag].Ammo )
+						self:D_SetMagID( hand, mag )
+						self:D_SetClip( hand, inv[mag].Ammo )
+						wep_table.Loaded = mag
 						B_Sound( self, wep_class.Sound_MagIn )
 					else
 						B_Sound( self, "Common.NoAmmo" )
 					end
 				end
-				self:TPReload( self:GetTempHandedness() )
 			end
-		-- end
+			self:TPReload( self:GetTempHandedness() )
+		end
 	end
 	return true
 end

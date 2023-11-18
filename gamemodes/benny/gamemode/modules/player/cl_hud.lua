@@ -240,9 +240,15 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 	local scheme = schemes[active]
 
 	do -- Health
+		local b_w, b_h = ss(142), ss(32)
+		local b_bh = ss(14)
+		local b_bh2 = ss(8)
+		local b_s = ss(4)
+		local b_s2 = b_s*2
+		local b_x, b_y = b, sh - b - b_h
 		-- BG
 		surface.SetDrawColor( scheme["bg"] )
-		surface.DrawRect( b, sh - b - ss(22), ss(140), ss(14+8) )
+		surface.DrawRect( b_x, b_y, b_w, b_h )
 
 		local hp = p:Health()/100 --CurTime()*0.5 % 1
 		local ti = (CurTime()*0.75 / (hp)) % 1
@@ -250,24 +256,41 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 		-- Text underneath
 		surface.SetFont( "Benny_18" )
 		surface.SetTextColor( scheme["fg"] )
-		surface.SetTextPos( b + ss(6), sh - b - ss(22) + ss(3) )
+		surface.SetTextPos( b_x + ss(6), b_y + ss(3) )
 		surface.DrawText( scheme["name"] )
 
 		-- Bar
 		surface.SetDrawColor( scheme["fg"] )
-		surface.DrawRect( b + ss(4), sh - b - ss(22) + ss(4), ss((140*hp)-8), ss(14) )
+		surface.DrawOutlinedRect( b_x + b_s, b_y + b_s, ss(142-8), b_bh, ss( 0.5 ) )
+		surface.DrawRect( b_x + b_s + ss(1), b_y + b_s + ss(1), ss(142*hp-8-2), b_bh - ss(2) )
 
 		heartbeatcol.a = math.ease.OutQuint(1-ti)*255
 		surface.SetDrawColor( heartbeatcol )
 		surface.SetMaterial( mat_grad )
-		surface.DrawTexturedRect( b + ss(4), sh - b - ss(22) + ss(4), ss((140*hp*ti)-8), ss(14) )
+		surface.DrawTexturedRect( b_x + b_s + ss(1), b_y + b_s + ss(1), ss(142*hp*ti-8-2), b_bh - ss(2) )
 
 		-- Bar text
 		surface.SetTextColor( scheme["bg"] )
-		surface.SetTextPos( b + ss(6), sh - b - ss(22) + ss(3) )
-		render.SetScissorRect( b + ss(4), sh - b - ss(22) + ss(4), b + ss(4) + ss((140*hp)-8), sh - b - ss(22) + ss(4) + ss(14), true ) -- Enable the rect
+		surface.SetTextPos( b_x + ss(6), b_y + ss(3) )
+		render.SetScissorRect( b_x + b_s, b_y + b_s, b_x + b_s + ss(142*hp-8), b_y + b_s + b_bh, true ) -- Enable the rect
 			surface.DrawText( scheme["name"] )
 		render.SetScissorRect( 0, 0, 0, 0, false ) -- Disable after you are done
+
+		if true then -- Stamina
+			local perc = CurTime()*0.5 % 2
+			if perc > 1 then perc = 2-perc end
+			for i=1, 4 do
+				local localperc = math.Clamp( math.Remap( perc, (0.25*(i-1)), (0.25*(i)), 0, 1 ), 0, 1 )
+				surface.SetDrawColor( scheme["fg"] )
+				surface.DrawOutlinedRect( b_x + b_s + ((i-1)*ss(32+2)), b_y + b_bh + ss(4+2), ss(32), b_bh2, ss(0.5) )
+				surface.DrawRect( b_x + b_s + ((i-1)*ss(32+2)) + ss(1), b_y + b_bh + ss(4+2) + ss(1), ss(32*localperc) - ss(2), b_bh2 - ss(2) )
+			end
+		end
+		if wep and wep:GetTempHandedness() then
+			surface.SetDrawColor( scheme["bg"] )
+			surface.DrawRect( b_x, b_y - ss( 12+3 ), ss( 86 ), ss( 12 ) )
+			draw.SimpleText( "LEFT-HANDED MODE", "Benny_12", b_x + ss( 2 ), b_y - ss( 12+2 ), scheme["fg"], TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP )
+		end
 	end
 
 	do -- Vaulting
@@ -348,6 +371,12 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 							count = count + 1
 						end
 						draw.SimpleText( wep:D_GetClip( hand ), "Benny_12", p_x + p_w - pb - ss(1), p_y + p_h - offset - ss(12+3), scheme["fg"], TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP )
+
+						if wep:D_GetMagID( hand ) != wep_table.Loaded then
+							surface.SetDrawColor( scheme["bg"] )
+							surface.DrawRect( p_x, p_y - ss( 12+3 ), ss( 66 ), ss( 12 ) )
+							draw.SimpleText( "!! Mag desync.", "Benny_12", p_x + ss( 2 ), p_y - ss( 12+2 ), scheme["fg"], TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP )
+						end
 					end
 					if wep_class.Ammo then -- Magazines
 						local m_w, m_h = ss( 14 ), ss( 24 )
@@ -366,7 +395,7 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 							table.insert( newmaglist, v )
 						end
 						for id, tag in ipairs( newmaglist ) do
-							assert( inv[tag], "That magazine doesn't exist." )
+							--assert( inv[tag], "That magazine doesn't exist. " .. tag )
 							local chunk = ((ss(1)+m_w)*(id-1))
 							surface.SetDrawColor( scheme["bg"] )
 							surface.DrawRect( m_x - chunk, m_y, m_w, m_h )
@@ -727,7 +756,7 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 		end
 	end
 
-	if false and p:BennyCheck() then
+	if true and p:BennyCheck() then
 		local bx, by = sw/2, sh*(0.75)
 		local mx = 50
 
@@ -737,7 +766,9 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 			draw.SimpleText( "Clip1: " .. wep:Clip1(),				"Trebuchet24", bx-mx, by+24*0, color_white, TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP )
 			draw.SimpleText( "ID1: " .. wep:GetWep1(),				"Trebuchet24", bx-mx, by+24*1, color_white, TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP )
 			draw.SimpleText( "MagID1: " .. wep:D_GetMagID( false ),	"Trebuchet24", bx-mx, by+24*2, color_white, TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP )
-			draw.SimpleText( "T_MagID1: " .. wep1_table.Loaded,		"Trebuchet24", bx-mx, by+24*3, color_white, TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP )
+			if wep1_table.Loaded then
+				draw.SimpleText( "T_MagID1: " .. wep1_table.Loaded,		"Trebuchet24", bx-mx, by+24*3, color_white, TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP )
+			end
 		end
 
 		local wep2_table, wep2_class = wep:BTable( true ), wep:BClass( true )
@@ -746,7 +777,9 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 			draw.SimpleText( "Clip2: " .. wep:Clip2(),				"Trebuchet24", bx+mx, by+24*0, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP )
 			draw.SimpleText( "ID2: " .. wep:GetWep2(),				"Trebuchet24", bx+mx, by+24*1, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP )
 			draw.SimpleText( "MagID2: " .. wep:D_GetMagID( true ),	"Trebuchet24", bx+mx, by+24*2, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP )
-			draw.SimpleText( "T_MagID2: " .. wep2_table.Loaded,		"Trebuchet24", bx+mx, by+24*3, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP )
+			if wep2_table.Loaded then
+				draw.SimpleText( "T_MagID2: " .. wep2_table.Loaded,		"Trebuchet24", bx+mx, by+24*3, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP )
+			end
 		end
 	end
 end )
@@ -756,9 +789,9 @@ do
 		local ply = LocalPlayer()
 		local buckets = ply:INV_Buckets()
 		if buckets[bucket_selected] and buckets[bucket_selected][item_selected] then
-			ply.CLIENTDESIRE = buckets[bucket_selected][item_selected]
+			-- ply.CLIENTDESIRE = buckets[bucket_selected][item_selected]
 
-			--RunConsoleCommand( "benny_inv_equip", buckets[bucket_selected][item_selected] )
+			RunConsoleCommand( "benny_inv_equip", buckets[bucket_selected][item_selected] )
 		end
 	end
 	local function Locate( ply, buckets, id )
