@@ -93,7 +93,7 @@ function PT:INV_FindMag( class, exclude )
 	local inv = self:INV_Get()
 	local results = {}
 	for i, v in pairs( inv ) do
-		if v.Class == class and i != (exclude or "") then
+		if v.Class == class and (exclude and !exclude[i] or !exclude and true) then
 			table.insert( results, i )
 		end
 	end

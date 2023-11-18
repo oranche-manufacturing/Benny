@@ -339,7 +339,10 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 
 					draw.SimpleText( wep_class.Name, "Benny_16", p_x+ss(6), p_y+ss(5), scheme["bg"], TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP )
 					
-					draw.SimpleText( wep:D_GetID( hand ), "Benny_10", p_x+p_w-pb2, p_y+ss(7), scheme["bg"], TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP )
+					local identicallist = p:INV_Find( wep:BTable( hand ).Class )
+					identicallist = table.Flip( identicallist )
+					local numba = identicallist[ wep:D_GetID( hand ) ]
+					draw.SimpleText( "(" .. tostring(numba) .. ") - " .. wep:D_GetID( hand ), "Benny_10", p_x+p_w-pb2, p_y+ss(7), scheme["bg"], TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP )
 
 					if wep_class.Firemodes then -- Firemode
 						surface.SetDrawColor( scheme["fg"] )
@@ -385,11 +388,14 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 						local b2 = ss( 2 )
 						local b3 = ss( 3 )
 						local b4 = ss( 4 )
-						local maglist = p:INV_FindMag( "mag_" .. wep_table.Class, wep:D_GetMagID( hand ) )
+						local maglist = p:INV_FindMag( "mag_" .. wep_table.Class, { [wep:D_GetMagID( hand )] = true, [wep:D_GetMagID( !hand )] = true, } )
 
 						local newmaglist = {}
 						if wep:D_GetMagID( hand ) != "" then
 							table.insert( newmaglist, wep:D_GetMagID( hand ) )
+						end
+						if wep:D_GetMagID( !hand ) != "" then
+							table.insert( newmaglist, wep:D_GetMagID( !hand ) )
 						end
 						for i, v in ipairs( maglist ) do
 							table.insert( newmaglist, v )
@@ -406,19 +412,20 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 							local perc = math.abs( math.cos( CurTime() ) )
 
 							local s1 = (m_h - b2 - b2)
-							local s2 = (m_h - b2 - b2) * ( inv[tag].Ammo / WEAPONS[inv[tag].Class].Ammo )
+							local s2 = (m_h - b2 - b2) * (inv[tag] and ( inv[tag].Ammo / WEAPONS[inv[tag].Class].Ammo ) or 8)
 							local s3 = math.floor( s2 - s1 )
 
 							local m1, m2, m3, m4 = m_x + bb + bb - chunk, m_y + bb + bb - s3, m_w - b2 - b2, s2
 							local active = tag == wep:D_GetMagID( hand )
-							if active then
-								draw.SimpleText( "x", "Benny_10", m_x + (m_w/2) - chunk, m_y + (m_h/2), scheme["fg"], TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER )
+							local active2 = tag == wep:D_GetMagID( !hand )
+							if active or active2 then
+								draw.SimpleText( active2 and "|" or "x", "Benny_10", m_x + (m_w/2) - chunk, m_y + (m_h/2), scheme["fg"], TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER )
 							end
 							surface.DrawRect( m1, m2, m3, m4 )
 
-							if active then
+							if active or active2 then
 								render.SetScissorRect( m1, m2, m1 + m3, m2 + m4, true )
-								draw.SimpleText( "x", "Benny_10", m_x + (m_w/2) - chunk, m_y + (m_h/2), scheme["bg"], TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER )
+								draw.SimpleText( active2 and "|" or "x", "Benny_10", m_x + (m_w/2) - chunk, m_y + (m_h/2), scheme["bg"], TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER )
 								render.SetScissorRect( 0, 0, 0, 0, false )
 							end
 						end
@@ -808,7 +815,7 @@ do
 	end
 	local function Wrap( ply, num )
 		local buckets = ply:INV_Buckets()
-		local currsel = ply:GetActiveWeapon():GetWep1()
+		local currsel = ply:GetActiveWeapon():D_GetID( ply:GetActiveWeapon():GetTempHandedness() )
 
 		local lb, li = Locate( ply, buckets, currsel )
 		if lb then

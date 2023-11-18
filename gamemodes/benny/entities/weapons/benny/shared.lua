@@ -130,7 +130,25 @@ function SWEP:Reload()
 					wep_table.Loaded = ""
 				else
 					local maglist = p:INV_FindMag( "mag_" .. wep_table.Class )
-					local mag = maglist[1]
+					local mag
+					
+					local usedlist = {}
+					for _id, mrow in pairs( inv ) do
+						if mrow.Loaded and mrow.Loaded != "" then
+							usedlist[mrow.Loaded] = true
+							-- print( mrow.Loaded .. " Added to Mrowlist" )
+						end
+					end
+					
+					for num, mid in ipairs( maglist ) do
+						if usedlist[mid] then
+							-- print( "oh No we can't use " .. mid )
+						else
+							mag = mid
+							break
+						end
+					end
+
 					if mag then
 						self:D_SetMagID( hand, mag )
 						self:D_SetClip( hand, inv[mag].Ammo )

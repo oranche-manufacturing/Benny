@@ -73,10 +73,13 @@ function SWEP:BDeploy( hand, id )
 	self:D_SetID( hand, id )
 	self:D_SetMagID( hand, "" )
 	self:D_SetClip( hand, 0 )
-	if item.Loaded then
+	if item.Loaded and item.Loaded != "" then
 		local mid = item.Loaded
 		local midi = inv[ mid ]
-		assert( midi, "Deploy: Magazine doesn't exist in the inventory!! " .. tostring(item.Loaded) )
+		if !midi then
+			item.Loaded = ""
+			error( "Deploy: Magazine doesn't exist in the inventory!! " .. tostring(mid) .. " item.Loaded removed." )
+		end
 		self:D_SetMagID( hand, mid )
 		self:D_SetClip( hand, midi.Ammo )
 	end

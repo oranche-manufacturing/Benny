@@ -47,7 +47,43 @@ end, "arg 1: player ent index, arg 2: classname")
 -- PROTO: Move this all into weapon code.
 concommand.Add("benny_inv_equip", function( ply, cmd, args )
 	local wep = ply:BennyCheck()
-	if wep then wep:BDeploy( wep:GetTempHandedness(), args[1] ) end
+	if wep then
+		print(args[2])
+		local hand = args[2]!=nil and tobool(args[2]) or wep:GetTempHandedness()
+		print(hand)
+		local id = args[1]
+		local swap_or_replace = tobool(args[3])
+
+		local L, R = true, false
+		local curr_r = wep:D_GetID( false )
+		local curr_l = wep:D_GetID( true )
+
+		if hand == R then
+			if curr_r == id then
+				-- We already have this equipped
+				return
+			elseif swap_or_replace and curr_r != "" then
+				-- We already have something equipped here, move it to the offhand
+				wep:BDeploy( L, curr_r )
+			elseif curr_l == id then
+				-- You have the gun we want, snatched
+				wep:BHolster( L )
+			end
+			wep:BDeploy( R, id )
+		elseif hand == L then
+			if curr_l == id then
+				-- We already have this equipped
+				return
+			elseif swap_or_replace and curr_l != "" then
+				-- We already have something equipped here, move it to the offhand
+				wep:BDeploy( R, curr_l )
+			elseif curr_r == id then
+				-- You have the gun we want, snatched
+				wep:BHolster( R )
+			end
+			wep:BDeploy( L, id )
+		end
+	end
 end,
 function(cmd, args)
 	args = string.Trim(args:lower())
@@ -238,24 +274,67 @@ if CLIENT then
 	end
 	local function regen_items( itemlist )
 		local ply = LocalPlayer()
+		local inv = ply:INV_Get()
 		local active = GetConVar("benny_hud_tempactive"):GetString()
 		itemlist:Clear()
 
-		for i, v in pairs( ply:INV_Get() ) do
+		for i, v in pairs( ply:INV_ListFromBuckets() ) do
 			local button = vgui.Create( "DButton" )
 			itemlist:AddItem( button )
-			button:SetSize( 1, ss(36) )
+			button:SetSize( 1, ss(30) )
 			button:Dock( TOP )
 			button:DockMargin( 0, 0, 0, ss(4) )
 
-			button.ID = i
-			local Class = WEAPONS[v.Class]
+			button.ID = v
+			local Class = WEAPONS[inv[v].Class]
 			button.Text_Name = Class.Name
 			button.Text_Desc = Class.Description
 
 			-- PROTO: These functions don't need to be remade over and over like this.
 			function button:DoClick()
-				RunConsoleCommand("benny_inv_equip", button.ID)
+				local Menu = DermaMenu()
+
+				local opt0 = Menu:AddOption( "Equip", function()
+					RunConsoleCommand( "benny_inv_equip", button.ID )
+				end)
+				opt0:SetIcon( "icon16/control_play_blue.png" )
+				
+				Menu:AddSpacer()
+
+				local opt1 = Menu:AddOption( "Equip Right", function()
+					RunConsoleCommand( "benny_inv_equip", button.ID, "false" )
+				end)
+				opt1:SetIcon( "icon16/resultset_next.png" )
+
+				local opt2 = Menu:AddOption( "Equip Left", function()
+					RunConsoleCommand( "benny_inv_equip", button.ID, "true" )
+				end)
+				opt2:SetIcon( "icon16/resultset_previous.png" )
+
+				local opt3 = Menu:AddOption( "Swap Right", function()
+					RunConsoleCommand( "benny_inv_equip", button.ID, "false", "true" )
+				end)
+				opt3:SetIcon( "icon16/resultset_first.png" )
+
+				local opt4 = Menu:AddOption( "Swap Left", function()
+					RunConsoleCommand( "benny_inv_equip", button.ID, "true", "true" )
+				end)
+				opt4:SetIcon( "icon16/resultset_last.png" )
+
+				Menu:AddSpacer()
+
+				local opt5 = Menu:AddOption( "Holster", function()
+					RunConsoleCommand( "benny_inv_holster", button.ID )
+				end)
+				opt5:SetIcon( "icon16/control_pause_blue.png" )
+
+				local opt6 = Menu:AddOption( "Discard", function()
+					RunConsoleCommand("benny_inv_discard", button.ID)
+					self:Remove()
+				end)
+				opt6:SetIcon( "icon16/bin.png" )
+				
+				Menu:Open()
 				-- timer.Simple( 0.1, function() if IsValid( itemlist ) then regen_items( itemlist ) end end )
 			end
 
