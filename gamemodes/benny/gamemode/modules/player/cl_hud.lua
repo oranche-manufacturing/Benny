@@ -215,8 +215,8 @@ local col_2 = Color(0, 0, 0, 255)
 local col_3 = Color(255, 127, 127, 255)
 local col_4 = Color(255, 222, 222, 255)
 local heartbeatcol = Color(255, 255, 255, 255)
-local mat_dot = Material("benny/hud/xhair/dot.png", "mips smooth")
-local mat_long = Material("benny/hud/xhair/long.png", "mips smooth")
+local mat_dot = Material("benny/hud/xhair/dotx.png", "")
+local mat_long = Material("benny/hud/xhair/long.png", "")
 local mat_dot_s = Material("benny/hud/xhair/dot_s.png", "mips smooth")
 local mat_long_s = Material("benny/hud/xhair/long_s.png", "mips smooth")
 local spacer_long = 2 -- screenscaled
@@ -308,35 +308,41 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 		end
 	end
 
-	do -- Hints
-		local b_w, b_h = ss(170), ss(2)
-		local b_x, b_y = sw - Wb - b_w, Hb--sh/2 - b_h/2
+	if true then -- Hints
+		local b_w, b_h = ss(130), ss(2)
+		local b_x, b_y = sw - Wb - b_w, Hb + ss(200)--sh/2 - b_h/2
 
 		local honk = ss(1)
 		local honk2 = honk*2
 
-		local tbw, tbh, tbg = ss(6), ss(2), ss(19)
+		local tbw, tbh, tbg = ss(6), ss(2), ss(14)
 
 		local bump = 0
 		local tbump = 0
 
 		local lonk = {
-			{
-				Glyph = "M1",
-				Text1 = "ATTACK",
-				Text2 = "Fire your weapon",
-				Space = ss(20)
-			},
-			{
-				Glyph = "M2",
-				Text1 = "ATTACK2",
-				Text2 = "Fire your other weapon",
-				Space = ss(20)
-			},
+			--{
+			--	Glyph = "M1",
+			--	Text1 = "ATTACK",
+			--	Text2 = "Fire your weapon",
+			--	Space = ss(20)
+			--},
+			--{
+			--	Glyph = "M2",
+			--	Text1 = "ATTACK (AKIMBO)",
+			--	Text2 = "Fire your other weapon",
+			--	Space = ss(20)
+			--},
 			{
 				Glyph = "R",
 				Text1 = "RELOAD",
-				Text2 = "Reload your active weapon",
+				Text2 = "Reload weapon",
+				Space = ss(20)
+			},
+			{
+				Glyph = "T",
+				Text1 = "RELOAD (AKIMBO)",
+				Text2 = "Reload alternate weapon",
 				Space = ss(20)
 			},
 			{
@@ -359,7 +365,7 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 			},
 			{
 				Glyph = "F1",
-				Text1 = "DEVELOPER SPAWN",
+				Text1 = "DEV. SPAWN",
 				Text2 = "Cheat items in",
 				Space = ss(20)
 			},
@@ -367,10 +373,19 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 
 
 		for _, data in ipairs( lonk ) do
-			tbump = tbump + ss(4)
-			tbump = tbump + data.Space + ss(4)
+			if _==1 then
+				tbump = tbump + ss(4)
+			end
+			tbump = tbump + ss(18)
+			if _==#lonk then
+				tbump = tbump + ss(4)
+			end
 		end
+
 		b_h = b_h + tbump
+
+
+		b_y = sh - b_h - Hb
 
 		surface.SetDrawColor( scheme["bg"] )
 		surface.DrawRect( b_x, b_y, b_w, b_h )
@@ -378,36 +393,41 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 		surface.SetDrawColor( scheme["fg"] )
 		surface.DrawOutlinedRect( b_x + honk, b_y + honk, b_w - honk2, b_h - honk2, ss(0.5) )
 		for _, data in ipairs( lonk ) do
-			bump = bump + ss(4)
+			if _==1 then
+				bump = bump + ss(4)
+			end
 
 			--surface.DrawRect( b_x + b_w - 64, b_y + bump, 32, data.Space )
 
-			draw.SimpleText( data.Text1, "Benny_16", b_x + b_w - tbw,
+			draw.SimpleText( data.Text1, "Benny_14", b_x + b_w - tbw,
 			b_y + bump,
 			scheme["fg"], TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP )
 
-			draw.SimpleText( data.Text2, "Benny_12", b_x + b_w - tbw,
-			b_y+ss(12) + bump,
+			draw.SimpleText( data.Text2, "Benny_8", b_x + b_w - tbw,
+			b_y+ss(10) + bump,
 			scheme["fg"], TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP )
 
 			if #data.Glyph == 1 then
 				surface.DrawOutlinedRect( b_x + tbw,
 				b_y + ss(2) + bump, tbg, tbg, ss(1) )
 				draw.SimpleText( data.Glyph, "Benny_16", b_x + tbw + tbg/2,
-				b_y + ss(4.2) + bump,
+				b_y + ss(2.6) + bump,
 				scheme["fg"], TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP )
 			else
-				surface.SetFont( "Benny_12" )
+				surface.SetFont( "Benny_10" )
 				local tx = surface.GetTextSize( data.Glyph )
 				tx = math.max( tx + ss(8), tbg )
 
 				surface.DrawOutlinedRect( b_x + tbw,
 				b_y + ss(2) + bump, tx, tbg, ss(1) )
-				draw.SimpleText( data.Glyph, "Benny_12", b_x + tbw + tx/2,
-				b_y + ss(6.2) + bump,
+				draw.SimpleText( data.Glyph, "Benny_10", b_x + tbw + tx/2,
+				b_y + ss(4.6) + bump,
 				scheme["fg"], TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP )
 			end
-			bump = bump + data.Space + ss(4)
+			bump = bump + ss(18)
+			if _==#lonk then
+				bump = bump + ss(4)
+			end
 		end
 	end
 
@@ -425,8 +445,8 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 				local wep_class = wep:BClass( hand )
 
 				local p_w, p_h = ss(156), ss(64)
-				local p_x, p_y = sw - Wb - p_w, sh - Hb - p_h
-				if hand then p_y = p_y - p_h - ss(20 + 2) end
+				local p_x, p_y = sw - p_w - Wb, Hb
+				if hand then p_x = Wb end
 				local pb = ss(4)
 				local pb2 = pb*2
 
@@ -484,7 +504,7 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 					end
 					if wep_class.Ammo then -- Magazines
 						local m_w, m_h = ss( 12 ), ss( 20 )
-						local m_x, m_y = p_x + p_w - m_w, p_y - m_h - ss(1)--p_x - m_w, p_y + p_h - m_h
+						local m_x, m_y = p_x + p_w - m_w, p_y + p_h + ss(1)--p_x - m_w, p_y + p_h - m_h
 						local bb = ss( 1 )
 						local b2 = ss( 2 )
 						local b3 = ss( 3 )
@@ -602,12 +622,12 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 					surface.DrawTexturedRectRotated( poosx, poosy, s(16), s(16), 0 )
 				else -- pistol
 					surface.SetMaterial( mat2 )
-					surface.DrawTexturedRectRotated( poosx - gap, poosy, s(24), s(24), 0 )
-					surface.DrawTexturedRectRotated( poosx + gap, poosy, s(24), s(24), 0 )
+					surface.DrawTexturedRectRotated( poosx - gap, poosy, s(32), s(32), 0 )
+					surface.DrawTexturedRectRotated( poosx + gap, poosy, s(32), s(32), 0 )
 
 					surface.SetMaterial( mat2 )
-					surface.DrawTexturedRectRotated( poosx, poosy - gap, s(24), s(24), 0 )
-					surface.DrawTexturedRectRotated( poosx, poosy + gap, s(24), s(24), 0 )
+					surface.DrawTexturedRectRotated( poosx, poosy - gap, s(32), s(32), 0 )
+					surface.DrawTexturedRectRotated( poosx, poosy + gap, s(32), s(32), 0 )
 				end
 			end
 		end
