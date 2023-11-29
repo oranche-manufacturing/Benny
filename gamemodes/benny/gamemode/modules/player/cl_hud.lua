@@ -309,30 +309,18 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 	end
 
 	if true then -- Hints
-		local b_w, b_h = ss(130), ss(2)
+		local b_w, b_h = ss(130), ss(0)
 		local b_x, b_y = sw - Wb - b_w, Hb + ss(200)--sh/2 - b_h/2
 
 		local honk = ss(1)
 		local honk2 = honk*2
 
-		local tbw, tbh, tbg = ss(6), ss(2), ss(14)
+		local tbw, tbh, tbg = ss(6), ss(2), ss(12)
 
 		local bump = 0
 		local tbump = 0
 
 		local lonk = {
-			--{
-			--	Glyph = "M1",
-			--	Text1 = "ATTACK",
-			--	Text2 = "Fire your weapon",
-			--	Space = ss(20)
-			--},
-			--{
-			--	Glyph = "M2",
-			--	Text1 = "ATTACK (AKIMBO)",
-			--	Text2 = "Fire your other weapon",
-			--	Space = ss(20)
-			--},
 			{
 				Glyph = "R",
 				Text1 = "RELOAD",
@@ -376,15 +364,13 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 			if _==1 then
 				tbump = tbump + ss(4)
 			end
-			tbump = tbump + ss(18)
+			tbump = tbump + ss(16)
 			if _==#lonk then
 				tbump = tbump + ss(4)
 			end
 		end
 
 		b_h = b_h + tbump
-
-
 		b_y = sh - b_h - Hb
 
 		surface.SetDrawColor( scheme["bg"] )
@@ -397,20 +383,22 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 				bump = bump + ss(4)
 			end
 
-			--surface.DrawRect( b_x + b_w - 64, b_y + bump, 32, data.Space )
+			-- surface.SetDrawColor( 0, 100, 255, 32 )
+			-- surface.DrawRect( b_x, b_y + bump, b_w, ss(16) )
 
-			draw.SimpleText( data.Text1, "Benny_14", b_x + b_w - tbw,
+			draw.SimpleText( data.Text1, "Benny_12", b_x + b_w - tbw,
 			b_y + bump,
 			scheme["fg"], TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP )
 
 			draw.SimpleText( data.Text2, "Benny_8", b_x + b_w - tbw,
-			b_y+ss(10) + bump,
+			b_y+ss(8) + bump,
 			scheme["fg"], TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP )
 
 			if #data.Glyph == 1 then
+				surface.SetDrawColor( scheme["fg"] )
 				surface.DrawOutlinedRect( b_x + tbw,
 				b_y + ss(2) + bump, tbg, tbg, ss(1) )
-				draw.SimpleText( data.Glyph, "Benny_16", b_x + tbw + tbg/2,
+				draw.SimpleText( data.Glyph, "Benny_12", b_x + tbw + tbg/2,
 				b_y + ss(2.6) + bump,
 				scheme["fg"], TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP )
 			else
@@ -418,13 +406,14 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 				local tx = surface.GetTextSize( data.Glyph )
 				tx = math.max( tx + ss(8), tbg )
 
+				surface.SetDrawColor( scheme["fg"] )
 				surface.DrawOutlinedRect( b_x + tbw,
 				b_y + ss(2) + bump, tx, tbg, ss(1) )
 				draw.SimpleText( data.Glyph, "Benny_10", b_x + tbw + tx/2,
-				b_y + ss(4.6) + bump,
+				b_y + ss(3.6) + bump,
 				scheme["fg"], TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP )
 			end
-			bump = bump + ss(18)
+			bump = bump + ss(16)
 			if _==#lonk then
 				bump = bump + ss(4)
 			end
