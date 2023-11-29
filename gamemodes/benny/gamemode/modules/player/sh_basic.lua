@@ -229,7 +229,7 @@ if CLIENT then
 			Collapse:SetLabel( i )
 			local Lays = itemlist:Add( "DIconLayout" )
 			Collapse:SetContents( Lays )
-			Collapse:SetExpanded( false )
+			Collapse:SetExpanded( i!="magazine" )
 			Lays:Dock( FILL )
 			Lays:SetSpaceX( ss(1) )
 			Lays:SetSpaceY( ss(1) )
