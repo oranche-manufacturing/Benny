@@ -48,7 +48,7 @@ end, "arg 1: player ent index, arg 2: classname")
 concommand.Add("benny_inv_equip", function( ply, cmd, args )
 	local wep = ply:BennyCheck()
 	if wep then
-		local hand = args[2]!=nil and tobool(args[2]) or wep:GetTempHandedness()
+		local hand = args[2]!=nil and tobool(args[2])
 		local id = args[1]
 		local swap_or_replace = tobool(args[3])
 
@@ -379,11 +379,7 @@ if CLIENT then
 				-- timer.Simple( 0.1, function() if IsValid( itemlist ) then regen_items( itemlist ) end end )
 			end
 
-			function button:DoRightClick()
-				RunConsoleCommand("benny_inv_discard", button.ID)
-				self:Remove()
-				-- timer.Simple( 0.1, function() if IsValid( itemlist ) then regen_items( itemlist ) end end )
-			end
+			button.DoRightClick = button.DoClick
 
 			function button:Paint( w, h )
 				surface.SetDrawColor( schemes[active]["fg"] )
