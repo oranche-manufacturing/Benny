@@ -1,7 +1,7 @@
 
 
 function SWEP:PrimaryAttack()
-	local dual = self:BTable( false ) and self:BTable( true )
+	local dual = self:C_DualCheck()
 	if dual then
 		self:BFire( true )
 	else
@@ -11,7 +11,7 @@ function SWEP:PrimaryAttack()
 end
 
 function SWEP:SecondaryAttack()
-	local dual = self:BTable( false ) and self:BTable( true )
+	local dual = self:C_DualCheck()
 	if dual then
 		self:BFire( false )
 	else

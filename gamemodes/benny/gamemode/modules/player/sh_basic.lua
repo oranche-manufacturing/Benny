@@ -182,7 +182,13 @@ end
 
 function GM:ShowSpare1( ply )
 	if SERVER then
-		ply:ConCommand( "benny_inv_holster" )
+		ply:ConCommand( "benny_gui_settings" )
+	end
+end
+
+function GM:ShowSpare2( ply )
+	if SERVER then
+		ply:ConCommand( "benny_gui_spscore" )
 	end
 end
 
@@ -344,24 +350,24 @@ if CLIENT then
 				local opt1 = Menu:AddOption( "Equip Right", function()
 					RunConsoleCommand( "benny_inv_equip", button.ID, "false" )
 				end)
-				opt1:SetIcon( "icon16/resultset_next.png" )
+				opt1:SetIcon( "icon16/resultset_last.png" )
 
-				local opt3 = Menu:AddOption( "Swap Right", function()
+				local opt3 = Menu:AddOption( "Equip Right, Move Left", function()
 					RunConsoleCommand( "benny_inv_equip", button.ID, "false", "true" )
 				end)
-				opt3:SetIcon( "icon16/resultset_first.png" )
+				opt3:SetIcon( "icon16/resultset_next.png" )
 				
 				Menu:AddSpacer()
 
 				local opt2 = Menu:AddOption( "Equip Left", function()
 					RunConsoleCommand( "benny_inv_equip", button.ID, "true" )
 				end)
-				opt2:SetIcon( "icon16/resultset_previous.png" )
+				opt2:SetIcon( "icon16/resultset_first.png" )
 
-				local opt4 = Menu:AddOption( "Swap Left", function()
+				local opt4 = Menu:AddOption( "Equip Left, Move Right", function()
 					RunConsoleCommand( "benny_inv_equip", button.ID, "true", "true" )
 				end)
-				opt4:SetIcon( "icon16/resultset_last.png" )
+				opt4:SetIcon( "icon16/resultset_previous.png" )
 
 				Menu:AddSpacer()
 

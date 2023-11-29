@@ -53,6 +53,10 @@ function SWEP:D_SetClip( hand, value )
 	return (hand == true) and self:SetClip2( value ) or (hand == false) and self:SetClip1( value )
 end
 
+function SWEP:C_DualCheck()
+	return self:BTable( true )--self:BTable( false ) and self:BTable( true ) and self:BClass( false ).Features == "firearm" and self:BClass( true ).Features == "firearm"
+end
+
 function SWEP:BDeploy( hand, id )
 	assert( isbool(hand), "You forgot the hand." )
 	assert( isstring(id), "You forgot the ID." )
