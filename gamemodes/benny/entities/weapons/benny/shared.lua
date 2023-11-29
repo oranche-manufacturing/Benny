@@ -107,7 +107,11 @@ function SWEP:Reload( hand )
 		local mid = self:D_GetMagID( hand )
 		if SERVER or (CLIENT and IsFirstTimePredicted()) then
 			if mid != "" then
-				if inv[mid].Ammo == 0 then
+				if !inv[mid] then
+					ErrorNoHalt( "Mag isn't a valid item" )
+					self:D_SetMagID( hand, "" )
+					wep_table.Loaded = ""
+				elseif inv[mid].Ammo == 0 then
 					if SERVER or (CLIENT and IsFirstTimePredicted()) then
 						p:INV_Discard( mid )
 					end
