@@ -57,6 +57,11 @@ function SWEP:C_DualCheck()
 	return self:BTable( true )--self:BTable( false ) and self:BTable( true ) and self:BClass( false ).Features == "firearm" and self:BClass( true ).Features == "firearm"
 end
 
+function SWEP:C_AttackDown( hand )
+	if self:C_DualCheck() then hand = !hand end
+	return (hand == true) and self:GetOwner():KeyDown( IN_ATTACK2 ) or (hand == false) and self:GetOwner():KeyDown( IN_ATTACK )
+end
+
 function SWEP:BDeploy( hand, id )
 	assert( isbool(hand), "You forgot the hand." )
 	assert( isstring(id), "You forgot the ID." )

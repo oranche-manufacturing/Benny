@@ -452,7 +452,7 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 					local identicallist = p:INV_Find( wep:BTable( hand ).Class )
 					identicallist = table.Flip( identicallist )
 					local numba = identicallist[ wep:D_GetID( hand ) ]
-					draw.SimpleText( "(" .. tostring(numba) .. ") - " .. wep:D_GetID( hand ), "Benny_10", p_x+p_w-pb2, p_y+ss(7), scheme["bg"], TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP )
+					draw.SimpleText( "#" .. tostring(numba) .. ", " .. wep:D_GetID( hand ), "Benny_10", p_x+p_w-pb2, p_y+ss(7), scheme["bg"], TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP )
 
 					if wep_class.Firemodes then -- Firemode
 						surface.SetDrawColor( scheme["fg"] )

@@ -195,8 +195,10 @@ function SWEP:Think()
 
 	self:SetAim( math.Approach( self:GetAim(), self:GetUserAim() and 1 or 0, FrameTime()/0.2 ) )
 
-	if !p:KeyDown( IN_ATTACK ) then
+	if !self:C_AttackDown( false ) then
 		self:SetWep1_Burst( 0 )
+	end
+	if !self:C_AttackDown( true ) then
 		self:SetWep2_Burst( 0 )
 	end
 
