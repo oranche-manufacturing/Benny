@@ -520,7 +520,7 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 							surface.DrawOutlinedRect( m_x + bb - chunk, m_y + bb, m_w - b2, m_h - b2, ss( 0.5 ) )
 
 							local s1 = (m_h - b2 - b2)
-							local s2 = (m_h - b2 - b2) * (inv[tag] and ( inv[tag].Ammo / WEAPONS[inv[tag].Class].Ammo ) or 8)
+							local s2 = (m_h - b2 - b2) * (inv[tag] and ( inv[tag].Ammo / WeaponGet(inv[tag].Class).Ammo ) or 8)
 							local s3 = math.floor( s2 - s1 )
 
 							local m1, m2, m3, m4 = m_x + bb + bb - chunk, m_y + bb + bb - s3, m_w - b2 - b2, s2
@@ -681,7 +681,7 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 				bump = bump + (nextwe_no)
 			else
 				for d, item in ipairs( bucket ) do
-					local idata = WEAPONS[inv[item].Class]
+					local idata = WeaponGet(inv[item].Class)
 					local sel = item==wep:D_GetID( false )--d==item_selected
 					surface.SetDrawColor( scheme["bg"] )
 					surface.DrawRect( bump + Wb, (item_start+ybump) + Hb, size_textx, (sel and size_texty_sel or size_texty) )

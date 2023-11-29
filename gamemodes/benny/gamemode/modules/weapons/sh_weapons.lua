@@ -11,6 +11,10 @@ FIREMODE_SEMI = {
 }
 WEAPONS = {}
 
+function WeaponGet( classname )
+	return WEAPONS[ classname ]
+end
+
 AddSound( "1911.Fire", {
 	"benny/weapons/1911/01.ogg",
 	"benny/weapons/1911/02.ogg",
@@ -887,7 +891,7 @@ do -- Grenades, nothing here is guaranteed.
 	local function GrenadeCreate( self, data )
 		-- PROTO: See to getting this done better. Maybe it's spawned while priming the nade for low CL-SV/phys delay?
 		local p = self:GetOwner()
-		local class = WEAPONS[data.Class]
+		local class = WeaponGet(data.Class)
 		local GENT = ents.Create( class.GrenadeEnt )
 		GENT:SetOwner( p )
 		local ang = p:EyeAngles()
@@ -906,7 +910,7 @@ do -- Grenades, nothing here is guaranteed.
 
 	local function GrenadeThrow( self, data )
 		local p = self:GetOwner()
-		local class = WEAPONS[data.Class]
+		local class = WeaponGet(data.Class)
 		self:SetGrenadeDown( false )
 		-- TEMP: Do this right!
 		if !class.GrenadeCharge then self:SetGrenadeDownStart( CurTime() ) end
@@ -929,7 +933,7 @@ do -- Grenades, nothing here is guaranteed.
 
 	local function GrenadeThink( self, data )
 		local p = self:GetOwner()
-		local class = WEAPONS[data.Class]
+		local class = WeaponGet(data.Class)
 		if self:GetGrenadeDown() then
 			if true or ( CurTime() >= (self:GetGrenadeDownStart() + class.GrenadeFuse) ) then
 				GrenadeThrow( self, data )

@@ -75,7 +75,7 @@ function SWEP:BDeploy( hand, id )
 	local inv = p:INV_Get()
 
 	local item = inv[id]
-	local class = WEAPONS[item.Class]
+	local class = WeaponGet(item.Class)
 
 	assert( item, "That item doesn't exist. " .. tostring(item) )
 
@@ -102,7 +102,7 @@ function SWEP:BHolster( hand )
 	local p = self:GetOwner()
 	local item = self:BTable( hand )
 	if item then
-		local class = WEAPONS[item.Class]
+		local class = WeaponGet(item.Class)
 		if class.Custom_Holster then class.Custom_Holster( self, item, class, hand ) end
 	end
 

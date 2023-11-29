@@ -139,7 +139,7 @@ do
 		for i, bucket in ipairs( inventorylist ) do
 			local temp = {}
 			for id, data in pairs( inv ) do
-				local idata = WEAPONS[data.Class]
+				local idata = WeaponGet(data.Class)
 				local translated = translat[idata.Type]
 
 				if i == translated[1] then
