@@ -7,6 +7,8 @@ function GM:PlayerSpawn( ply )
 	ply:SetPlayerColor( Vector( 0.275, 0.2, 0.145 ) )
 	ply:Give( "benny" )
 
+	ply:SetStamina( 1 )
+
 	ply:SetCrouchedWalkSpeed( 0.3 )
 	ply:SetDuckSpeed( 0.1 )
 	ply:SetUnDuckSpeed( 0.1 )

@@ -281,8 +281,7 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 		render.SetScissorRect( 0, 0, 0, 0, false ) -- Disable after you are done
 
 		if true then -- Stamina
-			local perc = CurTime()*0.5 % 2
-			if perc > 1 then perc = 2-perc end
+			local perc = p:GetStamina()
 			for i=1, 4 do
 				local localperc = math.Clamp( math.Remap( perc, (0.25*(i-1)), (0.25*(i)), 0, 1 ), 0, 1 )
 				surface.SetDrawColor( scheme["fg"] )
