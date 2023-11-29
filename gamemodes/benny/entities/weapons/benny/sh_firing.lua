@@ -32,12 +32,15 @@ function SWEP:BFire( hand )
 		if self:D_GetDelay( hand ) > CurTime() then
 			return
 		end
-		if self:D_GetBurst( hand ) >= self:B_Firemode( hand ).Mode then
+		if self:D_GetClip( hand ) == 0 then
+			if self:D_GetBurst( hand ) >= 1 then
+				return
+			end
+			B_Sound( self, wep_class.Sound_DryFire )
+			self:D_SetBurst( hand, self:D_GetBurst( hand ) + 1 )
 			return
 		end
-		if self:D_GetClip( hand ) == 0 then
-			B_Sound( self, wep_class.Sound_DryFire )
-			self:D_SetDelay( hand, CurTime() + 0.2 )
+		if self:D_GetBurst( hand ) >= self:B_Firemode( hand ).Mode then
 			return
 		end
 		
