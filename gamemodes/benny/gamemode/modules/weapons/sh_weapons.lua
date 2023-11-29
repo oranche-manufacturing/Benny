@@ -385,6 +385,7 @@ do -- Handguns
 		Firemodes = FIREMODE_SEMI,
 		Ammo = 8,
 		Damage = 30,
+		Spread = 22/60,
 
 		Features = "firearm",
 	}
@@ -410,6 +411,7 @@ do -- Handguns
 		Firemodes = FIREMODE_SEMI,
 		Ammo = 12,
 		Damage = 30,
+		Spread = 15/60,
 
 		Features = "firearm",
 	}
@@ -434,6 +436,7 @@ do -- Handguns
 		Firemodes = FIREMODE_AUTOSEMI,
 		Ammo = 17,
 		Damage = 18,
+		Spread = 75/60,
 
 		Features = "firearm",
 	}
@@ -458,6 +461,7 @@ do -- Handguns
 		Firemodes = FIREMODE_SEMI,
 		Ammo = 6,
 		Damage = 26,
+		Spread = 30/60,
 
 		Features = "firearm",
 	}
@@ -482,6 +486,7 @@ do -- Handguns
 		Firemodes = FIREMODE_SEMI,
 		Ammo = 6,
 		Damage = 40,
+		Spread = 30/60,
 
 		Features = "firearm",
 	}
@@ -506,6 +511,7 @@ do -- Handguns
 		Firemodes = FIREMODE_SEMI,
 		Ammo = 7,
 		Damage = 40,
+		Spread = 30/60,
 
 		Features = "firearm",
 	}
