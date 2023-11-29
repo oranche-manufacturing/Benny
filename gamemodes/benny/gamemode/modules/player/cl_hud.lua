@@ -316,6 +316,109 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 		end
 	end
 
+	do -- Hints
+		local b_w, b_h = ss(170), ss(2)
+		local b_x, b_y = sw - Wb - b_w, Hb--sh/2 - b_h/2
+
+		local honk = ss(1)
+		local honk2 = honk*2
+
+		local tbw, tbh, tbg = ss(6), ss(2), ss(19)
+
+		local bump = 0
+		local tbump = 0
+
+		local lonk = {
+			{
+				Glyph = "M1",
+				Text1 = "ATTACK",
+				Text2 = "Fire your weapon",
+				Space = ss(20)
+			},
+			{
+				Glyph = "M2",
+				Text1 = "ATTACK2",
+				Text2 = "Fire your other weapon",
+				Space = ss(20)
+			},
+			{
+				Glyph = "R",
+				Text1 = "RELOAD",
+				Text2 = "Reload your active weapon",
+				Space = ss(20)
+			},
+			{
+				Glyph = "F",
+				Text1 = "AIM",
+				Text2 = "Enter weapon mode",
+				Space = ss(20)
+			},
+			{
+				Glyph = "SPACE",
+				Text1 = "STUNT",
+				Text2 = "Do a barrel roll",
+				Space = ss(20)
+			},
+			{
+				Glyph = "CTRL",
+				Text1 = "STANCE",
+				Text2 = "Get down",
+				Space = ss(20)
+			},
+			{
+				Glyph = "F1",
+				Text1 = "DEVELOPER SPAWN",
+				Text2 = "Cheat items in",
+				Space = ss(20)
+			},
+		}
+
+
+		for _, data in ipairs( lonk ) do
+			tbump = tbump + ss(4)
+			tbump = tbump + data.Space + ss(4)
+		end
+		b_h = b_h + tbump
+
+		surface.SetDrawColor( scheme["bg"] )
+		surface.DrawRect( b_x, b_y, b_w, b_h )
+		
+		surface.SetDrawColor( scheme["fg"] )
+		surface.DrawOutlinedRect( b_x + honk, b_y + honk, b_w - honk2, b_h - honk2, ss(0.5) )
+		for _, data in ipairs( lonk ) do
+			bump = bump + ss(4)
+
+			--surface.DrawRect( b_x + b_w - 64, b_y + bump, 32, data.Space )
+
+			draw.SimpleText( data.Text1, "Benny_16", b_x + b_w - tbw,
+			b_y + bump,
+			scheme["fg"], TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP )
+
+			draw.SimpleText( data.Text2, "Benny_12", b_x + b_w - tbw,
+			b_y+ss(12) + bump,
+			scheme["fg"], TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP )
+
+			if #data.Glyph == 1 then
+				surface.DrawOutlinedRect( b_x + tbw,
+				b_y + ss(2) + bump, tbg, tbg, ss(1) )
+				draw.SimpleText( data.Glyph, "Benny_16", b_x + tbw + tbg/2,
+				b_y + ss(4.2) + bump,
+				scheme["fg"], TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP )
+			else
+				surface.SetFont( "Benny_12" )
+				local tx = surface.GetTextSize( data.Glyph )
+				tx = math.max( tx + ss(8), tbg )
+
+				surface.DrawOutlinedRect( b_x + tbw,
+				b_y + ss(2) + bump, tx, tbg, ss(1) )
+				draw.SimpleText( data.Glyph, "Benny_12", b_x + tbw + tx/2,
+				b_y + ss(6.2) + bump,
+				scheme["fg"], TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP )
+			end
+			bump = bump + data.Space + ss(4)
+		end
+	end
+
 	if wep then -- Weapon
 		local inv = p:INV_Get()
 		local wep1 = wep:BTable( false )
