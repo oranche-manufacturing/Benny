@@ -911,26 +911,27 @@ do -- Grenades, nothing here is guaranteed.
 		-- TEMP: Do this right!
 		if !class.GrenadeCharge then self:SetGrenadeDownStart( CurTime() ) end
 		--
-		self:TPFire( self:GetTempHandedness() )
+		local hand = (self:BTable( true ) and self:BTable( true ).Class == data.Class) or false
+		self:TPFire( hand )
 		if SERVER then GrenadeCreate( self, data ) end
-		local id = self:D_GetID( false )
-		self:BHolster( false )
+		local id = self:D_GetID( hand )
+		self:BHolster( hand )
 
 		if SERVER or (CLIENT and IsFirstTimePredicted()) then
 			p:INV_Discard( id )
 		end
 
-		local subsequent = p:INV_Find( data.Class )[1]
-		if subsequent then
-			self:BDeploy( false, subsequent )
-		end
+		-- local subsequent = p:INV_Find( data.Class )[1]
+		-- if subsequent then
+		-- 	self:BDeploy( hand, subsequent )
+		-- end
 	end
 
 	local function GrenadeThink( self, data )
 		local p = self:GetOwner()
 		local class = WEAPONS[data.Class]
 		if self:GetGrenadeDown() then
-			if !p:KeyDown( IN_ATTACK ) or ( CurTime() >= (self:GetGrenadeDownStart() + class.GrenadeFuse) ) then
+			if true or ( CurTime() >= (self:GetGrenadeDownStart() + class.GrenadeFuse) ) then
 				GrenadeThrow( self, data )
 			end
 		end

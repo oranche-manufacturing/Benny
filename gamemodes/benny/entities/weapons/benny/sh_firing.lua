@@ -1,12 +1,22 @@
 
 
 function SWEP:PrimaryAttack()
-	self:BFire( false )-- self:GetTempHandedness() )
+	local dual = self:BTable( false ) and self:BTable( true )
+	if dual then
+		self:BFire( true )
+	else
+		self:BFire( false )
+	end
 	return true
 end
 
 function SWEP:SecondaryAttack()
-	self:BFire( true )-- self:GetTempHandedness() )
+	local dual = self:BTable( false ) and self:BTable( true )
+	if dual then
+		self:BFire( false )
+	else
+		self:BFire( true )
+	end
 	return true
 end
 
@@ -34,7 +44,7 @@ function SWEP:BFire( hand )
 		self:B_Ammo( hand, self:D_GetClip( hand ) - 1 )
 
 		B_Sound( self, wep_class.Sound_Fire )
-		self:TPFire( self:GetTempHandedness() )
+		self:TPFire( hand )
 		self:CallFire( hand )
 
 		self:D_SetDelay( hand, CurTime() + wep_class.Delay )
@@ -67,8 +77,8 @@ function SWEP:CallFire( hand )
 	for i=1, class.Pellets or 1 do
 		local dir = self:GetOwner():EyeAngles()
 
-		local radius = util.SharedRandom("benny_distance", 0, 1, i )
-		local circ = util.SharedRandom("benny_radius", 0, math.rad(360), i )
+		local radius = util.SharedRandom("benny_distance_"..tostring(hand), 0, 1, i )
+		local circ = util.SharedRandom("benny_radius_"..tostring(hand), 0, math.rad(360), i )
 
 		dir:RotateAroundAxis( dir:Right(), spread * radius * math.sin( circ ) )
 		dir:RotateAroundAxis( dir:Up(), spread * radius * math.cos( circ ) )

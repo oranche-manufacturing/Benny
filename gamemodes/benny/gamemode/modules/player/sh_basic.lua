@@ -97,7 +97,13 @@ end, "arg 1: item id, arg 2 does offhand")
 -- PROTO: Move this all into weapon code.
 concommand.Add("benny_inv_holster", function( ply, cmd, args )
 	local wep = ply:BennyCheck()
-	if wep then wep:BHolster( wep:GetTempHandedness() ) end
+	if wep then
+		if wep:D_GetID( false ) == args[1] then
+			wep:BHolster( false )
+		elseif wep:D_GetID( true ) == args[1] then
+			wep:BHolster( true )
+		end
+	end
 end)
 
 concommand.Add("benny_inv_sync", function( ply, cmd, args )
@@ -335,27 +341,22 @@ if CLIENT then
 			function button:DoClick()
 				local Menu = DermaMenu()
 
-				local opt0 = Menu:AddOption( "Equip", function()
-					RunConsoleCommand( "benny_inv_equip", button.ID )
-				end)
-				opt0:SetIcon( "icon16/control_play_blue.png" )
-				
-				Menu:AddSpacer()
-
 				local opt1 = Menu:AddOption( "Equip Right", function()
 					RunConsoleCommand( "benny_inv_equip", button.ID, "false" )
 				end)
 				opt1:SetIcon( "icon16/resultset_next.png" )
 
-				local opt2 = Menu:AddOption( "Equip Left", function()
-					RunConsoleCommand( "benny_inv_equip", button.ID, "true" )
-				end)
-				opt2:SetIcon( "icon16/resultset_previous.png" )
-
 				local opt3 = Menu:AddOption( "Swap Right", function()
 					RunConsoleCommand( "benny_inv_equip", button.ID, "false", "true" )
 				end)
 				opt3:SetIcon( "icon16/resultset_first.png" )
+				
+				Menu:AddSpacer()
+
+				local opt2 = Menu:AddOption( "Equip Left", function()
+					RunConsoleCommand( "benny_inv_equip", button.ID, "true" )
+				end)
+				opt2:SetIcon( "icon16/resultset_previous.png" )
 
 				local opt4 = Menu:AddOption( "Swap Left", function()
 					RunConsoleCommand( "benny_inv_equip", button.ID, "true", "true" )
@@ -379,7 +380,10 @@ if CLIENT then
 				-- timer.Simple( 0.1, function() if IsValid( itemlist ) then regen_items( itemlist ) end end )
 			end
 
-			button.DoRightClick = button.DoClick
+			button.DoRightClick = function( self )
+				RunConsoleCommand("benny_inv_discard", button.ID)
+				self:Remove()
+			end
 
 			function button:Paint( w, h )
 				surface.SetDrawColor( schemes[active]["fg"] )

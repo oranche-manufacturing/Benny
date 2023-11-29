@@ -48,7 +48,6 @@ function SWEP:SetupDataTables()
 	self:NetworkVar( "Int", 3, "Wep2_Firemode" )
 	self:NetworkVar( "Bool", 0, "UserAim" )
 	self:NetworkVar( "Bool", 1, "GrenadeDown" )
-	self:NetworkVar( "Bool", 2, "TempHandedness" )
 
 	self:SetWep1_Firemode( 1 )
 	self:SetWep2_Firemode( 1 )
@@ -91,67 +90,65 @@ function SWEP:B_FiremodeName( alt )
 	end
 end
 
-function SWEP:Reload()
+function SWEP:Reload( hand )
+	if hand == nil then return end -- Needs to be called from the custom ones
 	local p = self:GetOwner()
 	local inv = p:INV_Get()
-	if p:KeyPressed( IN_RELOAD ) then
-		local hand = self:GetTempHandedness()
-		local wep_table = self:BTable( hand )
-		local wep_class = self:BClass( hand )
-		if wep_table then
-			if wep_class.Custom_Reload then
-				if wep_class.Custom_Reload( self, wep_table ) then return end
-			end
-			if self:D_GetDelay( hand ) > CurTime() then
-				return false
-			end
+	local wep_table = self:BTable( hand )
+	local wep_class = self:BClass( hand )
+	if wep_table then
+		if wep_class.Custom_Reload then
+			if wep_class.Custom_Reload( self, wep_table ) then return end
+		end
+		if self:D_GetDelay( hand ) > CurTime() then
+			return false
+		end
 
-			local mid = self:D_GetMagID( hand )
-			if SERVER or (CLIENT and IsFirstTimePredicted()) then
-				if mid != "" then
-					if inv[mid].Ammo == 0 then
-						if SERVER or (CLIENT and IsFirstTimePredicted()) then
-							p:INV_Discard( mid )
-						end
-					end
-
-					self:D_SetMagID( hand, "" )
-					self:D_SetClip( hand, 0 )
-					B_Sound( self, wep_class.Sound_MagOut )
-					wep_table.Loaded = ""
-				else
-					local maglist = p:INV_FindMag( "mag_" .. wep_table.Class )
-					local mag
-					
-					local usedlist = {}
-					for _id, mrow in pairs( inv ) do
-						if mrow.Loaded and mrow.Loaded != "" then
-							usedlist[mrow.Loaded] = true
-							-- print( mrow.Loaded .. " Added to Mrowlist" )
-						end
-					end
-					
-					for num, mid in ipairs( maglist ) do
-						if usedlist[mid] then
-							-- print( "oh No we can't use " .. mid )
-						else
-							mag = mid
-							break
-						end
-					end
-
-					if mag then
-						self:D_SetMagID( hand, mag )
-						self:D_SetClip( hand, inv[mag].Ammo )
-						wep_table.Loaded = mag
-						B_Sound( self, wep_class.Sound_MagIn )
-					else
-						B_Sound( self, "Common.NoAmmo" )
+		local mid = self:D_GetMagID( hand )
+		if SERVER or (CLIENT and IsFirstTimePredicted()) then
+			if mid != "" then
+				if inv[mid].Ammo == 0 then
+					if SERVER or (CLIENT and IsFirstTimePredicted()) then
+						p:INV_Discard( mid )
 					end
 				end
+
+				self:D_SetMagID( hand, "" )
+				self:D_SetClip( hand, 0 )
+				B_Sound( self, wep_class.Sound_MagOut )
+				wep_table.Loaded = ""
+			else
+				local maglist = p:INV_FindMag( "mag_" .. wep_table.Class )
+				local mag
+				
+				local usedlist = {}
+				for _id, mrow in pairs( inv ) do
+					if mrow.Loaded and mrow.Loaded != "" then
+						usedlist[mrow.Loaded] = true
+						-- print( mrow.Loaded .. " Added to Mrowlist" )
+					end
+				end
+				
+				for num, mid in ipairs( maglist ) do
+					if usedlist[mid] then
+						-- print( "oh No we can't use " .. mid )
+					else
+						mag = mid
+						break
+					end
+				end
+
+				if mag then
+					self:D_SetMagID( hand, mag )
+					self:D_SetClip( hand, inv[mag].Ammo )
+					wep_table.Loaded = mag
+					B_Sound( self, wep_class.Sound_MagIn )
+				else
+					B_Sound( self, "Common.NoAmmo" )
+				end
 			end
-			self:TPReload( self:GetTempHandedness() )
 		end
+		self:TPReload( hand )
 	end
 	return true
 end
@@ -168,6 +165,15 @@ hook.Add( "PlayerButtonDown", "Benny_PlayerButtonDown_TempForAim", function( ply
 			wep:SetUserAim( true )
 		end
 	end
+
+	local dual = wep:BTable( false ) and wep:BTable( true )
+	if button == KEY_R then
+		if dual then wep:Reload( true ) else wep:Reload( false ) end
+	end
+
+	if button == KEY_T then
+		if dual then wep:Reload( false ) else wep:Reload( true ) end
+	end
 end)
 
 hook.Add( "PlayerButtonUp", "Benny_PlayerButtonUp_TempForAim", function( ply, button )
@@ -182,18 +188,6 @@ end)
 
 function SWEP:Think()
 	local p = self:GetOwner()
-
-	--if tobool(p:GetInfoNum("benny_toggleaim", 0)) then
-	--	if p:KeyPressed( IN_ATTACK2 ) then
-	--		self:SetUserAim( !self:GetUserAim() )
-	--	end
-	--else
-	--	self:SetUserAim( p:KeyDown( IN_ATTACK2 ) )
-	--end
-
-	if p:KeyPressed( IN_ZOOM ) and (SERVER or (CLIENT and IsFirstTimePredicted())) then
-		self:SetTempHandedness( !self:GetTempHandedness() )
-	end
 
 	self:SetAim( math.Approach( self:GetAim(), self:GetUserAim() and 1 or 0, FrameTime()/0.2 ) )
 
@@ -214,14 +208,17 @@ function SWEP:Think()
 	end
 
 	if ht == "normal" and self:GetHoldType() != "normal" then
-		self:TPHolster( self:GetTempHandedness() )
+		self:TPHolster( false )
 	elseif ht != "normal" and self:GetHoldType() == "normal" then
-		self:TPDraw( self:GetTempHandedness() )
+		self:TPDraw( false )
 	end
 	
-	if self:BClass( false ) then
-		if self:BClass( false ).Custom_Think then
-			self:BClass( false ).Custom_Think( self, self:BTable( false ) )
+	for i=1, 2 do
+		local hand = i==2
+		if self:BClass( hand ) then
+			if self:BClass( hand ).Custom_Think then
+				self:BClass( hand ).Custom_Think( self, self:BTable( hand ) )
+			end
 		end
 	end
 

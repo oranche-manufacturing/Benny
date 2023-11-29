@@ -291,14 +291,6 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 		end
 	end
 
-	if wep and wep:GetTempHandedness() then
-		local t_w, t_h = ss( 90 ), ss( 14 )
-		local t_x, t_y = sw/2 - t_w/2, sh - Hb - t_h
-		surface.SetDrawColor( scheme["bg"] )
-		surface.DrawRect( t_x, t_y, t_w, t_h )
-		draw.SimpleText( "LEFT-HANDED MODE", "Benny_12", t_x + t_w/2, t_y + t_h/2 + ss(1), scheme["fg"], TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER )
-	end
-
 	do -- Vaulting
 		if vaultsave then
 			local tex = "[SPACE] VAULT OVER"
@@ -621,7 +613,7 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 		end
 	end
 
-	if wep then -- Quickinv
+	if false then -- Quickinv
 		local inv = p:INV_Get()
 		local gap = ss(1)
 		local size_textx = ss(96)
@@ -641,12 +633,9 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 
 		-- PROTO: Maybe check this every 10hz instead
 		do
-			-- local flipped = table.Flip( Entity(1):INV_ListFromBuckets() )
-			-- local id = flipped[ Entity(1):GetActiveWeapon():D_GetID( false ) ]
-
 			for n, bucket in ipairs( inventorylist ) do
 				for i, v in ipairs( bucket ) do
-					if v == wep:D_GetID( wep:GetTempHandedness() ) then
+					if v == wep:D_GetID( false ) then
 						bucket_selected = n
 						item_selected = i
 					end
@@ -684,7 +673,7 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 			else
 				for d, item in ipairs( bucket ) do
 					local idata = WEAPONS[inv[item].Class]
-					local sel = item==wep:D_GetID( wep:GetTempHandedness() )--d==item_selected
+					local sel = item==wep:D_GetID( false )--d==item_selected
 					surface.SetDrawColor( scheme["bg"] )
 					surface.DrawRect( bump + Wb, (item_start+ybump) + Hb, size_textx, (sel and size_texty_sel or size_texty) )
 					if sel then
@@ -927,8 +916,9 @@ do
 		return false
 	end
 	local function Wrap( ply, num )
+		do return end
 		local buckets = ply:INV_Buckets()
-		local currsel = ply:GetActiveWeapon():D_GetID( ply:GetActiveWeapon():GetTempHandedness() )
+		local currsel = ply:GetActiveWeapon():D_GetID( false )
 
 		local lb, li = Locate( ply, buckets, currsel )
 		if lb then
@@ -955,9 +945,10 @@ do
 	end
 	local qt = {
 		["invnext"] = function( ply )
+			do return end
 			if !ply:BennyCheck() then return end
 			local buckets = ply:INV_Buckets()
-			local currsel = ply:GetActiveWeapon():D_GetID( ply:GetActiveWeapon():GetTempHandedness() )
+			local currsel = ply:GetActiveWeapon():D_GetID( false )
 
 			local lb, li = Locate( ply, buckets, currsel )
 			if lb then
@@ -980,8 +971,9 @@ do
 			end
 		end,
 		["invprev"] = function( ply )
+			do return end
 			local buckets = ply:INV_Buckets()
-			local currsel = ply:GetActiveWeapon():D_GetID( ply:GetActiveWeapon():GetTempHandedness() )
+			local currsel = ply:GetActiveWeapon():D_GetID( false )
 
 			local lb, li = Locate( ply, buckets, currsel )
 			if lb then
