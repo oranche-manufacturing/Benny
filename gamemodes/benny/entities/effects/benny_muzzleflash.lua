@@ -16,8 +16,8 @@ function EFFECT:Init( data )
 	self.ea = data:GetAttachment()
 	self.particles = 1
 
-	self.CreationTime = CurTime()
-	self.DieTime = CurTime() + 0.05
+	self.CreationTime = UnPredictedCurTime()
+	self.DieTime = UnPredictedCurTime() + 0.1
 
 	self:SetRenderBounds( rbb, rba )
 
@@ -31,9 +31,9 @@ function EFFECT:Init( data )
 		dlight.r = 255
 		dlight.g = 200
 		dlight.b = 150
-		dlight.Brightness = 4
-		dlight.Size = 72*1.5
-		dlight.DieTime = CurTime() + 0.07
+		dlight.Brightness = 1
+		dlight.Size = 72*3
+		dlight.DieTime = UnPredictedCurTime() + 0.05
 		dlight.Decay = 72*20
 	end
 	
@@ -86,12 +86,12 @@ function EFFECT:Init( data )
 end
 
 function EFFECT:Think()
-	return (self.DieTime >= CurTime()) -- Return false to kill
+	return (self.DieTime >= UnPredictedCurTime()) -- Return false to kill
 end
 
 function EFFECT:Render()
 	local atti = self.en:GetAttachment( self.ea )
-	local tf = 1-math.TimeFraction( self.DieTime, self.CreationTime, CurTime() )
+	local tf = 1-math.TimeFraction( self.DieTime, self.CreationTime, UnPredictedCurTime() )
 
 	-- Big flash!
 	if true then
@@ -110,13 +110,13 @@ function EFFECT:Render()
 				p:SetEndAlpha( 255 )
 				p:SetStartSize( Lerp( tf, 6, 0 ) )
 				p:SetEndSize( Lerp( tf, 6, 0 ) )
-				p:SetNextThink( CurTime() )
+				p:SetNextThink( UnPredictedCurTime() )
 				p:SetThinkFunction( function( pa )
 					timer.Simple( 0, function()
 						pa:SetStartAlpha( 0 )
 						pa:SetEndAlpha( 0 )
 					end)
-					pa:SetNextThink( CurTime() )
+					pa:SetNextThink( UnPredictedCurTime() )
 				end)
 			end
 		end
@@ -142,13 +142,13 @@ function EFFECT:Render()
 				p:SetStartLength(	Lerp( tf, 12, 16 ) )
 				p:SetEndSize(		Lerp( tf, 16, 4 ) )
 				p:SetEndLength(		Lerp( tf, 12, 16 ) )
-				p:SetNextThink( CurTime() )
+				p:SetNextThink( UnPredictedCurTime() )
 				p:SetThinkFunction( function( pa )
 					timer.Simple( 0, function()
 						pa:SetStartAlpha( 0 )
 						pa:SetEndAlpha( 0 )
 					end)
-					pa:SetNextThink( CurTime() )
+					pa:SetNextThink( UnPredictedCurTime() )
 				end)
 			end
 		end
@@ -182,13 +182,13 @@ function EFFECT:Render()
 				p:SetStartLength(	Lerp( tf, 10, 1 ) )
 				p:SetEndSize(		Lerp( tf, 1, 12 ) )
 				p:SetEndLength(		Lerp( tf, 10, 1 ) )
-				p:SetNextThink( CurTime() )
+				p:SetNextThink( UnPredictedCurTime() )
 				p:SetThinkFunction( function( pa )
 					timer.Simple( 0, function()
 						pa:SetStartAlpha( 0 )
 						pa:SetEndAlpha( 0 )
 					end)
-					pa:SetNextThink( CurTime() )
+					pa:SetNextThink( UnPredictedCurTime() )
 				end)
 			end
 		end
