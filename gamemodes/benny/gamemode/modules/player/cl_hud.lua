@@ -503,7 +503,7 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 						if wep:D_GetMagID( hand ) != "" then
 							table.insert( newmaglist, wep:D_GetMagID( hand ) )
 						end
-						if wep:D_GetMagID( !hand ) != "" then
+						if false and (wep_table.Class == wep:BTable( !hand ).Class) and wep:D_GetMagID( !hand ) != "" then
 							table.insert( newmaglist, wep:D_GetMagID( !hand ) )
 						end
 						for i, v in ipairs( maglist ) do
@@ -517,8 +517,6 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 
 							surface.SetDrawColor( scheme["fg"] )
 							surface.DrawOutlinedRect( m_x + bb - chunk, m_y + bb, m_w - b2, m_h - b2, ss( 0.5 ) )
-
-							local perc = math.abs( math.cos( CurTime() ) )
 
 							local s1 = (m_h - b2 - b2)
 							local s2 = (m_h - b2 - b2) * (inv[tag] and ( inv[tag].Ammo / WEAPONS[inv[tag].Class].Ammo ) or 8)
@@ -717,6 +715,12 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 				bump = bump + (nextwe)
 			end
 		end
+	end
+
+	if wep then -- Fatinv
+		local inv = p:INV_Get()
+
+		local b_x, b_y = Wb, Hb
 	end
 
 	do -- Captions
