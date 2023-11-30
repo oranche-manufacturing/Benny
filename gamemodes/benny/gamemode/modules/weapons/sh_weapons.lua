@@ -150,7 +150,6 @@ AddSound( "Common.NoAmmo", "benny/weapons/noammo.ogg", 70, 100, 0.5, CHAN_STATIC
 
 do -- Toolgun
 
-	CreateClientConVar( "benny_toolgun", "", true, true )
 	local ToolGunTools = {
 		["ammocrate"] = function( self, p, tr )
 			if SERVER then

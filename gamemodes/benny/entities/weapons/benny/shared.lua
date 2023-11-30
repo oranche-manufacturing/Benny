@@ -157,8 +157,6 @@ function SWEP:Reload( hand )
 	return true
 end
 
-CreateClientConVar( "benny_toggleaim", 0, true, true )
-
 hook.Add( "PlayerButtonDown", "Benny_PlayerButtonDown_TempForAim", function( ply, button )
 	local wep = ply:BennyCheck()
 

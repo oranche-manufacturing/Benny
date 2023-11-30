@@ -17,10 +17,8 @@ hook.Add( "HUDShouldDraw", "Benny_HUDShouldDraw", function( name )
 	if ( hide[ name ] ) then return false end
 end )
 
-local HSCALE = CreateClientConVar( "benny_hud_scale", 2, true, false, "HUD scaling", 0, 4 )
-
 function ss( scale )
-	return scale*HSCALE:GetInt()--math.Round( scale * ( ScrH() / 480 ) * HSCALE:GetFloat() )
+	return scale*ConVarCL_Int("hud_scale")--math.Round( scale * ( ScrH() / 480 ) * HSCALE:GetFloat() )
 end
 
 local function genfonts()
@@ -220,14 +218,12 @@ local mat_long = Material("benny/hud/xhair/long.png", "")
 local mat_dot_s = Material("benny/hud/xhair/dot_s.png", "mips smooth")
 local mat_long_s = Material("benny/hud/xhair/long_s.png", "mips smooth")
 local spacer_long = 2 -- screenscaled
-local gap = 24
+local gap = 8
 
 local trash_vec, trash_ang = Vector(), Angle()
 
 bucket_selected = bucket_selected or 1
 item_selected = item_selected or 1
-
-CreateClientConVar( "benny_hud_tempactive", "benny", true, false )
 
 hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 	local sw, sh = ScrW(), ScrH()
@@ -719,6 +715,10 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 		local inv = p:INV_Get()
 
 		local b_x, b_y = Wb, Hb
+
+		for i, v in ipairs( inv ) do
+			surface.SetDrawColor( scheme["bg"] )
+		end
 	end
 
 	do -- Captions
