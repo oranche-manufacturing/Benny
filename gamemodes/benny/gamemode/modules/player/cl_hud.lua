@@ -203,6 +203,39 @@ end
 local color_caption = Color( 0, 0, 0, 127 )
 local mat_grad = Material( "benny/hud/grad.png", "mips smooth" )
 
+local lonk = {
+	{
+		Glyph = "R",
+		Text1 = "RELOAD",
+		Text2 = "Reload weapon",
+	},
+	{
+		Glyph = "T",
+		Text1 = "RELOAD (AKIMBO)",
+		Text2 = "Reload alternate weapon",
+	},
+	{
+		Glyph = "F",
+		Text1 = "AIM",
+		Text2 = "Enter weapon mode",
+	},
+	{
+		Glyph = "SPACE",
+		Text1 = "STUNT",
+		Text2 = "Do a barrel roll",
+	},
+	{
+		Glyph = "CTRL",
+		Text1 = "STANCE",
+		Text2 = "Get down",
+	},
+	{
+		Glyph = "F1",
+		Text1 = "DEV. SPAWN",
+		Text2 = "Cheat items in",
+	},
+}
+
 -- Stew port
 globhit = Vector()
 globang = Angle()
@@ -316,45 +349,6 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 		local bump = 0
 		local tbump = 0
 
-		local lonk = {
-			{
-				Glyph = "R",
-				Text1 = "RELOAD",
-				Text2 = "Reload weapon",
-				Space = ss(20)
-			},
-			{
-				Glyph = "T",
-				Text1 = "RELOAD (AKIMBO)",
-				Text2 = "Reload alternate weapon",
-				Space = ss(20)
-			},
-			{
-				Glyph = "F",
-				Text1 = "AIM",
-				Text2 = "Enter weapon mode",
-				Space = ss(20)
-			},
-			{
-				Glyph = "SPACE",
-				Text1 = "STUNT",
-				Text2 = "Do a barrel roll",
-				Space = ss(20)
-			},
-			{
-				Glyph = "CTRL",
-				Text1 = "STANCE",
-				Text2 = "Get down",
-				Space = ss(20)
-			},
-			{
-				Glyph = "F1",
-				Text1 = "DEV. SPAWN",
-				Text2 = "Cheat items in",
-				Space = ss(20)
-			},
-		}
-
 
 		for _, data in ipairs( lonk ) do
 			if _==1 then
@@ -367,7 +361,7 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 		end
 
 		b_h = b_h + tbump
-		b_y = sh - b_h - Hb
+		b_y = sh/2 - b_h/2
 
 		surface.SetDrawColor( scheme["bg"] )
 		surface.DrawRect( b_x, b_y, b_w, b_h )
@@ -711,13 +705,71 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 		end
 	end
 
-	if wep then -- Fatinv
+	if wep then -- Newinv
+		local weighted = p:INV_Weight()
 		local inv = p:INV_Get()
+		local iflip = table.Flip( p:INV_Get())
 
-		local b_x, b_y = Wb, Hb
+		local b_w = 38
+		local b_h = 14
 
-		for i, v in ipairs( inv ) do
+		local b_x, b_y = sw - Wb, sh - Hb - ss(b_h)
+
+		local bump = 0
+		local fbump = 0
+
+		local num, tcount = 0, table.Count( weighted )
+		for _, item in pairs( weighted ) do
+			num = num + 1
+			local class = WeaponGet(item.Class)
+			local boxsize = ss(b_w)
+			fbump = fbump + boxsize
+			if num != tcount then
+				fbump = fbump + ss(2)
+			end
+		end
+		b_x = b_x - fbump
+
+		local invid = 0
+		for _, item in pairs( weighted ) do
+			local id = iflip[item]
+			local class = WeaponGet(item.Class)
+			local boxsize = ss(b_w)
 			surface.SetDrawColor( scheme["bg"] )
+			surface.DrawRect( b_x + bump, b_y, boxsize, ss(b_h) )
+			--draw.SimpleText( class.Type, "Benny_8", b_x + bump + boxsize/2, b_y + ss(3), scheme["fg"], TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP )
+			draw.SimpleText( class.Name, "Benny_8", b_x + bump + boxsize/2, b_y + ss(4), scheme["fg"], TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP )
+			--draw.SimpleText( "", "Benny_8", b_x + bump + boxsize/2, b_y + ss(17), scheme["fg"], TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP )
+			if class.Features == "firearm" or class.Features == "grenade" then
+				surface.SetDrawColor( scheme["fg"] )
+				surface.DrawOutlinedRect( b_x + bump + ss(1), b_y + ss(1), boxsize-ss(2), ss(b_h-2), ss(0.5) )
+				invid = invid + 1
+				surface.SetDrawColor( scheme["bg"] )
+				surface.DrawRect( b_x + bump, b_y - ss(2+12), ss(12), ss(12) )
+				draw.SimpleText( invid, "Benny_10", b_x + bump + ss(6), b_y - ss(2+10), scheme["fg"], TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP )
+			end
+			print( item.Loaded )
+
+			-- PROTO: Make FindMagSmart that does all this in sh_player, along with the other one in the Weapon HUD.
+			local maginv = p:INV_FindMag( "mag_" .. item.Class, (item.Loaded and item.Loaded != "" and { [item.Loaded] = true }) )
+			local f_maginv = {}
+			if item.Loaded != "" then table.insert( f_maginv, item.Loaded ) end
+			for i, v in ipairs( maginv ) do
+				table.insert( f_maginv, v )
+			end
+			-- PROTO end
+			local magbump = 0
+			for _, mag in ipairs( f_maginv ) do
+				local mitem = inv[mag]
+				local loaded = (item.Loaded == mag)
+				local perc = mitem.Ammo/WeaponGet(mitem.Class).Ammo
+				surface.SetDrawColor( scheme["bg"] )
+				surface.DrawRect( b_x + bump + magbump + ss(13), b_y - ss(14), ss(4), ss(12) )
+				surface.SetDrawColor( scheme["fg"] )
+				surface.DrawRect( b_x + bump + magbump + ss(13) + ss(1), b_y - ss(14-1) + math.Round((ss(10)-ss(10*perc))), ss(2), math.Round(ss(10*perc)) )
+				magbump = magbump + ss(4+1)
+			end
+			bump = bump + boxsize + ss(2)
 		end
 	end
 
@@ -1043,3 +1095,49 @@ do
 		end
 	end)
 end
+
+local dads = {
+	[KEY_1] = 1,
+	[KEY_2] = 2,
+	[KEY_3] = 3,
+	[KEY_4] = 4,
+	[KEY_5] = 5,
+	[KEY_6] = 6,
+	[KEY_7] = 7,
+	[KEY_8] = 8,
+	[KEY_9] = 9,
+	[KEY_0] = 0,
+}
+
+local function beatup( ply, num )
+	local weighted = ply:INV_Weight()
+	local inv = ply:INV_Get()
+	local iflip = table.Flip( inv )
+
+	local invid = 0
+	for _, item in pairs( weighted ) do
+		local class = WeaponGet(item.Class)
+		if class.Features == "firearm" or class.Features == "grenade" then
+			invid = invid + 1
+			if num == invid then
+				RunConsoleCommand( "benny_inv_equip", iflip[item], "false", "false" )
+			end
+		end
+	end
+end
+
+hook.Add( "PlayerButtonDown", "Benny_PlayerButtonDown_Inv", function( ply, button )
+	local wep = ply:BennyCheck()
+
+	if button == KEY_F then
+		if tobool(ply:GetInfoNum("benny_wep_toggleaim", 1)) then
+			wep:SetUserAim( !wep:GetUserAim() )
+		else
+			wep:SetUserAim( true )
+		end
+	end
+
+	if dads[button] then
+		beatup( ply, dads[button] )
+	end
+end)

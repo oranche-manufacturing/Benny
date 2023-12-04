@@ -91,6 +91,40 @@ function PT:INV_Find( class, exclude )
 	return results
 end
 
+local T_WEIGHT = {
+	["machinegun"]		= 40,
+	["rifle"]			= 35,
+	["shotgun"]			= 30,
+	["smg"]				= 25,
+	["pistol"]			= 20,
+	["melee"]			= 15,
+	["special"]			= 10,
+	["utility"]			= 05,
+	["equipment"]		= 00,
+	["grenade"]			= -10,
+	["magazine"]		= -100,
+}
+
+function PT:INV_Weight()
+	local inv = self:INV_Get()
+	local results = {}
+	for i, v in pairs( inv ) do
+		if WeaponGet(v.Class).Features != "magazine" then
+			table.insert( results, { inv[i], WeaponGet(v.Class) } )
+		end
+	end
+	-- PROTO: HOLY SHIT THIS SUCKS, MAKES A FUNCTION AND MIGHT RUN EVERY FRAME!!!
+	table.sort( results, function( a, b )
+		return	(T_WEIGHT[b[2]["Type"]] + b[1]["Acquisition"]*(1e-5))
+		< 		(T_WEIGHT[a[2]["Type"]] + a[1]["Acquisition"]*(1e-5))
+	end )
+	local finale = {}
+	for i, v in ipairs( results ) do
+		table.insert( finale, v[1] )
+	end
+	return finale
+end
+
 function PT:INV_FindMag( class, exclude )
 	local inv = self:INV_Get()
 	local results = {}
@@ -100,7 +134,7 @@ function PT:INV_FindMag( class, exclude )
 		end
 	end
 	-- PROTO: HOLY SHIT THIS SUCKS, MAKES A FUNCTION AND MIGHT RUN EVERY FRAME!!!
-	table.sort( results, function( a, b ) return (inv[b]["Ammo"] - (inv[b]["Acquisition"]/(2^16))) < (inv[a]["Ammo"] - (inv[a]["Acquisition"]/(2^16))) end )
+	table.sort( results, function( a, b ) return (inv[b]["Ammo"] - (inv[b]["Acquisition"]*(1e-5))) < (inv[a]["Ammo"] - (inv[a]["Acquisition"]*(1e-5))) end )
 	return results
 end
 
