@@ -748,7 +748,6 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 				surface.DrawRect( b_x + bump, b_y - ss(2+12), ss(12), ss(12) )
 				draw.SimpleText( invid, "Benny_10", b_x + bump + ss(6), b_y - ss(2+10), scheme["fg"], TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP )
 			end
-			print( item.Loaded )
 
 			-- PROTO: Make FindMagSmart that does all this in sh_player, along with the other one in the Weapon HUD.
 			local maginv = p:INV_FindMag( "mag_" .. item.Class, (item.Loaded and item.Loaded != "" and { [item.Loaded] = true }) )
