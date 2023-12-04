@@ -84,8 +84,10 @@ hook.Add( "CreateMove", "Benny_CreateMove", function( cmd )
 	local p = LocalPlayer()
 	local w = p:BennyCheck()
 	local cdis = false
-	if w:BClass( false ) and w:BClass( false ).Custom_DisableSpecialMovement and w:BClass( false ).Custom_DisableSpecialMovement( w ) then cdis = true end
-	if w:BClass( true ) and w:BClass( true ).Custom_DisableSpecialMovement and w:BClass( true ).Custom_DisableSpecialMovement( w ) then cdis = true end
+	if w then
+		if w:BClass( false ) and w:BClass( false ).Custom_DisableSpecialMovement and w:BClass( false ).Custom_DisableSpecialMovement( w ) then cdis = true end
+		if w:BClass( true ) and w:BClass( true ).Custom_DisableSpecialMovement and w:BClass( true ).Custom_DisableSpecialMovement( w ) then cdis = true end
+	end
 	if GetConVar("benny_cam_override"):GetString() != "" then cdis = true end
 	if LocalPlayer():NoclippingAndNotVaulting() then cdis = true end
 	if w and !cdis then -- FPS cam
@@ -120,7 +122,7 @@ hook.Add( "CreateMove", "Benny_CreateMove", function( cmd )
 				start = opos,
 				endpos = opos+(ang:Forward()*(2^16)),
 				filter = p,
-				mask = MASK_SOLID,
+				mask = MASK_SHOT,
 			} )
 
 			local planner = (tr.HitPos-p:EyePos()):Angle()
