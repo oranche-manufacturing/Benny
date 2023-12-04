@@ -168,26 +168,25 @@ hook.Add( "PlayerDeathSound", "Benny_PlayerDeathSound", function( ply )
 	return true -- we don't want the default sound!
 end )
 
-function GM:ShowHelp( ply )
-	if SERVER then
-		ply:SendLua( [[OpenSMenu()]] )
-	end
-end
+if CLIENT then
+hook.Add( "PlayerButtonDown", "Benny_PlayerButtonDown_Dev", function( ply, button )
+	local wep = ply:BennyCheck()
 
-function GM:ShowTeam( ply )
-	if SERVER then
-		ply:SendLua( [[OpenDeadeye()]] )
+	if button == KEY_F1 then
+		OpenSettingsMenu()
+	elseif button == KEY_F2 then
+		OpenScorePanel()
+	elseif button == KEY_F3 then
+		OpenSMenu()
+	elseif button == KEY_F4 then
+		OpenDeadeye()
+	elseif button == KEY_F5 then
+	elseif button == KEY_F6 then
+	elseif button == KEY_F7 then
+	elseif button == KEY_F8 then
+	elseif button == KEY_F9 then
+	elseif button == KEY_F11 then
+	elseif button == KEY_F12 then
 	end
-end
-
-function GM:ShowSpare1( ply )
-	if SERVER then
-		ply:ConCommand( "benny_gui_settings" )
-	end
-end
-
-function GM:ShowSpare2( ply )
-	if SERVER then
-		ply:ConCommand( "benny_gui_spscore" )
-	end
+end)
 end

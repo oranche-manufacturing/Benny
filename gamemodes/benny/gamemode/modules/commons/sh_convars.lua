@@ -42,6 +42,11 @@ CONVARS_CL = {}
 CONVARS_CL["hud_scale"]					= { 2,			1,		4,		false,		true,	"HUD integer scaling" }
 CONVARS_CL["hud_tempactive"]			= { "benny",	nil,	nil,	false,		true,	"HUD color scheme temporary" }
 
+CONVARS_CL["hud_enable_health"]			= { 1,			nil,	nil,	false,		true,	"Draw Health panel" }
+CONVARS_CL["hud_enable_hotbar"]			= { 1,			nil,	nil,	false,		true,	"Draw Hotbar panel" }
+CONVARS_CL["hud_enable_active"]			= { 1,			nil,	nil,	false,		true,	"Draw Active Weapons panel" }
+CONVARS_CL["hud_enable_hints"]			= { 1,			nil,	nil,	false,		true,	"Draw Hints panel" }
+
 CONVARS_CL["wep_toggleaim"]				= { 1,			0,		1,		true,		true,	"Hold or toggle to aim weapon." }
 
 CONVARS_CL["wep_toolgun"]				= { "",			nil,	nil,	true,		true,	"Toolgun tool." }

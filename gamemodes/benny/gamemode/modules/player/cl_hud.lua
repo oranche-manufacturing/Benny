@@ -272,7 +272,7 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 	local active = GetConVar("benny_hud_tempactive"):GetString()
 	local scheme = schemes[active]
 
-	do -- Health
+	if ConVarCL_Bool("hud_enable_health") then -- Health
 		local b_w, b_h = ss(142), ss(32)
 		local b_bh = ss(14)
 		local b_bh2 = ss(8)
@@ -337,7 +337,7 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 		end
 	end
 
-	if true then -- Hints
+	if ConVarCL_Bool("hud_enable_hints") then -- Hints
 		local b_w, b_h = ss(130), ss(0)
 		local b_x, b_y = sw - Wb - b_w, Hb + ss(200)--sh/2 - b_h/2
 
@@ -410,7 +410,8 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 		end
 	end
 
-	if wep then -- Weapon
+	
+	if wep and ConVarCL_Bool("hud_enable_active") then -- Weapon
 		local inv = p:INV_Get()
 		local wep1 = wep:BTable( false )
 		local wep1c = wep:BClass( false )
@@ -705,7 +706,8 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 		end
 	end
 
-	if wep then -- Newinv
+	
+	if wep and ConVarCL_Bool("hud_enable_hotbar") then -- Newinv
 		local weighted = p:INV_Weight()
 		local inv = p:INV_Get()
 		local iflip = table.Flip( p:INV_Get())
