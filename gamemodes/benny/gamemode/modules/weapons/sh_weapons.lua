@@ -180,13 +180,13 @@ do -- Toolgun
 
 		local List = Frame:Add( "DComboBox" )
 		List:Dock( TOP )
-		List:SetValue(GetConVar("benny_toolgun"):GetString())
+		List:SetValue(GetConVar("benny_wep_toolgun"):GetString())
 		List:DockMargin( 10, 0, 10, 0 )
 		for i, v in SortedPairs( ToolGunTools ) do
 			List:AddChoice( i )
 		end
 		List.OnSelect = function( self, index, value )
-			RunConsoleCommand( "benny_toolgun", value )
+			RunConsoleCommand( "benny_wep_toolgun", value )
 			Frame:Remove()
 		end
 	end
@@ -211,7 +211,7 @@ do -- Toolgun
 			local p = self:GetOwner()
 		
 			local tr = p:GetEyeTrace()
-			local tool = p:GetInfo( "benny_toolgun" )
+			local tool = p:GetInfo( "benny_wep_toolgun" )
 			if ToolGunTools[tool] then ToolGunTools[tool]( self, p, tr ) end
 		
 			if CLIENT and IsFirstTimePredicted() then
@@ -228,7 +228,7 @@ do -- Toolgun
 		end,
 		
 		Custom_Reload = function( self, data )
-			if CLIENT and self:GetOwner():KeyPressed( IN_RELOAD ) then
+			if CLIENT then
 				CreateSelect()
 			end
 		

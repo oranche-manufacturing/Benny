@@ -161,7 +161,7 @@ hook.Add( "PlayerButtonDown", "Benny_PlayerButtonDown_TempForAim", function( ply
 	local wep = ply:BennyCheck()
 
 	if button == KEY_F then
-		if tobool(ply:GetInfoNum("benny_toggleaim", 0)) then
+		if tobool(ply:GetInfoNum("benny_wep_toggleaim", 1)) then
 			wep:SetUserAim( !wep:GetUserAim() )
 		else
 			wep:SetUserAim( true )
@@ -182,7 +182,7 @@ hook.Add( "PlayerButtonUp", "Benny_PlayerButtonUp_TempForAim", function( ply, bu
 	local wep = ply:BennyCheck()
 
 	if button == KEY_F then
-		if !tobool(ply:GetInfoNum("benny_toggleaim", 0)) then
+		if !tobool(ply:GetInfoNum("benny_wep_toggleaim", 0)) then
 			wep:SetUserAim( false )
 		end
 	end
