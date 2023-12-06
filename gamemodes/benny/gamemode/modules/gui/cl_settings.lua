@@ -20,13 +20,13 @@ local conf = {
 	},
 }
 
-local function genpan( Base, Sect, Num )
+local function genpan( Base, Sect, Conf )
 	local Scroll = Base:Add("DPanel")
 	Scroll:DockPadding( 10, 5, 10, 5 )
 	Scroll.Paint = function() end
 	Sect:SetContents( Scroll )
 
-	for i, v in ipairs( conf[Num] ) do
+	for i, v in ipairs( Conf ) do
 		if v[1] == 0 then
 			local Butt = Scroll:Add("DCheckBoxLabel")
 			Butt:Dock(TOP)
@@ -52,18 +52,21 @@ local function genpan( Base, Sect, Num )
 end
 
 function OpenSettingsMenu()
-	local Base = vgui.Create("DFrame")
+	if IsValid( SettingsMenu ) then SettingsMenu:Remove() return end
+	local Base = vgui.Create("BFrame")
+	SettingsMenu = Base
 	Base:SetTitle("Settings")
 	Base:SetSize( 800, 600 )
 	Base:Center()
 	Base:MakePopup()
+	Base:SetKeyboardInputEnabled( false )
 
 	do -- Sect 1
 		local Sect = Base:Add("DCollapsibleCategory")
 		Sect:Dock(TOP)
-		Sect:SetLabel("Preferences")
+		Sect:SetLabel("HUD")
 
-		genpan( Base, Sect, 1 )
+		genpan( Base, Sect, conf[1] )
 	end
 
 	do -- Sect 2
@@ -71,12 +74,6 @@ function OpenSettingsMenu()
 		Sect:Dock(TOP)
 		Sect:SetLabel("Controls")
 
-		genpan( Base, Sect, 2 )
-	end
-
-	do -- Sect 3
-		local Sect = Base:Add("DCollapsibleCategory")
-		Sect:Dock(TOP)
-		Sect:SetLabel("HUD")
+		genpan( Base, Sect, conf[2] )
 	end
 end
