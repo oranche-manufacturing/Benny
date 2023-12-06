@@ -501,19 +501,8 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 						local b2 = ss( 2 )
 						local b3 = ss( 3 )
 						local b4 = ss( 4 )
-						local maglist = p:INV_FindMag( wep_table.Class, { [wep:D_GetMagID( hand )] = true, [wep:D_GetMagID( !hand )] = true, } )
-
-						local newmaglist = {}
-						if wep:D_GetMagID( hand ) != "" then
-							table.insert( newmaglist, wep:D_GetMagID( hand ) )
-						end
-						if false and (wep_table.Class == wep:BTable( !hand ).Class) and wep:D_GetMagID( !hand ) != "" then
-							table.insert( newmaglist, wep:D_GetMagID( !hand ) )
-						end
-						for i, v in ipairs( maglist ) do
-							table.insert( newmaglist, v )
-						end
-						for id, tag in ipairs( newmaglist ) do
+						local maglist = p:INV_FindMagSmart( wep_table.Class, wep:D_GetID( hand ) )
+						for id, tag in ipairs( maglist ) do
 							--assert( inv[tag], "That magazine doesn't exist. " .. tag )
 							local chunk = ((ss(1)+m_w)*(id-1))
 							surface.SetDrawColor( scheme["bg"] )
@@ -763,7 +752,7 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 				draw.SimpleText( invid, "Benny_10", b_x + bump + ss(6), b_y - ss(2+10), scheme["fg"], TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP )
 			end
 
-			local maginv = p:INV_FindMagSmart( item.Class, nil, id )
+			local maginv = p:INV_FindMagSmart( item.Class, id )
 			local magbump = 0
 			for _, mag in ipairs( maginv ) do
 				local mitem = inv[mag]

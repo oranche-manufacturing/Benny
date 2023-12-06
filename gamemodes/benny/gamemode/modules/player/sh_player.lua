@@ -139,7 +139,7 @@ function PT:INV_FindMag( class, exclude )
 	return results
 end
 
-function PT:INV_FindMagSmart( class, exclude, loader )
+function PT:INV_FindMagSmart( class, loader )
 	local inv = self:INV_Get()
 	local loadm = inv[loader]
 
