@@ -148,8 +148,20 @@ schemes = {
 	}
 }
 
-function schema( i1, i2, alpha )
-	return schemes[i1][i2].r, schemes[i1][i2].g, schemes[i1][i2].b, alpha*255
+local activescheme = ConVarCL("hud_tempactive")
+function schema( i2, alpha )
+	local i1 = activescheme:GetString()
+	return schemes[i1][i2].r, schemes[i1][i2].g, schemes[i1][i2].b, (alpha or 1)*255
+end
+
+local junker = Color( 0, 0, 0, 0 )
+function schema_c( i2, alpha )
+	local r,g,b,a=schema( i2, alpha )
+	junker.r=r
+	junker.g=g
+	junker.b=b
+	junker.a=a
+	return junker
 end
 
 captions = {
@@ -873,7 +885,7 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 			surface.SetFont( "Benny_36")
 			local tx = surface.GetTextSize( d1 )
 
-			local c1, c2, c3, c4 = schema( active, "fg", ((tt.ms/100)%1))
+			local c1, c2, c3, c4 = schema( "fg", ((tt.ms/100)%1))
 
 			surface.SetTextColor( c1, c2, c3, c4 )
 			surface.SetTextPos( ib + r_x + ss( 24 ) - tx, r_y )
