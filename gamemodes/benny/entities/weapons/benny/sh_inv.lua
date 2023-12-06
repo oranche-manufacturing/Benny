@@ -55,7 +55,7 @@ end
 
 function SWEP:C_DualCheck()
 	local p = self:GetOwner()
-	local lt = self:BTable( true )
+	local lt = self:BClass( true )
 	if lt then
 		if lt.Features == "firearm" then
 			return p:GetInfoNum( "benny_wep_ao_firearms", 1 )==1
