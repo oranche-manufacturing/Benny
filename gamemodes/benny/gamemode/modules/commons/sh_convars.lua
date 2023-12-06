@@ -12,7 +12,7 @@ CONVARS_SV["net_easyway"]					= { 0,			0,		1,		true,		false,	"Use a disgusting w
 
 CONVARS_SV_GEN = {}
 for i, v in pairs( CONVARS_SV ) do 
-	CONVARS_SV_GEN[i] = CreateConVar( "benny_" .. i, v[1], (v[4] and FCVAR_REPLICATED or 0) + (v[5] and FCVAR_ARCHIVE or 0), v[5], v[2], v[3] )
+	CONVARS_SV_GEN[i] = CreateConVar( "benny_" .. i, v[1], (v[4] and FCVAR_REPLICATED or 0) + (v[5] and FCVAR_ARCHIVE or 0), v[6], v[2], v[3] )
 end
 
 function ConVarSV( name )
@@ -56,7 +56,7 @@ CONVARS_CL["wep_toolgun"]				= { "",			nil,	nil,	true,		true,	"Toolgun tool." }
 
 CONVARS_CL_GEN = {}
 for i, v in pairs( CONVARS_CL ) do 
-	CONVARS_CL_GEN[i] = CreateConVar( "benny_" .. i, v[1], (v[4] and FCVAR_USERINFO or 0) + (v[5] and FCVAR_ARCHIVE or 0), v[5], v[2], v[3] )
+	CONVARS_CL_GEN[i] = CreateConVar( "benny_" .. i, v[1], (v[4] and FCVAR_USERINFO or 0) + (v[5] and FCVAR_ARCHIVE or 0), v[6], v[2], v[3] )
 end
 
 function ConVarCL( name )
