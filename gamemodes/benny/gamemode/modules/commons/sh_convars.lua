@@ -48,6 +48,9 @@ CONVARS_CL["hud_enable_active"]			= { 1,			nil,	nil,	false,		true,	"Draw Active 
 CONVARS_CL["hud_enable_hints"]			= { 1,			nil,	nil,	false,		true,	"Draw Hints panel" }
 
 CONVARS_CL["wep_toggleaim"]				= { 1,			0,		1,		true,		true,	"Hold or toggle to aim weapon." }
+CONVARS_CL["wep_ao_firearms"]			= { 1,			0,		1,		true,		true,	"Whether offhand firearms overrides primary attack." }
+CONVARS_CL["wep_ao_grenades"]			= { 0,			0,		1,		true,		true,	"Whether offhand grenades overrides primary attack." }
+CONVARS_CL["wep_ao_junk"]				= { 0,			0,		1,		true,		true,	"Whether offhand junk overrides primary attack." }
 
 CONVARS_CL["wep_toolgun"]				= { "",			nil,	nil,	true,		true,	"Toolgun tool." }
 

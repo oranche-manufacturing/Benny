@@ -54,7 +54,19 @@ function SWEP:D_SetClip( hand, value )
 end
 
 function SWEP:C_DualCheck()
-	return self:BTable( true )--self:BTable( false ) and self:BTable( true ) and self:BClass( false ).Features == "firearm" and self:BClass( true ).Features == "firearm"
+	local p = self:GetOwner()
+	local lt = self:BTable( true )
+	if lt then
+		if lt.Features == "firearm" then
+			return p:GetInfoNum( "benny_wep_ao_firearms", 1 )==1
+		elseif lt.Features == "grenade" then
+			return p:GetInfoNum( "benny_wep_ao_grenades", 0 )==1
+		else
+			return p:GetInfoNum( "benny_wep_ao_junk", 0 )==1
+		end
+	else
+		return false
+	end
 end
 
 function SWEP:C_AttackDown( hand )
