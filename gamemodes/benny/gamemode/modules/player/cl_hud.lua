@@ -489,7 +489,7 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 						local b2 = ss( 2 )
 						local b3 = ss( 3 )
 						local b4 = ss( 4 )
-						local maglist = p:INV_FindMag( "mag_" .. wep_table.Class, { [wep:D_GetMagID( hand )] = true, [wep:D_GetMagID( !hand )] = true, } )
+						local maglist = p:INV_FindMag( wep_table.Class, { [wep:D_GetMagID( hand )] = true, [wep:D_GetMagID( !hand )] = true, } )
 
 						local newmaglist = {}
 						if wep:D_GetMagID( hand ) != "" then
@@ -751,16 +751,9 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 				draw.SimpleText( invid, "Benny_10", b_x + bump + ss(6), b_y - ss(2+10), scheme["fg"], TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP )
 			end
 
-			-- PROTO: Make FindMagSmart that does all this in sh_player, along with the other one in the Weapon HUD.
-			local maginv = p:INV_FindMag( "mag_" .. item.Class, (item.Loaded and item.Loaded != "" and { [item.Loaded] = true }) )
-			local f_maginv = {}
-			if item.Loaded != "" then table.insert( f_maginv, item.Loaded ) end
-			for i, v in ipairs( maginv ) do
-				table.insert( f_maginv, v )
-			end
-			-- PROTO end
+			local maginv = p:INV_FindMagSmart( item.Class, nil, id )
 			local magbump = 0
-			for _, mag in ipairs( f_maginv ) do
+			for _, mag in ipairs( maginv ) do
 				local mitem = inv[mag]
 				local loaded = (item.Loaded == mag)
 				local perc = mitem.Ammo/WeaponGet(mitem.Class).Ammo

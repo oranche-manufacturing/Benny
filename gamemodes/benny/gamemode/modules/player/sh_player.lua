@@ -129,13 +129,35 @@ function PT:INV_FindMag( class, exclude )
 	local inv = self:INV_Get()
 	local results = {}
 	for i, v in pairs( inv ) do
-		if v.Class == class and (exclude and !exclude[i] or !exclude and true) then
+		-- PROTO: STANAG mags and such should share, and this'll need to be changed.
+		if v.Class == ("mag_" .. class) and (exclude and !exclude[i] or !exclude and true) then
 			table.insert( results, i )
 		end
 	end
 	-- PROTO: HOLY SHIT THIS SUCKS, MAKES A FUNCTION AND MIGHT RUN EVERY FRAME!!!
 	table.sort( results, function( a, b ) return (inv[b]["Ammo"] - (inv[b]["Acquisition"]*(1e-5))) < (inv[a]["Ammo"] - (inv[a]["Acquisition"]*(1e-5))) end )
 	return results
+end
+
+function PT:INV_FindMagSmart( class, exclude, loader )
+	local inv = self:INV_Get()
+	local loadm = inv[loader]
+
+	local addexc = {}
+	for i, v in pairs( inv ) do
+		if v.Loaded and v.Loaded != "" then
+			addexc[v.Loaded] = true
+		end
+	end
+	local findmag = self:INV_FindMag( class, addexc )
+
+	local f_maginv = {}
+	if addexc[loadm.Loaded] or loadm.Loaded != "" then table.insert( f_maginv, loadm.Loaded ) end
+	for i, v in ipairs( findmag ) do
+		table.insert( f_maginv, v )
+	end
+
+	return f_maginv
 end
 
 do

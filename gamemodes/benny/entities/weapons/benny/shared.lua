@@ -122,7 +122,7 @@ function SWEP:Reload( hand )
 				B_Sound( self, wep_class.Sound_MagOut )
 				wep_table.Loaded = ""
 			else
-				local maglist = p:INV_FindMag( "mag_" .. wep_table.Class )
+				local maglist = p:INV_FindMag( wep_table.Class )
 				local mag
 				
 				local usedlist = {}
