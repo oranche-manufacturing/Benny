@@ -512,3 +512,19 @@ concommand.Add( "benny_dev_eyetrace", function( ply )
 	print( string.format("Vector( %i, %i, %i )", math.Round( tr.HitPos.x ), math.Round( tr.HitPos.y ), math.Round( tr.HitPos.z ) ) )
 	print( tr.Entity )
 end)
+
+if game.GetMap():Left( 13 ) == "bennysurvive_" then
+	local ourMat = Material( "color" )
+	hook.Add("PostDraw2DSkyBox", "ExampleHook", function()
+		local r, g, b = render.GetFogColor()
+		r=(r+1)/255
+		g=(g+1)/255
+		b=(b+1)/255
+		local v = Vector( r, g, b )
+		render.OverrideDepthEnable( true, false ) -- ignore Z to prevent drawing over 3D skybox
+			ourMat:SetVector( "$color", v )
+			render.SetMaterial( ourMat )
+			render.DrawScreenQuadEx( 0, 0, ScrW(), ScrH() )
+		render.OverrideDepthEnable( false, false )
+	end)
+end
