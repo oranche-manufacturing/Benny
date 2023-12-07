@@ -389,6 +389,12 @@ do -- Handguns
 		Ammo = 8,
 		Damage = 30,
 		Spread = 22/60,
+		SpreadAdd = 0.5,
+		SpreadAddMax = 15,
+		
+		SpreadDecay_Start = 3,
+		SpreadDecay_End = 11,
+		SpreadDecay_RampTime = 0.5,
 
 		Features = "firearm",
 	}
@@ -415,6 +421,12 @@ do -- Handguns
 		Ammo = 12,
 		Damage = 30,
 		Spread = 15/60,
+		SpreadAdd = 0.5,
+		SpreadAddMax = 15,
+		
+		SpreadDecay_Start = 3,
+		SpreadDecay_End = 11,
+		SpreadDecay_RampTime = 0.5,
 
 		Features = "firearm",
 	}
@@ -439,7 +451,14 @@ do -- Handguns
 		Firemodes = FIREMODE_AUTOSEMI,
 		Ammo = 17,
 		Damage = 18,
-		Spread = 75/60,
+		Spread = 60/60,
+		SpreadAdd = 0.8,
+		SpreadAddMax = 15,
+		
+		SpreadDecay_Start = 3,
+		SpreadDecay_End = 11,
+		SpreadDecay_RampTime = 0.5,
+
 
 		Features = "firearm",
 	}
@@ -465,6 +484,12 @@ do -- Handguns
 		Ammo = 6,
 		Damage = 26,
 		Spread = 30/60,
+		SpreadAdd = 1.5,
+		SpreadAddMax = 15,
+		
+		SpreadDecay_Start = 3,
+		SpreadDecay_End = 11,
+		SpreadDecay_RampTime = 0.5,
 
 		Features = "firearm",
 	}
@@ -488,8 +513,14 @@ do -- Handguns
 		Delay = (60/180),
 		Firemodes = FIREMODE_SEMI,
 		Ammo = 6,
-		Damage = 40,
+		Damage = 49,
 		Spread = 30/60,
+		SpreadAdd = 6,
+		SpreadAddMax = 15,
+		
+		SpreadDecay_Start = 6,
+		SpreadDecay_End = 22,
+		SpreadDecay_RampTime = 0.65,
 
 		Features = "firearm",
 	}
@@ -515,6 +546,12 @@ do -- Handguns
 		Ammo = 7,
 		Damage = 40,
 		Spread = 30/60,
+		SpreadAdd = 4,
+		SpreadAddMax = 15,
+		
+		SpreadDecay_Start = 8,
+		SpreadDecay_End = 25,
+		SpreadDecay_RampTime = 0.5,
 
 		Features = "firearm",
 	}
@@ -543,6 +580,12 @@ do -- SMGs & PDWs
 		Ammo = 15,
 		Damage = 18,
 		Spread = 20/60,
+		SpreadAdd = 10/60,
+		SpreadAddMax = 10,
+
+		SpreadDecay_Start = 4,
+		SpreadDecay_End = 30,
+		SpreadDecay_RampTime = 0.4,
 
 		Features = "firearm",
 	}
@@ -567,6 +610,12 @@ do -- SMGs & PDWs
 		Ammo = 20,
 		Damage = 16,
 		Spread = 20/60,
+		SpreadAdd = 20/60,
+		SpreadAddMax = 10,
+
+		SpreadDecay_Start = 2,
+		SpreadDecay_End = 30,
+		SpreadDecay_RampTime = 0.2,
 
 		Features = "firearm",
 	}
@@ -591,6 +640,12 @@ do -- SMGs & PDWs
 		Ammo = 15,
 		Damage = 18,
 		Spread = 20/60,
+		SpreadAdd = 10/60,
+		SpreadAddMax = 10,
+
+		SpreadDecay_Start = 3,
+		SpreadDecay_End = 30,
+		SpreadDecay_RampTime = 0.3,
 
 		Features = "firearm",
 	}
@@ -610,11 +665,17 @@ do -- SMGs & PDWs
 		Sound_MagOut = "MAC11.MagOut",
 		Sound_MagIn = "MAC11.MagIn",
 
-		Delay = (60/770),
+		Delay = (60/1400),
 		Firemodes = FIREMODE_AUTOSEMI,
 		Ammo = 16,
 		Damage = 16,
-		Spread = 30/60,
+		Spread = 60/60,
+		SpreadAdd = 30/60,
+		SpreadAddMax = 20,
+
+		SpreadDecay_Start = 10,
+		SpreadDecay_End = 30,
+		SpreadDecay_RampTime = 0.3,
 
 		Features = "firearm",
 	}
@@ -634,11 +695,17 @@ do -- SMGs & PDWs
 		Sound_MagOut = "Bizon.MagOut",
 		Sound_MagIn = "Bizon.MagIn",
 
-		Delay = (60/525),
+		Delay = (60/700),
 		Firemodes = FIREMODE_AUTOSEMI,
 		Ammo = 40,
 		Damage = 16,
 		Spread = 40/60,
+		SpreadAdd = 10/60,
+		SpreadAddMax = 20,
+		
+		SpreadDecay_Start = 1,
+		SpreadDecay_End = 10,
+		SpreadDecay_RampTime = 0.6,
 
 		Features = "firearm",
 	}
@@ -658,11 +725,17 @@ do -- SMGs & PDWs
 		Sound_MagOut = "Bizon.MagOut",
 		Sound_MagIn = "Bizon.MagIn",
 
-		Delay = (60/525),
+		Delay = (60/1050),
 		Firemodes = FIREMODE_AUTOSEMI,
 		Ammo = 36,
 		Damage = 12,
 		Spread = 40/60,
+		SpreadAdd = 33/60,
+		SpreadAddMax = 20,
+		
+		SpreadDecay_Start = 4,
+		SpreadDecay_End = 30,
+		SpreadDecay_RampTime = 0.7,
 
 		Features = "firearm",
 	}
@@ -691,6 +764,12 @@ do -- Shotguns
 		Damage = 10,
 		Pellets = 8,
 		Spread = 150/60,
+		SpreadAdd = 150/60,
+		SpreadAddMax = 20,
+		
+		SpreadDecay_Start = 150/60,
+		SpreadDecay_End = 30,
+		SpreadDecay_RampTime = 2,
 
 		Features = "firearm",
 	}
@@ -715,6 +794,12 @@ do -- Shotguns
 		Damage = 10,
 		Pellets = 8,
 		Spread = 300/60,
+		SpreadAdd = 150/60,
+		SpreadAddMax = 20,
+		
+		SpreadDecay_Start = 150/60,
+		SpreadDecay_End = 30,
+		SpreadDecay_RampTime = 1,
 
 		Features = "firearm",
 	}
@@ -739,6 +824,12 @@ do -- Shotguns
 		Damage = 8,
 		Pellets = 8,
 		Spread = 250/60,
+		SpreadAdd = 150/60,
+		SpreadAddMax = 20,
+		
+		SpreadDecay_Start = 700/60,
+		SpreadDecay_End = 30,
+		SpreadDecay_RampTime = 1,
 
 		Features = "firearm",
 	}
@@ -766,6 +857,13 @@ do -- Rifles
 		Firemodes = FIREMODE_AUTOSEMI,
 		Ammo = 30,
 		Damage = 10,
+		Spread = 30/60,
+		SpreadAdd = 22/60,
+		SpreadAddMax = 10,
+		
+		SpreadDecay_Start = 0,
+		SpreadDecay_End = 12,
+		SpreadDecay_RampTime = 0.2,
 
 		Features = "firearm",
 	}
@@ -785,10 +883,17 @@ do -- Rifles
 		Sound_MagOut = "FNC.MagOut",
 		Sound_MagIn = "FNC.MagIn",
 
-		Delay = (60/600),
+		Delay = (60/800),
 		Firemodes = FIREMODE_AUTOSEMI,
 		Ammo = 30,
 		Damage = 10,
+		Spread = 45/60,
+		SpreadAdd = 35/60,
+		SpreadAddMax = 10,
+		
+		SpreadDecay_Start = 12,
+		SpreadDecay_End = 36,
+		SpreadDecay_RampTime = 0.6,
 
 		Features = "firearm",
 	}
@@ -815,6 +920,13 @@ do -- Rifles
 		},
 		Ammo = 30,
 		Damage = 10,
+		Spread = 22/60,
+		SpreadAdd = 11/60,
+		SpreadAddMax = 10,
+		
+		SpreadDecay_Start = 0,
+		SpreadDecay_End = 12,
+		SpreadDecay_RampTime = 0.3,
 
 		Features = "firearm",
 	}
