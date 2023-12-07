@@ -258,11 +258,12 @@ local col_2 = Color(0, 0, 0, 255)
 local col_3 = Color(255, 127, 127, 255)
 local col_4 = Color(255, 222, 222, 255)
 local heartbeatcol = Color(255, 255, 255, 255)
-local mat_dot = Material("benny/hud/xhair/dotx.png", "")
-local mat_long = Material("benny/hud/xhair/long.png", "")
+local mat_dot = Material("benny/hud/xhair/dotx.png", "smooth")
+local mat_long = Material("benny/hud/xhair/long.png", "smooth")
 local mat_dot_s = Material("benny/hud/xhair/dot_s.png", "mips smooth")
 local mat_long_s = Material("benny/hud/xhair/long_s.png", "mips smooth")
-local spacer_long = 2 -- screenscaled
+local spacer_long = 5 -- screenscaled
+local spacer = 1 -- screenscaled
 local gap = 8
 
 local trash_vec, trash_ang = Vector(), Angle()
@@ -534,9 +535,15 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 			end
 		end
 
-		if wep:GetUserAim() then -- Crosshair
+		if wep:GetUserAim() and wep:BClass( false ) then -- Crosshair
 			local s, w, h = ss, ScrW(), ScrH()
 			local pl_x, pl_y = w/2, h/2
+
+			local dispersion = math.rad( wep:BSpread( false ) )
+			cam.Start3D()
+				local lool = ( EyePos() + ( EyeAngles():Forward()*8192 ) + ( dispersion * EyeAngles():Up()*8192 ) ) :ToScreen()
+			cam.End3D()
+			gap = ( (ScrH()/2) - lool.y )
 
 			do
 				local tr1 = util.TraceLine({
@@ -585,30 +592,30 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 				local mat1 = i == 1 and mat_long_s or mat_long
 				local mat2 = i == 1 and mat_dot_s or mat_dot
 				surface.SetDrawColor( cooler )
-				if wep.XHairMode == "rifle" then
+				if wep:BClass( false ).Type == "rifle" then
 					surface.SetMaterial( mat1 )
-					surface.DrawTexturedRectRotated( poosx - s(spacer_long) - gap, poosy, s(16), s(16), 0 )
-					surface.DrawTexturedRectRotated( poosx + s(spacer_long) + gap, poosy, s(16), s(16), 0 )
+					surface.DrawTexturedRectRotated( poosx - s(spacer_long) - gap, poosy, s(32), s(32), 0 )
+					surface.DrawTexturedRectRotated( poosx + s(spacer_long) + gap, poosy, s(32), s(32), 0 )
 
 					surface.SetMaterial( mat2 )
-					surface.DrawTexturedRectRotated( poosx, poosy - gap, s(16), s(16), 0 )
-					surface.DrawTexturedRectRotated( poosx, poosy + gap, s(16), s(16), 0 )
-				elseif wep.XHairMode == "smg" then
+					surface.DrawTexturedRectRotated( poosx, poosy - gap - s(spacer), s(32), s(32), 0 )
+					surface.DrawTexturedRectRotated( poosx, poosy + gap + s(spacer), s(32), s(32), 0 )
+				elseif wep:BClass( false ).Type == "smg" then
 					surface.SetMaterial( mat1 )
-					surface.DrawTexturedRectRotated( poosx, poosy + gap + s(spacer_long), s(16), s(16), 90 )
-					surface.DrawTexturedRectRotated( poosx - (math.sin(math.rad(45))*gap) - (math.sin(math.rad(45))*s(spacer_long)), poosy - (math.sin(math.rad(45))*gap) - (math.sin(math.rad(45))*s(spacer_long)), s(16), s(16), -45 )
-					surface.DrawTexturedRectRotated( poosx + (math.sin(math.rad(45))*gap) + (math.sin(math.rad(45))*s(spacer_long)), poosy - (math.sin(math.rad(45))*gap) - (math.sin(math.rad(45))*s(spacer_long)), s(16), s(16), 45 )
+					surface.DrawTexturedRectRotated( poosx, poosy + gap + s(spacer_long), s(32), s(32), 90 )
+					surface.DrawTexturedRectRotated( poosx - (math.sin(math.rad(45))*gap) - (math.sin(math.rad(45))*s(spacer_long)), poosy - (math.sin(math.rad(45))*gap) - (math.sin(math.rad(45))*s(spacer_long)), s(32), s(32), -45 )
+					surface.DrawTexturedRectRotated( poosx + (math.sin(math.rad(45))*gap) + (math.sin(math.rad(45))*s(spacer_long)), poosy - (math.sin(math.rad(45))*gap) - (math.sin(math.rad(45))*s(spacer_long)), s(32), s(32), 45 )
 
 					surface.SetMaterial( mat2 )
-					surface.DrawTexturedRectRotated( poosx, poosy, s(16), s(16), 0 )
+					surface.DrawTexturedRectRotated( poosx, poosy, s(32), s(32), 0 )
 				else -- pistol
 					surface.SetMaterial( mat2 )
-					surface.DrawTexturedRectRotated( poosx - gap, poosy, s(32), s(32), 0 )
-					surface.DrawTexturedRectRotated( poosx + gap, poosy, s(32), s(32), 0 )
+					surface.DrawTexturedRectRotated( poosx - gap - s(spacer), poosy, s(32), s(32), 0 )
+					surface.DrawTexturedRectRotated( poosx + gap + s(spacer), poosy, s(32), s(32), 0 )
 
 					surface.SetMaterial( mat2 )
-					surface.DrawTexturedRectRotated( poosx, poosy - gap, s(32), s(32), 0 )
-					surface.DrawTexturedRectRotated( poosx, poosy + gap, s(32), s(32), 0 )
+					surface.DrawTexturedRectRotated( poosx, poosy - gap - s(spacer), s(32), s(32), 0 )
+					surface.DrawTexturedRectRotated( poosx, poosy + gap + s(spacer), s(32), s(32), 0 )
 				end
 			end
 		end
