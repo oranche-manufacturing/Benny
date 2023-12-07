@@ -26,10 +26,10 @@ function PANEL:Init()
 	self.btnClose:SetText( "" )
 	self.btnClose.DoClick = function ( button ) self:Close() end
 	self.btnClose.Paint = function( panel, w, h )
-		surface.SetDrawColor( schema( "bg" ) )
+		surface.SetDrawColor( schema( "fg" ) )
 		surface.DrawRect( 0, 0, w, h )
 
-		draw.SimpleText( "X", "Benny_10", ss(3.3), ss(0), schema_c( "fg" ), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+		draw.SimpleText( "X", "Benny_10", ss(3.3), ss(0), schema_c( "bg" ), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
 
 		return true
 	end
@@ -162,9 +162,9 @@ function PANEL:Paint( w, h )
 	surface.DrawRect( 0, 0, w, h )
 
 	surface.SetDrawColor( schema( "fg" ) )
-	surface.DrawRect( 0, 0, w, ss(tall) )
+	surface.DrawOutlinedRect( 0, 0, w, ss(tall), ss(0.5) )
 
-	draw.SimpleText( self.Title, "Benny_16", ss(2), ss(0), schema_c( "bg" ), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP )
+	draw.SimpleText( self.Title, "Benny_12", ss(2), ss(1), schema_c( "fg" ), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP )
 	return true
 end
 
