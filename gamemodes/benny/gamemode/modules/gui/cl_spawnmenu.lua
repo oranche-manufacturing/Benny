@@ -11,26 +11,15 @@ end
 function OpenSMenu()
 	if IsValid( smenu ) then smenu:Remove() return end
 	local active = GetConVar("benny_hud_tempactive"):GetString()
-	smenu = vgui.Create("DFrame")
+	smenu = vgui.Create("BFrame")
 	smenu:SetSize( ss(1+(96+2)*4), ss(360) )
+	smenu:SetTitle("Developer Spawnmenu")
 	smenu:MakePopup()
 	smenu:SetKeyboardInputEnabled( false )
 	smenu:Center()
 
-	function smenu:Paint( w, h )
-		surface.SetDrawColor( schemes[active]["bg"] )
-		surface.DrawRect( 0, 0, w, h )
-		return true
-	end
-
 	local itemlist = smenu:Add("DScrollPanel")
 	itemlist:Dock( FILL )
-
-	-- local List = vgui.Create( "DIconLayout", itemlist )
-	-- List:Dock( FILL )
-	-- List:SetSpaceX( 5 )
-	-- List:SetSpaceY( 5 )
-
 
 	local createlist = {}
 	

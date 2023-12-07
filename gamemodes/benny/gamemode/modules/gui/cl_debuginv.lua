@@ -64,6 +64,7 @@ local function regen_items( itemlist )
 
 		-- PROTO: These functions don't need to be remade over and over like this.
 		function button:DoClick()
+			do return end
 			local Menu = DermaMenu()
 
 			local opt1 = Menu:AddOption( "Equip Right", function()
@@ -106,6 +107,7 @@ local function regen_items( itemlist )
 		end
 
 		button.DoRightClick = function( self )
+			do return end
 			RunConsoleCommand("benny_inv_discard", button.ID)
 			self:Remove()
 		end
@@ -126,28 +128,107 @@ local function regen_items( itemlist )
 				surface.DrawText( self.Text_Desc )
 			end
 
+			local wep = ply:BennyCheck()
+			if wep then
+				local handed_r = wep:D_GetID( false ) == v
+				local handed_l = wep:D_GetID( true ) == v
+				if handed_r or handed_l then
+					draw.SimpleText( handed_l and "LEFT" or "RIGHT", "Benny_18", w/2, h/2 + ss(1), schema_c("bg"), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER )
+				end
+			end
+
 			surface.SetFont( "Benny_10" )
 			local tx = surface.GetTextSize( self.Text_ID )
 			surface.SetTextPos( w - ss(2) - tx, ss(2) )
 			surface.DrawText( self.Text_ID )
 			return true
 		end
+
+		button.B		= button:Add("DButton")
+		button.B:Dock( RIGHT )
+		function button.B:DoClick()
+			return RunConsoleCommand( "benny_inv_discard", button.ID )
+		end
+		function button.B:Paint( w, h )
+			surface.SetDrawColor( schema( "fg" ) )
+			surface.DrawRect( 0, 0, w, h )
+
+			surface.SetDrawColor( schema( "bg" ) )
+			surface.DrawOutlinedRect( 0, 0, w, h, ss(1) )
+			draw.SimpleText( "DISCARD", "Benny_10", w/2, h/2 + ss(1), schema_c("bg"), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER )
+			return true
+		end
+		button.B:DockMargin( ss(2), ss(2), ss(2), ss(2) )
+		button.B:SetSize( ss(36), ss(24) )
+
+		button.H		= button:Add("DButton")
+		button.H:Dock( RIGHT )
+		function button.H:DoClick()
+			return RunConsoleCommand( "benny_inv_holster", button.ID )
+		end
+		function button.H:Paint( w, h )
+			surface.SetDrawColor( schema( "fg" ) )
+			surface.DrawRect( 0, 0, w, h )
+
+			surface.SetDrawColor( schema( "bg" ) )
+			surface.DrawOutlinedRect( 0, 0, w, h, ss(1) )
+			draw.SimpleText( "HOLSTER", "Benny_10", w/2, h/2 + ss(1), schema_c("bg"), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER )
+			return true
+		end
+		button.H:DockMargin( ss(2), ss(2), ss(2), ss(2) )
+		button.H:SetSize( ss(36), ss(24) )
+
+		button.E_R		= button:Add("DButton")
+		button.E_R:Dock( RIGHT )
+		function button.E_R:DoClick()
+			return RunConsoleCommand( "benny_inv_equip", button.ID, "false", "true" )
+		end
+		function button.E_R:Paint( w, h )
+			surface.SetDrawColor( schema( "fg" ) )
+			surface.DrawRect( 0, 0, w, h )
+
+			surface.SetDrawColor( schema( "bg" ) )
+			surface.DrawOutlinedRect( 0, 0, w, h, ss(1) )
+			draw.SimpleText( "RIGHT", "Benny_10", w/2, h/2 + ss(1), schema_c("bg"), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER )
+			return true
+		end
+		button.E_R:DockMargin( ss(2), ss(2), ss(2), ss(2) )
+		button.E_R:SetSize( ss(36), ss(24) )
+
+		button.E_L		= button:Add("DButton")
+		button.E_L:Dock( RIGHT )
+		function button.E_L:DoClick()
+			return RunConsoleCommand( "benny_inv_equip", button.ID, "true", "true" )
+		end
+		function button.E_L:Paint( w, h )
+			surface.SetDrawColor( schema( "fg" ) )
+			surface.DrawRect( 0, 0, w, h )
+
+			surface.SetDrawColor( schema( "bg" ) )
+			surface.DrawOutlinedRect( 0, 0, w, h, ss(1) )
+			draw.SimpleText( "LEFT", "Benny_10", w/2, h/2 + ss(1), schema_c("bg"), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER )
+			return true
+		end
+		button.E_L:DockMargin( ss(2), ss(2), ss(2), ss(2) )
+		button.E_L:SetSize( ss(36), ss(24) )
+
+		function button:Think()
+			local visible = self.E_L:IsHovered() or self.E_R:IsHovered() or self.H:IsHovered() or self.B:IsHovered() or self:IsHovered()
+			self.E_L:SetVisible( visible )
+			self.E_R:SetVisible( visible )
+			self.H:SetVisible( visible )
+			self.B:SetVisible( visible )
+		end
 	end
 end
 concommand.Add("benny_debug_inv", function()
 	if IsValid( base ) then base:Remove() end
-	base = vgui.Create("DFrame")
+	base = vgui.Create("BFrame")
 	base:SetSize( ss(400), ss(400) )
+	base:SetTitle("Developer Inventory")
 	base:MakePopup()
 	base:SetKeyboardInputEnabled( false )
 	base:Center()
-	local active = GetConVar("benny_hud_tempactive"):GetString()
-
-	function base:Paint( w, h )
-		surface.SetDrawColor( schemes[active]["bg"] )
-		surface.DrawRect( 0, 0, w, h )
-		return true
-	end
 
 	local itemlist = base:Add("DScrollPanel")
 	itemlist:Dock( FILL )
