@@ -1,5 +1,5 @@
 
--- Meanings:								Default,	Min,	Max,	Replicated,	Archived, Hint
+-- Meanings:								Default,	Min,	Max,		Replicated,	Archived, Hint
 -- Replicated is Userinfo in Client.
 
 CONVARS_SV = {}
@@ -8,6 +8,8 @@ CONVARS_SV["cam_override"]					= { "",			nil,	nil,	true,		false,	"X Y Z P Y R FO
 CONVARS_SV["cam_unlock"]					= { 0,			0,		1,		true,		false,	"First person (sort of)" }
 
 CONVARS_SV["net_easyway"]					= { 0,			0,		1,		true,		false,	"Use a disgusting way of networking inventories for minimal desync." }
+
+CONVARS_SV["cheat_infiniteammo"]			= { 0,			0,		1,		true,		false,	"Cheat: Don't expend ammo." }
 
 
 CONVARS_SV_GEN = {}

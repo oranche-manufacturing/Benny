@@ -38,6 +38,10 @@ function SWEP:SetupDataTables()
 	self:NetworkVar( "Float", 1, "Delay1" )
 	self:NetworkVar( "Float", 2, "Delay2" )
 	self:NetworkVar( "Float", 3, "GrenadeDownStart" )
+	self:NetworkVar( "Float", 4, "Wep1_Spread" )
+	self:NetworkVar( "Float", 5, "Wep2_Spread" )
+	self:NetworkVar( "Float", 6, "Wep1_ShotTime" )
+	self:NetworkVar( "Float", 7, "Wep2_ShotTime" )
 	self:NetworkVar( "String", 0, "Wep1" )
 	self:NetworkVar( "String", 1, "Wep2" )
 	self:NetworkVar( "String", 2, "Wep1_Clip" )
@@ -159,37 +163,44 @@ end
 
 hook.Add( "PlayerButtonDown", "Benny_PlayerButtonDown_TempForAim", function( ply, button )
 	local wep = ply:BennyCheck()
-
-	if button == KEY_F then
-		if tobool(ply:GetInfoNum("benny_wep_toggleaim", 1)) then
-			wep:SetUserAim( !wep:GetUserAim() )
-		else
-			wep:SetUserAim( true )
+	if wep then
+		if button == KEY_F then
+			if tobool(ply:GetInfoNum("benny_wep_toggleaim", 1)) then
+				wep:SetUserAim( !wep:GetUserAim() )
+			else
+				wep:SetUserAim( true )
+			end
 		end
-	end
 
-	local dual = wep:C_DualCheck()
-	if button == KEY_R then
-		if dual then wep:Reload( true ) else wep:Reload( false ) end
-	end
+		local dual = wep:C_DualCheck()
+		if button == KEY_R then
+			if dual then wep:Reload( true ) else wep:Reload( false ) end
+		end
 
-	if button == KEY_T then
-		if dual then wep:Reload( false ) else wep:Reload( true ) end
+		if button == KEY_T then
+			if dual then wep:Reload( false ) else wep:Reload( true ) end
+		end
 	end
 end)
 
 hook.Add( "PlayerButtonUp", "Benny_PlayerButtonUp_TempForAim", function( ply, button )
 	local wep = ply:BennyCheck()
-
-	if button == KEY_F then
-		if !tobool(ply:GetInfoNum("benny_wep_toggleaim", 0)) then
-			wep:SetUserAim( false )
+	if wep then
+		if button == KEY_F then
+			if !tobool(ply:GetInfoNum("benny_wep_toggleaim", 0)) then
+				wep:SetUserAim( false )
+			end
 		end
 	end
 end)
 
 function SWEP:Think()
 	local p = self:GetOwner()
+
+	local wep1 = self:BTable( false )
+	local wep1c = self:BClass( false )
+	local wep2 = self:BTable( true )
+	local wep2c = self:BClass( true )
 
 	self:SetAim( math.Approach( self:GetAim(), self:GetUserAim() and 1 or 0, FrameTime()/0.2 ) )
 
@@ -198,6 +209,13 @@ function SWEP:Think()
 	end
 	if !self:C_AttackDown( true ) then
 		self:SetWep2_Burst( 0 )
+	end
+
+	if wep1 and self:D_GetDelay( false ) < CurTime()-0.01 then
+		local mweh = math.Remap( CurTime(), self:D_GetShotTime( false ), self:D_GetShotTime( false )+wep1c.SpreadDecay_RampTime, 0, 1 )
+		mweh = math.Clamp( mweh, 0, 1 )
+		local decayfinal = Lerp( math.ease.InExpo( mweh ), wep1c.SpreadDecay_Start, wep1c.SpreadDecay_End )
+		self:D_SetSpread( false, math.Approach( self:D_GetSpread( false ), 0, decayfinal * FrameTime() ) )
 	end
 
 	local ht = "normal"

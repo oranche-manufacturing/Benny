@@ -44,7 +44,9 @@ function SWEP:BFire( hand )
 			return
 		end
 		
-		self:B_Ammo( hand, self:D_GetClip( hand ) - 1 )
+		if !ConVarSV_Bool("cheat_infiniteammo") then
+			self:B_Ammo( hand, self:D_GetClip( hand ) - 1 )
+		end
 
 		B_Sound( self, wep_class.Sound_Fire )
 		self:TPFire( hand )
@@ -52,6 +54,8 @@ function SWEP:BFire( hand )
 
 		self:D_SetDelay( hand, CurTime() + wep_class.Delay )
 		self:D_SetBurst( hand, self:D_GetBurst( hand ) + 1 )
+		self:D_SetSpread( hand, math.Clamp( self:D_GetSpread( hand ) + wep_class.SpreadAdd, 0, wep_class.SpreadAddMax ) )
+		self:D_SetShotTime( hand, CurTime() )
 
 		
 		if CLIENT and IsFirstTimePredicted() then
@@ -76,7 +80,7 @@ end
 function SWEP:CallFire( hand )
 	local p = self:GetOwner()
 	local class = self:BClass( hand )
-	local spread = class.Spread or 0
+	local spread = self:BSpread( hand )
 	for i=1, class.Pellets or 1 do
 		local dir = self:GetOwner():EyeAngles()
 

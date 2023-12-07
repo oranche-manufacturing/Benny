@@ -38,8 +38,6 @@ RegisterCaption("Anaconda.Reload", "Anaconda", color_white, "[reload]", 0.1, 0.5
 RegisterCaption("Nambu.Fire", "Nambu", color_white, "[fire]", 0.1, 0.5, false, true )
 RegisterCaption("Nambu.Reload", "Nambu", color_white, "[reload]", 0.1, 0.5, false, true )
 
-CAPTIONS = CAPTIONS["en-us"]
-
 SOUNDS = {}
 
 function AddSound( name, path, sndlevel, pitch, volume, channel )
@@ -72,3 +70,10 @@ function B_Sound( ent, tag )
 		end
 	end
 end
+
+AddSound( "Common.Deploy", "benny/weapons/common/06-07.ogg", 70, 100, 0.2, CHAN_STATIC )
+AddSound( "Common.Holster", "benny/weapons/common/06-09.ogg", 70, 100, 0.2, CHAN_STATIC )
+RegisterCaption("Common.Deploy", "DEBUG", color_white, "[deploy]", 0.1, 0.5, false, true )
+RegisterCaption("Common.Holster", "DEBUG", color_white, "[holster]", 0.1, 0.5, false, true )
+
+CAPTIONS = CAPTIONS["en-us"]

@@ -35,6 +35,24 @@ function SWEP:D_SetBurst( hand, value )
 	return (hand == true) and self:SetWep2_Burst( value ) or (hand == false) and self:SetWep1_Burst( value )
 end
 
+-- Weapon Spread
+function SWEP:D_GetSpread( hand )
+	return (hand == true) and self:GetWep2_Spread() or (hand == false) and self:GetWep1_Spread()
+end
+
+function SWEP:D_SetSpread( hand, value )
+	return (hand == true) and self:SetWep2_Spread( value ) or (hand == false) and self:SetWep1_Spread( value )
+end
+
+-- Weapon Spread
+function SWEP:D_GetShotTime( hand )
+	return (hand == true) and self:GetWep2_ShotTime() or (hand == false) and self:GetWep1_ShotTime()
+end
+
+function SWEP:D_SetShotTime( hand, value )
+	return (hand == true) and self:SetWep2_ShotTime( value ) or (hand == false) and self:SetWep1_ShotTime( value )
+end
+
 -- Internal SWEP Delay
 function SWEP:D_GetDelay( hand )
 	return (hand == true) and self:GetDelay2() or (hand == false) and self:GetDelay1()
@@ -94,6 +112,8 @@ function SWEP:BDeploy( hand, id )
 	self:D_SetID( hand, id )
 	self:D_SetMagID( hand, "" )
 	self:D_SetClip( hand, 0 )
+	self:D_SetSpread( hand, 0 )
+	B_Sound( self, "Common.Deploy" )
 	if item.Loaded and item.Loaded != "" then
 		local mid = item.Loaded
 		local midi = inv[ mid ]
@@ -112,6 +132,7 @@ function SWEP:BHolster( hand )
 	end
 
 	local p = self:GetOwner()
+	B_Sound( self, "Common.Holster" )
 	local item = self:BTable( hand )
 	if item then
 		local class = WeaponGet(item.Class)
@@ -122,3 +143,8 @@ function SWEP:BHolster( hand )
 	self:D_SetMagID( hand, "" )
 	self:D_SetClip( hand, 0 )
 end
+
+function SWEP:BSpread( hand )
+	return self:BClass( hand ).Spread + self:D_GetSpread( hand )
+end
+
