@@ -196,20 +196,34 @@ end)
 
 function SWEP:Think()
 	local p = self:GetOwner()
+	local inv = p:INV_Get()
 
-	if p:GetReqID1() != self:D_GetID( false ) then
-		if p:GetReqID1() != "" then
-			self:BDeploy( false, p:GetReqID1() )
+	local L, R = true, false
+	local curr_l, curr_r = self:D_GetID( true ), self:D_GetID( false )
+
+	if p:GetReqID1() != self:D_GetID( R ) then
+		if inv[p:GetReqID1()] and p:GetReqID1() != "" then
+			if curr_r != "" then
+				-- We already have something equipped here, move it to the offhand
+				self:BDeploy( L, curr_r )
+				p:SetReqID2( curr_r )
+			end
+			self:BDeploy( R, p:GetReqID1() )
 		else
-			self:BHolster( false )
+			self:BHolster( R )
 		end
 	end
 
-	if p:GetReqID2() != self:D_GetID( true ) then
-		if p:GetReqID2() != "" then
-			self:BDeploy( true, p:GetReqID2() )
+	if p:GetReqID2() != self:D_GetID( L ) then
+		if inv[p:GetReqID2()] and p:GetReqID2() != "" then
+			if curr_l != "" then
+				-- We already have something equipped here, move it to the offhand
+				self:BDeploy( R, curr_l )
+				p:SetReqID1( curr_l )
+			end
+			self:BDeploy( L, p:GetReqID2() )
 		else
-			self:BHolster( true )
+			self:BHolster( L )
 		end
 	end
 
