@@ -209,6 +209,12 @@ function SWEP:BThinkHolster( hand )
 	if self:D_GetHolstering( hand ) == 0 then
 		self:D_SetHolstering( hand, -1 )
 		self:BHolster( hand )
+		local p = self:GetOwner()
+		local req = self:D_GetReqID( hand )
+		local inv = p:INV_Get()
+		if req != "" and inv[req] then
+			self:BDeploy( hand, req )
+		end
 	end
 end
 
@@ -216,10 +222,7 @@ function SWEP:Think()
 	local p = self:GetOwner()
 	local inv = p:INV_Get()
 
-	local L, R = true, false
-	local curr_l, curr_r = self:D_GetID( true ), self:D_GetID( false )
-
-	for i=1, 1 do
+	for i=1, 2 do
 		local hand = i==2
 		local req = self:D_GetReqID( hand )
 		local curr = self:D_GetID( hand )
@@ -236,7 +239,7 @@ function SWEP:Think()
 			end
 		end
 
-		self:BThinkHolster( R )
+		self:BThinkHolster( hand )
 		-- print( self:D_GetReqID( hand ), self:D_GetID( hand ) )
 	end
 

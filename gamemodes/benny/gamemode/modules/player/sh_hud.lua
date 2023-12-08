@@ -34,7 +34,11 @@ local function beatup( ply, num )
 			end
 		end
 	end
-	return ply:SetReqID1( "" )
+	if ply:KeyDown(IN_ZOOM) then
+		return ply:SetReqID2( "" ) 
+	else
+		return ply:SetReqID1( "" )
+	end
 end
 
 hook.Add( "PlayerButtonDown", "Benny_PlayerButtonDown_Inv", function( ply, button )
