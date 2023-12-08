@@ -197,6 +197,22 @@ end)
 function SWEP:Think()
 	local p = self:GetOwner()
 
+	if p:GetReqID1() != self:D_GetID( false ) then
+		if p:GetReqID1() != "" then
+			self:BDeploy( false, p:GetReqID1() )
+		else
+			self:BHolster( false )
+		end
+	end
+
+	if p:GetReqID2() != self:D_GetID( true ) then
+		if p:GetReqID2() != "" then
+			self:BDeploy( true, p:GetReqID2() )
+		else
+			self:BHolster( true )
+		end
+	end
+
 	local wep1 = self:BTable( false )
 	local wep1c = self:BClass( false )
 	local wep2 = self:BTable( true )

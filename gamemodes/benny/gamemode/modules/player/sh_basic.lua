@@ -44,81 +44,6 @@ function(cmd, args)
 	return meow
 end, "arg 1: player ent index, arg 2: classname")
 
--- PROTO: Move this all into weapon code.
-concommand.Add("benny_inv_equip", function( ply, cmd, args )
-	local wep = ply:BennyCheck()
-	if wep then
-		local hand = args[2]!=nil and tobool(args[2])
-		local id = args[1]
-		local swap_or_replace = tobool(args[3])
-
-		local L, R = true, false
-		local curr_r = wep:D_GetID( false )
-		local curr_l = wep:D_GetID( true )
-
-		if hand == R then
-			if curr_r == id then
-				-- We already have this equipped
-				return
-			elseif swap_or_replace and curr_r != "" then
-				-- We already have something equipped here, move it to the offhand
-				wep:BDeploy( L, curr_r )
-			elseif curr_l == id then
-				-- You have the gun we want, snatched
-				wep:BHolster( L )
-			end
-			wep:BDeploy( R, id )
-		elseif hand == L then
-			if curr_l == id then
-				-- We already have this equipped
-				return
-			elseif swap_or_replace and curr_l != "" then
-				-- We already have something equipped here, move it to the offhand
-				wep:BDeploy( R, curr_l )
-			elseif curr_r == id then
-				-- You have the gun we want, snatched
-				wep:BHolster( R )
-			end
-			wep:BDeploy( L, id )
-		end
-	end
-end,
-function(cmd, args)
-	args = string.Trim(args:lower())
-	local meow = {}
-	for i, v in SortedPairs( Entity(1):INV_Get() ) do
-		if string.lower(i):find(args) then
-			table.insert( meow, cmd .. " " .. i )
-		end
-	end
-	return meow
-end, "arg 1: item id, arg 2 does offhand")
-
--- PROTO: Move this all into weapon code.
-concommand.Add("benny_inv_holster", function( ply, cmd, args )
-	local wep = ply:BennyCheck()
-	if wep then
-		if wep:D_GetID( false ) == args[1] then
-			wep:BHolster( false )
-		elseif wep:D_GetID( true ) == args[1] then
-			wep:BHolster( true )
-		end
-	end
-end)
-
-concommand.Add("benny_inv_sync", function( ply, cmd, args )
-	local inv = ply:INV_Get()
-
-	-- PROTO: WriteTable.
-	net.Start("benny_syncinv")
-		net.WriteUInt( table.Count( inv ), 4 )
-		for ID, Data in pairs( inv ) do
-			net.WriteString( ID )
-			net.WriteTable( Data )
-		end
-	net.Send( ply )
-end)
-
 concommand.Add("benny_inv_discard", function( ply, cmd, args )
 	local inv = ply:INV_Get()
 	local wep = ply:GetActiveWeapon()
@@ -142,27 +67,6 @@ concommand.Add("benny_inv_discard", function( ply, cmd, args )
 		wep:SetClip2( 0 )
 	end
 end)
-
--- Network to client
-if CLIENT then
-	net.Receive( "benny_syncinv", function( len, ply )
-		local ply = LocalPlayer()
-		local inv = ply:INV_Get()
-
-		table.Empty( inv )
-		for i=1, net.ReadUInt( 4 ) do
-			inv[net.ReadString()] = net.ReadTable()
-		end
-	end)
-	net.Receive( "benny_sendinvitem", function( len, ply )
-		local ply = LocalPlayer()
-		ply:INV_Get()[net.ReadString()] = net.ReadTable()
-	end)
-	net.Receive( "benny_discardinvitem", function( len, ply )
-		local ply = LocalPlayer()
-		ply:INV_Get()[net.ReadString()] = nil
-	end)
-end
 
 hook.Add( "PlayerDeathSound", "Benny_PlayerDeathSound", function( ply )
 	return true -- we don't want the default sound!

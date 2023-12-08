@@ -31,6 +31,9 @@ function PLAYER:SetupDataTables()
 	self.Player:NetworkVar( "Vector", 1, "VaultPos2")
 	
 	self.Player:NetworkVar( "Float", 2, "Stamina" )
+
+	self.Player:NetworkVar( "String", 0, "ReqID1")
+	self.Player:NetworkVar( "String", 1, "ReqID2")
 end
 
 player_manager.RegisterClass( "player_benny", PLAYER, "player_default" )
