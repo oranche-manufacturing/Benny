@@ -2,10 +2,8 @@
 -- Dev spawnmenu
 
 function GM:OnSpawnMenuOpen()
-	RunConsoleCommand( "benny_debug_inv" )
 end
 function GM:OnSpawnMenuClose()
-	if IsValid( base ) then base:Remove() end
 end
 
 function OpenSMenu()
