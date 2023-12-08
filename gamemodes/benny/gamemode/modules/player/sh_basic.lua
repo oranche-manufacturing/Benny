@@ -175,7 +175,7 @@ hook.Add( "PlayerButtonDown", "Benny_PlayerButtonDown_Dev", function( ply, butto
 	if button == KEY_F1 then
 		OpenSettingsMenu()
 	elseif button == KEY_F2 then
-		OpenScorePanel()
+		OpenDebugInv()
 	elseif button == KEY_F3 then
 		OpenSMenu()
 	elseif button == KEY_F4 then

@@ -222,7 +222,10 @@ local function regen_items( itemlist )
 	end
 end
 concommand.Add("benny_debug_inv", function()
-	if IsValid( base ) then base:Remove() end
+	OpenDebugInv()
+end)
+function OpenDebugInv()
+	if IsValid( base ) then base:Remove() return end
 	base = vgui.Create("BFrame")
 	base:SetSize( ss(400), ss(400) )
 	base:SetTitle("Developer Inventory")
@@ -234,4 +237,4 @@ concommand.Add("benny_debug_inv", function()
 	itemlist:Dock( FILL )
 
 	regen_items( itemlist )
-end)
+end
