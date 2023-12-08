@@ -956,7 +956,7 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 		end
 	end
 
-	if wep then
+	if false and wep then
 		surface.SetDrawColor( color_white )
 		surface.DrawRect( sw/2 - ss(400)/2, sh/2 - ss(8)/2, ss(400*wep:GetWep1_Holstering()), ss(8) )
 

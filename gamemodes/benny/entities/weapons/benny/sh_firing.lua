@@ -32,6 +32,9 @@ function SWEP:BFire( hand )
 		if self:D_GetDelay( hand ) > CurTime() then
 			return
 		end
+		if self:D_GetHolstering( hand ) > 0 then
+			return
+		end
 		if self:D_GetClip( hand ) == 0 then
 			if self:D_GetBurst( hand ) >= 1 then
 				return

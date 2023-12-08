@@ -204,12 +204,11 @@ end
 
 function SWEP:BThinkHolster( hand )
 	if self:D_GetHolstering( hand ) > 0 then
-		self:D_SetHolstering( hand, math.Approach( self:D_GetHolstering( hand ), 0, FrameTime() / 0.2 ) )
+		self:D_SetHolstering( hand, math.Approach( self:D_GetHolstering( hand ), 0, FrameTime() / 0.35 ) )
 	end
 	if self:D_GetHolstering( hand ) == 0 then
 		self:D_SetHolstering( hand, -1 )
 		self:BHolster( hand )
-		self:D_SetReqID( hand, "" )
 	end
 end
 
@@ -222,11 +221,18 @@ function SWEP:Think()
 
 	for i=1, 1 do
 		local hand = i==2
-		if self:D_GetReqID( hand ) != self:D_GetID( hand ) then
-			if inv[self:D_GetReqID( hand )] and self:D_GetReqID( hand ) != "" then
-				self:BDeploy( hand, p:GetReqID1() )
-			else
+		local req = self:D_GetReqID( hand )
+		local curr = self:D_GetID( hand )
+		if req != curr then
+			if curr != "" then
+				-- require holster first
 				self:BStartHolster( hand )
+			else
+				if req != "" and inv[req] then
+					self:BDeploy( hand, req )
+				else
+					self:BStartHolster( hand )
+				end
 			end
 		end
 
@@ -260,7 +266,7 @@ function SWEP:Think()
 	end
 
 	local ht = "normal"
-	if self:GetUserAim() then
+	if self:GetUserAim() and self:D_GetHolstering( false ) < 0 then
 		if self:BClass( false ) then
 			if self:BClass( true ) then
 				ht = "duel"

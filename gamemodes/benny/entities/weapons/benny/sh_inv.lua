@@ -119,7 +119,7 @@ function SWEP:BDeploy( hand, id )
 		-- This breaks prediction somewhat!!
 		-- return -- PROTO: If you're in the middle of holstering, cancel it
 	elseif self:D_GetID( hand ) != "" then
-		self:BHolster( hand )
+		return--self:BHolster( hand )
 	end
 	local p = self:GetOwner()
 	local inv = p:INV_Get()
@@ -133,6 +133,7 @@ function SWEP:BDeploy( hand, id )
 	self:D_SetMagID( hand, "" )
 	self:D_SetClip( hand, 0 )
 	self:D_SetSpread( hand, 0 )
+	self:D_SetDelay( hand, CurTime() + 0.35 )
 	B_Sound( self, "Common.Deploy" )
 	if item.Loaded and item.Loaded != "" then
 		local mid = item.Loaded
