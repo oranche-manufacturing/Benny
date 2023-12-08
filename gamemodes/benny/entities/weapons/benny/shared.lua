@@ -211,11 +211,15 @@ function SWEP:Think()
 		self:SetWep2_Burst( 0 )
 	end
 
-	if wep1 and self:D_GetDelay( false ) < CurTime()-0.01 then
-		local mweh = math.Remap( CurTime(), self:D_GetShotTime( false ), self:D_GetShotTime( false )+wep1c.SpreadDecay_RampTime, 0, 1 )
-		mweh = math.Clamp( mweh, 0, 1 )
-		local decayfinal = Lerp( math.ease.InExpo( mweh ), wep1c.SpreadDecay_Start, wep1c.SpreadDecay_End )
-		self:D_SetSpread( false, math.Approach( self:D_GetSpread( false ), 0, decayfinal * FrameTime() ) )
+	for i=1, 2 do
+		local hand = i==2
+		local wep, wepc = self:BTable( hand ), self:BClass( hand )
+		if wepc and wepc.Features == "firearm" and self:D_GetDelay( hand ) < CurTime()-0.01 then
+			local mweh = math.Remap( CurTime(), self:D_GetShotTime( hand ), self:D_GetShotTime( hand )+wepc.SpreadDecay_RampTime, 0, 1 )
+			mweh = math.Clamp( mweh, 0, 1 )
+			local decayfinal = Lerp( math.ease.InExpo( mweh ), wepc.SpreadDecay_Start, wepc.SpreadDecay_End )
+			self:D_SetSpread( hand, math.Approach( self:D_GetSpread( hand ), 0, decayfinal * FrameTime() ) )
+		end
 	end
 
 	local ht = "normal"

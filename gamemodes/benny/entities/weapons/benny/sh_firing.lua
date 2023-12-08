@@ -59,7 +59,7 @@ function SWEP:BFire( hand )
 
 		
 		if CLIENT and IsFirstTimePredicted() then
-			if IsValid(self.CWM) then
+			if IsValid(self.CWM) and self.CWM:GetAttachment( 1 ) then
 				local vStart = self.CWM:GetAttachment( 1 ).Pos
 				--local vPoint = p:GetEyeTrace().HitPos
 				--local effectdata = EffectData()

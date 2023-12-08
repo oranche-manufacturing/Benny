@@ -535,11 +535,12 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 			end
 		end
 
-		if wep:GetUserAim() and wep:BClass( false ) then -- Crosshair
+		local meow = wep:C_DualCheck()
+		if wep:GetUserAim() and wep:BClass( meow ) and wep:BClass( meow ).Spread then -- Crosshair
 			local s, w, h = ss, ScrW(), ScrH()
 			local pl_x, pl_y = w/2, h/2
 
-			local dispersion = math.rad( wep:BSpread( false ) )
+			local dispersion = math.rad( wep:BSpread( meow ) )
 			cam.Start3D()
 				local lool = ( EyePos() + ( EyeAngles():Forward()*8192 ) + ( dispersion * EyeAngles():Up()*8192 ) ) :ToScreen()
 			cam.End3D()
@@ -592,7 +593,7 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 				local mat1 = i == 1 and mat_long_s or mat_long
 				local mat2 = i == 1 and mat_dot_s or mat_dot
 				surface.SetDrawColor( cooler )
-				if wep:BClass( false ).Type == "rifle" then
+				if wep:BClass( meow ).Type == "rifle" then
 					surface.SetMaterial( mat1 )
 					surface.DrawTexturedRectRotated( poosx - s(spacer_long) - gap, poosy, s(32), s(32), 0 )
 					surface.DrawTexturedRectRotated( poosx + s(spacer_long) + gap, poosy, s(32), s(32), 0 )
@@ -600,7 +601,7 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 					surface.SetMaterial( mat2 )
 					surface.DrawTexturedRectRotated( poosx, poosy - gap - s(spacer), s(32), s(32), 0 )
 					surface.DrawTexturedRectRotated( poosx, poosy + gap + s(spacer), s(32), s(32), 0 )
-				elseif wep:BClass( false ).Type == "smg" then
+				elseif wep:BClass( meow ).Type == "smg" then
 					surface.SetMaterial( mat1 )
 					surface.DrawTexturedRectRotated( poosx, poosy + gap + s(spacer_long), s(32), s(32), 90 )
 					surface.DrawTexturedRectRotated( poosx - (math.sin(math.rad(45))*gap) - (math.sin(math.rad(45))*s(spacer_long)), poosy - (math.sin(math.rad(45))*gap) - (math.sin(math.rad(45))*s(spacer_long)), s(32), s(32), -45 )
