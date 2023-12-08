@@ -53,6 +53,26 @@ function SWEP:D_SetShotTime( hand, value )
 	return (hand == true) and self:SetWep2_ShotTime( value ) or (hand == false) and self:SetWep1_ShotTime( value )
 end
 
+-- Weapon Holstering Time
+function SWEP:D_GetHolstering( hand )
+	return (hand == true) and self:GetWep2_Holstering() or (hand == false) and self:GetWep1_Holstering()
+end
+
+function SWEP:D_SetHolstering( hand, value )
+	return (hand == true) and self:SetWep2_Holstering( value ) or (hand == false) and self:SetWep1_Holstering( value )
+end
+
+-- Weapon Player Requesting ID
+function SWEP:D_GetReqID( hand )
+	local p = self:GetOwner()
+	return (hand == true) and p:GetReqID2() or (hand == false) and p:GetReqID1()
+end
+
+function SWEP:D_SetReqID( hand, value )
+	local p = self:GetOwner()
+	return (hand == true) and p:SetReqID2( value ) or (hand == false) and p:SetReqID1( value )
+end
+
 -- Internal SWEP Delay
 function SWEP:D_GetDelay( hand )
 	return (hand == true) and self:GetDelay2() or (hand == false) and self:GetDelay1()

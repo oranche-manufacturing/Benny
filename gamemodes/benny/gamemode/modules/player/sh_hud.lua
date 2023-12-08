@@ -27,13 +27,14 @@ local function beatup( ply, num )
 			if num == invid then
 				--RunConsoleCommand( "benny_inv_equip", iflip[item], "false", "false" )
 				if ply:KeyDown(IN_ZOOM) then
-					ply:SetReqID2(iflip[item])
+					return ply:SetReqID2(iflip[item])
 				else
-					ply:SetReqID1(iflip[item])
+					return ply:SetReqID1(iflip[item])
 				end
 			end
 		end
 	end
+	return ply:SetReqID1( "" )
 end
 
 hook.Add( "PlayerButtonDown", "Benny_PlayerButtonDown_Inv", function( ply, button )

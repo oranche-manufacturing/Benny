@@ -42,6 +42,8 @@ function SWEP:SetupDataTables()
 	self:NetworkVar( "Float", 5, "Wep2_Spread" )
 	self:NetworkVar( "Float", 6, "Wep1_ShotTime" )
 	self:NetworkVar( "Float", 7, "Wep2_ShotTime" )
+	self:NetworkVar( "Float", 8, "Wep1_Holstering" )
+	self:NetworkVar( "Float", 9, "Wep2_Holstering" )
 	self:NetworkVar( "String", 0, "Wep1" )
 	self:NetworkVar( "String", 1, "Wep2" )
 	self:NetworkVar( "String", 2, "Wep1_Clip" )
@@ -194,6 +196,23 @@ hook.Add( "PlayerButtonUp", "Benny_PlayerButtonUp_TempForAim", function( ply, bu
 	end
 end)
 
+function SWEP:BStartHolster( hand )
+	if self:D_GetHolstering( hand ) == -1 then
+		self:D_SetHolstering( hand, 1 )
+	end
+end
+
+function SWEP:BThinkHolster( hand )
+	if self:D_GetHolstering( hand ) > 0 then
+		self:D_SetHolstering( hand, math.Approach( self:D_GetHolstering( hand ), 0, FrameTime() / 0.2 ) )
+	end
+	if self:D_GetHolstering( hand ) == 0 then
+		self:D_SetHolstering( hand, -1 )
+		self:BHolster( hand )
+		self:D_SetReqID( hand, "" )
+	end
+end
+
 function SWEP:Think()
 	local p = self:GetOwner()
 	local inv = p:INV_Get()
@@ -201,30 +220,18 @@ function SWEP:Think()
 	local L, R = true, false
 	local curr_l, curr_r = self:D_GetID( true ), self:D_GetID( false )
 
-	if p:GetReqID1() != self:D_GetID( R ) then
-		if inv[p:GetReqID1()] and p:GetReqID1() != "" then
-			if curr_r != "" then
-				-- We already have something equipped here, move it to the offhand
-				self:BDeploy( L, curr_r )
-				p:SetReqID2( curr_r )
+	for i=1, 1 do
+		local hand = i==2
+		if self:D_GetReqID( hand ) != self:D_GetID( hand ) then
+			if inv[self:D_GetReqID( hand )] and self:D_GetReqID( hand ) != "" then
+				self:BDeploy( hand, p:GetReqID1() )
+			else
+				self:BStartHolster( hand )
 			end
-			self:BDeploy( R, p:GetReqID1() )
-		else
-			self:BHolster( R )
 		end
-	end
 
-	if p:GetReqID2() != self:D_GetID( L ) then
-		if inv[p:GetReqID2()] and p:GetReqID2() != "" then
-			if curr_l != "" then
-				-- We already have something equipped here, move it to the offhand
-				self:BDeploy( R, curr_l )
-				p:SetReqID1( curr_l )
-			end
-			self:BDeploy( L, p:GetReqID2() )
-		else
-			self:BHolster( L )
-		end
+		self:BThinkHolster( R )
+		-- print( self:D_GetReqID( hand ), self:D_GetID( hand ) )
 	end
 
 	local wep1 = self:BTable( false )

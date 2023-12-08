@@ -929,7 +929,7 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 		end
 	end
 
-	if false and p:BennyCheck() then
+	if false and wep then
 		local bx, by = sw/2, sh*(0.75)
 		local mx = 50
 
@@ -954,6 +954,13 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 				draw.SimpleText( "T_MagID2: " .. wep2_table.Loaded,		"Trebuchet24", bx+mx, by+24*3, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP )
 			end
 		end
+	end
+
+	if wep then
+		surface.SetDrawColor( color_white )
+		surface.DrawRect( sw/2 - ss(400)/2, sh/2 - ss(8)/2, ss(400*wep:GetWep1_Holstering()), ss(8) )
+
+		surface.DrawOutlinedRect( sw/2 - ss(400+2)/2, sh/2 - ss(8+2)/2, ss(400+2), ss(8+2), ss(0.5) )
 	end
 end )
 
