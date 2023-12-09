@@ -535,69 +535,72 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 				end
 			end
 		end
+	end
 
-		for h=1, 2 do
-			local hand = h==2
+	if wep then -- Crosshair
+		
+		local dispersion = math.rad( 1 )
+		cam.Start3D()
+			local lool = ( EyePos() + ( EyeAngles():Forward()*8192 ) + ( dispersion * EyeAngles():Up()*8192 ) ) :ToScreen()
+		cam.End3D()
+		gap = ( (ScrH()/2) - lool.y )
+
+		do
+			local tr1 = util.TraceLine({
+				start = p:EyePos(),
+				endpos = p:EyePos() + (p:EyeAngles():Forward()*16000),
+				filter = p
+			})
+
+			local tr2 = util.TraceLine({
+				start = globhit,
+				endpos = globhit + (globang:Forward()*16000),
+				filter = p
+			})
+
+			tr1f:Set(tr1.HitPos)
+			tr2f:Set(tr2.HitPos)
+		end
+
+		pl_x = tr2f:ToScreen().x
+		pl_y = tr2f:ToScreen().y
+		ps_x = tr2f:ToScreen().x
+		ps_y = tr2f:ToScreen().y
+
+		local touse1 = col_1
+		local touse1_primary = col_1a
+		local touse2 = col_2
+		if false then
+			pl_x = tr1f:ToScreen().x
+			pl_y = tr1f:ToScreen().y
+			ps_x = tr1f:ToScreen().x
+			ps_y = tr1f:ToScreen().y
+		elseif util.TraceLine({start = tr2f, endpos = tr1f, filter = p}).Fraction != 1 and !tr2f:IsEqualTol(tr1f, 1) then
+			touse1 = col_4
+			touse2 = col_3
+			pl_x = tr1f:ToScreen().x
+			pl_y = tr1f:ToScreen().y
+		end
+
+		pl_x = math.Round( pl_x )
+		pl_y = math.Round( pl_y )
+		ps_x = math.Round( ps_x )
+		ps_y = math.Round( ps_y )
+		
+		for hhhh=1, 2 do
+			local hand = hhhh==2
 			if wep:GetUserAim() and wep:BClass( hand ) then -- Crosshair
 				local s, w, h = ss, ScrW(), ScrH()
-				local pl_x, pl_y = w/2, h/2
 
+				local gap = gap
 				if wep:BClass( hand ).Spread then
-					local dispersion = math.rad( wep:BSpread( hand ) )
-					cam.Start3D()
-						local lool = ( EyePos() + ( EyeAngles():Forward()*8192 ) + ( dispersion * EyeAngles():Up()*8192 ) ) :ToScreen()
-					cam.End3D()
-					gap = ( (ScrH()/2) - lool.y )
-				else
-					gap = 0
+					gap = gap * wep:BSpread( hand )
 				end
-
-				do
-					local tr1 = util.TraceLine({
-						start = p:EyePos(),
-						endpos = p:EyePos() + (p:EyeAngles():Forward()*16000),
-						filter = p
-					})
-
-					local tr2 = util.TraceLine({
-						start = globhit,
-						endpos = globhit + (globang:Forward()*16000),
-						filter = p
-					})
-
-					tr1f:Set(tr1.HitPos)
-					tr2f:Set(tr2.HitPos)
-				end
-
-				pl_x = tr2f:ToScreen().x
-				pl_y = tr2f:ToScreen().y
-				ps_x = tr2f:ToScreen().x
-				ps_y = tr2f:ToScreen().y
-
-				local touse1 = col_1
-				local touse1_primary = col_1a
-				local touse2 = col_2
-				if ve then
-					pl_x = tr1f:ToScreen().x
-					pl_y = tr1f:ToScreen().y
-					ps_x = tr1f:ToScreen().x
-					ps_y = tr1f:ToScreen().y
-				elseif util.TraceLine({start = tr2f, endpos = tr1f, filter = p}).Fraction != 1 and !tr2f:IsEqualTol(tr1f, 1) then
-					touse1 = col_4
-					touse2 = col_3
-					pl_x = tr1f:ToScreen().x
-					pl_y = tr1f:ToScreen().y
-				end
-
-				pl_x = math.Round( pl_x )
-				pl_y = math.Round( pl_y )
-				ps_x = math.Round( ps_x )
-				ps_y = math.Round( ps_y )
 
 				local meow = wep:C_DualCheck()
 				
 				for i=1, 2 do
-					local cooler = i == 1 and touse2 or (hand!=meow and touse1_primary or touse1)
+					local cooler = i == 1 and touse2 or touse1--(hand!=meow and touse1_primary or touse1)
 					local poosx, poosy = i == 1 and ps_x or pl_x, i == 1 and ps_y or pl_y
 					local mat1 = i == 1 and mat_long_s or mat_long
 					local mat2 = i == 1 and mat_dot_s or mat_dot
@@ -625,8 +628,6 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 							fx, fy = math.Round( fx ), math.Round( fy )
 							surface.DrawTexturedRectRotated( fx, fy, s(16), s(16), i+(lmg and 0 or 90) )
 						end
-						--surface.SetMaterial( mat2 )
-						--surface.DrawTexturedRectRotated( poosx, poosy, s(32), s(32), 0 )
 					elseif typ == "pistol" then -- pistol
 						surface.SetMaterial( mat2 )
 						surface.DrawTexturedRectRotated( poosx - gap - s(spacer), poosy, s(32), s(32), 0 )
@@ -643,6 +644,7 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 				end
 			end
 		end
+
 	end
 
 	if false then -- Quickinv
