@@ -254,6 +254,7 @@ globang = Angle()
 tr1f = Vector()
 tr2f = Vector()
 local col_1 = Color(255, 255, 255, 200)
+local col_1a = Color(100, 100, 255, 200)
 local col_2 = Color(0, 0, 0, 255)
 local col_3 = Color(255, 127, 127, 255)
 local col_4 = Color(255, 222, 222, 255)
@@ -264,7 +265,7 @@ local mat_dot_s = Material("benny/hud/xhair/dot_s.png", "mips smooth")
 local mat_long_s = Material("benny/hud/xhair/long_s.png", "mips smooth")
 local spacer_long = 3 -- screenscaled
 local spacer = 1 -- screenscaled
-local gap = 8
+local gap = 0
 
 local trash_vec, trash_ang = Vector(), Angle()
 
@@ -535,97 +536,110 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 			end
 		end
 
-		local meow = wep:C_DualCheck()
-		if wep:GetUserAim() and wep:BClass( meow ) and wep:BClass( meow ).Spread then -- Crosshair
-			local s, w, h = ss, ScrW(), ScrH()
-			local pl_x, pl_y = w/2, h/2
+		for h=1, 2 do
+			local hand = h==2
+			if wep:GetUserAim() and wep:BClass( hand ) then -- Crosshair
+				local s, w, h = ss, ScrW(), ScrH()
+				local pl_x, pl_y = w/2, h/2
 
-			local dispersion = math.rad( wep:BSpread( meow ) )
-			cam.Start3D()
-				local lool = ( EyePos() + ( EyeAngles():Forward()*8192 ) + ( dispersion * EyeAngles():Up()*8192 ) ) :ToScreen()
-			cam.End3D()
-			gap = ( (ScrH()/2) - lool.y )
+				if wep:BClass( hand ).Spread then
+					local dispersion = math.rad( wep:BSpread( hand ) )
+					cam.Start3D()
+						local lool = ( EyePos() + ( EyeAngles():Forward()*8192 ) + ( dispersion * EyeAngles():Up()*8192 ) ) :ToScreen()
+					cam.End3D()
+					gap = ( (ScrH()/2) - lool.y )
+				else
+					gap = 0
+				end
 
-			do
-				local tr1 = util.TraceLine({
-					start = p:EyePos(),
-					endpos = p:EyePos() + (p:EyeAngles():Forward()*16000),
-					filter = p
-				})
+				do
+					local tr1 = util.TraceLine({
+						start = p:EyePos(),
+						endpos = p:EyePos() + (p:EyeAngles():Forward()*16000),
+						filter = p
+					})
 
-				local tr2 = util.TraceLine({
-					start = globhit,
-					endpos = globhit + (globang:Forward()*16000),
-					filter = p
-				})
+					local tr2 = util.TraceLine({
+						start = globhit,
+						endpos = globhit + (globang:Forward()*16000),
+						filter = p
+					})
 
-				tr1f:Set(tr1.HitPos)
-				tr2f:Set(tr2.HitPos)
-			end
+					tr1f:Set(tr1.HitPos)
+					tr2f:Set(tr2.HitPos)
+				end
 
-			pl_x = tr2f:ToScreen().x
-			pl_y = tr2f:ToScreen().y
-			ps_x = tr2f:ToScreen().x
-			ps_y = tr2f:ToScreen().y
+				pl_x = tr2f:ToScreen().x
+				pl_y = tr2f:ToScreen().y
+				ps_x = tr2f:ToScreen().x
+				ps_y = tr2f:ToScreen().y
 
-			local touse1 = col_1
-			local touse2 = col_2
-			if ve then
-				pl_x = tr1f:ToScreen().x
-				pl_y = tr1f:ToScreen().y
-				ps_x = tr1f:ToScreen().x
-				ps_y = tr1f:ToScreen().y
-			elseif util.TraceLine({start = tr2f, endpos = tr1f, filter = p}).Fraction != 1 and !tr2f:IsEqualTol(tr1f, 1) then
-				touse1 = col_4
-				touse2 = col_3
-				pl_x = tr1f:ToScreen().x
-				pl_y = tr1f:ToScreen().y
-			end
+				local touse1 = col_1
+				local touse1_primary = col_1a
+				local touse2 = col_2
+				if ve then
+					pl_x = tr1f:ToScreen().x
+					pl_y = tr1f:ToScreen().y
+					ps_x = tr1f:ToScreen().x
+					ps_y = tr1f:ToScreen().y
+				elseif util.TraceLine({start = tr2f, endpos = tr1f, filter = p}).Fraction != 1 and !tr2f:IsEqualTol(tr1f, 1) then
+					touse1 = col_4
+					touse2 = col_3
+					pl_x = tr1f:ToScreen().x
+					pl_y = tr1f:ToScreen().y
+				end
 
-			pl_x = math.Round( pl_x )
-			pl_y = math.Round( pl_y )
-			ps_x = math.Round( ps_x )
-			ps_y = math.Round( ps_y )
-			
-			for i=1, 2 do
-				local cooler = i == 1 and touse2 or touse1
-				local poosx, poosy = i == 1 and ps_x or pl_x, i == 1 and ps_y or pl_y
-				local mat1 = i == 1 and mat_long_s or mat_long
-				local mat2 = i == 1 and mat_dot_s or mat_dot
-				surface.SetDrawColor( cooler )
-				local typ = wep:BClass( meow ).Type
-				if typ == "rifle" then
-					surface.SetMaterial( mat1 )
-					surface.DrawTexturedRectRotated( poosx - s(spacer_long) - gap, poosy, s(16), s(16), 0 )
-					surface.DrawTexturedRectRotated( poosx + s(spacer_long) + gap, poosy, s(16), s(16), 0 )
+				pl_x = math.Round( pl_x )
+				pl_y = math.Round( pl_y )
+				ps_x = math.Round( ps_x )
+				ps_y = math.Round( ps_y )
 
-					surface.SetMaterial( mat2 )
-					surface.DrawTexturedRectRotated( poosx, poosy - gap - s(spacer), s(32), s(32), 0 )
-					surface.DrawTexturedRectRotated( poosx, poosy + gap + s(spacer), s(32), s(32), 0 )
-				elseif typ == "shotgun" or typ == "smg" or typ == "machinegun" then
-					local smg = typ == "smg"
-					local lmg = typ == "machinegun"
-					surface.SetMaterial( mat1 )
-					local split = smg and 3 or lmg and 4 or 8
-					for i=(360/split), 360, 360/split do
-						local i = i-(360/split)+180 + (lmg and 45 or 0) -- + ( CurTime()*0.25 % 1 )*360
-						local ra = math.rad(i)
-						local co, si, sl = math.cos(ra), math.sin(ra), s(spacer_long)
+				local meow = wep:C_DualCheck()
+				
+				for i=1, 2 do
+					local cooler = i == 1 and touse2 or (hand!=meow and touse1_primary or touse1)
+					local poosx, poosy = i == 1 and ps_x or pl_x, i == 1 and ps_y or pl_y
+					local mat1 = i == 1 and mat_long_s or mat_long
+					local mat2 = i == 1 and mat_dot_s or mat_dot
+					surface.SetDrawColor( cooler )
+					local typ = wep:BClass( hand ).Type
+					if typ == "rifle" then
 						surface.SetMaterial( mat1 )
-						local fx, fy = poosx + si*gap + si*sl, poosy + co*gap + co*sl
-						fx, fy = math.Round( fx ), math.Round( fy )
-						surface.DrawTexturedRectRotated( fx, fy, s(16), s(16), i+(lmg and 0 or 90) )
-					end
-					--surface.SetMaterial( mat2 )
-					--surface.DrawTexturedRectRotated( poosx, poosy, s(32), s(32), 0 )
-				else -- pistol
-					surface.SetMaterial( mat2 )
-					surface.DrawTexturedRectRotated( poosx - gap - s(spacer), poosy, s(32), s(32), 0 )
-					surface.DrawTexturedRectRotated( poosx + gap + s(spacer), poosy, s(32), s(32), 0 )
+						surface.DrawTexturedRectRotated( poosx - s(spacer_long) - gap, poosy, s(16), s(16), 0 )
+						surface.DrawTexturedRectRotated( poosx + s(spacer_long) + gap, poosy, s(16), s(16), 0 )
 
-					surface.SetMaterial( mat2 )
-					surface.DrawTexturedRectRotated( poosx, poosy - gap - s(spacer), s(32), s(32), 0 )
-					surface.DrawTexturedRectRotated( poosx, poosy + gap + s(spacer), s(32), s(32), 0 )
+						surface.SetMaterial( mat2 )
+						surface.DrawTexturedRectRotated( poosx, poosy - gap - s(spacer), s(32), s(32), 0 )
+						surface.DrawTexturedRectRotated( poosx, poosy + gap + s(spacer), s(32), s(32), 0 )
+					elseif typ == "shotgun" or typ == "smg" or typ == "machinegun" then
+						local smg = typ == "smg"
+						local lmg = typ == "machinegun"
+						surface.SetMaterial( mat1 )
+						local split = smg and 3 or lmg and 4 or 8
+						for i=(360/split), 360, 360/split do
+							local i = i-(360/split)+180 + (lmg and 45 or 0) -- + ( CurTime()*0.25 % 1 )*360
+							local ra = math.rad(i)
+							local co, si, sl = math.cos(ra), math.sin(ra), s(spacer_long)
+							surface.SetMaterial( mat1 )
+							local fx, fy = poosx + si*gap + si*sl, poosy + co*gap + co*sl
+							fx, fy = math.Round( fx ), math.Round( fy )
+							surface.DrawTexturedRectRotated( fx, fy, s(16), s(16), i+(lmg and 0 or 90) )
+						end
+						--surface.SetMaterial( mat2 )
+						--surface.DrawTexturedRectRotated( poosx, poosy, s(32), s(32), 0 )
+					elseif typ == "pistol" then -- pistol
+						surface.SetMaterial( mat2 )
+						surface.DrawTexturedRectRotated( poosx - gap - s(spacer), poosy, s(32), s(32), 0 )
+						surface.DrawTexturedRectRotated( poosx + gap + s(spacer), poosy, s(32), s(32), 0 )
+
+						surface.SetMaterial( mat2 )
+						surface.DrawTexturedRectRotated( poosx, poosy - gap - s(spacer), s(32), s(32), 0 )
+						surface.DrawTexturedRectRotated( poosx, poosy + gap + s(spacer), s(32), s(32), 0 )
+					elseif typ == "grenade" then -- grenade
+						surface.SetMaterial( mat2 )
+						surface.DrawTexturedRectRotated( poosx, poosy, s(32), s(32), 0 )
+						surface.DrawTexturedRectRotated( poosx, poosy, s(32), s(32), 0 )
+					end
 				end
 			end
 		end
@@ -753,7 +767,7 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 		local invid = 0
 		for _, item in pairs( weighted ) do
 			local id = iflip[item]
-			local active = wep:D_GetID( false ) == id or wep:D_GetID( true ) == id
+			local active = wep:D_GetReqID( false ) == id or wep:D_GetReqID( true ) == id
 			local class = WeaponGet(item.Class)
 			local boxsize = ss(b_w)
 			surface.SetDrawColor( scheme[active and "fg" or "bg"] )
@@ -762,12 +776,14 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 			draw.SimpleText( class.Name, "Benny_8", b_x + bump + boxsize/2, b_y + ss(6), scheme[active and "bg" or "fg"], TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP )
 			--draw.SimpleText( "", "Benny_8", b_x + bump + boxsize/2, b_y + ss(17), scheme["fg"], TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP )
 			if class.Features == "firearm" or class.Features == "grenade" then
+				invid = invid + 1
 				surface.SetDrawColor( scheme[active and "bg" or "fg"] )
 				surface.DrawOutlinedRect( b_x + bump + ss(1), b_y + ss(1), boxsize-ss(2), ss(b_h-2), ss(0.5) )
-				invid = invid + 1
-				surface.SetDrawColor( scheme[active and "fg" or "bg"] )
-				surface.DrawRect( b_x + bump, b_y - ss(2+12), ss(12), ss(12) )
-				draw.SimpleText( invid, "Benny_10", b_x + bump + ss(6), b_y - ss(2+10), scheme[active and "bg" or "fg"], TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP )
+				if invid < 11 then
+					surface.SetDrawColor( scheme[active and "fg" or "bg"] )
+					surface.DrawRect( b_x + bump, b_y - ss(2+12), ss(12), ss(12) )
+					draw.SimpleText( invid==10 and 0 or invid, "Benny_10", b_x + bump + ss(6), b_y - ss(2+10), scheme[active and "bg" or "fg"], TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP )
+				end
 			end
 
 			local maginv = p:INV_FindMagSmart( item.Class, id )

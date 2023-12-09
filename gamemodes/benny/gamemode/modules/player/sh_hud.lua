@@ -26,6 +26,7 @@ local function beatup( ply, num )
 		local id = iflip[item]
 		if class.Features == "firearm" or class.Features == "grenade" then
 			invid = invid + 1
+			if num == 0 then num = 10 end
 			if num == invid then
 				if ply:KeyDown(IN_ZOOM) then
 					if id == wep:D_GetID( true ) then
