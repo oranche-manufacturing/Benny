@@ -147,6 +147,7 @@ local function regen_items( itemlist )
 		button.B		= button:Add("DButton")
 		button.B:Dock( RIGHT )
 		function button.B:DoClick()
+			button:Remove()
 			return RunConsoleCommand( "benny_inv_discard", button.ID )
 		end
 		function button.B:Paint( w, h )
@@ -161,62 +162,8 @@ local function regen_items( itemlist )
 		button.B:DockMargin( ss(2), ss(2), ss(2), ss(2) )
 		button.B:SetSize( ss(36), ss(24) )
 
-		button.H		= button:Add("DButton")
-		button.H:Dock( RIGHT )
-		function button.H:DoClick()
-			return RunConsoleCommand( "benny_inv_holster", button.ID )
-		end
-		function button.H:Paint( w, h )
-			surface.SetDrawColor( schema( "fg" ) )
-			surface.DrawRect( 0, 0, w, h )
-
-			surface.SetDrawColor( schema( "bg" ) )
-			surface.DrawOutlinedRect( 0, 0, w, h, ss(1) )
-			draw.SimpleText( "HOLSTER", "Benny_10", w/2, h/2 + ss(1), schema_c("bg"), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER )
-			return true
-		end
-		button.H:DockMargin( ss(2), ss(2), ss(2), ss(2) )
-		button.H:SetSize( ss(36), ss(24) )
-
-		button.E_R		= button:Add("DButton")
-		button.E_R:Dock( RIGHT )
-		function button.E_R:DoClick()
-			return RunConsoleCommand( "benny_inv_equip", button.ID, "false", "true" )
-		end
-		function button.E_R:Paint( w, h )
-			surface.SetDrawColor( schema( "fg" ) )
-			surface.DrawRect( 0, 0, w, h )
-
-			surface.SetDrawColor( schema( "bg" ) )
-			surface.DrawOutlinedRect( 0, 0, w, h, ss(1) )
-			draw.SimpleText( "RIGHT", "Benny_10", w/2, h/2 + ss(1), schema_c("bg"), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER )
-			return true
-		end
-		button.E_R:DockMargin( ss(2), ss(2), ss(2), ss(2) )
-		button.E_R:SetSize( ss(36), ss(24) )
-
-		button.E_L		= button:Add("DButton")
-		button.E_L:Dock( RIGHT )
-		function button.E_L:DoClick()
-			return RunConsoleCommand( "benny_inv_equip", button.ID, "true", "true" )
-		end
-		function button.E_L:Paint( w, h )
-			surface.SetDrawColor( schema( "fg" ) )
-			surface.DrawRect( 0, 0, w, h )
-
-			surface.SetDrawColor( schema( "bg" ) )
-			surface.DrawOutlinedRect( 0, 0, w, h, ss(1) )
-			draw.SimpleText( "LEFT", "Benny_10", w/2, h/2 + ss(1), schema_c("bg"), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER )
-			return true
-		end
-		button.E_L:DockMargin( ss(2), ss(2), ss(2), ss(2) )
-		button.E_L:SetSize( ss(36), ss(24) )
-
 		function button:Think()
-			local visible = self.E_L:IsHovered() or self.E_R:IsHovered() or self.H:IsHovered() or self.B:IsHovered() or self:IsHovered()
-			self.E_L:SetVisible( visible )
-			self.E_R:SetVisible( visible )
-			self.H:SetVisible( visible )
+			local visible = self.B:IsHovered() or self:IsHovered()
 			self.B:SetVisible( visible )
 		end
 	end
