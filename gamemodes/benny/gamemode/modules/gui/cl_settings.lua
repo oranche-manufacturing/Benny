@@ -12,10 +12,10 @@ local conf = {
 	},
 	[2] = {
 		{ 0, "benny_wep_ao_firearms",		"Firearms Override Primary Attack" },
-			{ 2, "Pressing Left Mouse will shoot an offhand firearm." },
+			{ 2, "Like traditional akimbo, pressing Left Mouse will shoot an offhand firearm." },
 		{ 0, "benny_wep_ao_grenades",		"Grenades Override Primary Attack" },
 			{ 2, "Pressing Left Mouse will throw an offhand grenade." },
-		{ 0, "benny_wep_ao_junk",			"Junk Override Primary Attack" },
+		{ 0, "benny_wep_ao_junk",			"Junk Overrides Primary Attack" },
 			{ 2, "Pressing Left Mouse will throw offhand junk." },
 	},
 }
@@ -45,7 +45,7 @@ local function genpan( Base, Sect, Conf )
 		elseif v[1] == 2 then
 			local Butt = Scroll:Add("DLabel")
 			Butt:Dock(TOP)
-			Butt:DockMargin( 40, -5, 0, 0 )
+			Butt:DockMargin( 24, -5, 0, 0 )
 			Butt:SetText( v[2] )
 		end
 	end
