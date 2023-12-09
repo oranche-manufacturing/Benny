@@ -262,7 +262,7 @@ local mat_dot = Material("benny/hud/xhair/dotx.png", "smooth")
 local mat_long = Material("benny/hud/xhair/long.png", "smooth")
 local mat_dot_s = Material("benny/hud/xhair/dot_s.png", "mips smooth")
 local mat_long_s = Material("benny/hud/xhair/long_s.png", "mips smooth")
-local spacer_long = 5 -- screenscaled
+local spacer_long = 3 -- screenscaled
 local spacer = 1 -- screenscaled
 local gap = 8
 
@@ -593,22 +593,31 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 				local mat1 = i == 1 and mat_long_s or mat_long
 				local mat2 = i == 1 and mat_dot_s or mat_dot
 				surface.SetDrawColor( cooler )
-				if wep:BClass( meow ).Type == "rifle" then
+				local typ = wep:BClass( meow ).Type
+				if typ == "rifle" then
 					surface.SetMaterial( mat1 )
-					surface.DrawTexturedRectRotated( poosx - s(spacer_long) - gap, poosy, s(32), s(32), 0 )
-					surface.DrawTexturedRectRotated( poosx + s(spacer_long) + gap, poosy, s(32), s(32), 0 )
+					surface.DrawTexturedRectRotated( poosx - s(spacer_long) - gap, poosy, s(16), s(16), 0 )
+					surface.DrawTexturedRectRotated( poosx + s(spacer_long) + gap, poosy, s(16), s(16), 0 )
 
 					surface.SetMaterial( mat2 )
 					surface.DrawTexturedRectRotated( poosx, poosy - gap - s(spacer), s(32), s(32), 0 )
 					surface.DrawTexturedRectRotated( poosx, poosy + gap + s(spacer), s(32), s(32), 0 )
-				elseif wep:BClass( meow ).Type == "smg" then
+				elseif typ == "shotgun" or typ == "smg" or typ == "machinegun" then
+					local smg = typ == "smg"
+					local lmg = typ == "machinegun"
 					surface.SetMaterial( mat1 )
-					surface.DrawTexturedRectRotated( poosx, poosy + gap + s(spacer_long), s(32), s(32), 90 )
-					surface.DrawTexturedRectRotated( poosx - (math.sin(math.rad(45))*gap) - (math.sin(math.rad(45))*s(spacer_long)), poosy - (math.sin(math.rad(45))*gap) - (math.sin(math.rad(45))*s(spacer_long)), s(32), s(32), -45 )
-					surface.DrawTexturedRectRotated( poosx + (math.sin(math.rad(45))*gap) + (math.sin(math.rad(45))*s(spacer_long)), poosy - (math.sin(math.rad(45))*gap) - (math.sin(math.rad(45))*s(spacer_long)), s(32), s(32), 45 )
-
-					surface.SetMaterial( mat2 )
-					surface.DrawTexturedRectRotated( poosx, poosy, s(32), s(32), 0 )
+					local split = smg and 3 or lmg and 4 or 8
+					for i=(360/split), 360, 360/split do
+						local i = i-(360/split)+180 + (lmg and 45 or 0) -- + ( CurTime()*0.25 % 1 )*360
+						local ra = math.rad(i)
+						local co, si, sl = math.cos(ra), math.sin(ra), s(spacer_long)
+						surface.SetMaterial( mat1 )
+						local fx, fy = poosx + si*gap + si*sl, poosy + co*gap + co*sl
+						fx, fy = math.Round( fx ), math.Round( fy )
+						surface.DrawTexturedRectRotated( fx, fy, s(16), s(16), i+(lmg and 0 or 90) )
+					end
+					--surface.SetMaterial( mat2 )
+					--surface.DrawTexturedRectRotated( poosx, poosy, s(32), s(32), 0 )
 				else -- pistol
 					surface.SetMaterial( mat2 )
 					surface.DrawTexturedRectRotated( poosx - gap - s(spacer), poosy, s(32), s(32), 0 )
@@ -721,8 +730,8 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 		local inv = p:INV_Get()
 		local iflip = table.Flip( p:INV_Get())
 
-		local b_w = 38
-		local b_h = 14
+		local b_w = 42
+		local b_h = 19
 
 		local b_x, b_y = sw - Wb, sh - Hb - ss(b_h)
 
@@ -744,20 +753,21 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 		local invid = 0
 		for _, item in pairs( weighted ) do
 			local id = iflip[item]
+			local active = wep:D_GetID( false ) == id or wep:D_GetID( true ) == id
 			local class = WeaponGet(item.Class)
 			local boxsize = ss(b_w)
-			surface.SetDrawColor( scheme["bg"] )
+			surface.SetDrawColor( scheme[active and "fg" or "bg"] )
 			surface.DrawRect( b_x + bump, b_y, boxsize, ss(b_h) )
 			--draw.SimpleText( class.Type, "Benny_8", b_x + bump + boxsize/2, b_y + ss(3), scheme["fg"], TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP )
-			draw.SimpleText( class.Name, "Benny_8", b_x + bump + boxsize/2, b_y + ss(4), scheme["fg"], TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP )
+			draw.SimpleText( class.Name, "Benny_8", b_x + bump + boxsize/2, b_y + ss(6), scheme[active and "bg" or "fg"], TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP )
 			--draw.SimpleText( "", "Benny_8", b_x + bump + boxsize/2, b_y + ss(17), scheme["fg"], TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP )
 			if class.Features == "firearm" or class.Features == "grenade" then
-				surface.SetDrawColor( scheme["fg"] )
+				surface.SetDrawColor( scheme[active and "bg" or "fg"] )
 				surface.DrawOutlinedRect( b_x + bump + ss(1), b_y + ss(1), boxsize-ss(2), ss(b_h-2), ss(0.5) )
 				invid = invid + 1
-				surface.SetDrawColor( scheme["bg"] )
+				surface.SetDrawColor( scheme[active and "fg" or "bg"] )
 				surface.DrawRect( b_x + bump, b_y - ss(2+12), ss(12), ss(12) )
-				draw.SimpleText( invid, "Benny_10", b_x + bump + ss(6), b_y - ss(2+10), scheme["fg"], TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP )
+				draw.SimpleText( invid, "Benny_10", b_x + bump + ss(6), b_y - ss(2+10), scheme[active and "bg" or "fg"], TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP )
 			end
 
 			local maginv = p:INV_FindMagSmart( item.Class, id )
