@@ -15,138 +15,142 @@ function WeaponGet( classname )
 	return WEAPONS[ classname ]
 end
 
-AddSound( "1911.Fire", {
-	"benny/weapons/1911/01.ogg",
-	"benny/weapons/1911/02.ogg",
-	"benny/weapons/1911/03.ogg",
-}, 140, 100, 0.5, CHAN_STATIC )
+do -- Sound definitions
 
-AddSound( "Bizon.Fire", {
-	"benny/weapons/bizon/01.ogg",
-	"benny/weapons/bizon/02.ogg",
-	"benny/weapons/bizon/03.ogg",
-}, 140, 100, 0.5, CHAN_STATIC )
+	AddSound( "1911.Fire", {
+		"benny/weapons/1911/01.ogg",
+		"benny/weapons/1911/02.ogg",
+		"benny/weapons/1911/03.ogg",
+	}, 140, 100, 0.5, CHAN_STATIC )
 
-AddSound( "MP5K.Fire", {
-	"benny/weapons/mp5k/01.ogg",
-	"benny/weapons/mp5k/02.ogg",
-	"benny/weapons/mp5k/03.ogg",
-}, 140, 100, 0.5, CHAN_STATIC )
+	AddSound( "Bizon.Fire", {
+		"benny/weapons/bizon/01.ogg",
+		"benny/weapons/bizon/02.ogg",
+		"benny/weapons/bizon/03.ogg",
+	}, 140, 100, 0.5, CHAN_STATIC )
 
-AddSound( "MAC11.Fire", {
-	"benny/weapons/mac11/01.ogg",
-	"benny/weapons/mac11/02.ogg",
-	"benny/weapons/mac11/03.ogg",
-}, 140, 100, 0.5, CHAN_STATIC )
+	AddSound( "MP5K.Fire", {
+		"benny/weapons/mp5k/01.ogg",
+		"benny/weapons/mp5k/02.ogg",
+		"benny/weapons/mp5k/03.ogg",
+	}, 140, 100, 0.5, CHAN_STATIC )
 
-AddSound( "MP7.Fire", {
-	"benny/weapons/mp7/01.ogg",
-	"benny/weapons/mp7/02.ogg",
-	"benny/weapons/mp7/03.ogg",
-}, 140, 100, 0.5, CHAN_STATIC )
+	AddSound( "MAC11.Fire", {
+		"benny/weapons/mac11/01.ogg",
+		"benny/weapons/mac11/02.ogg",
+		"benny/weapons/mac11/03.ogg",
+	}, 140, 100, 0.5, CHAN_STATIC )
 
-AddSound( "TMP.Fire", {
-	"benny/weapons/tmp/01.ogg",
-	"benny/weapons/tmp/02.ogg",
-	"benny/weapons/tmp/03.ogg",
-}, 140, 100, 0.5, CHAN_STATIC )
+	AddSound( "MP7.Fire", {
+		"benny/weapons/mp7/01.ogg",
+		"benny/weapons/mp7/02.ogg",
+		"benny/weapons/mp7/03.ogg",
+	}, 140, 100, 0.5, CHAN_STATIC )
 
-AddSound( "Anaconda.Fire", {
-	"benny/weapons/anaconda/01.ogg",
-	"benny/weapons/anaconda/02.ogg",
-	"benny/weapons/anaconda/03.ogg",
-}, 140, 100, 0.5, CHAN_STATIC )
+	AddSound( "TMP.Fire", {
+		"benny/weapons/tmp/01.ogg",
+		"benny/weapons/tmp/02.ogg",
+		"benny/weapons/tmp/03.ogg",
+	}, 140, 100, 0.5, CHAN_STATIC )
 
-AddSound( "Nambu.Fire", {
-	"benny/weapons/nambu/01.ogg",
-	"benny/weapons/nambu/02.ogg",
-	"benny/weapons/nambu/03.ogg",
-}, 140, 100, 0.5, CHAN_STATIC )
+	AddSound( "Anaconda.Fire", {
+		"benny/weapons/anaconda/01.ogg",
+		"benny/weapons/anaconda/02.ogg",
+		"benny/weapons/anaconda/03.ogg",
+	}, 140, 100, 0.5, CHAN_STATIC )
 
-AddSound( "USP.Fire", {
-	"benny/weapons/usp/01.ogg",
-	"benny/weapons/usp/02.ogg",
-	"benny/weapons/usp/03.ogg",
-}, 140, 100, 0.5, CHAN_STATIC )
+	AddSound( "Nambu.Fire", {
+		"benny/weapons/nambu/01.ogg",
+		"benny/weapons/nambu/02.ogg",
+		"benny/weapons/nambu/03.ogg",
+	}, 140, 100, 0.5, CHAN_STATIC )
 
-AddSound( "Glock.Fire", {
-	"benny/weapons/glock/01.ogg",
-	"benny/weapons/glock/02.ogg",
-	"benny/weapons/glock/03.ogg",
-}, 140, 100, 0.5, CHAN_STATIC )
+	AddSound( "USP.Fire", {
+		"benny/weapons/usp/01.ogg",
+		"benny/weapons/usp/02.ogg",
+		"benny/weapons/usp/03.ogg",
+	}, 140, 100, 0.5, CHAN_STATIC )
 
-AddSound( "M92.Fire", {
-	"benny/weapons/m92/01.ogg",
-	"benny/weapons/m92/02.ogg",
-	"benny/weapons/m92/03.ogg",
-}, 140, 100, 0.5, CHAN_STATIC )
+	AddSound( "Glock.Fire", {
+		"benny/weapons/glock/01.ogg",
+		"benny/weapons/glock/02.ogg",
+		"benny/weapons/glock/03.ogg",
+	}, 140, 100, 0.5, CHAN_STATIC )
 
-AddSound( "P226.Fire", {
-	"benny/weapons/p226/01.ogg",
-	"benny/weapons/p226/02.ogg",
-	"benny/weapons/p226/03.ogg",
-}, 140, 100, 0.5, CHAN_STATIC )
+	AddSound( "M92.Fire", {
+		"benny/weapons/m92/01.ogg",
+		"benny/weapons/m92/02.ogg",
+		"benny/weapons/m92/03.ogg",
+	}, 140, 100, 0.5, CHAN_STATIC )
 
-AddSound( "M16A2.Fire", {
-	"benny/weapons/m16a2/01.ogg",
-	"benny/weapons/m16a2/02.ogg",
-	"benny/weapons/m16a2/03.ogg",
-}, 140, 100, 0.5, CHAN_STATIC )
+	AddSound( "P226.Fire", {
+		"benny/weapons/p226/01.ogg",
+		"benny/weapons/p226/02.ogg",
+		"benny/weapons/p226/03.ogg",
+	}, 140, 100, 0.5, CHAN_STATIC )
 
-AddSound( "FNC.Fire", {
-	"benny/weapons/fnc/01.ogg",
-	"benny/weapons/fnc/02.ogg",
-	"benny/weapons/fnc/03.ogg",
-}, 140, 100, 0.5, CHAN_STATIC )
+	AddSound( "M16A2.Fire", {
+		"benny/weapons/m16a2/01.ogg",
+		"benny/weapons/m16a2/02.ogg",
+		"benny/weapons/m16a2/03.ogg",
+	}, 140, 100, 0.5, CHAN_STATIC )
 
-AddSound( "AA12.Fire", "benny/weapons/aa12/01.ogg", 140, 100, 0.5, CHAN_STATIC )
+	AddSound( "FNC.Fire", {
+		"benny/weapons/fnc/01.ogg",
+		"benny/weapons/fnc/02.ogg",
+		"benny/weapons/fnc/03.ogg",
+	}, 140, 100, 0.5, CHAN_STATIC )
 
-AddSound( "SPAS12.Fire", {
-	"benny/weapons/spas12/01.ogg",
-	"benny/weapons/spas12/02.ogg",
-	"benny/weapons/spas12/03.ogg",
-}, 140, 100, 0.5, CHAN_STATIC )
+	AddSound( "AA12.Fire", "benny/weapons/aa12/01.ogg", 140, 100, 0.5, CHAN_STATIC )
 
-AddSound( "MP5K.MagOut", "benny/weapons/mp5k/magout.ogg", 70, 100, 0.5, CHAN_STATIC )
-AddSound( "MP5K.MagIn", "benny/weapons/mp5k/magin.ogg", 70, 100, 0.5, CHAN_STATIC )
-AddSound( "MAC11.MagOut", "benny/weapons/mac11/magout.ogg", 70, 100, 0.5, CHAN_STATIC )
-AddSound( "MAC11.MagIn", "benny/weapons/mac11/magin.ogg", 70, 100, 0.5, CHAN_STATIC )
-AddSound( "MP7.MagOut", "benny/weapons/mp7/magout.ogg", 70, 100, 0.5, CHAN_STATIC )
-AddSound( "MP7.MagIn", "benny/weapons/mp7/magin.ogg", 70, 100, 0.5, CHAN_STATIC )
-AddSound( "TMP.MagOut", "benny/weapons/tmp/magout.ogg", 70, 100, 0.5, CHAN_STATIC )
-AddSound( "TMP.MagIn", "benny/weapons/tmp/magin.ogg", 70, 100, 0.5, CHAN_STATIC )
-AddSound( "Bizon.MagOut", "benny/weapons/bizon/magout.ogg", 70, 100, 0.5, CHAN_STATIC )
-AddSound( "Bizon.MagIn", "benny/weapons/bizon/magin.ogg", 70, 100, 0.5, CHAN_STATIC )
-AddSound( "Anaconda.MagOut", "benny/weapons/anaconda/magout.ogg", 70, 100, 0.5, CHAN_STATIC )
-AddSound( "Anaconda.MagIn", "benny/weapons/anaconda/magin.ogg", 70, 100, 0.5, CHAN_STATIC )
-AddSound( "Nambu.MagOut", "benny/weapons/nambu/magout.ogg", 70, 100, 0.5, CHAN_STATIC )
-AddSound( "Nambu.MagIn", "benny/weapons/nambu/magin.ogg", 70, 100, 0.5, CHAN_STATIC )
-AddSound( "P226.MagOut", "benny/weapons/p226/magout.ogg", 70, 100, 0.5, CHAN_STATIC )
-AddSound( "P226.MagIn", "benny/weapons/p226/magin.ogg", 70, 100, 0.5, CHAN_STATIC )
-AddSound( "M92.MagOut", "benny/weapons/m92/magout.ogg", 70, 100, 0.5, CHAN_STATIC )
-AddSound( "M92.MagIn", "benny/weapons/m92/magin.ogg", 70, 100, 0.5, CHAN_STATIC )
-AddSound( "1911.MagOut", "benny/weapons/1911/magout.ogg", 70, 100, 0.5, CHAN_STATIC )
-AddSound( "1911.MagIn", "benny/weapons/1911/magin.ogg", 70, 100, 0.5, CHAN_STATIC )
-AddSound( "USP.MagOut", "benny/weapons/usp/magout.ogg", 70, 100, 0.5, CHAN_STATIC )
-AddSound( "USP.MagIn", "benny/weapons/usp/magin.ogg", 70, 100, 0.5, CHAN_STATIC )
-AddSound( "Glock.MagOut", "benny/weapons/glock/magout.ogg", 70, 100, 0.5, CHAN_STATIC )
-AddSound( "Glock.MagIn", "benny/weapons/glock/magin.ogg", 70, 100, 0.5, CHAN_STATIC )
-AddSound( "M16A2.MagOut", "benny/weapons/m16a2/magout.ogg", 70, 100, 0.5, CHAN_STATIC )
-AddSound( "M16A2.MagIn", "benny/weapons/m16a2/magin.ogg", 70, 100, 0.5, CHAN_STATIC )
-AddSound( "FNC.MagOut", "benny/weapons/fnc/magout.ogg", 70, 100, 0.5, CHAN_STATIC )
-AddSound( "FNC.MagIn", "benny/weapons/fnc/magin.ogg", 70, 100, 0.5, CHAN_STATIC )
-AddSound( "AA12.MagOut", "benny/weapons/aa12/magout.ogg", 70, 100, 0.5, CHAN_STATIC )
-AddSound( "AA12.MagIn", "benny/weapons/aa12/magin.ogg", 70, 100, 0.5, CHAN_STATIC )
-AddSound( "SPAS12.MagOut", {
-	"benny/weapons/spas12/magout-01.ogg",
-	"benny/weapons/spas12/magout-02.ogg",
-	"benny/weapons/spas12/magout-03.ogg",
-}, 70, 100, 0.5, CHAN_STATIC )
-AddSound( "SPAS12.MagIn", "benny/weapons/spas12/magin.ogg", 70, 100, 0.5, CHAN_STATIC )
+	AddSound( "SPAS12.Fire", {
+		"benny/weapons/spas12/01.ogg",
+		"benny/weapons/spas12/02.ogg",
+		"benny/weapons/spas12/03.ogg",
+	}, 140, 100, 0.5, CHAN_STATIC )
 
-AddSound( "Common.Dryfire.Pistol", "benny/weapons/common/06-13.ogg", 70, 100, 0.5, CHAN_STATIC )
-AddSound( "Common.Dryfire.Rifle", "benny/weapons/common/06-12.ogg", 70, 100, 0.5, CHAN_STATIC )
-AddSound( "Common.NoAmmo", "benny/weapons/noammo.ogg", 70, 100, 0.5, CHAN_STATIC )
+	AddSound( "MP5K.MagOut", "benny/weapons/mp5k/magout.ogg", 70, 100, 0.5, CHAN_STATIC )
+	AddSound( "MP5K.MagIn", "benny/weapons/mp5k/magin.ogg", 70, 100, 0.5, CHAN_STATIC )
+	AddSound( "MAC11.MagOut", "benny/weapons/mac11/magout.ogg", 70, 100, 0.5, CHAN_STATIC )
+	AddSound( "MAC11.MagIn", "benny/weapons/mac11/magin.ogg", 70, 100, 0.5, CHAN_STATIC )
+	AddSound( "MP7.MagOut", "benny/weapons/mp7/magout.ogg", 70, 100, 0.5, CHAN_STATIC )
+	AddSound( "MP7.MagIn", "benny/weapons/mp7/magin.ogg", 70, 100, 0.5, CHAN_STATIC )
+	AddSound( "TMP.MagOut", "benny/weapons/tmp/magout.ogg", 70, 100, 0.5, CHAN_STATIC )
+	AddSound( "TMP.MagIn", "benny/weapons/tmp/magin.ogg", 70, 100, 0.5, CHAN_STATIC )
+	AddSound( "Bizon.MagOut", "benny/weapons/bizon/magout.ogg", 70, 100, 0.5, CHAN_STATIC )
+	AddSound( "Bizon.MagIn", "benny/weapons/bizon/magin.ogg", 70, 100, 0.5, CHAN_STATIC )
+	AddSound( "Anaconda.MagOut", "benny/weapons/anaconda/magout.ogg", 70, 100, 0.5, CHAN_STATIC )
+	AddSound( "Anaconda.MagIn", "benny/weapons/anaconda/magin.ogg", 70, 100, 0.5, CHAN_STATIC )
+	AddSound( "Nambu.MagOut", "benny/weapons/nambu/magout.ogg", 70, 100, 0.5, CHAN_STATIC )
+	AddSound( "Nambu.MagIn", "benny/weapons/nambu/magin.ogg", 70, 100, 0.5, CHAN_STATIC )
+	AddSound( "P226.MagOut", "benny/weapons/p226/magout.ogg", 70, 100, 0.5, CHAN_STATIC )
+	AddSound( "P226.MagIn", "benny/weapons/p226/magin.ogg", 70, 100, 0.5, CHAN_STATIC )
+	AddSound( "M92.MagOut", "benny/weapons/m92/magout.ogg", 70, 100, 0.5, CHAN_STATIC )
+	AddSound( "M92.MagIn", "benny/weapons/m92/magin.ogg", 70, 100, 0.5, CHAN_STATIC )
+	AddSound( "1911.MagOut", "benny/weapons/1911/magout.ogg", 70, 100, 0.5, CHAN_STATIC )
+	AddSound( "1911.MagIn", "benny/weapons/1911/magin.ogg", 70, 100, 0.5, CHAN_STATIC )
+	AddSound( "USP.MagOut", "benny/weapons/usp/magout.ogg", 70, 100, 0.5, CHAN_STATIC )
+	AddSound( "USP.MagIn", "benny/weapons/usp/magin.ogg", 70, 100, 0.5, CHAN_STATIC )
+	AddSound( "Glock.MagOut", "benny/weapons/glock/magout.ogg", 70, 100, 0.5, CHAN_STATIC )
+	AddSound( "Glock.MagIn", "benny/weapons/glock/magin.ogg", 70, 100, 0.5, CHAN_STATIC )
+	AddSound( "M16A2.MagOut", "benny/weapons/m16a2/magout.ogg", 70, 100, 0.5, CHAN_STATIC )
+	AddSound( "M16A2.MagIn", "benny/weapons/m16a2/magin.ogg", 70, 100, 0.5, CHAN_STATIC )
+	AddSound( "FNC.MagOut", "benny/weapons/fnc/magout.ogg", 70, 100, 0.5, CHAN_STATIC )
+	AddSound( "FNC.MagIn", "benny/weapons/fnc/magin.ogg", 70, 100, 0.5, CHAN_STATIC )
+	AddSound( "AA12.MagOut", "benny/weapons/aa12/magout.ogg", 70, 100, 0.5, CHAN_STATIC )
+	AddSound( "AA12.MagIn", "benny/weapons/aa12/magin.ogg", 70, 100, 0.5, CHAN_STATIC )
+	AddSound( "SPAS12.MagOut", {
+		"benny/weapons/spas12/magout-01.ogg",
+		"benny/weapons/spas12/magout-02.ogg",
+		"benny/weapons/spas12/magout-03.ogg",
+	}, 70, 100, 0.5, CHAN_STATIC )
+	AddSound( "SPAS12.MagIn", "benny/weapons/spas12/magin.ogg", 70, 100, 0.5, CHAN_STATIC )
+
+	AddSound( "Common.Dryfire.Pistol", "benny/weapons/common/06-13.ogg", 70, 100, 0.5, CHAN_STATIC )
+	AddSound( "Common.Dryfire.Rifle", "benny/weapons/common/06-12.ogg", 70, 100, 0.5, CHAN_STATIC )
+	AddSound( "Common.NoAmmo", "benny/weapons/noammo.ogg", 70, 100, 0.5, CHAN_STATIC )
+
+end
 
 do -- Toolgun
 
@@ -421,7 +425,7 @@ do -- Handguns
 		Ammo = 12,
 		Damage = 30,
 		Spread = 15/60,
-		SpreadAdd = 0.5,
+		SpreadAdd = 0.4,
 		SpreadAddMax = 15,
 		
 		SpreadDecay_Start = 3,
@@ -447,7 +451,7 @@ do -- Handguns
 		Sound_MagOut = "Glock.MagOut",
 		Sound_MagIn = "Glock.MagIn",
 
-		Delay = (60/800),
+		Delay = (60/900),
 		Firemodes = FIREMODE_AUTOSEMI,
 		Ammo = 17,
 		Damage = 18,
@@ -482,7 +486,7 @@ do -- Handguns
 		Delay = (60/180),
 		Firemodes = FIREMODE_SEMI,
 		Ammo = 6,
-		Damage = 26,
+		Damage = 36,
 		Spread = 30/60,
 		SpreadAdd = 1.5,
 		SpreadAddMax = 15,
@@ -513,7 +517,7 @@ do -- Handguns
 		Delay = (60/180),
 		Firemodes = FIREMODE_SEMI,
 		Ammo = 6,
-		Damage = 49,
+		Damage = 55,
 		Spread = 30/60,
 		SpreadAdd = 6,
 		SpreadAddMax = 15,
@@ -544,7 +548,7 @@ do -- Handguns
 		Delay = (60/180),
 		Firemodes = FIREMODE_SEMI,
 		Ammo = 7,
-		Damage = 40,
+		Damage = 47,
 		Spread = 30/60,
 		SpreadAdd = 4,
 		SpreadAddMax = 15,
@@ -746,7 +750,7 @@ do -- Shotguns
 
 	WEAPONS["spas12"] = {
 		Name = "SPAS-12",
-		Description = "meow",
+		Description = "Heavy metal pump-action shotgun.",
 		Type = "shotgun",
 
 		WModel = "models/weapons/w_shotgun.mdl",
@@ -776,7 +780,7 @@ do -- Shotguns
 
 	WEAPONS["doublebarrel"] = {
 		Name = "D/B",
-		Description = "meow",
+		Description = "Pocket-sized double-barrelled rocket of fun!",
 		Type = "shotgun",
 
 		WModel = "models/weapons/w_shot_shorty.mdl",
@@ -806,7 +810,7 @@ do -- Shotguns
 
 	WEAPONS["aa12"] = {
 		Name = "AA-12",
-		Description = "meow",
+		Description = "Magazine fed powerhouse.",
 		Type = "shotgun",
 
 		WModel = "models/weapons/w_shot_br99.mdl",
@@ -840,7 +844,7 @@ do -- Rifles
 
 	WEAPONS["fnc"] = {
 		Name = "FNC PARA",
-		Description = "meow",
+		Description = "Run of the mill automatic assault rifle.",
 		Type = "rifle",
 
 		Icon = Material( "benny/weapons/fnc.png", "smooth" ),
@@ -856,7 +860,7 @@ do -- Rifles
 		Delay = (60/600),
 		Firemodes = FIREMODE_AUTOSEMI,
 		Ammo = 30,
-		Damage = 10,
+		Damage = 30,
 		Spread = 30/60,
 		SpreadAdd = 22/60,
 		SpreadAddMax = 10,
@@ -870,7 +874,7 @@ do -- Rifles
 
 	WEAPONS["qbz"] = {
 		Name = "QBZ-95",
-		Description = "Bullpup assault rifle.",
+		Description = "Bullpup assault rifle. Low profile, great in close quarters.",
 		Type = "rifle",
 
 		Icon = Material( "benny/weapons/fnc.png", "smooth" ),
@@ -886,7 +890,7 @@ do -- Rifles
 		Delay = (60/800),
 		Firemodes = FIREMODE_AUTOSEMI,
 		Ammo = 30,
-		Damage = 10,
+		Damage = 30,
 		Spread = 45/60,
 		SpreadAdd = 35/60,
 		SpreadAddMax = 10,
@@ -900,7 +904,7 @@ do -- Rifles
 
 	WEAPONS["m16a2"] = {
 		Name = "M16A2",
-		Description = "meow",
+		Description = "Burst-fire assault rifle. Precise and effective at range.",
 		Type = "rifle",
 
 		Icon = Material( "benny/weapons/m16a2.png", "smooth" ),
@@ -919,7 +923,7 @@ do -- Rifles
 			{ Mode = 1 },
 		},
 		Ammo = 30,
-		Damage = 10,
+		Damage = 30,
 		Spread = 22/60,
 		SpreadAdd = 11/60,
 		SpreadAddMax = 10,
