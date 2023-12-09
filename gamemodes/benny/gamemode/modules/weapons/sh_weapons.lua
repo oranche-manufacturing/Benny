@@ -605,7 +605,7 @@ do -- SMGs & PDWs
 		Sound_MagOut = "MP7.MagOut",
 		Sound_MagIn = "MP7.MagIn",
 
-		Delay = (60/700),
+		Delay = (60/900),
 		Firemodes = FIREMODE_AUTOSEMI,
 		Ammo = 20,
 		Damage = 16,
@@ -767,9 +767,9 @@ do -- Shotguns
 		SpreadAdd = 150/60,
 		SpreadAddMax = 20,
 		
-		SpreadDecay_Start = 150/60,
+		SpreadDecay_Start = 2,
 		SpreadDecay_End = 30,
-		SpreadDecay_RampTime = 2,
+		SpreadDecay_RampTime = 0.7,
 
 		Features = "firearm",
 	}
@@ -797,9 +797,9 @@ do -- Shotguns
 		SpreadAdd = 150/60,
 		SpreadAddMax = 20,
 		
-		SpreadDecay_Start = 150/60,
+		SpreadDecay_Start = 10,
 		SpreadDecay_End = 30,
-		SpreadDecay_RampTime = 1,
+		SpreadDecay_RampTime = 0.5,
 
 		Features = "firearm",
 	}
@@ -937,7 +937,7 @@ do -- Machine guns
 
 	WEAPONS["stoner63"] = {
 		Name = "STONER 63",
-		Description = "meow",
+		Description = "Box-fed light machine gun that maintains mid-range authority.",
 		Type = "machinegun",
 		
 		WModel = "models/weapons/w_mach_hk21e.mdl",
@@ -949,17 +949,24 @@ do -- Machine guns
 		Sound_MagOut = "M16A2.MagOut",
 		Sound_MagIn = "M16A2.MagIn",
 		
-		Delay = (60/550),
+		Delay = (60/650),
 		Firemodes = FIREMODE_AUTOSEMI,
 		Ammo = 75,
 		Damage = 10,
+		Spread = 26/60,
+		SpreadAdd = 22/60,
+		SpreadAddMax = 10,
+		
+		SpreadDecay_Start = 4,
+		SpreadDecay_End = 36,
+		SpreadDecay_RampTime = 0.6,
 
 		Features = "firearm",
 	}
 
 	WEAPONS["qbblsw"] = {
 		Name = "QBB-LSW-42",
-		Description = "Bullpup light machine gun.",
+		Description = "Bullpup mag-fed light machine gun that excels in close quarters.",
 		Type = "machinegun",
 		
 		WModel = "models/weapons/w_mach_mg36.mdl",
@@ -971,10 +978,17 @@ do -- Machine guns
 		Sound_MagOut = "M16A2.MagOut",
 		Sound_MagIn = "M16A2.MagIn",
 		
-		Delay = (60/550),
+		Delay = (60/850),
 		Firemodes = FIREMODE_AUTOSEMI,
 		Ammo = 60,
 		Damage = 10,
+		Spread = 36/60,
+		SpreadAdd = 33/60,
+		SpreadAddMax = 15,
+		
+		SpreadDecay_Start = 6,
+		SpreadDecay_End = 36,
+		SpreadDecay_RampTime = 0.4,
 
 		Features = "firearm",
 	}
