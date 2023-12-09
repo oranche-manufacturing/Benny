@@ -600,7 +600,7 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 				local meow = wep:C_DualCheck()
 				
 				for i=1, 2 do
-					local cooler = i == 1 and touse2 or touse1--(hand!=meow and touse1_primary or touse1)
+					local cooler = i == 1 and touse2 or (hand!=meow and touse1_primary or touse1)
 					local poosx, poosy = i == 1 and ps_x or pl_x, i == 1 and ps_y or pl_y
 					local mat1 = i == 1 and mat_long_s or mat_long
 					local mat2 = i == 1 and mat_dot_s or mat_dot
