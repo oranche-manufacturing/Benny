@@ -19,6 +19,7 @@ local function beatup( ply, num )
 	local inv = ply:INV_Get()
 	local wep = ply:BennyCheck()
 	local iflip = table.Flip( inv )
+	local hand = ply:KeyDown(IN_ZOOM)
 
 	local invid = 0
 	for _, item in pairs( weighted ) do
@@ -28,27 +29,20 @@ local function beatup( ply, num )
 			invid = invid + 1
 			if num == 0 then num = 10 end
 			if num == invid then
-				if ply:KeyDown(IN_ZOOM) then
-					if id == wep:D_GetID( true ) then
-						return ply:SetReqID2("")
-					else
-						return ply:SetReqID2(id)
-					end
+				if id == wep:D_GetID( hand ) then
+					-- If we are selected our currently equipped weapon, holster it.
+					return wep:D_SetReqID( hand, "" )
 				else
-					if id == wep:D_GetID( false ) then
-						return ply:SetReqID1("")
-					else
-						return ply:SetReqID1(id)
+					if id == wep:D_GetID( !hand ) then
+						-- If the wanted weapon is in the other hand, request to holster it.
+						wep:D_SetReqID( !hand, "" )
 					end
+					return wep:D_SetReqID( hand, id )
 				end
 			end
 		end
 	end
-	if ply:KeyDown(IN_ZOOM) then
-		return ply:SetReqID2( "" ) 
-	else
-		return ply:SetReqID1( "" )
-	end
+	return wep:D_SetReqID( hand, "" )
 end
 
 hook.Add( "PlayerButtonDown", "Benny_PlayerButtonDown_Inv", function( ply, button )

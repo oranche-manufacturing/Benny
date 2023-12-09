@@ -153,7 +153,7 @@ function SWEP:BHolster( hand )
 	end
 
 	local p = self:GetOwner()
-	B_Sound( self, "Common.Holster" )
+	--B_Sound( self, "Common.Holster" )
 	local item = self:BTable( hand )
 	if item then
 		local class = WeaponGet(item.Class)

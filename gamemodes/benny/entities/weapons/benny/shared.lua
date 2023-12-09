@@ -198,6 +198,8 @@ end)
 
 function SWEP:BStartHolster( hand )
 	if self:D_GetHolstering( hand ) == -1 then
+		B_Sound( self, "Common.Holster" )
+		-- print( "Holstering the " .. (hand and "LEFT" or "RIGHT") )
 		self:D_SetHolstering( hand, 1 )
 	end
 end
@@ -225,14 +227,21 @@ function SWEP:Think()
 	for i=1, 2 do
 		local hand = i==2
 		local req = self:D_GetReqID( hand )
+		local req_o = self:D_GetReqID( !hand )
 		local curr = self:D_GetID( hand )
+		local curr_o = self:D_GetID( !hand )
 		if req != curr then
 			if curr != "" then
 				-- require holster first
 				self:BStartHolster( hand )
 			else
+				local otherhasthis = curr_o == req
 				if req != "" and inv[req] then
-					self:BDeploy( hand, req )
+					if otherhasthis then
+						self:BStartHolster( !hand )
+					else
+						self:BDeploy( hand, req )
+					end
 				else
 					self:BStartHolster( hand )
 				end
