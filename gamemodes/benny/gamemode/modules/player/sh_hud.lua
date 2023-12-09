@@ -17,19 +17,28 @@ local dads = {
 local function beatup( ply, num )
 	local weighted = ply:INV_Weight()
 	local inv = ply:INV_Get()
+	local wep = ply:BennyCheck()
 	local iflip = table.Flip( inv )
 
 	local invid = 0
 	for _, item in pairs( weighted ) do
 		local class = WeaponGet(item.Class)
+		local id = iflip[item]
 		if class.Features == "firearm" or class.Features == "grenade" then
 			invid = invid + 1
 			if num == invid then
-				--RunConsoleCommand( "benny_inv_equip", iflip[item], "false", "false" )
 				if ply:KeyDown(IN_ZOOM) then
-					return ply:SetReqID2(iflip[item])
+					if id == wep:D_GetID( true ) then
+						return ply:SetReqID2("")
+					else
+						return ply:SetReqID2(id)
+					end
 				else
-					return ply:SetReqID1(iflip[item])
+					if id == wep:D_GetID( false ) then
+						return ply:SetReqID1("")
+					else
+						return ply:SetReqID1(id)
+					end
 				end
 			end
 		end
