@@ -224,6 +224,11 @@ function SWEP:Think()
 	local p = self:GetOwner()
 	local inv = p:INV_Get()
 
+	if self:D_GetReqID( false ) != "" and self:D_GetReqID( true ) != "" and self:D_GetReqID( false ) == self:D_GetReqID( true ) then
+		self:D_SetReqID( false, "" )
+		self:D_SetReqID( true, "" )
+		if CLIENT then chat.AddText( "Same weapons on ReqID, both holstered" ) end
+	end
 	for i=1, 2 do
 		local hand = i==2
 		if self:D_GetReqID( hand ) != "" and !inv[self:D_GetReqID( hand )] then
