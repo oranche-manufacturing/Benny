@@ -186,12 +186,12 @@ local function multlinetext(text, maxw, font)
 	return content
 end
 
-local c_F = 184
-local c_D = 184
-local c_C = 90
-local c_B = 60
-local c_A = 12
-local c_S = 0
+local h_F, s_F, v_F = 224,		0.00, 0.40
+local h_D, s_D, v_D = 224,		0.20, 0.40
+local h_C, s_C, v_C = 90,		0.40, 0.50
+local h_B, s_B, v_B = 60,		0.60, 0.80
+local h_A, s_A, v_A = 12,		0.70, 0.80
+local h_S, s_S, v_S = 0,		0.75, 0.80
 
 local function rank( perc )
 	local letter
@@ -199,33 +199,57 @@ local function rank( perc )
 	if perc <= 1/10 then
 		letter = "F"
 
-		local ler = math.Remap( perc, 0, 1/10, 0, 1 )
-		color = HSVToColor( c_F, 0, .4 )
+		local ler = math.ease.OutExpo( math.Remap( perc, 0, 1/10, 0, 1 ) )
+		color = HSVToColor(
+			h_F,
+			s_F,
+			v_F
+		)
 	elseif perc <= 3/10 then
 		letter = "D"
 
-		local ler = math.Remap( perc, 1/10, 3/10, 0, 1 )
-		color = HSVToColor( Lerp( ler, c_F, c_D ), Lerp( ler, 0.0, 0.5 ), .4 )
+		local ler = math.ease.OutExpo( math.Remap( perc, 1/10, 3/10, 0, 1 ) )
+		color = HSVToColor(
+			Lerp( ler, h_F, h_D ),
+			Lerp( ler, s_F, s_D ),
+			Lerp( ler, v_F, v_D )
+		)
 	elseif perc <= 5/10 then
 		letter = "C"
 
-		local ler = math.Remap( perc, 3/10, 5/10, 0, 1 )
-		color = HSVToColor( Lerp( ler, c_D, c_C ), Lerp( ler, 0.5, 0.5 ), Lerp( ler, 0.4, 0.6 ) )
+		local ler = math.ease.OutExpo( math.Remap( perc, 3/10, 5/10, 0, 1 ) )
+		color = HSVToColor(
+			Lerp( ler, h_D, h_C ),
+			Lerp( ler, s_D, s_C ),
+			Lerp( ler, v_D, v_C )
+		)
 	elseif perc <= 7/10 then
 		letter = "B"
 
-		local ler = math.Remap( perc, 5/10, 7/10, 0, 1 )
-		color = HSVToColor( Lerp( ler, c_C, c_B ), Lerp( ler, 0.5, 0.7 ), Lerp( ler, 0.6, 0.8 ) )
+		local ler = math.ease.OutExpo( math.Remap( perc, 5/10, 7/10, 0, 1 ) )
+		color = HSVToColor(
+			Lerp( ler, h_C, h_B ),
+			Lerp( ler, s_C, s_B ),
+			Lerp( ler, v_C, v_B )
+		)
 	elseif perc <= 9/10 then
 		letter = "A"
 
-		local ler = math.Remap( perc, 7/10, 9/10, 0, 1 )
-		color = HSVToColor( Lerp( ler, c_B, c_A ), Lerp( ler, 0.7, 0.75 ), .80 )
+		local ler = math.ease.OutExpo( math.Remap( perc, 7/10, 9/10, 0, 1 ) )
+		color = HSVToColor(
+			Lerp( ler, h_B, h_A ),
+			Lerp( ler, s_B, s_A ),
+			Lerp( ler, v_B, v_A )
+		)
 	elseif perc <= 1 then
 		letter = "S"
 
-		local ler = math.Remap( perc, 9/10, 1, 0, 1 )
-		color = HSVToColor( Lerp( ler, c_A, c_S ), Lerp( ler, 0.75, 0.75 ), .80 )
+		local ler = math.ease.OutExpo( math.Remap( perc, 9/10, 1, 0, 1 ) )
+		color = HSVToColor(
+			Lerp( ler, h_A, h_S ),
+			Lerp( ler, s_A, s_S ),
+			Lerp( ler, v_A, v_S )
+		)
 	end
 	return letter, color
 end
@@ -288,7 +312,6 @@ function OpenSMenu()
 				end
 				if us.Stat then
 					local perc = us.Stat( rang )
-					--perc = math.abs(math.sin(CurTime()*math.pi/(i^2)*10))
 					--perc = (CurTime()*0.2+i/4) % 2
 					--if perc > 1 then
 					--	perc = 2-perc
