@@ -647,107 +647,13 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 
 	end
 
-	if false then -- Quickinv
-		local inv = p:INV_Get()
-		local gap = ss(1)
-		local size_textx = ss(96)
-		local size_texty = ss(12)
-		local size_texty_sel = ss(36)
-		local size_num = ss(12)
-		local size_thi = ss(0.5)
-		
-		local nextwe = ss(96+2)
-		local nextwe_no = ss(12+2)
-		local item_start = ss(14)
-		local item_gap = ss(12+2)
-		local item_gap_sel = ss(36+2)
-
-		local inventorylist = p:INV_Buckets()
-		local bump = 0
-
-		-- PROTO: Maybe check this every 10hz instead
-		do
-			for n, bucket in ipairs( inventorylist ) do
-				for i, v in ipairs( bucket ) do
-					if v == wep:D_GetID( false ) then
-						bucket_selected = n
-						item_selected = i
-					end
-				end
-			end
-		end
-
-		for i, bucket in ipairs( inventorylist ) do
-			surface.SetDrawColor( scheme["bg"] )
-			surface.DrawRect( bump + Wb, Hb, size_num, size_num )
-
-			if i==bucket_selected then
-				surface.SetDrawColor( scheme["fg"] )
-				surface.DrawRect( bump + Wb + gap, Hb + gap, size_num - (gap*2), size_num - (gap*2) )
-
-				surface.SetFont( "Benny_12" )
-				surface.SetTextColor( scheme["bg"] )
-				surface.SetTextPos( bump + Wb + ss(3), Hb + ss(1) )
-				surface.DrawText( i )
-			else
-				surface.SetFont( "Benny_12" )
-				surface.SetTextColor( scheme["fg"] )
-				surface.SetTextPos( bump + Wb + ss(3), Hb + ss(1) )
-				surface.DrawText( i )
-			end
-
-			local ybump = 0
-			if i!=bucket_selected then
-				for d, item in ipairs( bucket ) do
-					surface.SetDrawColor( scheme["bg"] )
-					surface.DrawRect( bump + Wb, (item_start+ybump) + Hb, size_texty, size_texty )
-					ybump = ybump + (item_gap)
-				end
-				bump = bump + (nextwe_no)
-			else
-				for d, item in ipairs( bucket ) do
-					local idata = WeaponGet(inv[item].Class)
-					local sel = item==wep:D_GetID( false )--d==item_selected
-					surface.SetDrawColor( scheme["bg"] )
-					surface.DrawRect( bump + Wb, (item_start+ybump) + Hb, size_textx, (sel and size_texty_sel or size_texty) )
-					if sel then
-						surface.SetDrawColor( scheme["fg"] )
-						surface.DrawRect( bump + Wb + gap, (item_start+ybump) + Hb + gap, size_textx - (gap*2), (sel and size_texty_sel or size_texty) - (gap*2) )
-
-						surface.SetTextColor( scheme["bg"] )
-						-- PROTO: This is just useful information for me.
-						surface.SetFont( "Benny_8" )
-						local num = 0
-						for i, v in pairs( inv[item] ) do
-							surface.SetTextPos( bump + Wb + ss(3), (item_start+ybump) + Hb + ss(1+6+(4*num)) )
-							surface.DrawText( i .. " : " .. v )
-							num = num +1
-						end
-					else
-						surface.SetTextColor( scheme["fg"] )
-					end
-					surface.SetFont( "Benny_12" )
-					surface.SetTextPos( bump + Wb + ss(3), (item_start+ybump) + Hb + ss(1) )
-					surface.DrawText( idata.Name )
-
-					surface.SetFont( "Benny_8" )
-					surface.SetTextPos( bump + Wb + size_textx - surface.GetTextSize(item) - ss(3), (item_start+ybump) + Hb + ss(1) )
-					surface.DrawText( item )
-					ybump = ybump + (d==item_selected and item_gap_sel or item_gap)
-				end
-				bump = bump + (nextwe)
-			end
-		end
-	end
-
-	
 	if wep and ConVarCL_Bool("hud_enable_hotbar") then -- Newinv
 		local weighted = p:INV_Weight()
 		local inv = p:INV_Get()
 		local iflip = table.Flip( p:INV_Get())
 
-		local b_w = 42
-		local b_h = 19
+		local b_w = 48
+		local b_h = 22
 
 		local b_x, b_y = sw - Wb, sh - Hb - ss(b_h)
 
@@ -770,12 +676,17 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 		for _, item in pairs( weighted ) do
 			local id = iflip[item]
 			local active = wep:D_GetReqID( false ) == id or wep:D_GetReqID( true ) == id
+			local active_r = wep:D_GetReqID( false ) == id
+			local active_l = wep:D_GetReqID( true ) == id
 			local class = WeaponGet(item.Class)
 			local boxsize = ss(b_w)
 			surface.SetDrawColor( scheme[active and "fg" or "bg"] )
 			surface.DrawRect( b_x + bump, b_y, boxsize, ss(b_h) )
 			--draw.SimpleText( class.Type, "Benny_8", b_x + bump + boxsize/2, b_y + ss(3), scheme["fg"], TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP )
-			draw.SimpleText( class.Name, "Benny_8", b_x + bump + boxsize/2, b_y + ss(6), scheme[active and "bg" or "fg"], TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP )
+			draw.SimpleText( class.Name, "Benny_8", b_x + bump + boxsize/2, b_y + ss(4), scheme[active and "bg" or "fg"], TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP )
+			if active then
+				draw.SimpleText( active_r and "RIGHT" or active_l and "LEFT", "Benny_10", b_x + bump + boxsize/2, b_y + ss(10), scheme["bg"], TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP )
+			end
 			--draw.SimpleText( "", "Benny_8", b_x + bump + boxsize/2, b_y + ss(17), scheme["fg"], TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP )
 			if class.Features == "firearm" or class.Features == "grenade" then
 				invid = invid + 1
