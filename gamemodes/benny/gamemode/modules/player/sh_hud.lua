@@ -29,7 +29,7 @@ local function beatup( ply, num )
 			invid = invid + 1
 			if num == 0 then num = 10 end
 			if num == invid then
-				if id == wep:D_GetID( hand ) then
+				if id == wep:D_GetID( hand ) or id == wep:D_GetReqID( hand ) then
 					-- If we are selected our currently equipped weapon, holster it.
 					return wep:D_SetReqID( hand, "" )
 				else
@@ -37,7 +37,7 @@ local function beatup( ply, num )
 						-- If the wanted weapon is in the other hand, request to holster it.
 						wep:D_SetReqID( !hand, "" )
 					end
-					if wep:D_GetID( hand ) != "" then -- If we have something in this hand, swap it with the other
+					if wep:D_GetID( !hand ) != "" and wep:D_GetID( hand ) != "" then -- If we have something in this hand, swap it with the other
 						wep:D_SetReqID( !hand, wep:D_GetID( hand ) )
 					end
 					return wep:D_SetReqID( hand, id )
