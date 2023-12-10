@@ -915,7 +915,6 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 				-- PROTO: Get interp values
 				local interpr = GetConVarNumber( "cl_interp_ratio" )/GetConVarNumber( "cl_cmdrate" )
 				local interp = GetConVarNumber( "cl_interp" )
-				print( interpr, interp )
 				wr = wr - math.max( interpr, interp )
 
 				local r_w, r_h = ss(8), ss(72)
