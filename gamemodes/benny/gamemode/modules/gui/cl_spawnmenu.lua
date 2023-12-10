@@ -52,18 +52,22 @@ local mewer = {
 		Size = 12,
 		Font = "Benny_10",
 		Stat = function( class )
-			local dps = class.Damage * (1/class.Delay)
-			local dpscalc = rmt1c( dps, 100, 373 )
-			local magbonus-- = math.Remap( class.Ammo, 16, 40*2, -0.05, 0.3 )
-			if class.Ammo > 20 then
-				magbonus = 1-rmt1c( class.Ammo, 80, 20 )
-				magbonus = magbonus * 0.5
-			else
-				magbonus = math.Remap( class.Ammo, 5, 20, -0.75, -0.1 )
+			local weight_1, weight_2 = 1, 3
+			local totalscore = (weight_1 + weight_2)
+			weight_1, weight_2 = weight_1/totalscore, weight_2/totalscore
+			local score_1, score_2 = 1, 1
+
+			local truedelay = (1/class.Delay)
+			if class.Firemodes[1].Mode == 1 then
+				truedelay = math.min( truedelay, 60/300 )
 			end
-			local meowzor = math.ease.OutSine( math.Clamp( dpscalc + magbonus, 0, 1 ) )
-			print( class.Name, dps, dpscalc, math.Round( magbonus, 2 ), meowzor )
-			return meowzor
+			score_1 = rmt1c( class.Damage * truedelay, 100, 350 )
+			score_1 = score_1 * weight_1
+
+			score_2 = rmt1c( class.Ammo, 16, 42 )
+			score_2 = score_2 * weight_2
+
+			return score_1 + score_2
 		end,
 		-- "How much damage the weapon can output over a long period of time.\nDoes not consider armor penetration.\nAffected by Damage, RPM, Capacity and Reload Time."
 	},

@@ -464,7 +464,7 @@ do -- Handguns
 		Delay = (60/900),
 		Firemodes = FIREMODE_AUTOSEMI,
 		Ammo = 17,
-		Damage = 18,
+		Damage = 22,
 		Spread = 60/60,
 		SpreadAdd = 0.8,
 		SpreadAddMax = 15,
@@ -1043,19 +1043,19 @@ do -- Sniper rifles
 		Sound_MagOut = "M16A2.MagOut",
 		Sound_MagIn = "M16A2.MagIn",
 
-		Delay = (60/700),
+		Delay = (60/140),
 		Firemodes = {
 			{ Mode = 1 },
 		},
 		Ammo = 5,
 		Damage = 99,
 		Spread = 5/60,
-		SpreadAdd = 3,
-		SpreadAddMax = 9,
+		SpreadAdd = 9,
+		SpreadAddMax = 18,
 		
-		SpreadDecay_Start = 0,
-		SpreadDecay_End = 12,
-		SpreadDecay_RampTime = 0.3,
+		SpreadDecay_Start = 4,
+		SpreadDecay_End = 22,
+		SpreadDecay_RampTime = 1,
 
 		Speed_Move = 0.75,
 		Speed_Aiming = 0.75,
@@ -1095,6 +1095,11 @@ do -- Machine guns
 		SpreadDecay_End = 36,
 		SpreadDecay_RampTime = 0.6,
 
+		Speed_Move = 0.8,
+		Speed_Aiming = 0.75,
+		Speed_Reloading = 0.5,
+		Speed_Firing = 0.334,
+
 		Features = "firearm",
 	}
 
@@ -1123,6 +1128,11 @@ do -- Machine guns
 		SpreadDecay_Start = 6,
 		SpreadDecay_End = 36,
 		SpreadDecay_RampTime = 0.4,
+
+		Speed_Move = 0.8,
+		Speed_Aiming = 0.8,
+		Speed_Reloading = 0.75,
+		Speed_Firing = 0.334,
 
 		Features = "firearm",
 	}
