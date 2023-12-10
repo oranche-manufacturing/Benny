@@ -92,6 +92,7 @@ function PT:INV_Find( class, exclude )
 end
 
 local T_WEIGHT = {
+	["sniper"]			= 45,
 	["machinegun"]		= 40,
 	["rifle"]			= 35,
 	["shotgun"]			= 30,
@@ -167,8 +168,9 @@ do
 		["pistol"]			= { 2, 1 },
 		["smg"]				= { 3, 1 },
 		["shotgun"]			= { 4, 1 },
-		["rifle"]			= { 5, 1 },
-		["machinegun"]		= { 5, 2 },
+		["sniper"]			= { 5, 1 },
+		["rifle"]			= { 5, 2 },
+		["machinegun"]		= { 5, 3 },
 		["grenade"]			= { 6, 1 },
 		["utility"]			= { 6, 2 },
 		["equipment"]		= { 7, 1 },

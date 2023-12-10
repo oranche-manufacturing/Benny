@@ -606,7 +606,7 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 					local mat2 = i == 1 and mat_dot_s or mat_dot
 					surface.SetDrawColor( cooler )
 					local typ = wep:BClass( hand ).Type
-					if typ == "rifle" then
+					if typ == "rifle" or typ == "sniper" then
 						surface.SetMaterial( mat1 )
 						surface.DrawTexturedRectRotated( poosx - s(spacer_long) - gap, poosy, s(16), s(16), 0 )
 						surface.DrawTexturedRectRotated( poosx + s(spacer_long) + gap, poosy, s(16), s(16), 0 )

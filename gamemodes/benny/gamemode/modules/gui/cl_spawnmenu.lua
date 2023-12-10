@@ -10,6 +10,14 @@ local function yea()
 	return true
 end
 
+local function rmt1( val, min, max )
+	return math.Remap( val, min, max, 0, 1 )
+end
+
+local function rmt1c( val, min, max )
+	return math.Clamp( rmt1( val, min, max, 0, 1 ), 0, 1 )
+end
+
 local mewer = {
 	{
 		Func = function( class )
@@ -26,14 +34,18 @@ local mewer = {
 		Size = 14,
 		SizeMultiline = 12,
 		Font = "Benny_12",
+		-- "How easily and quickly the weapon can take out a single target.\nDoes not consider armor penetration.\nAffected by Damage and RPM."
 	},
 	{
 		Name = "Lethality",
 		Size = 12,
 		Font = "Benny_10",
 		Stat = function( class )
-			return math.Clamp( math.Remap( class.Damage * (class.Pellets or 1), 12, 50, 0, 1 ), 0, 1 )
+			local bwep =  math.Clamp( math.Remap( class.Damage * (class.Pellets or 1), 14, 80, 0, 1 ), 0, 1 )
+			local meowzor = math.ease.OutQuart( bwep )
+			return meowzor
 		end,
+		-- "How much the weapon's point of aim will move around.\nAffected by various Sway stats."
 	},
 	{
 		Name = "Suppression",
@@ -41,8 +53,19 @@ local mewer = {
 		Font = "Benny_10",
 		Stat = function( class )
 			local dps = class.Damage * (1/class.Delay)
-			return math.Clamp( math.Remap( dps, 50, 550, 0, 1 ), 0, 1 )
+			local dpscalc = rmt1c( dps, 100, 373 )
+			local magbonus-- = math.Remap( class.Ammo, 16, 40*2, -0.05, 0.3 )
+			if class.Ammo > 20 then
+				magbonus = 1-rmt1c( class.Ammo, 80, 20 )
+				magbonus = magbonus * 0.5
+			else
+				magbonus = math.Remap( class.Ammo, 5, 20, -0.75, -0.1 )
+			end
+			local meowzor = math.ease.OutSine( math.Clamp( dpscalc + magbonus, 0, 1 ) )
+			print( class.Name, dps, dpscalc, math.Round( magbonus, 2 ), meowzor )
+			return meowzor
 		end,
+		-- "How much damage the weapon can output over a long period of time.\nDoes not consider armor penetration.\nAffected by Damage, RPM, Capacity and Reload Time."
 	},
 	{
 		Name = "Range",
@@ -51,6 +74,7 @@ local mewer = {
 		Stat = function( class )
 			return 0
 		end,
+		-- "How well the weapon gains or loses damage over long distances.\nAffected by Minimum Range, Maximum Range, and damage falloff."
 	},
 	{
 		Name = "Precision",
@@ -59,6 +83,7 @@ local mewer = {
 		Stat = function( class )
 			return math.Clamp( math.Remap( class.Spread, 1/60, 2, 1, 0 ), 0, 1 )
 		end,
+		-- "How accurate the weapon is when firing single shots or short bursts.\nAffected by Spread and various Recoil stats."
 	},
 	{
 		Name = "Control",
@@ -67,6 +92,7 @@ local mewer = {
 		Stat = function( class )
 			return math.Clamp( math.Remap( class.SpreadAdd * (1/class.Delay), 1, 13, 1, 0 ), 0, 1 )
 		end,
+		-- "How managable the weapon's recoil and spread is under sustained fire.\nAffected by RPM and various Recoil stats."
 	},
 	{
 		Name = "Handling",
@@ -75,6 +101,7 @@ local mewer = {
 		Stat = function( class )
 			return 0
 		end,
+		-- "How quickly this weapon readies from sprinting, aiming and deploying.\nAffected by Aim Down Sights Time, Sprint To Fire Time, and Deploy Time."
 	},
 	{
 		Name = "Maneuvering",
@@ -83,23 +110,43 @@ local mewer = {
 		Stat = function( class )
 			return 0
 		end,
+		-- "How accurate the weapon is while not aiming.\nAffected by Hipfire Spread, Mid-air Spread, Sway, and Free Aim Angle."
 	},
 	{
 		Name = "Mobility",
 		Size = 12,
 		Font = "Benny_10",
 		Stat = function( class )
-			return 0
+			local weight_moving, weight_aiming, weight_reloading, weight_firing = 5, 5, 2, 1
+			local totalscore = (weight_moving + weight_aiming + weight_reloading + weight_firing)
+			weight_moving, weight_aiming, weight_reloading, weight_firing = weight_moving/totalscore, weight_aiming/totalscore, weight_reloading/totalscore, weight_firing/totalscore
+
+			local score_moving, score_aiming, score_reloading, score_firing = 1, 1, 1, 1
+
+			score_moving = rmt1c( class.Speed_Move or 1, 0.75, 0.95 )
+			score_moving = score_moving * weight_moving
+
+			score_aiming = rmt1c( class.Speed_Aiming or 1, 0.75, 0.95 )
+			score_aiming = score_aiming * weight_aiming
+
+			score_reloading = rmt1c( class.Speed_Reloading or 1, 0.75, 0.9 )
+			score_reloading = score_reloading * weight_reloading
+
+			score_firing = rmt1c( class.Speed_Firing or 1, 0.75, 0.9 )
+			score_firing = score_firing * weight_firing
+
+			return score_moving + score_aiming + score_reloading + score_firing
 		end,
+		-- "How fast the user can move while using this weapon.\nAffected by various Speed stats."
 	},
-	{
-		Name = "Stability",
-		Size = 12,
-		Font = "Benny_10",
-		Stat = function( class )
-			return 0
-		end,
-	},
+	-- {
+	-- 	Name = "Stability",
+	-- 	Size = 12,
+	-- 	Font = "Benny_10",
+	-- 	Stat = function( class )
+	-- 		return 0
+	-- 	end,
+	-- "How much the weapon's point of aim will move around.\nAffected by various Sway stats."- },
 }
 
 local function multlinetext(text, maxw, font)
@@ -183,7 +230,7 @@ function OpenSMenu()
 	if IsValid( smenu ) then smenu:Remove() return end
 	local active = GetConVar("benny_hud_tempactive"):GetString()
 	smenu = vgui.Create("BFrame")
-	smenu:SetSize( ss(640), ss(360) )
+	smenu:SetSize( ss(520), ss(360) )
 	smenu:SetTitle("Developer Spawnmenu")
 	smenu:MakePopup()
 	smenu:SetKeyboardInputEnabled( false )
@@ -194,7 +241,7 @@ function OpenSMenu()
 	smenu:Center()
 
 	local statlist = smenu:Add("DPanel")
-	statlist:SetWide( ss(320) )
+	statlist:SetWide( ss(300) )
 	statlist:Dock( RIGHT )
 	statlist:DockMargin( ss(2), 0, 0, 0 )
 	statlist:DockPadding( ss(2), ss(2), ss(2), ss(2) )
@@ -251,7 +298,9 @@ function OpenSMenu()
 
 					surface.SetDrawColor( col )
 					local width = w-(ss(60+1.5)+h)
-					surface.DrawRect( ss(60+1)+h, h*.125, math.max( ss(1), width*perc ), h*.75 )
+					surface.DrawRect( ss(60+1)+h, ss(3), math.max( ss(1), width*perc ), h-ss(6) )
+					--surface.SetDrawColor( schema("bg") )
+					--surface.DrawOutlinedRect( ss(60+1)+h, ss(0.5), width, h-ss(1), ss(2) )
 					for i=1, 10 do
 						if i==1 then continue end
 						surface.SetDrawColor( schema("fg", i%2==1 and 0.01 or 1) )
