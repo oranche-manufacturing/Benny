@@ -109,6 +109,18 @@ do -- Sound definitions
 		"benny/weapons/spas12/03.ogg",
 	}, 140, 100, 0.5, CHAN_STATIC )
 
+	AddSound( "QBBLSW.Fire", {
+		"benny/weapons/qbblsw/01.ogg",
+		"benny/weapons/qbblsw/02.ogg",
+		"benny/weapons/qbblsw/03.ogg",
+	}, 140, 100, 0.5, CHAN_STATIC )
+
+	AddSound( "Stoner63.Fire", {
+		"benny/weapons/stoner63/01.ogg",
+		"benny/weapons/stoner63/02.ogg",
+		"benny/weapons/stoner63/03.ogg",
+	}, 140, 100, 0.5, CHAN_STATIC )
+
 	AddSound( "MP5K.MagOut", "benny/weapons/mp5k/magout.ogg", 70, 100, 0.5, CHAN_STATIC )
 	AddSound( "MP5K.MagIn", "benny/weapons/mp5k/magin.ogg", 70, 100, 0.5, CHAN_STATIC )
 	AddSound( "MAC11.MagOut", "benny/weapons/mac11/magout.ogg", 70, 100, 0.5, CHAN_STATIC )
@@ -962,7 +974,7 @@ do -- Rifles
 		HoldType = "rpg",
 		GestureFire = { ACT_HL2MP_GESTURE_RANGE_ATTACK_PISTOL, 0.3 },
 
-		Sound_Fire = "FNC.Fire",
+		Sound_Fire = "QBBLSW.Fire",
 		Sound_DryFire = "Common.Dryfire.Rifle",
 		Sound_MagOut = "FNC.MagOut",
 		Sound_MagIn = "FNC.MagIn",
@@ -1079,7 +1091,7 @@ do -- Machine guns
 		HoldType = "rpg",
 		GestureFire = { ACT_HL2MP_GESTURE_RANGE_ATTACK_REVOLVER, 0.3 },
 
-		Sound_Fire = "FNC.Fire",
+		Sound_Fire = "Stoner63.Fire",
 		Sound_DryFire = "Common.Dryfire.Rifle",
 		Sound_MagOut = "M16A2.MagOut",
 		Sound_MagIn = "M16A2.MagIn",
@@ -1113,7 +1125,7 @@ do -- Machine guns
 		HoldType = "rpg",
 		GestureFire = { ACT_HL2MP_GESTURE_RANGE_ATTACK_REVOLVER, 0.3 },
 
-		Sound_Fire = "FNC.Fire",
+		Sound_Fire = "QBBLSW.Fire",
 		Sound_DryFire = "Common.Dryfire.Rifle",
 		Sound_MagOut = "M16A2.MagOut",
 		Sound_MagIn = "M16A2.MagIn",
