@@ -226,6 +226,9 @@ function SWEP:Think()
 
 	for i=1, 2 do
 		local hand = i==2
+		if self:D_GetReqID( hand ) != "" and !inv[self:D_GetReqID( hand )] then
+			self:D_SetReqID( hand, "" )
+		end
 		local req = self:D_GetReqID( hand )
 		local req_o = self:D_GetReqID( !hand )
 		local curr = self:D_GetID( hand )
@@ -236,7 +239,7 @@ function SWEP:Think()
 				self:BStartHolster( hand )
 			else
 				local otherhasthis = curr_o == req
-				if req != "" and inv[req] then
+				if req != "" then
 					if otherhasthis then
 						self:BStartHolster( !hand )
 					else
