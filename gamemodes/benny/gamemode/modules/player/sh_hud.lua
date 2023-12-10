@@ -22,6 +22,7 @@ local function beatup( ply, num )
 	local hand = ply:KeyDown(IN_ZOOM)
 
 	local invid = 0
+	if CLIENT and !IsFirstTimePredicted() then return end
 	for _, item in pairs( weighted ) do
 		local class = WeaponGet(item.Class)
 		local id = iflip[item]

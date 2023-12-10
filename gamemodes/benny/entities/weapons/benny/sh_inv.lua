@@ -1,65 +1,101 @@
 
 -- Weapon ID
 function SWEP:D_GetID( hand )
+	assert( hand!=nil, "Missing hand argument" )
 	return (hand == true) and self:GetWep2() or (hand == false) and self:GetWep1()
 end
 
 function SWEP:D_SetID( hand, value )
+	assert( hand!=nil, "Missing hand argument" )
 	return (hand == true) and self:SetWep2( value ) or (hand == false) and self:SetWep1( value )
 end
 
 -- Wep. Clip ID
 function SWEP:D_GetMagID( hand )
+	assert( hand!=nil, "Missing hand argument" )
 	return (hand == true) and self:GetWep2_Clip() or (hand == false) and self:GetWep1_Clip()
 end
 
 function SWEP:D_SetMagID( hand, value )
+	assert( hand!=nil, "Missing hand argument" )
 	return (hand == true) and self:SetWep2_Clip( value ) or (hand == false) and self:SetWep1_Clip( value )
 end
 
 -- Weapon Firemode
 function SWEP:D_GetFiremode( hand )
+	assert( hand!=nil, "Missing hand argument" )
 	return (hand == true) and self:GetWep2_Firemode() or (hand == false) and self:GetWep1_Firemode()
 end
 
 function SWEP:D_SetFiremode( hand, value )
+	assert( hand!=nil, "Missing hand argument" )
 	return (hand == true) and self:SetWep2_Firemode( value ) or (hand == false) and self:SetWep1_Firemode( value )
 end
 
 -- Weapon Burst
 function SWEP:D_GetBurst( hand )
+	assert( hand!=nil, "Missing hand argument" )
 	return (hand == true) and self:GetWep2_Burst() or (hand == false) and self:GetWep1_Burst()
 end
 
 function SWEP:D_SetBurst( hand, value )
+	assert( hand!=nil, "Missing hand argument" )
 	return (hand == true) and self:SetWep2_Burst( value ) or (hand == false) and self:SetWep1_Burst( value )
 end
 
 -- Weapon Spread
 function SWEP:D_GetSpread( hand )
+	assert( hand!=nil, "Missing hand argument" )
 	return (hand == true) and self:GetWep2_Spread() or (hand == false) and self:GetWep1_Spread()
 end
 
 function SWEP:D_SetSpread( hand, value )
+	assert( hand!=nil, "Missing hand argument" )
 	return (hand == true) and self:SetWep2_Spread( value ) or (hand == false) and self:SetWep1_Spread( value )
 end
 
 -- Weapon Spread
 function SWEP:D_GetShotTime( hand )
+	assert( hand!=nil, "Missing hand argument" )
 	return (hand == true) and self:GetWep2_ShotTime() or (hand == false) and self:GetWep1_ShotTime()
 end
 
 function SWEP:D_SetShotTime( hand, value )
+	assert( hand!=nil, "Missing hand argument" )
 	return (hand == true) and self:SetWep2_ShotTime( value ) or (hand == false) and self:SetWep1_ShotTime( value )
 end
 
 -- Weapon Holstering Time
 function SWEP:D_GetHolstering( hand )
+	assert( hand!=nil, "Missing hand argument" )
 	return (hand == true) and self:GetWep2_Holstering() or (hand == false) and self:GetWep1_Holstering()
 end
 
 function SWEP:D_SetHolstering( hand, value )
+	assert( hand!=nil, "Missing hand argument" )
 	return (hand == true) and self:SetWep2_Holstering( value ) or (hand == false) and self:SetWep1_Holstering( value )
+end
+
+-- Weapon Reloading Time
+function SWEP:D_GetReloading( hand )
+	assert( hand!=nil, "Missing hand argument" )
+	return (hand == true) and self:GetWep2_Reloading() or (hand == false) and self:GetWep1_Reloading()
+end
+
+function SWEP:D_SetReloading( hand, value )
+	assert( hand!=nil, "Missing hand argument" )
+	return (hand == true) and self:SetWep2_Reloading( value ) or (hand == false) and self:SetWep1_Reloading( value )
+end
+
+-- Weapon Reload Type
+function SWEP:D_GetReloadType( hand )
+	assert( hand!=nil, "Missing hand argument" )
+	return (hand == true) and self:GetWep2_ReloadType() or (hand == false) and self:GetWep1_ReloadType()
+end
+
+function SWEP:D_SetReloadType( hand, value )
+	assert( hand!=nil, "Missing hand argument" )
+	return (hand == true) and self:SetWep2_ReloadType( value ) or (hand == false) and self:SetWep1_ReloadType( value )
 end
 
 -- Weapon Player Requesting ID

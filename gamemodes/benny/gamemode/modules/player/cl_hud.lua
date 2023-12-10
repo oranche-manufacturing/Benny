@@ -612,8 +612,8 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 						surface.DrawTexturedRectRotated( poosx + s(spacer_long) + gap, poosy, s(16), s(16), 0 )
 
 						surface.SetMaterial( mat2 )
-						surface.DrawTexturedRectRotated( poosx, poosy - gap - s(spacer), s(32), s(32), 0 )
-						surface.DrawTexturedRectRotated( poosx, poosy + gap + s(spacer), s(32), s(32), 0 )
+						surface.DrawTexturedRectRotated( poosx, poosy - gap - s(spacer), s(24), s(24), 0 )
+						surface.DrawTexturedRectRotated( poosx, poosy + gap + s(spacer), s(24), s(24), 0 )
 					elseif typ == "shotgun" or typ == "smg" or typ == "machinegun" then
 						local smg = typ == "smg"
 						local lmg = typ == "machinegun"
@@ -630,12 +630,12 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 						end
 					elseif typ == "pistol" then -- pistol
 						surface.SetMaterial( mat2 )
-						surface.DrawTexturedRectRotated( poosx - gap - s(spacer), poosy, s(32), s(32), 0 )
-						surface.DrawTexturedRectRotated( poosx + gap + s(spacer), poosy, s(32), s(32), 0 )
+						surface.DrawTexturedRectRotated( poosx - gap - s(spacer), poosy, s(24), s(24), 0 )
+						surface.DrawTexturedRectRotated( poosx + gap + s(spacer), poosy, s(24), s(24), 0 )
 
 						surface.SetMaterial( mat2 )
-						surface.DrawTexturedRectRotated( poosx, poosy - gap - s(spacer), s(32), s(32), 0 )
-						surface.DrawTexturedRectRotated( poosx, poosy + gap + s(spacer), s(32), s(32), 0 )
+						surface.DrawTexturedRectRotated( poosx, poosy - gap - s(spacer), s(24), s(24), 0 )
+						surface.DrawTexturedRectRotated( poosx, poosy + gap + s(spacer), s(24), s(24), 0 )
 					elseif typ == "grenade" then -- grenade
 						surface.SetMaterial( mat2 )
 						surface.DrawTexturedRectRotated( poosx, poosy, s(32), s(32), 0 )
@@ -895,11 +895,44 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 		end
 	end
 
-	if false and wep then
-		surface.SetDrawColor( color_white )
-		surface.DrawRect( sw/2 - ss(400)/2, sh/2 - ss(8)/2, ss(400*wep:GetWep1_Holstering()), ss(8) )
+	if true and wep then
+		for i=1, 2 do
+			local hand = i==2
+			local boost = ss(44)
+			if hand then boost = -boost end
 
-		surface.DrawOutlinedRect( sw/2 - ss(400+2)/2, sh/2 - ss(8+2)/2, ss(400+2), ss(8+2), ss(0.5) )
+			local wr = wep:D_GetReloading( hand )
+			if wr > 0 then
+				local translate = 1
+				if wep:D_GetReloadType( hand ) == 2 then
+					wr = math.TimeFraction( 0, wep.GEN_MagOut, wr )
+				else
+					wr = math.TimeFraction( 0, wep.GEN_MagIn, wr )
+				end
+				translate = wr/wep:D_GetReloading( hand )
+
+				wr = 1-wr
+				-- PROTO: Get interp values
+				local interpr = GetConVarNumber( "cl_interp_ratio" )/GetConVarNumber( "cl_cmdrate" )
+				local interp = GetConVarNumber( "cl_interp" )
+				print( interpr, interp )
+				wr = wr - math.max( interpr, interp )
+
+				local r_w, r_h = ss(8), ss(72)
+				local r_x, r_y = sw/2 - r_w/2 + boost, sh/2 - r_h/2
+
+				surface.SetDrawColor( schema("bg") )
+				surface.DrawRect( r_x, r_y, r_w, r_h )
+				surface.SetDrawColor( schema("fg") )
+				surface.DrawOutlinedRect( r_x + ss(1), r_y + ss(1), r_w - ss(2), r_h - ss(2), ss(0.5) )
+
+				surface.DrawRect( r_x + ss(2), r_y + ss(2) + (r_h-ss(4))-math.Round( (r_h-ss(4)) * wr ), r_w - ss(4), math.Round((r_h - ss(4)) * wr) )
+
+				surface.SetDrawColor( 255, 100, 100 )
+				surface.DrawRect( r_x + ss(2), r_y + ss(2) + (r_h+ss(4))*(translate*wep.GEN_MagIn_BonusStart), r_w - ss(4), ss(1) )
+				surface.DrawRect( r_x + ss(2), r_y + ss(2) + (r_h+ss(4))*(translate*wep.GEN_MagIn_BonusEnd), r_w - ss(4), ss(1) )
+			end
+		end
 	end
 end )
 

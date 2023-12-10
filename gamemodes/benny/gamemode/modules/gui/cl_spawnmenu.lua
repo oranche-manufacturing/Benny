@@ -71,15 +71,15 @@ local mewer = {
 		end,
 		-- "How much damage the weapon can output over a long period of time.\nDoes not consider armor penetration.\nAffected by Damage, RPM, Capacity and Reload Time."
 	},
-	{
-		Name = "Range",
-		Size = 12,
-		Font = "Benny_10",
-		Stat = function( class )
-			return 0
-		end,
-		-- "How well the weapon gains or loses damage over long distances.\nAffected by Minimum Range, Maximum Range, and damage falloff."
-	},
+	-- 
+	-- 	Name = "Range",
+	-- 	Size = 12,
+	-- 	Font = "Benny_10",
+	-- 	Stat = function( class )
+	-- 		return 0
+	-- 	end,
+	-- 	-- "How well the weapon gains or loses damage over long distances.\nAffected by Minimum Range, Maximum Range, and damage falloff."
+	-- },
 	{
 		Name = "Precision",
 		Size = 12,
@@ -98,24 +98,24 @@ local mewer = {
 		end,
 		-- "How managable the weapon's recoil and spread is under sustained fire.\nAffected by RPM and various Recoil stats."
 	},
-	{
-		Name = "Handling",
-		Size = 12,
-		Font = "Benny_10",
-		Stat = function( class )
-			return 0
-		end,
-		-- "How quickly this weapon readies from sprinting, aiming and deploying.\nAffected by Aim Down Sights Time, Sprint To Fire Time, and Deploy Time."
-	},
-	{
-		Name = "Maneuvering",
-		Size = 12,
-		Font = "Benny_10",
-		Stat = function( class )
-			return 0
-		end,
-		-- "How accurate the weapon is while not aiming.\nAffected by Hipfire Spread, Mid-air Spread, Sway, and Free Aim Angle."
-	},
+	-- {
+	-- 	Name = "Handling",
+	-- 	Size = 12,
+	-- 	Font = "Benny_10",
+	-- 	Stat = function( class )
+	-- 		return 0
+	-- 	end,
+	-- 	-- "How quickly this weapon readies from sprinting, aiming and deploying.\nAffected by Aim Down Sights Time, Sprint To Fire Time, and Deploy Time."
+	-- },
+	-- {
+	-- 	Name = "Maneuvering",
+	-- 	Size = 12,
+	-- 	Font = "Benny_10",
+	-- 	Stat = function( class )
+	-- 		return 0
+	-- 	end,
+	-- 	-- "How accurate the weapon is while not aiming.\nAffected by Hipfire Spread, Mid-air Spread, Sway, and Free Aim Angle."
+	-- },
 	{
 		Name = "Mobility",
 		Size = 12,

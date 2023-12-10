@@ -27,6 +27,8 @@ AddCSLuaFile( "sh_inv.lua" )
 include		( "sh_inv.lua" )
 AddCSLuaFile( "sh_holdtypes.lua" )
 include		( "sh_holdtypes.lua" )
+AddCSLuaFile( "sh_reload.lua" )
+include		( "sh_reload.lua" )
 
 AddCSLuaFile( "cl_wm.lua" )
 if CLIENT then
@@ -44,6 +46,8 @@ function SWEP:SetupDataTables()
 	self:NetworkVar( "Float", 7, "Wep2_ShotTime" )
 	self:NetworkVar( "Float", 8, "Wep1_Holstering" )
 	self:NetworkVar( "Float", 9, "Wep2_Holstering" )
+	self:NetworkVar( "Float", 10, "Wep1_Reloading" )
+	self:NetworkVar( "Float", 11, "Wep2_Reloading" )
 	self:NetworkVar( "String", 0, "Wep1" )
 	self:NetworkVar( "String", 1, "Wep2" )
 	self:NetworkVar( "String", 2, "Wep1_Clip" )
@@ -52,11 +56,19 @@ function SWEP:SetupDataTables()
 	self:NetworkVar( "Int", 1, "Wep2_Burst" )
 	self:NetworkVar( "Int", 2, "Wep1_Firemode" )
 	self:NetworkVar( "Int", 3, "Wep2_Firemode" )
+	self:NetworkVar( "Int", 4, "Wep1_ReloadType" )
+	self:NetworkVar( "Int", 5, "Wep2_ReloadType" )
 	self:NetworkVar( "Bool", 0, "UserAim" )
 	self:NetworkVar( "Bool", 1, "GrenadeDown" )
 
 	self:SetWep1_Firemode( 1 )
 	self:SetWep2_Firemode( 1 )
+
+	self:SetWep1_Holstering( -1 )
+	self:SetWep2_Holstering( -1 )
+
+	self:SetWep1_Reloading( -1 )
+	self:SetWep2_Reloading( -1 )
 end
 
 -- BENNY shit
@@ -96,73 +108,6 @@ function SWEP:B_FiremodeName( alt )
 	end
 end
 
-function SWEP:Reload( hand )
-	if hand == nil then return end -- Needs to be called from the custom ones
-	local p = self:GetOwner()
-	local inv = p:INV_Get()
-	local wep_table = self:BTable( hand )
-	local wep_class = self:BClass( hand )
-	if wep_table then
-		if wep_class.Custom_Reload then
-			if wep_class.Custom_Reload( self, wep_table ) then return end
-		end
-		if self:D_GetDelay( hand ) > CurTime() then
-			return false
-		end
-
-		local mid = self:D_GetMagID( hand )
-		if SERVER or (CLIENT and IsFirstTimePredicted()) then
-			if mid != "" then
-				if !inv[mid] then
-					ErrorNoHalt( "Mag isn't a valid item" )
-					self:D_SetMagID( hand, "" )
-					wep_table.Loaded = ""
-				elseif inv[mid].Ammo == 0 then
-					if SERVER or (CLIENT and IsFirstTimePredicted()) then
-						p:INV_Discard( mid )
-					end
-				end
-
-				self:D_SetMagID( hand, "" )
-				self:D_SetClip( hand, 0 )
-				B_Sound( self, wep_class.Sound_MagOut )
-				wep_table.Loaded = ""
-			else
-				local maglist = p:INV_FindMag( wep_table.Class )
-				local mag
-				
-				local usedlist = {}
-				for _id, mrow in pairs( inv ) do
-					if mrow.Loaded and mrow.Loaded != "" then
-						usedlist[mrow.Loaded] = true
-						-- print( mrow.Loaded .. " Added to Mrowlist" )
-					end
-				end
-				
-				for num, mid in ipairs( maglist ) do
-					if usedlist[mid] then
-						-- print( "oh No we can't use " .. mid )
-					else
-						mag = mid
-						break
-					end
-				end
-
-				if mag then
-					self:D_SetMagID( hand, mag )
-					self:D_SetClip( hand, inv[mag].Ammo )
-					wep_table.Loaded = mag
-					B_Sound( self, wep_class.Sound_MagIn )
-				else
-					B_Sound( self, "Common.NoAmmo" )
-				end
-			end
-		end
-		self:TPReload( hand )
-	end
-	return true
-end
-
 hook.Add( "PlayerButtonDown", "Benny_PlayerButtonDown_TempForAim", function( ply, button )
 	local wep = ply:BennyCheck()
 	if wep then
@@ -200,15 +145,17 @@ function SWEP:BStartHolster( hand )
 	if self:D_GetHolstering( hand ) == -1 then
 		B_Sound( self, "Common.Holster" )
 		-- print( "Holstering the " .. (hand and "LEFT" or "RIGHT") )
-		self:D_SetHolstering( hand, 1 )
+		self:D_SetHolstering( hand, 0 )
+		self:D_SetReloading( hand, -1 )
+		self:D_SetReloadType( hand, 0 )
 	end
 end
 
 function SWEP:BThinkHolster( hand )
-	if self:D_GetHolstering( hand ) > 0 then
-		self:D_SetHolstering( hand, math.Approach( self:D_GetHolstering( hand ), 0, FrameTime() / 0.35 ) )
+	if self:D_GetHolstering( hand ) >= 0 then
+		self:D_SetHolstering( hand, math.Approach( self:D_GetHolstering( hand ), 1, FrameTime() / 0.35 ) )
 	end
-	if self:D_GetHolstering( hand ) == 0 then
+	if self:D_GetHolstering( hand ) == 1 then
 		self:D_SetHolstering( hand, -1 )
 		self:BHolster( hand )
 		local p = self:GetOwner()
@@ -223,6 +170,11 @@ end
 function SWEP:Think()
 	local p = self:GetOwner()
 	local inv = p:INV_Get()
+
+	local wep1 = self:BTable( false )
+	local wep1c = self:BClass( false )
+	local wep2 = self:BTable( true )
+	local wep2c = self:BClass( true )
 
 	if self:D_GetReqID( false ) != "" and self:D_GetReqID( true ) != "" and self:D_GetReqID( false ) == self:D_GetReqID( true ) then
 		self:D_SetReqID( false, "" )
@@ -257,13 +209,26 @@ function SWEP:Think()
 		end
 
 		self:BThinkHolster( hand )
-		-- print( self:D_GetReqID( hand ), self:D_GetID( hand ) )
-	end
 
-	local wep1 = self:BTable( false )
-	local wep1c = self:BClass( false )
-	local wep2 = self:BTable( true )
-	local wep2c = self:BClass( true )
+		do -- Reload logic
+			if self:D_GetReloading( hand ) != -1 then
+				self:D_SetReloading( hand, math.Approach( self:D_GetReloading( hand ), 0, FrameTime() ) )
+				if self:D_GetReloading( hand ) == 0 then
+					local rlt = self:D_GetReloadType( hand )
+					if rlt == 1 then
+						if SERVER or (CLIENT and IsFirstTimePredicted() ) then
+							self:Reload_MagIn( hand, self:D_GetMagID( hand ), inv )
+						end
+					elseif rlt == 2 then
+						--self:Reload_MagOut( hand, self:D_GetMagID( hand ), inv )
+					end
+					self:D_SetReloading( hand, -1 )
+					self:D_SetReloadType( hand, 0 )
+					-- Do reload stuff.
+				end
+			end
+		end
+	end
 
 	self:SetAim( math.Approach( self:GetAim(), self:GetUserAim() and 1 or 0, FrameTime()/0.2 ) )
 
