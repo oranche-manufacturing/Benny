@@ -37,6 +37,9 @@ local function beatup( ply, num )
 						-- If the wanted weapon is in the other hand, request to holster it.
 						wep:D_SetReqID( !hand, "" )
 					end
+					if wep:D_GetID( hand ) != "" then -- If we have something in this hand, swap it with the other
+						wep:D_SetReqID( !hand, wep:D_GetID( hand ) )
+					end
 					return wep:D_SetReqID( hand, id )
 				end
 			end
