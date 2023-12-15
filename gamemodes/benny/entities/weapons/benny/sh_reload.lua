@@ -4,8 +4,8 @@
 SWEP.GEN_MagOut = 0
 SWEP.GEN_MagIn = 0.8
 
-SWEP.GEN_MagIn_BonusStart = 0.6
-SWEP.GEN_MagIn_BonusEnd = 0.7
+SWEP.GEN_MagIn_BonusStart = 0.5
+SWEP.GEN_MagIn_BonusEnd = 0.55
 
 function SWEP:Reload( hand )
 	if hand == nil then return end -- Needs to be called from the custom ones
