@@ -110,9 +110,9 @@ do -- Sound definitions
 	}, 140, 100, 0.5, CHAN_STATIC )
 
 	AddSound( "QBBLSW.Fire", {
-		"benny/weapons/qbblsw/01.ogg",
-		"benny/weapons/qbblsw/02.ogg",
-		"benny/weapons/qbblsw/03.ogg",
+		"benny/weapons/qbblsw/fire-01.ogg",
+		"benny/weapons/qbblsw/fire-02.ogg",
+		"benny/weapons/qbblsw/fire-03.ogg",
 	}, 140, 100, 0.5, CHAN_STATIC )
 
 	AddSound( "Stoner63.Fire", {
