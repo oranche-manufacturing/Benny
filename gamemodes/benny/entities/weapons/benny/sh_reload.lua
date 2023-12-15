@@ -4,8 +4,8 @@
 SWEP.GEN_MagOut = 0
 SWEP.GEN_MagIn = 0.8
 
-SWEP.GEN_MagIn_BonusStart = 0.2
-SWEP.GEN_MagIn_BonusEnd = 0.25
+SWEP.GEN_MagIn_BonusStart = 0.6
+SWEP.GEN_MagIn_BonusEnd = 0.7
 
 function SWEP:Reload( hand )
 	if hand == nil then return end -- Needs to be called from the custom ones
@@ -22,12 +22,12 @@ function SWEP:Reload( hand )
 		end
 		local rt = self:D_GetReloading( hand )
 		if rt > 0 then
-			if self.GEN_MagIn_BonusStart <= rt and rt < self.GEN_MagIn_BonusEnd then
+			if (rt+self.GEN_MagIn_BonusStart) <= RealTime() and RealTime() <= (rt+self.GEN_MagIn_BonusEnd) then
 				self:D_SetReloading( hand, 0 )
 				return true
 			else
 				B_Sound( self, "Common.ReloadFail" )
-				self:D_SetReloading( hand, 1 )
+				self:D_SetReloading( hand, RealTime() )
 				return false
 			end
 		end
@@ -38,8 +38,9 @@ function SWEP:Reload( hand )
 			-- self:D_SetReloadType( hand, 2 )
 			self:Reload_MagOut( hand, self:D_GetMagID( hand ), inv )
 		else
-			self:D_SetReloading( hand, wep_class.Reload_MagIn or self.GEN_MagIn )
+			self:D_SetReloading( hand, RealTime() )
 			self:D_SetReloadType( hand, 1 )
+			B_Sound( self, "Common.Unload" )
 		end
 		self:TPReload( hand )
 	end

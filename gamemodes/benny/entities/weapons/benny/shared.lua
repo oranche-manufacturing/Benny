@@ -212,8 +212,8 @@ function SWEP:Think()
 
 		do -- Reload logic
 			if self:D_GetReloading( hand ) != -1 then
-				self:D_SetReloading( hand, math.Approach( self:D_GetReloading( hand ), 0, FrameTime() ) )
-				if self:D_GetReloading( hand ) == 0 then
+				--self:D_SetReloading( hand, math.Approach( self:D_GetReloading( hand ), 0, FrameTime() ) )
+				if RealTime() >= self:D_GetReloading( hand ) + (self:BClass( hand ).Reload_MagIn or self.GEN_MagIn) then
 					local rlt = self:D_GetReloadType( hand )
 					if rlt == 1 then
 						if SERVER or (CLIENT and IsFirstTimePredicted() ) then

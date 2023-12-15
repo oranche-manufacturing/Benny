@@ -158,10 +158,11 @@ do -- Sound definitions
 	}, 70, 100, 0.5, CHAN_STATIC )
 	AddSound( "SPAS12.MagIn", "benny/weapons/spas12/magin.ogg", 70, 100, 0.5, CHAN_STATIC )
 
+	AddSound( "Common.Unload", "benny/weapons/unload.ogg", 70, 100, 0.5, CHAN_STATIC )
 	AddSound( "Common.Dryfire.Pistol", "benny/weapons/common/06-13.ogg", 70, 100, 0.5, CHAN_STATIC )
 	AddSound( "Common.Dryfire.Rifle", "benny/weapons/common/06-12.ogg", 70, 100, 0.5, CHAN_STATIC )
 	AddSound( "Common.NoAmmo", "benny/weapons/noammo.ogg", 70, 100, 0.5, CHAN_STATIC )
-	AddSound( "Common.ReloadFail", "benny/hud/reloadfail.ogg", 70, 100, 0.5, CHAN_STATIC )
+	AddSound( "Common.ReloadFail", "benny/hud/reloadfail.ogg", 70, 100, 0.1, CHAN_STATIC )
 
 end
 

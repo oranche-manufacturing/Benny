@@ -896,40 +896,39 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 	end
 
 	if true and wep then
+		local bump1 = ss(1)
+		local bump2 = ss(1)
+		local bump4 = ss(2)
+		local boost = ss(44)
+		local r_w, r_h = ss(8), ss(72)
 		for i=1, 2 do
 			local hand = i==2
-			local boost = ss(44)
 			if hand then boost = -boost end
 
 			local wr = wep:D_GetReloading( hand )
 			if wr > 0 then
-				local translate = 1
-				if wep:D_GetReloadType( hand ) == 2 then
-					wr = math.TimeFraction( 0, wep.GEN_MagOut, wr )
-				else
-					wr = math.TimeFraction( 0, wep.GEN_MagIn, wr )
-				end
-				translate = wr/wep:D_GetReloading( hand )
-
-				wr = 1-wr
-				-- PROTO: Get interp values
-				local interpr = GetConVarNumber( "cl_interp_ratio" )/GetConVarNumber( "cl_cmdrate" )
-				local interp = GetConVarNumber( "cl_interp" )
-				wr = wr - math.max( interpr, interp )
-
-				local r_w, r_h = ss(8), ss(72)
+				local b1 = math.TimeFraction( wr, wr + (wep.GEN_MagIn), wr + (wep.GEN_MagIn_BonusStart) )
+				local b2 = math.TimeFraction( wr, wr + (wep.GEN_MagIn), wr + (wep.GEN_MagIn_BonusEnd) )
+				wr = math.TimeFraction( wr, wr + (wep:BClass( hand ).Reload_MagIn or wep.GEN_MagIn), RealTime() )
 				local r_x, r_y = sw/2 - r_w/2 + boost, sh/2 - r_h/2
 
 				surface.SetDrawColor( schema("bg") )
-				surface.DrawRect( r_x, r_y, r_w, r_h )
+				surface.DrawRect( r_x - bump4, r_y - bump4, r_w + bump4*2, r_h + bump4*2 )
+
 				surface.SetDrawColor( schema("fg") )
-				surface.DrawOutlinedRect( r_x + ss(1), r_y + ss(1), r_w - ss(2), r_h - ss(2), ss(0.5) )
+				surface.DrawOutlinedRect( r_x - bump2, r_y - bump2, r_w + bump2*2, r_h + bump2*2, ss(0.5) )
 
-				surface.DrawRect( r_x + ss(2), r_y + ss(2) + (r_h-ss(4))-math.Round( (r_h-ss(4)) * wr ), r_w - ss(4), math.Round((r_h - ss(4)) * wr) )
-
+				local gump = math.Round( r_h*(1-wr) )
+				surface.SetDrawColor( schema("fg") )
+				surface.DrawRect( r_x, r_y+gump, r_w, r_h-gump )
+				
+				local gump1 = math.Round( r_h*(1-b1) )
+				local gump2 = math.Round( r_h*(1-b2) )
+				surface.SetDrawColor( 255, 100, 100, 100 )
+				surface.DrawRect( r_x, r_y+gump2, r_w, gump2 )
 				surface.SetDrawColor( 255, 100, 100 )
-				surface.DrawRect( r_x + ss(2), r_y + ss(2) + (r_h+ss(4))*(translate*wep.GEN_MagIn_BonusStart), r_w - ss(4), ss(1) )
-				surface.DrawRect( r_x + ss(2), r_y + ss(2) + (r_h+ss(4))*(translate*wep.GEN_MagIn_BonusEnd), r_w - ss(4), ss(1) )
+				surface.DrawRect( r_x, r_y+gump1, r_w, ss(1) )
+				surface.DrawRect( r_x, r_y+gump2, r_w, ss(1) )
 			end
 		end
 	end
