@@ -1,10 +1,8 @@
 
 function GM:PlayerSpawn( ply )
 	player_manager.SetPlayerClass( ply, "player_benny" )
-	ply:SetModel( "models/player/police.mdl" )
 	ply:SetViewOffset( Vector( 0, 0, 64 ) )
 	ply:SetViewOffsetDucked( Vector( 0, 0, 50 ) )
-	ply:SetPlayerColor( Vector( 0.275, 0.2, 0.145 ) )
 	ply:Give( "benny" )
 
 	ply:SetStamina( 1 )
@@ -17,9 +15,89 @@ function GM:PlayerSpawn( ply )
 	ply:SetRunSpeed( 220 )
 	ply:SetStepSize( 16 )
 	ply:SetCanZoom( false )
+
+	ply:MakeCharacter()
 end
 
 local PT = FindMetaTable( "Player" )
+
+local bgl = {
+	["benny"] = {
+		[0] = Vector( 0.275, 0.7, 0.7 ),
+		[1] = 17,
+		[2] = 7,
+		[3] = 2,
+		[4] = 11,
+		[5] = 3,
+		[6] = 0,
+		[7] = 0,
+		[8] = 3,
+		[9] = 0,
+		[10] = 0,
+		[11] = 0,
+		[12] = 3,
+		[13] = 0,
+	},
+	["nikki"] = {
+		[0] = Vector( 0.9, 0.3, 0.9 ),
+		[1] = 17,
+		[2] = 7,
+		[3] = 2,
+		[4] = 11,
+		[5] = 3,
+		[6] = 0,
+		[7] = 0,
+		[8] = 2,
+		[9] = 1,
+		[10] = 5,
+		[11] = 0,
+		[12] = 3,
+		[13] = 0,
+	},
+	["igor"] = {
+		[0] = Vector( 0.776, 0.929, 0.89 ),
+		[1] = 4,
+		[2] = 6,
+		[3] = 2,
+		[4] = 3,
+		[5] = 1,
+		[6] = 0,
+		[7] = 2,
+		[8] = 3,
+		[9] = 3,
+		[10] = 6,
+		[11] = 2,
+		[12] = 1,
+		[13] = 0,
+	},
+	["yanghao"] = {
+		[0] = Vector( 0.627, 0.21, 0.186 ),
+		[1] = 13,
+		[2] = 2,
+		[3] = 0,
+		[4] = 3,
+		[5] = 0,
+		[6] = 1,
+		[7] = 3,
+		[8] = 0,
+		[9] = 3,
+		[10] = 4,
+		[11] = 0,
+		[12] = 0,
+		[13] = 0,
+	},
+}
+
+function PT:MakeCharacter()
+	local char = ConVarSV_String("tempchar")
+	self:SetModel( "models/player/infoplayerrealism.mdl" )
+	self:SetPlayerColor( bgl[char][0] )
+	self:SetBodygroup( 0, 0 )
+	self:SetSkin( 3 )
+	for i, v in ipairs( bgl[char] ) do
+		self:SetBodygroup( i, v )
+	end
+end
 
 function PT:BennyCheck()
 	local wep = self:GetActiveWeapon()

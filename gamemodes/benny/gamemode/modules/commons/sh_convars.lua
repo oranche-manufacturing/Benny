@@ -11,6 +11,8 @@ CONVARS_SV["net_easyway"]					= { 0,			0,		1,		true,		false,	"Use a disgusting w
 
 CONVARS_SV["cheat_infiniteammo"]			= { 0,			0,		1,		true,		false,	"Cheat: Don't expend ammo." }
 
+CONVARS_SV["tempchar"]						= { "benny",			nil,	nil,	true,		false,	"Temporary character." }
+
 
 CONVARS_SV_GEN = {}
 for i, v in pairs( CONVARS_SV ) do 
