@@ -149,6 +149,7 @@ do -- Sound definitions
 	AddSound( "M16A2.MagIn", "benny/weapons/m16a2/magin.ogg", 70, 100, 0.5, CHAN_STATIC )
 	AddSound( "FNC.MagOut", "benny/weapons/fnc/magout.ogg", 70, 100, 0.5, CHAN_STATIC )
 	AddSound( "FNC.MagIn", "benny/weapons/fnc/magin.ogg", 70, 100, 0.5, CHAN_STATIC )
+	AddSound( "FNC.MagCock", "benny/weapons/fnc/cock.ogg", 70, 100, 0.5, CHAN_STATIC )
 	AddSound( "AA12.MagOut", "benny/weapons/aa12/magout.ogg", 70, 100, 0.5, CHAN_STATIC )
 	AddSound( "AA12.MagIn", "benny/weapons/aa12/magin.ogg", 70, 100, 0.5, CHAN_STATIC )
 	AddSound( "SPAS12.MagOut", {
@@ -944,8 +945,9 @@ do -- Rifles
 		Sound_DryFire = "Common.Dryfire.Rifle",
 		Sound_MagOut = "FNC.MagOut",
 		Sound_MagIn = "FNC.MagIn",
+		Sound_MagCock = "FNC.MagCock",
 
-		Delay = (60/600),
+		Delay = (60/700),
 		Firemodes = FIREMODE_AUTOSEMI,
 		Ammo = 30,
 		Damage = 30,
@@ -979,6 +981,7 @@ do -- Rifles
 		Sound_DryFire = "Common.Dryfire.Rifle",
 		Sound_MagOut = "FNC.MagOut",
 		Sound_MagIn = "FNC.MagIn",
+		Sound_MagCock = "FNC.MagCock",
 
 		Delay = (60/800),
 		Firemodes = FIREMODE_AUTOSEMI,

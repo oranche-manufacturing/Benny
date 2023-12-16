@@ -906,10 +906,11 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 			if hand then boost = -boost end
 
 			local wr = wep:D_GetReloading( hand )
+			local wrt = wep:D_GetReloadType( hand )
 			if wr > 0 then
 				local b1 = math.TimeFraction( wr, wr + (wep.GEN_MagIn), wr + (wep.GEN_MagIn_BonusStart) )
 				local b2 = math.TimeFraction( wr, wr + (wep.GEN_MagIn), wr + (wep.GEN_MagIn_BonusEnd) )
-				wr = math.TimeFraction( wr, wr + (wep:BClass( hand ).Reload_MagIn or wep.GEN_MagIn), RealTime() )
+				wr = math.TimeFraction( wr, wr + (wrt==1 and (wep:BClass( hand ).Reload_MagIn or wep.GEN_MagIn) or wrt==2 and wep.GEN_MagOut), RealTime() )
 				local r_x, r_y = sw/2 - r_w/2 + boost, sh/2 - r_h/2
 
 				surface.SetDrawColor( schema("bg") )
@@ -918,17 +919,26 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 				surface.SetDrawColor( schema("fg") )
 				surface.DrawOutlinedRect( r_x - bump2, r_y - bump2, r_w + bump2*2, r_h + bump2*2, ss(0.5) )
 
-				local gump = math.Round( r_h*(1-wr) )
-				surface.SetDrawColor( schema("fg") )
-				surface.DrawRect( r_x, r_y+gump, r_w, r_h-gump )
+				if wrt == 1 then
+					local gump = math.Round( r_h*(1-wr) )
+					surface.SetDrawColor( schema("fg") )
+					surface.DrawRect( r_x, r_y+gump, r_w, r_h-gump )
+				else
+					local gump = math.Round( r_h*(wr) )
+					surface.SetDrawColor( schema("fg") )
+					surface.DrawRect( r_x, r_y+gump, r_w, r_h-gump )
+				end
 				
-				local gump1 = math.Round( r_h*(1-b1) )
-				local gump2 = math.Round( r_h*(1-b2) )
-				surface.SetDrawColor( 255, 100, 100, 100 )
-				surface.DrawRect( r_x, r_y+gump2, r_w, gump1-gump2 )
-				surface.SetDrawColor( 255, 100, 100 )
-				surface.DrawRect( r_x, r_y+gump1, r_w, ss(1) )
-				surface.DrawRect( r_x, r_y+gump2, r_w, ss(1) )
+				-- TODO: Unshitify this.
+				if wrt == 1 then
+					local gump1 = math.Round( r_h*(1-b1) )
+					local gump2 = math.Round( r_h*(1-b2) )
+					surface.SetDrawColor( 255, 100, 100, 100 )
+					surface.DrawRect( r_x, r_y+gump2, r_w, gump1-gump2 )
+					surface.SetDrawColor( 255, 100, 100 )
+					surface.DrawRect( r_x, r_y+gump1, r_w, ss(1) )
+					surface.DrawRect( r_x, r_y+gump2, r_w, ss(1) )
+				end
 			end
 		end
 	end
