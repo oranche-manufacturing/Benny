@@ -121,8 +121,15 @@ do -- Sound definitions
 		"benny/weapons/stoner63/03.ogg",
 	}, 140, 100, 0.5, CHAN_STATIC )
 
+	AddSound( "Barrett.Fire", {
+		"benny/weapons/barrett/fire-01.ogg",
+		"benny/weapons/barrett/fire-02.ogg",
+		"benny/weapons/barrett/fire-03.ogg",
+	}, 140, 100, 0.5, CHAN_STATIC )
+
 	AddSound( "MP5K.MagOut", "benny/weapons/mp5k/magout.ogg", 70, 100, 0.5, CHAN_STATIC )
 	AddSound( "MP5K.MagIn", "benny/weapons/mp5k/magin.ogg", 70, 100, 0.5, CHAN_STATIC )
+	AddSound( "MP5K.Cock", "benny/weapons/mp5k/cock.ogg", 70, 100, 0.5, CHAN_STATIC )
 	AddSound( "MAC11.MagOut", "benny/weapons/mac11/magout.ogg", 70, 100, 0.5, CHAN_STATIC )
 	AddSound( "MAC11.MagIn", "benny/weapons/mac11/magin.ogg", 70, 100, 0.5, CHAN_STATIC )
 	AddSound( "MP7.MagOut", "benny/weapons/mp7/magout.ogg", 70, 100, 0.5, CHAN_STATIC )
@@ -153,6 +160,9 @@ do -- Sound definitions
 	AddSound( "FNC.MagOut", "benny/weapons/fnc/magout.ogg", 70, 100, 0.5, CHAN_STATIC )
 	AddSound( "FNC.MagIn", "benny/weapons/fnc/magin.ogg", 70, 100, 0.5, CHAN_STATIC )
 	AddSound( "FNC.Cock", "benny/weapons/fnc/cock.ogg", 70, 100, 0.5, CHAN_STATIC )
+	AddSound( "Barrett.MagOut", "benny/weapons/barrett/magout.ogg", 70, 100, 0.5, CHAN_STATIC )
+	AddSound( "Barrett.MagIn", "benny/weapons/barrett/magin.ogg", 70, 100, 0.5, CHAN_STATIC )
+	AddSound( "Barrett.Cock", "benny/weapons/barrett/cock.ogg", 70, 100, 0.5, CHAN_STATIC )
 	AddSound( "AA12.MagOut", "benny/weapons/aa12/magout.ogg", 70, 100, 0.5, CHAN_STATIC )
 	AddSound( "AA12.MagIn", "benny/weapons/aa12/magin.ogg", 70, 100, 0.5, CHAN_STATIC )
 	AddSound( "SPAS12.MagOut", {
@@ -165,6 +175,8 @@ do -- Sound definitions
 	AddSound( "Common.Unload", "benny/weapons/unload.ogg", 70, 100, 0.5, CHAN_STATIC )
 	AddSound( "Common.Dryfire.Pistol", "benny/weapons/common/06-13.ogg", 70, 100, 0.5, CHAN_STATIC )
 	AddSound( "Common.Dryfire.Rifle", "benny/weapons/common/06-12.ogg", 70, 100, 0.5, CHAN_STATIC )
+	AddSound( "Common.Deploy", "benny/weapons/common/magpouch.ogg", 70, 100, 0.5, CHAN_STATIC )
+	AddSound( "Common.Holster", "benny/weapons/common/magpouchin.ogg", 70, 100, 0.5, CHAN_STATIC )
 	AddSound( "Common.NoAmmo", "benny/weapons/noammo.ogg", 70, 100, 0.5, CHAN_STATIC )
 	AddSound( "Common.ReloadFail", "benny/hud/reloadfail.ogg", 70, 100, 0.1, CHAN_STATIC )
 
@@ -405,6 +417,7 @@ do -- Handguns
 		Sound_Reload = "1911.Reload",
 		Sound_MagOut = "1911.MagOut",
 		Sound_MagIn = "1911.MagIn",
+		Sound_Cock = "Glock.Cock",
 
 		Delay = (60/300),
 		Firemodes = FIREMODE_SEMI,
@@ -442,6 +455,7 @@ do -- Handguns
 		Sound_Reload = "USP.Reload",
 		Sound_MagOut = "USP.MagOut",
 		Sound_MagIn = "USP.MagIn",
+		Sound_Cock = "Glock.Cock",
 
 		Delay = (60/300),
 		Firemodes = FIREMODE_SEMI,
@@ -515,6 +529,7 @@ do -- Handguns
 		Sound_DryFire = "Common.Dryfire.Pistol",
 		Sound_MagOut = "Nambu.MagOut",
 		Sound_MagIn = "Nambu.MagIn",
+		Sound_Cock = "Glock.Cock",
 
 		Delay = (60/180),
 		Firemodes = FIREMODE_SEMI,
@@ -551,6 +566,7 @@ do -- Handguns
 		Sound_DryFire = "Common.Dryfire.Pistol",
 		Sound_MagOut = "Anaconda.MagOut",
 		Sound_MagIn = "Anaconda.MagIn",
+		Sound_Cock = "Glock.Cock",
 
 		Delay = (60/180),
 		Firemodes = FIREMODE_SEMI,
@@ -627,6 +643,7 @@ do -- SMGs & PDWs
 		Sound_Reload = "TMP.Reload",
 		Sound_MagOut = "TMP.MagOut",
 		Sound_MagIn = "TMP.MagIn",
+		Sound_Cock = "MP5K.Cock",
 
 		Delay = (60/650),
 		Firemodes = FIREMODE_AUTOSEMI,
@@ -662,6 +679,7 @@ do -- SMGs & PDWs
 		Sound_Reload = "MP7.Reload",
 		Sound_MagOut = "MP7.MagOut",
 		Sound_MagIn = "MP7.MagIn",
+		Sound_Cock = "MP5K.Cock",
 
 		Delay = (60/900),
 		Firemodes = FIREMODE_AUTOSEMI,
@@ -697,6 +715,7 @@ do -- SMGs & PDWs
 		Sound_Reload = "MP5K.Reload",
 		Sound_MagOut = "MP5K.MagOut",
 		Sound_MagIn = "MP5K.MagIn",
+		Sound_Cock = "MP5K.Cock",
 
 		Delay = (60/750),
 		Firemodes = FIREMODE_AUTOSEMI,
@@ -732,6 +751,7 @@ do -- SMGs & PDWs
 		Sound_Reload = "MAC11.Reload",
 		Sound_MagOut = "MAC11.MagOut",
 		Sound_MagIn = "MAC11.MagIn",
+		Sound_Cock = "MP5K.Cock",
 
 		Delay = (60/1400),
 		Firemodes = FIREMODE_AUTOSEMI,
@@ -767,6 +787,7 @@ do -- SMGs & PDWs
 		Sound_Reload = "Bizon.Reload",
 		Sound_MagOut = "Bizon.MagOut",
 		Sound_MagIn = "Bizon.MagIn",
+		Sound_Cock = "MP5K.Cock",
 
 		Delay = (60/700),
 		Firemodes = FIREMODE_AUTOSEMI,
@@ -802,6 +823,7 @@ do -- SMGs & PDWs
 		Sound_Reload = "Bizon.Reload",
 		Sound_MagOut = "Bizon.MagOut",
 		Sound_MagIn = "Bizon.MagIn",
+		Sound_Cock = "MP5K.Cock",
 
 		Delay = (60/1050),
 		Firemodes = FIREMODE_AUTOSEMI,
@@ -1057,19 +1079,18 @@ do -- Sniper rifles
 		Type = "sniper",
 
 		Icon = Material( "benny/weapons/m16a2.png", "smooth" ),
-		WModel = "models/weapons/w_rif_m16a2.mdl",
+		WModel = "models/weapons/w_snip_awp.mdl",
 		HoldType = "rpg",
-		GestureFire = { ACT_HL2MP_GESTURE_RANGE_ATTACK_PISTOL, 0.3 },
+		GestureFire = { ACT_HL2MP_GESTURE_RANGE_ATTACK_CROSSBOW, 0.1 },
 
-		Sound_Fire = "M16A2.Fire",
+		Sound_Fire = "Barrett.Fire",
 		Sound_DryFire = "Common.Dryfire.Rifle",
-		Sound_MagOut = "M16A2.MagOut",
-		Sound_MagIn = "M16A2.MagIn",
+		Sound_MagOut = "Barrett.MagOut",
+		Sound_MagIn = "Barrett.MagIn",
+		Sound_Cock = "Barrett.Cock",
 
 		Delay = (60/140),
-		Firemodes = {
-			{ Mode = 1 },
-		},
+		Firemodes = FIREMODE_SEMI,
 		Ammo = 5,
 		Damage = 99,
 		Spread = 5/60,
@@ -1079,6 +1100,11 @@ do -- Sniper rifles
 		SpreadDecay_Start = 4,
 		SpreadDecay_End = 22,
 		SpreadDecay_RampTime = 1,
+
+		Reload_MagOut = 0.5,
+		Reload_MagIn = 1.5,
+		Reload_MagIn_Bonus1 = 1.0,
+		Reload_MagIn_Bonus2 = 1.0+0.1,
 
 		Speed_Move = 0.75,
 		Speed_Aiming = 0.75,
