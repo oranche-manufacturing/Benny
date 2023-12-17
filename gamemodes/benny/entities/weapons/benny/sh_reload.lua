@@ -2,10 +2,10 @@
 -- Reload logic
 
 SWEP.GEN_MagOut				= 0.2
-SWEP.GEN_MagIn				= 1.10
+SWEP.GEN_MagIn				= 0.8
 
-SWEP.GEN_MagIn_BonusStart	= 0.60
-SWEP.GEN_MagIn_BonusEnd		= 0.60+0.1
+SWEP.GEN_MagIn_BonusStart	= 0.56
+SWEP.GEN_MagIn_BonusEnd		= 0.56+0.1
 
 function SWEP:Reload( hand )
 	if hand == nil then return end -- Needs to be called from the custom ones
@@ -44,7 +44,7 @@ function SWEP:Reload( hand )
 			self:D_SetReloadType( hand, 2 )
 			B_Sound( self, wep_class.Sound_MagOut )
 			self:Reload_MagOut( hand, self:D_GetMagID( hand ), inv )
-		elseif self:GetBestLoadableMagazine( wep_table.Class, inv ) then
+		elseif self:GetBestLoadableMagazine( hand, wep_table.Class, inv, wep_table ) then
 			self:D_SetReloading( hand, RealTime() )
 			self:D_SetReloadType( hand, 1 )
 			B_Sound( self, wep_class.Sound_MagIn )
@@ -78,7 +78,7 @@ function SWEP:Reload_MagOut( hand, curmag, optinv, optwep_table, optwep_class )
 	wep_table.Loaded = ""
 end
 
-function SWEP:GetLoadableMagazines( class, optinv )
+function SWEP:GetLoadableMagazines( hand, class, optinv, optwep_table )
 	local p = self:GetOwner()
 	local inv = optinv or p:INV_Get()
 	local wep_table = optwep_table or self:BTable( hand )
@@ -94,7 +94,7 @@ function SWEP:GetLoadableMagazines( class, optinv )
 	return maglist
 end
 
-function SWEP:GetBestLoadableMagazine( class, optinv )
+function SWEP:GetBestLoadableMagazine( hand, class, optinv, optwep_table )
 	local p = self:GetOwner()
 	local inv = optinv or p:INV_Get()
 	local wep_table = optwep_table or self:BTable( hand )
@@ -124,7 +124,7 @@ function SWEP:Reload_MagIn( hand, curmag, optinv, optwep_table, optwep_class )
 	local inv = optinv or p:INV_Get()
 	local wep_table = optwep_table or self:BTable( hand )
 	local wep_class = optwep_class or self:BClass( hand )
-	local mag = self:GetBestLoadableMagazine( wep_table.Class )
+	local mag = self:GetBestLoadableMagazine( hand, wep_table.Class )
 
 	if mag then
 		self:D_SetMagID( hand, mag )
