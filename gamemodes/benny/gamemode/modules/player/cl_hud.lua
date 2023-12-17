@@ -908,9 +908,9 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 			local wr = wep:D_GetReloading( hand )
 			local wrt = wep:D_GetReloadType( hand )
 			if wr > 0 then
-				local b1 = math.TimeFraction( wr, wr + (wep.GEN_MagIn), wr + (wep.GEN_MagIn_BonusStart) )
-				local b2 = math.TimeFraction( wr, wr + (wep.GEN_MagIn), wr + (wep.GEN_MagIn_BonusEnd) )
-				wr = math.TimeFraction( wr, wr + (wrt==1 and (wep:BClass( hand ).Reload_MagIn or wep.GEN_MagIn) or wrt==2 and wep.GEN_MagOut), RealTime() )
+				local b1 = math.TimeFraction( wr, wr + wep:GetStat( hand, "Reload_MagIn" ), wr + wep:GetStat( hand, "Reload_MagIn_Bonus1" ) )
+				local b2 = math.TimeFraction( wr, wr + wep:GetStat( hand, "Reload_MagIn" ), wr + wep:GetStat( hand, "Reload_MagIn_Bonus2" ) )
+				wr = math.TimeFraction( wr, wr + (wrt==1 and wep:GetStat( hand, "Reload_MagIn" ) or wrt==2 and wep:GetStat( hand, "Reload_MagOut" )), RealTime() )
 				local r_x, r_y = sw/2 - r_w/2 + boost, sh/2 - r_h/2
 
 				surface.SetDrawColor( schema("bg") )

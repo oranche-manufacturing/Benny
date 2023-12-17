@@ -127,6 +127,18 @@ function SWEP:D_SetClip( hand, value )
 	return (hand == true) and self:SetClip2( value ) or (hand == false) and self:SetClip1( value )
 end
 
+local fallbackstat = {
+	["Reload_MagOut"] = 0.2,
+	["Reload_MagIn"] = 0.8,
+	["Reload_MagIn_Bonus1"] = 0.56,
+	["Reload_MagIn_Bonus2"] = 0.56+0.1,
+	["Sound_Cock"] = "Glock.Cock",
+}
+
+function SWEP:GetStat( hand, stat )
+	return (self:BClass( hand )[stat] or fallbackstat[stat])
+end
+
 function SWEP:C_DualCheck()
 	local p = self:GetOwner()
 	local lt = self:BClass( true )

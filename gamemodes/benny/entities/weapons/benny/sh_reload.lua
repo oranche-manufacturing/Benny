@@ -1,12 +1,6 @@
 
 -- Reload logic
 
-SWEP.GEN_MagOut				= 0.2
-SWEP.GEN_MagIn				= 0.8
-
-SWEP.GEN_MagIn_BonusStart	= 0.56
-SWEP.GEN_MagIn_BonusEnd		= 0.56+0.1
-
 function SWEP:Reload( hand )
 	if hand == nil then return end -- Needs to be called from the custom ones
 	local p = self:GetOwner()
@@ -25,7 +19,7 @@ function SWEP:Reload( hand )
 			local rtt = self:D_GetReloadType( hand )
 			-- TODO: Unshitify this.
 			if rtt == 1 then
-				if (rt+self.GEN_MagIn_BonusStart) <= RealTime() and RealTime() <= (rt+self.GEN_MagIn_BonusEnd) then
+				if (rt+self:GetStat( hand, "Reload_MagIn_Bonus1" )) <= RealTime() and RealTime() <= (rt+self:GetStat( hand, "Reload_MagIn_Bonus2" )) then
 					self:D_SetReloading( hand, 0 )
 					return true
 				else

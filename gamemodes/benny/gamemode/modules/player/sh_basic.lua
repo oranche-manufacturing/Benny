@@ -12,7 +12,7 @@ concommand.Add("benny_debug_give", function(ply, cmd, args)
 
 	local class = WeaponGet(args[1])
 
-	assert(class, "Invalid Class.")
+	assert(class, "Invalid Class " .. tostring(class))
 
 	local item = {
 		Class = args[1],

@@ -71,8 +71,6 @@ function B_Sound( ent, tag )
 	end
 end
 
-AddSound( "Common.Deploy", "benny/weapons/common/06-07.ogg", 70, 100, 0.2, CHAN_STATIC )
-AddSound( "Common.Holster", "benny/weapons/common/06-09.ogg", 70, 100, 0.2, CHAN_STATIC )
 RegisterCaption("Common.Deploy", "DEBUG", color_white, "[deploy]", 0.1, 0.5, false, true )
 RegisterCaption("Common.Holster", "DEBUG", color_white, "[holster]", 0.1, 0.5, false, true )
 RegisterCaption("Common.ReloadFail", "DEBUG", color_white, "[fail]", 0.1, 0.5, false, true )

@@ -157,6 +157,8 @@ function SWEP:BThinkHolster( hand )
 	end
 	if self:D_GetHolstering( hand ) == 1 then
 		self:D_SetHolstering( hand, -1 )
+		self:D_SetReloading( hand, -1 )
+		self:D_SetReloadType( hand, 0 )
 		self:BHolster( hand )
 		local p = self:GetOwner()
 		local req = self:D_GetReqID( hand )
@@ -214,7 +216,7 @@ function SWEP:Think()
 			if self:D_GetReloading( hand ) != -1 then
 				local rlt = self:D_GetReloadType( hand )
 				-- TODO: Unshitify this.
-				if RealTime() >= self:D_GetReloading( hand ) + (rlt == 1 and self.GEN_MagIn or rlt == 2 and self.GEN_MagOut) then
+				if RealTime() >= self:D_GetReloading( hand ) + (rlt == 1 and self:GetStat( hand, "Reload_MagIn" ) or rlt == 2 and self:GetStat( hand, "Reload_MagOut" )) then
 					if rlt == 1 then
 						if SERVER or (CLIENT and IsFirstTimePredicted() ) then
 							self:Reload_MagIn( hand, self:D_GetMagID( hand ), inv )
