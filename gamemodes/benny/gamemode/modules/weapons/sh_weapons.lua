@@ -145,11 +145,14 @@ do -- Sound definitions
 	AddSound( "USP.MagIn", "benny/weapons/usp/magin.ogg", 70, 100, 0.5, CHAN_STATIC )
 	AddSound( "Glock.MagOut", "benny/weapons/glock/magout.ogg", 70, 100, 0.5, CHAN_STATIC )
 	AddSound( "Glock.MagIn", "benny/weapons/glock/magin.ogg", 70, 100, 0.5, CHAN_STATIC )
+	AddSound( "Glock.Cock", "benny/weapons/glock/cock.ogg", 70, 100, 0.5, CHAN_STATIC )
+	AddSound( "Deagle.Cock", "benny/weapons/deagle/cock.ogg", 70, 100, 0.5, CHAN_STATIC )
 	AddSound( "M16A2.MagOut", "benny/weapons/m16a2/magout.ogg", 70, 100, 0.5, CHAN_STATIC )
 	AddSound( "M16A2.MagIn", "benny/weapons/m16a2/magin.ogg", 70, 100, 0.5, CHAN_STATIC )
+	AddSound( "M16A2.Cock", "benny/weapons/m16a2/cock.ogg", 70, 100, 0.5, CHAN_STATIC )
 	AddSound( "FNC.MagOut", "benny/weapons/fnc/magout.ogg", 70, 100, 0.5, CHAN_STATIC )
 	AddSound( "FNC.MagIn", "benny/weapons/fnc/magin.ogg", 70, 100, 0.5, CHAN_STATIC )
-	AddSound( "FNC.MagCock", "benny/weapons/fnc/cock.ogg", 70, 100, 0.5, CHAN_STATIC )
+	AddSound( "FNC.Cock", "benny/weapons/fnc/cock.ogg", 70, 100, 0.5, CHAN_STATIC )
 	AddSound( "AA12.MagOut", "benny/weapons/aa12/magout.ogg", 70, 100, 0.5, CHAN_STATIC )
 	AddSound( "AA12.MagIn", "benny/weapons/aa12/magin.ogg", 70, 100, 0.5, CHAN_STATIC )
 	AddSound( "SPAS12.MagOut", {
@@ -475,6 +478,7 @@ do -- Handguns
 		Sound_DryFire = "Common.Dryfire.Pistol",
 		Sound_MagOut = "Glock.MagOut",
 		Sound_MagIn = "Glock.MagIn",
+		Sound_Cock = "Glock.Cock",
 
 		Delay = (60/900),
 		Firemodes = FIREMODE_AUTOSEMI,
@@ -583,6 +587,7 @@ do -- Handguns
 		Sound_DryFire = "Common.Dryfire.Pistol",
 		Sound_MagOut = "Anaconda.MagOut",
 		Sound_MagIn = "Anaconda.MagIn",
+		Sound_Cock = "Deagle.Cock",
 
 		Delay = (60/180),
 		Firemodes = FIREMODE_SEMI,
@@ -945,7 +950,7 @@ do -- Rifles
 		Sound_DryFire = "Common.Dryfire.Rifle",
 		Sound_MagOut = "FNC.MagOut",
 		Sound_MagIn = "FNC.MagIn",
-		Sound_MagCock = "FNC.MagCock",
+		Sound_Cock = "FNC.Cock",
 
 		Delay = (60/700),
 		Firemodes = FIREMODE_AUTOSEMI,
@@ -981,7 +986,7 @@ do -- Rifles
 		Sound_DryFire = "Common.Dryfire.Rifle",
 		Sound_MagOut = "FNC.MagOut",
 		Sound_MagIn = "FNC.MagIn",
-		Sound_MagCock = "FNC.MagCock",
+		Sound_Cock = "FNC.Cock",
 
 		Delay = (60/800),
 		Firemodes = FIREMODE_AUTOSEMI,
@@ -1017,6 +1022,7 @@ do -- Rifles
 		Sound_DryFire = "Common.Dryfire.Rifle",
 		Sound_MagOut = "M16A2.MagOut",
 		Sound_MagIn = "M16A2.MagIn",
+		Sound_Cock = "M16A2.Cock",
 
 		Delay = (60/700),
 		Firemodes = {

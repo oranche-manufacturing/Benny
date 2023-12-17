@@ -130,7 +130,7 @@ function SWEP:Reload_MagIn( hand, curmag, optinv, optwep_table, optwep_class )
 		self:D_SetMagID( hand, mag )
 		self:D_SetClip( hand, inv[mag].Ammo )
 		wep_table.Loaded = mag
-		B_Sound( self, wep_class.Sound_MagCock )
+		B_Sound( self, wep_class.Sound_Cock )
 	else
 		B_Sound( self, "Common.NoAmmo" )
 	end
