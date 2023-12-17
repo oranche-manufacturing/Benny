@@ -143,7 +143,7 @@ function PANEL:Think()
 
 	end
 
-	if ( self.Hovered && self:GetDraggable() && mousey < ( screenY + ss(16) ) ) then
+	if ( self.Hovered && self:GetDraggable() && mousey < ( screenY + ss(tall) ) ) then
 		self:SetCursor( "sizeall" )
 		return
 	end
