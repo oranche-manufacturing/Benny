@@ -332,6 +332,14 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 				surface.DrawRect( b_x + b_s + ((i-1)*ss(32+2)) + ss(1), b_y + b_bh + ss(4+2) + ss(1), ss(32*localperc) - ss(2), b_bh2 - ss(2) )
 			end
 		end
+		
+		if true then
+			surface.SetDrawColor( schema("bg") )
+			local s_h = ss(20)
+			surface.DrawRect( b_x, b_y - s_h - ss(4), b_w, s_h )
+
+			draw.SimpleText( string.format( "%f m/s", p:GetVelocity():Length2D()/39.3701 ), "Benny_24", b_x + b_w/2, b_y - s_h/2 - ss(4/2), schema_c("fg"), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER )
+		end
 	end
 
 	do -- Vaulting
@@ -570,7 +578,7 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 		local touse1 = col_1
 		local touse1_primary = col_1a
 		local touse2 = col_2
-		if false then
+		if ConVarCL_String("cam_override") != "" then
 			pl_x = tr1f:ToScreen().x
 			pl_y = tr1f:ToScreen().y
 			ps_x = tr1f:ToScreen().x

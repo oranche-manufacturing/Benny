@@ -233,20 +233,20 @@ function SWEP:Think()
 
 	self:SetAim( math.Approach( self:GetAim(), self:GetUserAim() and 1 or 0, FrameTime()/0.2 ) )
 
-	if !self:C_AttackDown( false ) then
-		self:SetWep1_Burst( 0 )
-	end
-	if !self:C_AttackDown( true ) then
-		self:SetWep2_Burst( 0 )
+	for i=1, 2 do
+		local hand = i==2
+		if !self:C_AttackDown( hand ) then
+			self:D_SetBurst( hand, 0 )
+		end
 	end
 
 	for i=1, 2 do
 		local hand = i==2
 		local wep, wepc = self:BTable( hand ), self:BClass( hand )
 		if wepc and wepc.Features == "firearm" and self:D_GetDelay( hand ) < CurTime()-0.01 then
-			local mweh = math.Remap( CurTime(), self:D_GetShotTime( hand ), self:D_GetShotTime( hand )+wepc.SpreadDecay_RampTime, 0, 1 )
+			local mweh = math.Remap( CurTime(), self:D_GetShotTime( hand ), self:D_GetShotTime( hand ) + self:GetStat( hand, "SpreadDecay_RampTime" ), 0, 1 )
 			mweh = math.Clamp( mweh, 0, 1 )
-			local decayfinal = Lerp( math.ease.InExpo( mweh ), wepc.SpreadDecay_Start, wepc.SpreadDecay_End )
+			local decayfinal = Lerp( math.ease.InExpo( mweh ), self:GetStat( hand, "SpreadDecay_Start" ), self:GetStat( hand, "SpreadDecay_End" ) )
 			self:D_SetSpread( hand, math.Approach( self:D_GetSpread( hand ), 0, decayfinal * FrameTime() ) )
 		end
 	end

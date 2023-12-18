@@ -41,7 +41,7 @@ local mewer = {
 		Size = 12,
 		Font = "Benny_10",
 		Stat = function( class )
-			local bwep =  math.Clamp( math.Remap( class.Damage * (class.Pellets or 1), 14, 80, 0, 1 ), 0, 1 )
+			local bwep =  math.Clamp( math.Remap( BENNY_GetStat( class, "Damage" ) * ( BENNY_GetStat( class, "Pellets" ) or 1 ), 14, 80, 0, 1 ), 0, 1 )
 			local meowzor = math.ease.OutQuart( bwep )
 			return meowzor
 		end,
@@ -57,14 +57,14 @@ local mewer = {
 			weight_1, weight_2 = weight_1/totalscore, weight_2/totalscore
 			local score_1, score_2 = 1, 1
 
-			local truedelay = (1/class.Delay)
-			if class.Firemodes[1].Mode == 1 then
+			local truedelay = ( 1 / BENNY_GetStat( class, "Delay" ) )
+			if BENNY_GetStat( class, "Firemodes" )[1].Mode == 1 then
 				truedelay = math.min( truedelay, 60/300 )
 			end
-			score_1 = rmt1c( class.Damage * truedelay, 100, 350 )
+			score_1 = rmt1c( BENNY_GetStat( class, "Damage" ) * truedelay, 100, 350 )
 			score_1 = score_1 * weight_1
 
-			score_2 = rmt1c( class.Ammo, 16, 42 )
+			score_2 = rmt1c( BENNY_GetStat( class, "Ammo" ), 16, 42 )
 			score_2 = score_2 * weight_2
 
 			return score_1 + score_2
@@ -85,7 +85,7 @@ local mewer = {
 		Size = 12,
 		Font = "Benny_10",
 		Stat = function( class )
-			return math.Clamp( math.Remap( class.Spread, 1/60, 2, 1, 0 ), 0, 1 )
+			return math.Clamp( math.Remap( BENNY_GetStat( class, "Spread" ), 1/60, 2, 1, 0 ), 0, 1 )
 		end,
 		-- "How accurate the weapon is when firing single shots or short bursts.\nAffected by Spread and various Recoil stats."
 	},
@@ -94,28 +94,28 @@ local mewer = {
 		Size = 12,
 		Font = "Benny_10",
 		Stat = function( class )
-			return math.Clamp( math.Remap( class.SpreadAdd * (1/class.Delay), 1, 13, 1, 0 ), 0, 1 )
+			return math.Clamp( math.Remap( BENNY_GetStat( class, "SpreadAdd" ) * ( 1 / BENNY_GetStat( class, "Delay" ) ), 1, 13, 1, 0 ), 0, 1 )
 		end,
 		-- "How managable the weapon's recoil and spread is under sustained fire.\nAffected by RPM and various Recoil stats."
 	},
-	-- {
-	-- 	Name = "Handling",
-	-- 	Size = 12,
-	-- 	Font = "Benny_10",
-	-- 	Stat = function( class )
-	-- 		return 0
-	-- 	end,
-	-- 	-- "How quickly this weapon readies from sprinting, aiming and deploying.\nAffected by Aim Down Sights Time, Sprint To Fire Time, and Deploy Time."
-	-- },
-	-- {
-	-- 	Name = "Maneuvering",
-	-- 	Size = 12,
-	-- 	Font = "Benny_10",
-	-- 	Stat = function( class )
-	-- 		return 0
-	-- 	end,
-	-- 	-- "How accurate the weapon is while not aiming.\nAffected by Hipfire Spread, Mid-air Spread, Sway, and Free Aim Angle."
-	-- },
+	{
+		Name = "Handling",
+		Size = 12,
+		Font = "Benny_10",
+		Stat = function( class )
+			return 0
+		end,
+		-- "How quickly this weapon readies from sprinting, aiming and deploying.\nAffected by Aim Down Sights Time, Sprint To Fire Time, and Deploy Time."
+	},
+	{
+		Name = "Maneuvering",
+		Size = 12,
+		Font = "Benny_10",
+		Stat = function( class )
+			return 0
+		end,
+		-- "How accurate the weapon is while not aiming.\nAffected by Hipfire Spread, Mid-air Spread, Sway, and Free Aim Angle."
+	},
 	{
 		Name = "Mobility",
 		Size = 12,
@@ -127,16 +127,16 @@ local mewer = {
 
 			local score_moving, score_aiming, score_reloading, score_firing = 1, 1, 1, 1
 
-			score_moving = rmt1c( class.Speed_Move or 1, 0.75, 0.95 )
+			score_moving = rmt1c( BENNY_GetStat( class, "Speed_Move" ), 0.75, 0.95 )
 			score_moving = score_moving * weight_moving
 
-			score_aiming = rmt1c( class.Speed_Aiming or 1, 0.75, 0.95 )
+			score_aiming = rmt1c( BENNY_GetStat( class, "Speed_Aiming" ), 0.75, 0.95 )
 			score_aiming = score_aiming * weight_aiming
 
-			score_reloading = rmt1c( class.Speed_Reloading or 1, 0.75, 0.9 )
+			score_reloading = rmt1c( BENNY_GetStat( class, "Speed_Reloading" ), 0.75, 0.9 )
 			score_reloading = score_reloading * weight_reloading
 
-			score_firing = rmt1c( class.Speed_Firing or 1, 0.75, 0.9 )
+			score_firing = rmt1c( BENNY_GetStat( class, "Speed_Firing" ), 0.75, 0.9 )
 			score_firing = score_firing * weight_firing
 
 			return score_moving + score_aiming + score_reloading + score_firing

@@ -174,9 +174,6 @@ tempmapcameras["benny_test"]["barber"] = {
 
 BENNY_ACTIVECAMERA = nil
 
-local c_over = CreateConVar( "benny_cam_override", "" )
-local c_unlock = CreateConVar( "benny_cam_unlock", 0 )
-
 local si = 4
 local ctrace = {
 	start = nil,
@@ -275,7 +272,7 @@ function bennyfp( origin, angles, fov )
 end
 
 hook.Add( "CalcView", "Benny_CalcView", function( ply, pos, ang, fov )
-	if c_unlock:GetBool() then return end
+	if ConVarCL_Bool("cam_unlock") then return end
 	if ply:NoclippingAndNotVaulting() then return end
 	decide_active()
 	local camera = BENNY_ACTIVECAMERA
@@ -305,7 +302,7 @@ hook.Add( "CalcView", "Benny_CalcView", function( ply, pos, ang, fov )
 		end
 	end
 
-	local st = c_over:GetString()
+	local st = ConVarCL_String("cam_override")
 	if st != "" then
 		local st = string.Explode( " ", st )
 		view.origin.x	= tonumber(st[1])

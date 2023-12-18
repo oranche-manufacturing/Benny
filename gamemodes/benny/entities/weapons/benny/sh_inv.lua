@@ -133,10 +133,32 @@ local fallbackstat = {
 	["Reload_MagIn_Bonus1"] = 0.56,
 	["Reload_MagIn_Bonus2"] = 0.56+0.1,
 	["Sound_Cock"] = "Glock.Cock",
+	["Damage"] = 0,
+	["Pellets"] = 1,
+	["Firemodes"] = { { Mode = 1 } },
+	["Delay"] = 0,
+	["Ammo"] = 0,
+	["Spread"] = 0,
+	["SpreadAdd"] = 0,
+	["SpreadDecay_Start"] = 0,
+	["SpreadDecay_End"] = 0,
+	["SpreadDecay_RampTime"] = 0,
+	["Speed_Move"] = 1,
+	["Speed_Aiming"] = 1,
+	["Speed_Reloading"] = 1,
+	["Speed_Firing"] = 1,
 }
 
 function SWEP:GetStat( hand, stat )
-	return (self:BClass( hand )[stat] or fallbackstat[stat])
+	local thereturn = (self:BClass( hand )[stat] or fallbackstat[stat])
+	assert( thereturn, "No stat for " .. stat )
+	return thereturn
+end
+
+function BENNY_GetStat( class, stat )
+	local thereturn = (class[stat] or fallbackstat[stat])
+	assert( thereturn, "No stat for " .. stat )
+	return thereturn
 end
 
 function SWEP:C_DualCheck()
