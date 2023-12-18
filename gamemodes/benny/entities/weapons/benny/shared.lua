@@ -193,19 +193,26 @@ function SWEP:Think()
 		local curr = self:D_GetID( hand )
 		local curr_o = self:D_GetID( !hand )
 		if req != curr then
-			if curr != "" then
-				-- require holster first
-				self:BStartHolster( hand )
+			-- Don't allow holstering from this weapon if...
+			-- Just know, this feels bad.
+			if self:D_GetReloading( hand ) > 0 then
+			elseif self:D_GetShotTime( hand ) + self:GetStat( hand, "ShootHolsterTime" ) > CurTime() then
+
 			else
-				local otherhasthis = curr_o == req
-				if req != "" then
-					if otherhasthis then
-						self:BStartHolster( !hand )
-					else
-						self:BDeploy( hand, req )
-					end
-				else
+				if curr != "" then
+					-- require holster first
 					self:BStartHolster( hand )
+				else
+					local otherhasthis = curr_o == req
+					if req != "" then
+						if otherhasthis then
+							self:BStartHolster( !hand )
+						else
+							self:BDeploy( hand, req )
+						end
+					else
+						self:BStartHolster( hand )
+					end
 				end
 			end
 		end
