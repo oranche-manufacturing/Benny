@@ -764,13 +764,13 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 				local loaded = (item.Loaded == mag)
 				local perc = mitem.Ammo/WeaponGet(mitem.Class).Ammo
 				surface.SetDrawColor( scheme["bg"] )
-				surface.DrawRect( b_x + bump + magbump + ss(13), b_y - ss(14), ss(4), ss(12) )
+				surface.DrawRect( b_x + bump + magbump + ss(13), b_y - ss(14), ss(3), ss(12) )
 				surface.SetDrawColor( scheme["fg"] )
 
 				local mstart = ss(10)
 				local meow = math.Round(ss(10*perc))
-				surface.DrawRect( b_x + bump + magbump + ss(14), b_y - ss(13) + (mstart-meow), ss(2), meow )
-				magbump = magbump + ss(4+1)
+				surface.DrawRect( b_x + bump + magbump + ss(14), b_y - ss(13) + (mstart-meow), ss(1), meow )
+				magbump = magbump + ss(2)
 			end
 			bump = bump + boxsize + ss(2)
 		end
