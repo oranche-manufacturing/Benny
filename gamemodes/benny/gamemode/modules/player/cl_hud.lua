@@ -335,10 +335,10 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 		
 		if true then
 			surface.SetDrawColor( schema("bg") )
-			local s_h = ss(20)
+			local s_h = ss(18)
 			surface.DrawRect( b_x, b_y - s_h - ss(4), b_w, s_h )
 
-			draw.SimpleText( string.format( "%f m/s", p:GetVelocity():Length2D()/39.3701 ), "Benny_24", b_x + b_w/2, b_y - s_h/2 - ss(4/2), schema_c("fg"), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER )
+			draw.SimpleText( string.format( "%f", p:GetVelocity():Length2D()/39.3701 ):Left( 4 ) .. " m/s", "Benny_18", b_x + ss(4), b_y - s_h - ss(4-2), schema_c("fg") )
 		end
 	end
 
@@ -716,7 +716,10 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 				surface.SetDrawColor( scheme["bg"] )
 				surface.DrawRect( b_x + bump + magbump + ss(13), b_y - ss(14), ss(4), ss(12) )
 				surface.SetDrawColor( scheme["fg"] )
-				surface.DrawRect( b_x + bump + magbump + ss(13) + ss(1), b_y - ss(14-1) + math.Round((ss(10)-ss(10*perc))), ss(2), math.Round(ss(10*perc)) )
+
+				local mstart = ss(10)
+				local meow = math.Round(ss(10*perc))
+				surface.DrawRect( b_x + bump + magbump + ss(14), b_y - ss(13) + (mstart-meow), ss(2), meow )
 				magbump = magbump + ss(4+1)
 			end
 			bump = bump + boxsize + ss(2)
@@ -764,40 +767,10 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 		end
 	end
 
-	if false then -- Debug Inventory
-		local gap = 0
-		for ID, Data in pairs( p:INV_Get() ) do
-			local active = (wep:GetWep2() == ID) and "Wep2" or (wep:GetWep1() == ID) and "Wep1" or ""
-			surface.SetDrawColor( scheme["bg"] )
-			surface.DrawRect( b + ss(4), b + ss(4) + gap, ss(240), ss(30) )
-
-			surface.SetFont( "Benny_12" )
-			surface.SetTextColor( scheme["fg"] )
-			surface.SetTextPos( b + ss(4 + 4), b + ss(4 + 3) + gap )
-			surface.DrawText( ID .. " " .. active )
-
-			local str = ""
-			for i, v in pairs( Data ) do
-				str = str .. i .. ": " .. v .. " "
-			end
-
-			surface.SetFont( "Benny_10" )
-			surface.SetTextColor( scheme["fg"] )
-			surface.SetTextPos( b + ss(4 + 4), b + ss(4 + 3 + 8) + gap )
-			surface.DrawText( str )
-
-			surface.SetFont( "Benny_12" )
-			surface.SetTextColor( scheme["fg"] )
-			surface.SetTextPos( b + ss(4 + 4), b + ss(4 + 3 + 8 + 8) + gap )
-			-- surface.DrawText( active )
-			gap = gap + ss(30+4)
-		end
-	end
-
 	if false then -- MP / Arena UI
 		surface.SetDrawColor( scheme["bg"] )
 
-		local r_x, r_y, r_w, r_h = sw/2 - ss(180/2), b, ss(180), ss(30)
+		local r_x, r_y, r_w, r_h = sw/2 - ss(180/2), Hb, ss(180), ss(30)
 		local ib, ic = ss(20), ss(2)
 		surface.DrawRect( r_x, r_y, r_w, r_h )
 
@@ -882,23 +855,23 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 
 		local wep1_table, wep1_class = wep:BTable( false ), wep:BClass( false )
 		if wep1_table then
-			draw.SimpleText( wep1_class.Name, 						"Trebuchet24", bx-mx, by+24*-1, color_white, TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP )
-			draw.SimpleText( "Clip1: " .. wep:Clip1(),				"Trebuchet24", bx-mx, by+24*0, color_white, TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP )
-			draw.SimpleText( "ID1: " .. wep:GetWep1(),				"Trebuchet24", bx-mx, by+24*1, color_white, TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP )
-			draw.SimpleText( "MagID1: " .. wep:D_GetMagID( false ),	"Trebuchet24", bx-mx, by+24*2, color_white, TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP )
+			draw.SimpleText( wep1_class.Name, 						"Benny_14", bx-mx, by+ss(8)*-1, color_white, TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP )
+			draw.SimpleText( "Clip1: " .. wep:Clip1(),				"Benny_14", bx-mx, by+ss(8)*0, color_white, TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP )
+			draw.SimpleText( "ID1: " .. wep:GetWep1(),				"Benny_14", bx-mx, by+ss(8)*1, color_white, TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP )
+			draw.SimpleText( "MagID1: " .. wep:D_GetMagID( false ),	"Benny_14", bx-mx, by+ss(8)*2, color_white, TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP )
 			if wep1_table.Loaded then
-				draw.SimpleText( "T_MagID1: " .. wep1_table.Loaded,		"Trebuchet24", bx-mx, by+24*3, color_white, TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP )
+				draw.SimpleText( "T_MagID1: " .. wep1_table.Loaded,		"Benny_14", bx-mx, by+ss(8)*3, color_white, TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP )
 			end
 		end
 
 		local wep2_table, wep2_class = wep:BTable( true ), wep:BClass( true )
 		if wep2_table then
-			draw.SimpleText( wep2_class.Name,						"Trebuchet24", bx+mx, by+24*-1, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP )
-			draw.SimpleText( "Clip2: " .. wep:Clip2(),				"Trebuchet24", bx+mx, by+24*0, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP )
-			draw.SimpleText( "ID2: " .. wep:GetWep2(),				"Trebuchet24", bx+mx, by+24*1, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP )
-			draw.SimpleText( "MagID2: " .. wep:D_GetMagID( true ),	"Trebuchet24", bx+mx, by+24*2, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP )
+			draw.SimpleText( wep2_class.Name,						"Benny_14", bx+mx, by+ss(8)*-1, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP )
+			draw.SimpleText( "Clip2: " .. wep:Clip2(),				"Benny_14", bx+mx, by+ss(8)*0, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP )
+			draw.SimpleText( "ID2: " .. wep:GetWep2(),				"Benny_14", bx+mx, by+ss(8)*1, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP )
+			draw.SimpleText( "MagID2: " .. wep:D_GetMagID( true ),	"Benny_14", bx+mx, by+ss(8)*2, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP )
 			if wep2_table.Loaded then
-				draw.SimpleText( "T_MagID2: " .. wep2_table.Loaded,		"Trebuchet24", bx+mx, by+24*3, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP )
+				draw.SimpleText( "T_MagID2: " .. wep2_table.Loaded,		"Benny_12", bx+mx, by+24*3, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP )
 			end
 		end
 	end
@@ -951,145 +924,3 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 		end
 	end
 end )
-
-do
-	local function Equip()
-		local ply = LocalPlayer()
-		local buckets = ply:INV_Buckets()
-		if buckets[bucket_selected] and buckets[bucket_selected][item_selected] then
-			-- ply.CLIENTDESIRE = buckets[bucket_selected][item_selected]
-
-			RunConsoleCommand( "benny_inv_equip", buckets[bucket_selected][item_selected] )
-		end
-	end
-	local function Locate( ply, buckets, id )
-		for i, v in ipairs( buckets ) do
-			for a, b in ipairs( v ) do
-				if b == id then
-					-- print( "Found it" )
-					return i, a
-				end
-			end
-		end
-		-- print( "Didn't find it" )
-		return false
-	end
-	local function Wrap( ply, num )
-		do return end
-		local buckets = ply:INV_Buckets()
-		local currsel = ply:GetActiveWeapon():D_GetID( false )
-
-		local lb, li = Locate( ply, buckets, currsel )
-		if lb then
-			bucket_selected = lb
-			item_selected = li
-		end
-
-		if !buckets[num] then return end
-		if bucket_selected == num then
-			item_selected = item_selected + 1
-			if item_selected > #buckets[bucket_selected] then
-				item_selected = 1
-			end
-		else
-			bucket_selected = num
-			item_selected = 1
-		end
-		if buckets[bucket_selected] and buckets[bucket_selected][item_selected] then
-			ply:EmitSound( "benny/hud/hud-02.ogg", 0, 100, 0.75, CHAN_STATIC )
-		else
-			ply:EmitSound( "benny/hud/hud-01.ogg", 0, 100, 0.75, CHAN_STATIC )
-		end
-		Equip()
-	end
-	local qt = {
-		["invnext"] = function( ply )
-			do return end
-			if !ply:BennyCheck() then return end
-			local buckets = ply:INV_Buckets()
-			local currsel = ply:GetActiveWeapon():D_GetID( false )
-
-			local lb, li = Locate( ply, buckets, currsel )
-			if lb then
-				bucket_selected = lb
-				item_selected = li
-			end
-
-			item_selected = item_selected + 1
-			for i=1, #buckets do
-				if item_selected > #buckets[bucket_selected] then
-					bucket_selected = bucket_selected + 1
-					item_selected = 1
-				end
-				if bucket_selected > #buckets then bucket_selected = 1 item_selected = 1 end
-				if buckets[bucket_selected][item_selected] then
-					ply:EmitSound( "benny/hud/hud-02.ogg", 0, 100, 0.75, CHAN_STATIC )
-					Equip()
-					return
-				end
-			end
-		end,
-		["invprev"] = function( ply )
-			do return end
-			local buckets = ply:INV_Buckets()
-			local currsel = ply:GetActiveWeapon():D_GetID( false )
-
-			local lb, li = Locate( ply, buckets, currsel )
-			if lb then
-				bucket_selected = lb
-				item_selected = li
-			end
-
-			item_selected = item_selected - 1
-			for i=1, #buckets do
-				if item_selected < 1 then
-					bucket_selected = bucket_selected - 1
-					if bucket_selected < 1 then bucket_selected = #buckets end
-					item_selected = #buckets[bucket_selected]
-				end
-				if buckets[bucket_selected][item_selected] then
-					ply:EmitSound( "benny/hud/hud-02.ogg", 0, 100, 0.75, CHAN_STATIC )
-					Equip()
-					return
-				end
-			end
-			Equip()
-		end,
-		["slot1"] = function( ply )
-			Wrap( ply, 1 )
-		end,
-		["slot2"] = function( ply )
-			Wrap( ply, 2 )
-		end,
-		["slot3"] = function( ply )
-			Wrap( ply, 3 )
-		end,
-		["slot4"] = function( ply )
-			Wrap( ply, 4 )
-		end,
-		["slot5"] = function( ply )
-			Wrap( ply, 5 )
-		end,
-		["slot6"] = function( ply )
-			Wrap( ply, 6 )
-		end,
-		["slot7"] = function( ply )
-			Wrap( ply, 7 )
-		end,
-		["slot8"] = function( ply )
-			Wrap( ply, 8 )
-		end,
-		["slot9"] = function( ply )
-			Wrap( ply, 9 )
-		end,
-		["slot0"] = function( ply )
-			Wrap( ply, 0 )
-		end,
-	}
-	hook.Add( "PlayerBindPress", "Benny_PlayerBindPress", function( ply, bind, pressed, code )
-		if qt[bind] and pressed then
-			qt[bind]( ply )
-			return true
-		end
-	end)
-end
