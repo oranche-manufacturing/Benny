@@ -217,19 +217,33 @@ local mat_grad = Material( "benny/hud/grad.png", "mips smooth" )
 
 local lonk = {
 	{
-		Glyph = "R",
-		Text1 = "RELOAD",
-		Text2 = "Reload weapon",
+		Glyph = "W",
+		Glyph2 = "S",
+		Text1 = "MOVE",
+		Text2 = "Forward and backward",
 	},
 	{
-		Glyph = "T",
-		Text1 = "RELOAD (AKIMBO)",
-		Text2 = "Reload alternate weapon",
+		Glyph = "A",
+		Glyph2 = "D",
+		Text1 = "STRAFE",
+		Text2 = "Left and right",
+	},
+	{
+		Spacer = true,
+	},
+	{
+		Glyph = "R",
+		Glyph2 = "T",
+		Text1 = "RELOAD",
+		Text2 = "Reload weapon",
 	},
 	{
 		Glyph = "F",
 		Text1 = "AIM",
 		Text2 = "Enter weapon mode",
+	},
+	{
+		Spacer = true,
 	},
 	{
 		Glyph = "SPACE",
@@ -242,9 +256,27 @@ local lonk = {
 		Text2 = "Get down",
 	},
 	{
+		Spacer = true,
+	},
+	{
 		Glyph = "F1",
+		Text1 = "SETTINGS",
+		Text2 = "Set settings",
+	},
+	{
+		Glyph = "F2",
+		Text1 = "DEV. INVENTORY",
+		Text2 = "Manage inventory",
+	},
+	{
+		Glyph = "F3",
 		Text1 = "DEV. SPAWN",
 		Text2 = "Cheat items in",
+	},
+	{
+		Glyph = "F4",
+		Text1 = "CHOREOGRAPHER",
+		Text2 = "Manage scenes",
 	},
 }
 
@@ -376,7 +408,11 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 			if _==1 then
 				tbump = tbump + ss(4)
 			end
-			tbump = tbump + ss(16)
+			if data.Spacer then
+				tbump = tbump + ss(5)
+			else
+				tbump = tbump + ss(16)
+			end
 			if _==#lonk then
 				tbump = tbump + ss(4)
 			end
@@ -397,35 +433,49 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 
 			-- surface.SetDrawColor( 0, 100, 255, 32 )
 			-- surface.DrawRect( b_x, b_y + bump, b_w, ss(16) )
-
-			draw.SimpleText( data.Text1, "Benny_12", b_x + b_w - tbw,
-			b_y + bump,
-			scheme["fg"], TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP )
-
-			draw.SimpleText( data.Text2, "Benny_8", b_x + b_w - tbw,
-			b_y+ss(8) + bump,
-			scheme["fg"], TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP )
-
-			if #data.Glyph == 1 then
+			if data.Spacer then
 				surface.SetDrawColor( scheme["fg"] )
-				surface.DrawOutlinedRect( b_x + tbw,
-				b_y + ss(2) + bump, tbg, tbg, ss(1) )
-				draw.SimpleText( data.Glyph, "Benny_12", b_x + tbw + tbg/2,
-				b_y + ss(2.6) + bump,
-				scheme["fg"], TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP )
+				surface.DrawRect( b_x + ss(4), b_y + ss(2) + bump, b_w - ss(8), ss(1) )
+				bump = bump + ss(5)
 			else
-				surface.SetFont( "Benny_10" )
-				local tx = surface.GetTextSize( data.Glyph )
-				tx = math.max( tx + ss(8), tbg )
+				draw.SimpleText( data.Text1, "Benny_12", b_x + b_w - tbw,
+				b_y + bump,
+				scheme["fg"], TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP )
 
-				surface.SetDrawColor( scheme["fg"] )
-				surface.DrawOutlinedRect( b_x + tbw,
-				b_y + ss(2) + bump, tx, tbg, ss(1) )
-				draw.SimpleText( data.Glyph, "Benny_10", b_x + tbw + tx/2,
-				b_y + ss(3.6) + bump,
-				scheme["fg"], TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP )
+				draw.SimpleText( data.Text2, "Benny_8", b_x + b_w - tbw,
+				b_y+ss(8) + bump,
+				scheme["fg"], TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP )
+
+				if #data.Glyph == 1 then
+					surface.SetDrawColor( scheme["fg"] )
+					surface.DrawOutlinedRect( b_x + tbw,
+					b_y + ss(2) + bump, tbg, tbg, ss(1) )
+					draw.SimpleText( data.Glyph, "Benny_12", b_x + tbw + tbg/2,
+					b_y + ss(2.6) + bump,
+					scheme["fg"], TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP )
+
+					if data.Glyph2 then
+						surface.SetDrawColor( scheme["fg"] )
+						surface.DrawOutlinedRect( b_x + tbw + tbg + ss(2),
+						b_y + ss(2) + bump, tbg, tbg, ss(1) )
+						draw.SimpleText( data.Glyph2, "Benny_12", b_x + tbw + tbg/2 + tbg + ss(2),
+						b_y + ss(2.6) + bump,
+						scheme["fg"], TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP )
+					end
+				else
+					surface.SetFont( "Benny_10" )
+					local tx = ss((#data.Glyph*5)+5) surface.GetTextSize( data.Glyph )
+					--tx = math.max( tx + ss(8), tbg )
+
+					surface.SetDrawColor( scheme["fg"] )
+					surface.DrawOutlinedRect( b_x + tbw,
+					b_y + ss(2) + bump, tx, tbg, ss(1) )
+					draw.SimpleText( data.Glyph, "Benny_10", b_x + tbw + tx/2,
+					b_y + ss(3.6) + bump,
+					scheme["fg"], TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP )
+				end
+				bump = bump + ss(16)
 			end
-			bump = bump + ss(16)
 			if _==#lonk then
 				bump = bump + ss(4)
 			end
