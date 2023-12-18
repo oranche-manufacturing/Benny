@@ -53,30 +53,6 @@
 		Features = "firearm",
 	}
 
-	WEAPONS["overunder"] = {
-		Name = "O/U",
-		Description = "meow",
-		Type = "shotgun",
-
-		WModel = "models/weapons/w_shot_kozlice.mdl",
-		HoldType = "rpg",
-		GestureFire = { ACT_HL2MP_GESTURE_RANGE_ATTACK_CROSSBOW, 0.5 },
-
-		Sound_Fire = "SPAS12.Fire",
-		Sound_DryFire = "Common.Dryfire.Rifle",
-		Sound_MagOut = "SPAS12.MagOut",
-		Sound_MagIn = "SPAS12.MagIn",
-
-		Delay = (60/120),
-		Firemodes = FIREMODE_SEMI,
-		Ammo = 2,
-		Damage = 10,
-		Pellets = 8,
-		Spread = 130/60,
-
-		Features = "firearm",
-	}
-
 	WEAPONS["cqb70"] = {
 		Name = "CS-70",
 		Description = "meow",

@@ -98,24 +98,24 @@ local mewer = {
 		end,
 		-- "How managable the weapon's recoil and spread is under sustained fire.\nAffected by RPM and various Recoil stats."
 	},
-	{
-		Name = "Handling",
-		Size = 12,
-		Font = "Benny_10",
-		Stat = function( class )
-			return 0
-		end,
-		-- "How quickly this weapon readies from sprinting, aiming and deploying.\nAffected by Aim Down Sights Time, Sprint To Fire Time, and Deploy Time."
-	},
-	{
-		Name = "Maneuvering",
-		Size = 12,
-		Font = "Benny_10",
-		Stat = function( class )
-			return 0
-		end,
-		-- "How accurate the weapon is while not aiming.\nAffected by Hipfire Spread, Mid-air Spread, Sway, and Free Aim Angle."
-	},
+	-- {
+	-- 	Name = "Handling",
+	-- 	Size = 12,
+	-- 	Font = "Benny_10",
+	-- 	Stat = function( class )
+	-- 		return 0
+	-- 	end,
+	-- 	-- "How quickly this weapon readies from sprinting, aiming and deploying.\nAffected by Aim Down Sights Time, Sprint To Fire Time, and Deploy Time."
+	-- },
+	--{
+	--	Name = "Maneuvering",
+	--	Size = 12,
+	--	Font = "Benny_10",
+	--	Stat = function( class )
+	--		return 0
+	--	end,
+	--	-- "How accurate the weapon is while not aiming.\nAffected by Hipfire Spread, Mid-air Spread, Sway, and Free Aim Angle."
+	--},
 	{
 		Name = "Mobility",
 		Size = 12,
@@ -127,16 +127,16 @@ local mewer = {
 
 			local score_moving, score_aiming, score_reloading, score_firing = 1, 1, 1, 1
 
-			score_moving = rmt1c( BENNY_GetStat( class, "Speed_Move" ), 0.75, 0.95 )
+			score_moving = rmt1c( BENNY_GetStat( class, "Speed_Move" ), 0.8, 1 )
 			score_moving = score_moving * weight_moving
 
-			score_aiming = rmt1c( BENNY_GetStat( class, "Speed_Aiming" ), 0.75, 0.95 )
+			score_aiming = rmt1c( BENNY_GetStat( class, "Speed_Aiming" ), 0.8, .98 )
 			score_aiming = score_aiming * weight_aiming
 
-			score_reloading = rmt1c( BENNY_GetStat( class, "Speed_Reloading" ), 0.75, 0.9 )
+			score_reloading = rmt1c( BENNY_GetStat( class, "Speed_Reloading" ), 0.75, 0.95 )
 			score_reloading = score_reloading * weight_reloading
 
-			score_firing = rmt1c( BENNY_GetStat( class, "Speed_Firing" ), 0.75, 0.9 )
+			score_firing = rmt1c( BENNY_GetStat( class, "Speed_Firing" ), 0.75, 0.95 )
 			score_firing = score_firing * weight_firing
 
 			return score_moving + score_aiming + score_reloading + score_firing
@@ -324,6 +324,52 @@ function OpenSMenu()
 				end
 			end
 
+			return true
+		end
+	end
+
+	do
+		local fucker = statlist:Add( "DLabel" )
+		fucker:SetTall( ss(14) )
+		fucker:Dock( TOP )
+		fucker:DockMargin( 0, 0, 0, ss(2) )
+		function fucker:Paint( w, h )
+			local hm = WeaponGet( pan_active )
+			surface.SetDrawColor( schema("fg") )
+			surface.DrawRect( 0, 0, w, h )
+
+			draw.SimpleText( BENNY_GetStat( hm, "Ammo" ) .. " rounds", "Benny_12", ss(2), ss(2), schema_c("bg") )
+			return true
+		end
+	end
+
+	do
+		local fucker = statlist:Add( "DLabel" )
+		fucker:SetTall( ss(14) )
+		fucker:Dock( TOP )
+		fucker:DockMargin( 0, 0, 0, ss(2) )
+		function fucker:Paint( w, h )
+			local hm = WeaponGet( pan_active )
+			surface.SetDrawColor( schema("fg") )
+			surface.DrawRect( 0, 0, w, h )
+
+			local fm = BENNY_GetStat( hm, "Firemodes" )
+			local fms = ""
+
+			for i,v in ipairs( fm) do
+				local m =v.Mode
+				if m == math.huge then
+					fms = fms .. "AUTO"
+				elseif m == 1 then
+					fms = fms .. "SEMI"
+				else
+					fms = fms .. m .. "-BURST"
+				end
+				if i != #fm then
+					fms = fms .. " / "
+				end
+			end
+			draw.SimpleText( fms, "Benny_12", ss(2), ss(2), schema_c("bg") )
 			return true
 		end
 	end

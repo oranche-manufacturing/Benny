@@ -158,7 +158,9 @@ hook.Add( "Move", "Benny_Move", function( ply, mv )
 		targetspeed = targetspeed * Lerp( w:GetAim(), 1, w:GetStat( false, "Speed_Aiming" ) )
 
 		local st = w:D_GetShotTime( false )
-		targetspeed = targetspeed * Lerp( math.TimeFraction( st, st+w:GetStat( hand, "Speed_FiringTime" ), CurTime() )>1 and 1 or 0, w:GetStat( false, "Speed_Firing" ), 1 )
+		targetspeed = targetspeed * (st+w:GetStat( hand, "Speed_FiringTime" ) > CurTime() and w:GetStat( false, "Speed_Firing" ) or 1)
+
+		targetspeed = targetspeed * (w:D_GetReloading( false ) > 0 and w:GetStat( false, "Speed_Reloading" ) or 1)
 
 		mv:SetMaxSpeed( targetspeed )
 		mv:SetMaxClientSpeed( targetspeed )

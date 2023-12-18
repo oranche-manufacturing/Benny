@@ -431,6 +431,11 @@ do -- Handguns
 		SpreadDecay_End = 11,
 		SpreadDecay_RampTime = 0.5,
 
+		Reload_MagOut = 0.1,
+		Reload_MagIn = 0.75,
+		Reload_MagIn_Bonus1 = 0.4,
+		Reload_MagIn_Bonus2 = 0.4+0.15,
+
 		Speed_Move = 1,
 		Speed_Aiming = 0.98,
 		Speed_Reloading = 1,
@@ -469,6 +474,11 @@ do -- Handguns
 		SpreadDecay_End = 11,
 		SpreadDecay_RampTime = 0.5,
 
+		Reload_MagOut = 0.15,
+		Reload_MagIn = 0.85,
+		Reload_MagIn_Bonus1 = 0.5,
+		Reload_MagIn_Bonus2 = 0.5+0.12,
+
 		Speed_Move = 1,
 		Speed_Aiming = 0.98,
 		Speed_Reloading = 1,
@@ -505,6 +515,11 @@ do -- Handguns
 		SpreadDecay_Start = 3,
 		SpreadDecay_End = 11,
 		SpreadDecay_RampTime = 0.5,
+
+		Reload_MagOut = 0.25,
+		Reload_MagIn = 1.1,
+		Reload_MagIn_Bonus1 = 0.8,
+		Reload_MagIn_Bonus2 = 0.8+0.08,
 
 		Speed_Move = 1,
 		Speed_Aiming = 0.95,
@@ -543,10 +558,15 @@ do -- Handguns
 		SpreadDecay_End = 11,
 		SpreadDecay_RampTime = 0.5,
 
+		Reload_MagOut = 0.5,
+		Reload_MagIn = 0.5,
+		Reload_MagIn_Bonus1 = 0.2,
+		Reload_MagIn_Bonus2 = 0.2+0.1,
+
 		Speed_Move = 1,
 		Speed_Aiming = 1,
 		Speed_Reloading = 0.9,
-		Speed_Firing = 0.95,
+		Speed_Firing = 1,
 
 		Features = "firearm",
 	}
@@ -580,8 +600,13 @@ do -- Handguns
 		SpreadDecay_End = 22,
 		SpreadDecay_RampTime = 0.65,
 
-		Speed_Move = 0.97,
-		Speed_Aiming = 0.9,
+		Reload_MagOut = 0.6,
+		Reload_MagIn = 0.6,
+		Reload_MagIn_Bonus1 = 0.18,
+		Reload_MagIn_Bonus2 = 0.18+0.08,
+
+		Speed_Move = 1.0,
+		Speed_Aiming = 0.95,
 		Speed_Reloading = 0.9,
 		Speed_Firing = 0.95,
 
@@ -877,8 +902,8 @@ do -- Shotguns
 		SpreadDecay_End = 30,
 		SpreadDecay_RampTime = 0.7,
 
-		Speed_Move = 0.85,
-		Speed_Aiming = 0.85,
+		Speed_Move = 0.93,
+		Speed_Aiming = 0.95,
 		Speed_Reloading = 0.85,
 		Speed_Firing = 0.75,
 
@@ -912,10 +937,45 @@ do -- Shotguns
 		SpreadDecay_End = 30,
 		SpreadDecay_RampTime = 0.5,
 
-		Speed_Move = 0.9,
-		Speed_Aiming = 0.9,
+		Speed_Move = 0.95,
+		Speed_Aiming = 0.95,
+		Speed_Reloading = 0.9,
+		Speed_Firing = 0.9,
+
+		Features = "firearm",
+	}
+
+	WEAPONS["overunder"] = {
+		Name = "O/U",
+		Description = "Full-length double-barrelled bar fight finisher.",
+		Type = "shotgun",
+
+		WModel = "models/weapons/w_shot_kozlice.mdl",
+		HoldType = "rpg",
+		GestureFire = { ACT_HL2MP_GESTURE_RANGE_ATTACK_CROSSBOW, 0.5 },
+
+		Sound_Fire = "SPAS12.Fire",
+		Sound_DryFire = "Common.Dryfire.Rifle",
+		Sound_MagOut = "SPAS12.MagOut",
+		Sound_MagIn = "SPAS12.MagIn",
+
+		Delay = (60/120),
+		Firemodes = FIREMODE_SEMI,
+		Ammo = 2,
+		Damage = 10,
+		Pellets = 8,
+		Spread = 130/60,
+		SpreadAdd = 130/60,
+		SpreadAddMax = 20,
+		
+		SpreadDecay_Start = 10,
+		SpreadDecay_End = 30,
+		SpreadDecay_RampTime = 0.5,
+
+		Speed_Move = 0.93,
+		Speed_Aiming = 0.95,
 		Speed_Reloading = 0.85,
-		Speed_Firing = 0.75,
+		Speed_Firing = 0.85,
 
 		Features = "firearm",
 	}
@@ -947,10 +1007,16 @@ do -- Shotguns
 		SpreadDecay_End = 30,
 		SpreadDecay_RampTime = 1,
 
-		Speed_Move = 0.82,
-		Speed_Aiming = 0.82,
+		Reload_MagOut = 0.5,
+		Reload_MagIn = 1.5,
+		Reload_MagIn_Bonus1 = 1.2,
+		Reload_MagIn_Bonus2 = 1.2+0.1,
+
+		Speed_Move = 0.92,
+		Speed_Aiming = 0.92,
 		Speed_Reloading = 0.5,
 		Speed_Firing = 0.334,
+		Speed_FiringTime = 0.5,
 
 		Features = "firearm",
 	}
@@ -987,10 +1053,15 @@ do -- Rifles
 		SpreadDecay_End = 12,
 		SpreadDecay_RampTime = 0.2,
 
-		Speed_Move = 0.9,
-		Speed_Aiming = 0.9,
-		Speed_Reloading = 0.9,
-		Speed_Firing = 0.9,
+		Reload_MagOut = 0.3,
+		Reload_MagIn = 1.3,
+		Reload_MagIn_Bonus1 = 0.8,
+		Reload_MagIn_Bonus2 = 0.8+0.1,
+
+		Speed_Move = 0.95,
+		Speed_Aiming = 0.95,
+		Speed_Reloading = 0.95,
+		Speed_Firing = 0.95,
 
 		Features = "firearm",
 	}
@@ -1023,10 +1094,15 @@ do -- Rifles
 		SpreadDecay_End = 36,
 		SpreadDecay_RampTime = 0.6,
 
-		Speed_Move = 0.9,
-		Speed_Aiming = 0.935,
-		Speed_Reloading = 0.935,
-		Speed_Firing = 0.935,
+		Reload_MagOut = 0.4,
+		Reload_MagIn = 1.5,
+		Reload_MagIn_Bonus1 = 0.8,
+		Reload_MagIn_Bonus2 = 0.8+0.1,
+
+		Speed_Move = 0.975,
+		Speed_Aiming = 0.975,
+		Speed_Reloading = 0.975,
+		Speed_Firing = 0.975,
 
 		Features = "firearm",
 	}
@@ -1062,10 +1138,15 @@ do -- Rifles
 		SpreadDecay_End = 12,
 		SpreadDecay_RampTime = 0.3,
 
-		Speed_Move = 0.9,
-		Speed_Aiming = 0.85,
-		Speed_Reloading = 0.9,
-		Speed_Firing = 0.85,
+		Reload_MagOut = 0.3,
+		Reload_MagIn = 1.3,
+		Reload_MagIn_Bonus1 = 0.6,
+		Reload_MagIn_Bonus2 = 0.6+0.1,
+
+		Speed_Move = 0.95,
+		Speed_Aiming = 0.9,
+		Speed_Reloading = 0.95,
+		Speed_Firing = 0.9,
 
 		Features = "firearm",
 	}
@@ -1194,9 +1275,12 @@ end
 
 do -- Grenades, nothing here is guaranteed.
 
-	local function GrenadeFire( self, data )
+	local function GrenadeFire( self, data, class, hand )
 		local p = self:GetOwner()
 		if self:GetGrenadeDown() then
+			return true
+		end
+		if self:D_GetHolstering( hand ) > 0 then
 			return true
 		end
 
@@ -1253,7 +1337,7 @@ do -- Grenades, nothing here is guaranteed.
 		-- end
 	end
 
-	local function GrenadeThink( self, data )
+	local function GrenadeThink( self, data, class, hand )
 		local p = self:GetOwner()
 		local class = WeaponGet(data.Class)
 		if self:GetGrenadeDown() then
@@ -1439,7 +1523,8 @@ end
 
 -- Ammo generator
 
-for class, data in pairs( WEAPONS ) do
+for class, data in SortedPairs( WEAPONS ) do
+	print(class=="aa12")
 	if data.Features == "firearm" then
 		WEAPONS["mag_" .. class] = {
 			Name = "MAG: " .. WEAPONS[class].Name,

@@ -280,7 +280,7 @@ function SWEP:Think()
 		local hand = i==2
 		if self:BClass( hand ) then
 			if self:BClass( hand ).Custom_Think then
-				self:BClass( hand ).Custom_Think( self, self:BTable( hand ) )
+				self:BClass( hand ).Custom_Think( self, self:BTable( hand ), self:BClass( hand ), hand )
 			end
 		end
 	end

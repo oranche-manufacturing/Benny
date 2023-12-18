@@ -761,6 +761,7 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 			local magbump = 0
 			for _, mag in ipairs( maginv ) do
 				local mitem = inv[mag]
+				if !mitem then continue end
 				local loaded = (item.Loaded == mag)
 				local perc = mitem.Ammo/WeaponGet(mitem.Class).Ammo
 				surface.SetDrawColor( scheme["bg"] )
