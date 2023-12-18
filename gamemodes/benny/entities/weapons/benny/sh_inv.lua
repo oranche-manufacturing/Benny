@@ -150,7 +150,7 @@ local fallbackstat = {
 }
 
 function SWEP:GetStat( hand, stat )
-	local thereturn = (self:BClass( hand )[stat] or fallbackstat[stat])
+	local thereturn = (self:BClass( hand ) and self:BClass( hand )[stat] or fallbackstat[stat])
 	assert( thereturn, "No stat for " .. stat )
 	return thereturn
 end

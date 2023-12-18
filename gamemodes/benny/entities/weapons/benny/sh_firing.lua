@@ -62,24 +62,20 @@ function SWEP:BFire( hand )
 
 		
 		if CLIENT and IsFirstTimePredicted() then
-			if IsValid(self.CWM) and self.CWM:GetAttachment( 1 ) then
-				local vStart = self.CWM:GetAttachment( 1 ).Pos
-				--local vPoint = p:GetEyeTrace().HitPos
-				--local effectdata = EffectData()
-				--effectdata:SetStart( vStart )
-				--effectdata:SetOrigin( vPoint )
-				--util.Effect( "ToolTracer", effectdata )
+			-- PROTO: This is shit! Replace it with a function that gets the right model.
+			if IsValid(hand and self.CWM_Left or self.CWM) and (hand and self.CWM_Left or self.CWM):GetAttachment( 1 ) then
+				local vStart = (hand and self.CWM_Left or self.CWM):GetAttachment( 1 ).Pos
 				local ed = EffectData()
 				ed:SetOrigin( vStart )
-				--ed:SetAngles( Angle() )
 				ed:SetEntity( self )
-				ed:SetAttachment( 1 )
+				ed:SetAttachment( (hand and 16 or 0) + 1 )
 				util.Effect( "benny_muzzleflash", ed )
 			end
 		end
 	end
 end
 
+local bc = { effects = false, damage = true }
 function SWEP:CallFire( hand )
 	local p = self:GetOwner()
 	local class = self:BClass( hand )
@@ -105,56 +101,27 @@ function SWEP:CallFire( hand )
 			Force = class.Damage/10,
 			Src = p:EyePos(),
 			Dir = dir:Forward(),
+			Tracer = 0,
 			IgnoreEntity = p,
-			Callback = self.BulletCallback,
+			Callback = function( atk, tr, dmginfo )
+				if CLIENT and IsFirstTimePredicted() then
+					self:FireCL( hand, tr )
+				end
+				return bc
+			end,
 		} )
-
-		-- self:FireCL( tr )
-		-- self:FireSV( tr )
 	end
 end
 
-function SWEP:BulletCallback()
-	return true
-end
-
-
-
-function SWEP:FireCL( tr )
-	if CLIENT and IsFirstTimePredicted() then
-		do
-			local vStart = self.CWM:GetAttachment( 1 ).Pos
-			local vPoint = tr.HitPos
-			local effectdata = EffectData()
-			effectdata:SetStart( vStart )
-			effectdata:SetOrigin( vPoint )
-			effectdata:SetEntity( self )
-			effectdata:SetScale( 1025*12 )
-			effectdata:SetFlags( 1 )
-			util.Effect( "Tracer", effectdata )
-		end
-		-- util.DecalEx( Material( util.DecalMaterial( "Impact.Concrete" ) ), tr.Entity, tr.HitPos, tr.HitNormal, color_white, 1, 1 )
-		do
-			local effectdata = EffectData()
-			effectdata:SetOrigin( tr.HitPos )
-			effectdata:SetStart( tr.StartPos )
-			effectdata:SetSurfaceProp( tr.SurfaceProps )
-			effectdata:SetEntity( tr.Entity )
-			effectdata:SetDamageType( DMG_BULLET )
-			util.Effect( "Impact", effectdata )
-		end
-	end
-end
-
-function SWEP:FireSV( tr )
-	local class = self:BClass( false )
-	if SERVER and IsValid( tr.Entity ) then
-		local dmginfo = DamageInfo()
-		dmginfo:SetDamage( class.Damage )
-		dmginfo:SetAttacker( self:GetOwner() )
-		dmginfo:SetInflictor( self )
-		dmginfo:SetDamageType( DMG_BULLET )
-		dmginfo:SetDamagePosition( tr.HitPos )
-		tr.Entity:TakeDamageInfo( dmginfo )
-	end
+function SWEP:FireCL( hand, tr )
+	-- PROTO: This is shit! Replace it with a function that gets the right model.
+	local vStart = (hand and self.CWM_Left or self.CWM):GetAttachment( 1 ).Pos
+	local vPoint = tr.HitPos
+	local effectdata = EffectData()
+	effectdata:SetStart( vStart )
+	effectdata:SetOrigin( vPoint )
+	effectdata:SetEntity( self )
+	effectdata:SetScale( 1025*12 )
+	effectdata:SetFlags( 1 )
+	util.Effect( "Tracer", effectdata )
 end

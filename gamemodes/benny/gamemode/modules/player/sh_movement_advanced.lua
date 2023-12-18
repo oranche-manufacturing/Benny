@@ -148,5 +148,15 @@ hook.Add( "Move", "Benny_Move", function( ply, mv )
 		ply:SetMoveType( (ply:GetVaultTransition() == 0) and MOVETYPE_WALK or MOVETYPE_NOCLIP )
 		return true
 	end
+
+	local w = ply:BennyCheck()
+	if w then
+		local targetspeed = ply:GetMaxSpeed()
+
+		targetspeed = targetspeed * w:GetStat( false, "Speed_Move" )
+
+		mv:SetMaxSpeed( targetspeed )
+		mv:SetMaxClientSpeed( targetspeed )
+	end
 	--debugoverlay.Box( Target+(TargetNor*16), ba, bb, 0, CR )
 end)

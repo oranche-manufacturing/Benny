@@ -12,8 +12,13 @@ function EFFECT:Init( data )
 	self.angles = data:GetAngles()
 	self.el = data:GetEntity()
 	self.en = data:GetEntity()
-	if IsValid(self.en.CWM) then self.en = self.en.CWM end
 	self.ea = data:GetAttachment()
+	if self.ea > 16 then
+		if IsValid(self.en.CWM_Left) then self.en = self.en.CWM_Left end
+		self.ea = self.ea - 16
+	else
+		if IsValid(self.en.CWM) then self.en = self.en.CWM end
+	end
 	self.particles = 1
 
 	self.CreationTime = UnPredictedCurTime()

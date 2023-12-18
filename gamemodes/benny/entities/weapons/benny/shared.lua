@@ -252,12 +252,13 @@ function SWEP:Think()
 	end
 
 	local ht = "normal"
-	if self:GetUserAim() and self:D_GetHolstering( false ) < 0 then
-		if self:BClass( false ) then
+	if self:BClass( false ) and self:D_GetHolstering( false ) < 0 then
+		ht = "passive"
+		if self:GetUserAim() then
 			if self:BClass( true ) then
 				ht = "duel"
 			else
-				ht = self:BClass( false ).HoldType or "revolver"
+				ht = self:GetStat( false, "HoldType" )
 			end
 		end
 	end
