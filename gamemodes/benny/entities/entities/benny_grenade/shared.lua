@@ -31,6 +31,18 @@ end
 function ENT:Think()
 	if SERVER and self.Fuse <= CurTime() then
 		self:Explode()
+	else
+		if CLIENT then
+			local li = DynamicLight( self:EntIndex() )
+			li.pos = self:GetPos() + vector_up*8
+			li.r = 255
+			li.g = 200
+			li.b = 100
+			li.brightness = 8
+			li.decay = 0
+			li.size = 32
+			li.dietime = CurTime() + 0
+		end
 	end
 	self:NextThink( CurTime() )
 	return true
