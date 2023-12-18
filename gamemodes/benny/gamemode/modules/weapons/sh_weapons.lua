@@ -1524,7 +1524,6 @@ end
 -- Ammo generator
 
 for class, data in SortedPairs( WEAPONS ) do
-	print(class=="aa12")
 	if data.Features == "firearm" then
 		WEAPONS["mag_" .. class] = {
 			Name = "MAG: " .. WEAPONS[class].Name,
