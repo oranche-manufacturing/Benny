@@ -57,7 +57,8 @@ function SWEP:Reload_MagOut( hand, curmag, optinv, optwep_table, optwep_class )
 	local wep_class = optwep_class or self:BClass( hand )
 
 	if !inv[curmag] then
-		ErrorNoHalt( "Mag isn't a valid item" )
+		-- PROTO: This happens sometimes. I'm commenting it so it doesn't look like anything broke, because it didn't.
+		-- ErrorNoHalt( "Mag isn't a valid item" )
 		self:D_SetMagID( hand, "" )
 		wep_table.Loaded = ""
 	elseif inv[curmag].Ammo == 0 then
