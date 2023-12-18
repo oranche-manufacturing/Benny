@@ -21,7 +21,7 @@ function SWEP:SecondaryAttack()
 end
 
 function SWEP:BFire( hand )
-	if self:BTable( hand ) then
+	if self:BTable( hand ) and self:GetAim() == 1 then
 		local p = self:GetOwner()
 		local wep_table = self:BTable( hand )
 		local wep_class = self:BClass( hand )
@@ -75,7 +75,7 @@ function SWEP:BFire( hand )
 	end
 end
 
-local bc = { effects = false, damage = true }
+local bc = { effects = true, damage = true }
 function SWEP:CallFire( hand )
 	local p = self:GetOwner()
 	local class = self:BClass( hand )

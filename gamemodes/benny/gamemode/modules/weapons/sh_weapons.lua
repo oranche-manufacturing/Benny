@@ -432,7 +432,7 @@ do -- Handguns
 		SpreadDecay_RampTime = 0.5,
 
 		Speed_Move = 1,
-		Speed_Aiming = 0.95,
+		Speed_Aiming = 0.98,
 		Speed_Reloading = 1,
 		Speed_Firing = 1,
 
@@ -470,7 +470,7 @@ do -- Handguns
 		SpreadDecay_RampTime = 0.5,
 
 		Speed_Move = 1,
-		Speed_Aiming = 0.95,
+		Speed_Aiming = 0.98,
 		Speed_Reloading = 1,
 		Speed_Firing = 1,
 
@@ -618,9 +618,10 @@ do -- Handguns
 		SpreadDecay_RampTime = 0.5,
 
 		Speed_Move = 0.95,
-		Speed_Aiming = 0.88,
-		Speed_Reloading = 0.88,
-		Speed_Firing = 0.93,
+		Speed_Aiming = 0.95,
+		Speed_Reloading = 0.95,
+		Speed_Firing = 0.95,
+		Speed_FiringTime = 0.5,
 
 		Features = "firearm",
 	}
@@ -1088,6 +1089,8 @@ do -- Sniper rifles
 		Sound_MagOut = "Barrett.MagOut",
 		Sound_MagIn = "Barrett.MagIn",
 		Sound_Cock = "Barrett.Cock",
+		
+		ShootHolsterTime = 1,
 
 		Delay = (60/140),
 		Firemodes = FIREMODE_SEMI,
@@ -1110,6 +1113,7 @@ do -- Sniper rifles
 		Speed_Aiming = 0.75,
 		Speed_Reloading = 0.5,
 		Speed_Firing = 0.334,
+		Speed_FiringTime = 1,
 
 		Features = "firearm",
 	}

@@ -147,6 +147,8 @@ local fallbackstat = {
 	["Speed_Aiming"] = 1,
 	["Speed_Reloading"] = 1,
 	["Speed_Firing"] = 1,
+	["Speed_FiringTime"] = 0.2,
+	["ShootHolsterTime"] = 0,
 }
 
 function SWEP:GetStat( hand, stat )
