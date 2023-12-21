@@ -334,11 +334,13 @@ function OpenSMenu()
 		fucker:Dock( TOP )
 		fucker:DockMargin( 0, 0, 0, ss(2) )
 		function fucker:Paint( w, h )
-			local hm = WeaponGet( pan_active )
-			surface.SetDrawColor( schema("fg") )
-			surface.DrawRect( 0, 0, w, h )
+			if pan_active then
+				local hm = WeaponGet( pan_active )
+				surface.SetDrawColor( schema("fg") )
+				surface.DrawRect( 0, 0, w, h )
 
-			draw.SimpleText( BENNY_GetStat( hm, "Ammo" ) .. " rounds", "Benny_12", ss(2), ss(2), schema_c("bg") )
+				draw.SimpleText( BENNY_GetStat( hm, "Ammo" ) .. " rounds", "Benny_12", ss(2), ss(2), schema_c("bg") )
+			end
 			return true
 		end
 	end
@@ -349,27 +351,29 @@ function OpenSMenu()
 		fucker:Dock( TOP )
 		fucker:DockMargin( 0, 0, 0, ss(2) )
 		function fucker:Paint( w, h )
-			local hm = WeaponGet( pan_active )
-			surface.SetDrawColor( schema("fg") )
-			surface.DrawRect( 0, 0, w, h )
+			if pan_active then
+				local hm = WeaponGet( pan_active )
+				surface.SetDrawColor( schema("fg") )
+				surface.DrawRect( 0, 0, w, h )
 
-			local fm = BENNY_GetStat( hm, "Firemodes" )
-			local fms = ""
+				local fm = BENNY_GetStat( hm, "Firemodes" )
+				local fms = ""
 
-			for i,v in ipairs( fm) do
-				local m =v.Mode
-				if m == math.huge then
-					fms = fms .. "AUTO"
-				elseif m == 1 then
-					fms = fms .. "SEMI"
-				else
-					fms = fms .. m .. "-BURST"
+				for i,v in ipairs( fm) do
+					local m =v.Mode
+					if m == math.huge then
+						fms = fms .. "AUTO"
+					elseif m == 1 then
+						fms = fms .. "SEMI"
+					else
+						fms = fms .. m .. "-BURST"
+					end
+					if i != #fm then
+						fms = fms .. " / "
+					end
 				end
-				if i != #fm then
-					fms = fms .. " / "
-				end
+				draw.SimpleText( fms, "Benny_12", ss(2), ss(2), schema_c("bg") )
 			end
-			draw.SimpleText( fms, "Benny_12", ss(2), ss(2), schema_c("bg") )
 			return true
 		end
 	end
