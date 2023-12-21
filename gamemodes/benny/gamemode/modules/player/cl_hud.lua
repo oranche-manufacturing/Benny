@@ -975,3 +975,24 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 		end
 	end
 end )
+
+do
+	local qt = {
+		["slot1"] = true,
+		["slot2"] = true,
+		["slot3"] = true,
+		["slot4"] = true,
+		["slot5"] = true,
+		["slot6"] = true,
+		["slot7"] = true,
+		["slot8"] = true,
+		["slot9"] = true,
+		["slot0"] = true,
+	}
+
+	hook.Add( "PlayerBindPress", "Benny_PlayerBindPress_Original", function( ply, bind, pressed, code )
+		if qt[bind] and pressed then
+			return true
+		end
+	end)
+end
