@@ -158,6 +158,7 @@ function SWEP:GetStat( hand, stat )
 end
 
 function BENNY_GetStat( class, stat )
+	assert( class, "No class" )
 	local thereturn = (class[stat] or fallbackstat[stat])
 	assert( thereturn, "No stat for " .. stat )
 	return thereturn
