@@ -237,7 +237,7 @@ do -- Toolgun
 	end
 	WEAPONS["toolgun"] = {
 		Name = "TOOL GUN",
-		Description = "Developer development device",
+		Description = "Developer development device. Hold ALT for Remover",
 		Type = "special",
 
 		WModel = "models/weapons/w_toolgun.mdl",
@@ -256,8 +256,8 @@ do -- Toolgun
 			local p = self:GetOwner()
 		
 			local tr = p:GetEyeTrace()
-			local tool = p:GetInfo( "benny_wep_toolgun" )
-			if ToolGunTools[tool] then ToolGunTools[tool]( self, p, tr ) end
+			local tool = p:KeyDown( IN_WALK ) and "remover" or p:GetInfo( "benny_wep_toolgun" )
+			if ToolGunTools[tool] then ToolGunTools[tool]( self, p, tr ) else return true end
 		
 			if CLIENT and IsFirstTimePredicted() then
 				local vStart = self:GetAttachment( 1 ).Pos

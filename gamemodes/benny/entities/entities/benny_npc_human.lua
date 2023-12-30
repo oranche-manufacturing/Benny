@@ -20,6 +20,7 @@ if CLIENT then
 		t.State = net.ReadString()
 		t.Team = net.ReadString()
 		t.Faction = net.ReadString()
+		t.Rank = net.ReadUInt(8)
 
 		t.Seeing = {}
 		for i=1, net.ReadUInt(8) do
@@ -88,13 +89,14 @@ if CLIENT then
 				DST( ent:Nick(), "DNB_14", x, y, color_white )
 				y = y + s(12)
 
-				DST( data.State, "DNB_10", x, y, color_white )
-				y = y + s(12)
-
-				DST( data.Team, "DNB_6", x, y, color_white )
-				y = y + s(4)
-				DST( data.Faction, "DNB_6", x, y, color_white )
+				DST( "RANK " .. data.Rank, "DNB_6", x, y, color_white )
 				y = y + s(6)
+
+				DST( data.Faction .. " - " .. data.Team, "DNB_6", x, y, color_white )
+				y = y + s(6)
+
+				DST( data.State, "DNB_10", x, y, color_white )
+				y = y + s(10)
 			end
 
 			do
@@ -143,9 +145,21 @@ if CLIENT then
 
 		end
 	end)
+	net.Receive("Benny_DebugNextbotChat", function()
+		chat.AddText( Color( 200, 200, 255 ), "[" .. net.ReadEntity():Nick() .. "] ", net.ReadColor( false ), net.ReadString() )
+	end)
 	return
 else
 	util.AddNetworkString("Benny_DebugNextbot")
+	util.AddNetworkString("Benny_DebugNextbotChat")
+end
+
+function ENT:DebugChat( text, color )
+	net.Start("Benny_DebugNextbotChat")
+		net.WriteEntity( self )
+		net.WriteColor( color or Color( 200, 255, 255 ), false )
+		net.WriteString( text )
+	net.Broadcast()
 end
 
 function ENT:SetState( state )
@@ -185,15 +199,26 @@ function ENT:BodyUpdate()
 end
 
 function ENT:OnEntitySight( ent )
-	-- ent:EmitSound( "benny/dev/d-01.ogg", 70, 100, 0.25 )
-	if !self.bEnemyMemory[ent] then
-		self.bEnemyMemory[ent] = {}
+	if !self.bSeeing[ent] then
+		if ent.BennyNPC and ent.Faction == self.Faction then
+			self:DebugChat( "Hello " .. ent:Nick() .. ".", Color( 200, 255, 200 ) )
+		else
+			if self.bEnemyMemory[ent] then
+				local em = self.bEnemyMemory[ent]
+				if CurTime()-em.LastSeenTime > 5 then
+					self:DebugChat( "Eyes on " .. ent:Nick() .. "!! " .. string.NiceTime(CurTime()-em.LastSeenTime), Color( 255, 200, 100 ) )
+				else
+					self:DebugChat( "Reacquired " .. ent:Nick() .. "!! " .. string.NiceTime(CurTime()-em.LastSeenTime), Color( 255, 200, 100 ) )
+				end
+			else
+				self:DebugChat( "New target " .. ent:Nick() .. "!!", Color( 255, 200, 100 ) )
+			end
+		end
 	end
 	self.bSeeing[ent] = true
 end
 
 function ENT:OnEntitySightLost( ent )
-	-- ent:EmitSound( "benny/dev/d-02.ogg", 70, 100, 0.25 )
 	self.bSeeing[ent] = nil
 end
 
@@ -206,11 +231,13 @@ function ENT:Initialize()
 	
 	self:SetState("idle")
 
-	self.Team = "test_duo_1"
-	self.Faction = "test"
+	self.Team = nil
+	self.Faction = "ALPHA"
 
 	self.bEnemyMemory = {}
 	self.bSeeing = {}
+
+	self.Rank = math.random( 0, 255 )
 end
 
 function ENT:RunBehaviour()
@@ -233,14 +260,23 @@ function ENT:Think()
 		end
 		self.bEnemyMemory[ent].LastPos = ent:GetPos()
 		self.bEnemyMemory[ent].LastSeenTime = CurTime()
+
+		if ent.BennyNPC then
+			if !self.Team and !ent.Team and self.Rank >= ent.Rank then
+				self:DebugChat( "Duoing with " .. ent:Nick() )
+				self.Team = "ALPHA_Duo_1"
+				ent.Team = "ALPHA_Duo_1"
+			end
+		end
 	end
 
 	net.Start("Benny_DebugNextbot")
 		net.WriteEntity(self)
 
 		net.WriteString( self.State )
-		net.WriteString( self.Team )
+		net.WriteString( self.Team or "TEAMLESS" )
 		net.WriteString( self.Faction )
+		net.WriteUInt( self.Rank, 8 )
 
 		net.WriteUInt( table.Count( self.bSeeing ), 8 )
 		for ent, _ in pairs( self.bSeeing ) do
