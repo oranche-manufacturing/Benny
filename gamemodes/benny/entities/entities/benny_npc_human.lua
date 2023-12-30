@@ -163,10 +163,12 @@ function ENT:DebugChat( text, color )
 end
 
 function ENT:SetState( state )
-	self:RunCurrentState( "Disable", state )
-	local oldstate = self.State
-	self.State = state
-	self:RunCurrentState( "Enable", oldstate )
+	if self.State != state then
+		self:RunCurrentState( "Disable", state )
+		local oldstate = self.State
+		self.State = state
+		self:RunCurrentState( "Enable", oldstate )
+	end
 end
 
 function ENT:GetState()
@@ -188,7 +190,6 @@ ENT.States = {
 		Enable = function( self, from )
 			-- Holster
 			self:AddGestureSequence( self:SelectWeightedSequence(ACT_GMOD_GESTURE_MELEE_SHOVE_1HAND) )
-			self:SetCycle( 0.65 )
 			if from then
 				self:DebugChat( "Entering idle from " .. from, Color( 100, 255, 100 ) )
 			end
@@ -196,7 +197,6 @@ ENT.States = {
 		Disable = function( self, to )
 			-- Draw
 			self:AddGestureSequence( self:SelectWeightedSequence(ACT_GMOD_GESTURE_MELEE_SHOVE_1HAND) )
-			self:SetCycle( 0.75 )
 			self:DebugChat( "Entering " .. to .. " from idle", Color( 100, 255, 100 ) )
 		end,
 	},
@@ -207,9 +207,29 @@ ENT.States = {
 				if self.bSeeing[re] then
 					self.loco:FaceTowards( re:GetPos() )
 					self:StartActivity( ACT_HL2MP_IDLE_AR2 )
+
+					if (self.NextFire or 0) <= CurTime() then
+						self:FireBullets( {
+							Attacker = self,
+							Inflictor = self,
+							Damage = 0,
+							Dir = self:EyeAngles():Forward(),
+							Src = self:EyePos()
+						} )
+						self.NextFire = CurTime() + 0.5
+					end
 				else
 					self.loco:SetDesiredSpeed( 200 )
 					self:StartActivity( ACT_HL2MP_WALK_RPG )
+					
+					local em = self.bEnemyMemory[re]
+					if em and em.GoToLastKnown and em.GoToLastKnown != true then
+						local result = self:MoveToPos( em.GoToLastKnown, { lookahead = 300, tolerance = 64, draw = true, repath = 0.2 } )
+						if result == "ok" then
+							em.GoToLastKnown = true
+							self:DebugChat("Went to last known position")
+						end
+					end
 				end
 			end
 
@@ -223,7 +243,18 @@ ENT.States = {
 }
 
 function ENT:BodyUpdate()
-	self:BodyMoveXY()
+	local target = self:RecentEnemy()
+	if target then
+		local a = self:EyePos() - target:EyePos()
+		a = a:Angle()
+		self:SetPoseParameter( "aim_yaw", 0 or a.y )
+		self:SetPoseParameter( "aim_pitch", -a.p )
+	end
+	self:SetPoseParameter( "move_x", 1 )
+	self:SetPoseParameter( "move_y", 1 )
+	self:SetPlaybackRate(1)
+	self:FrameAdvance()
+	--self:BodyMoveXY()
 	return
 end
 
@@ -239,8 +270,10 @@ function ENT:OnEntitySight( ent )
 				local em = self.bEnemyMemory[ent]
 				if CurTime()-em.LastSeenTime > 5 then
 					self:DebugChat( "New contact " .. ent:Nick() .. "!! " .. string.NiceTime(CurTime()-em.LastSeenTime), Color( 255, 200, 100 ) )
+					self.NextFire = CurTime() + 0.5
 				else
 					self:DebugChat( "There he is " .. ent:Nick() .. "!! " .. string.NiceTime(CurTime()-em.LastSeenTime), Color( 255, 200, 100 ) )
+					self.NextFire = CurTime() + 0.25
 				end
 			else
 				self:DebugChat( "New target " .. ent:Nick() .. "!!", Color( 255, 200, 100 ) )
@@ -279,9 +312,6 @@ function ENT:RunBehaviour()
 	end
 end
 
-function ENT:ChaseEnemy( options )
-end
-
 function ENT:OnContact( ent )
 end
 
@@ -313,7 +343,7 @@ function ENT:Think()
 		local t = self.bEnemyMemory[ent]
 		t.LastPos = ent:GetPos()
 		t.LastSeenTime = CurTime()
-		t.RequestVis1 = false
+		t.GoToLastKnown = false
 
 		if ent.BennyNPC then
 			if !self.Team and !ent.Team and self.Rank >= ent.Rank then
@@ -326,10 +356,10 @@ function ENT:Think()
 
 	if self:GetState() == "combat" then
 		for ent, data in pairs( self.bEnemyMemory ) do
-			if !data.RequestVis1 and data.LastSeenTime+5 < CurTime() then
-				data.RequestVis1 = true
-				self:DebugChat( "Where is " .. ent:Nick() )
-				self:SetState("idle")
+			if !data.GoToLastKnown and data.LastSeenTime+5 < CurTime() then
+				data.GoToLastKnown = Vector(data.LastPos)
+				self:DebugChat( "Investigating " .. ent:Nick() .. "'s last known position" )
+				--self:SetState("idle")
 			end
 		end
 	end
