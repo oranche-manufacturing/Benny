@@ -686,7 +686,7 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 							fx, fy = math.Round( fx ), math.Round( fy )
 							surface.DrawTexturedRectRotated( fx, fy, s(16), s(16), i+(lmg and 0 or 90) )
 						end
-					elseif typ == "pistol" then -- pistol
+					elseif typ == "pistol" or typ == "special" then -- pistol
 						surface.SetMaterial( mat2 )
 						surface.DrawTexturedRectRotated( poosx - gap - s(spacer), poosy, s(24), s(24), 0 )
 						surface.DrawTexturedRectRotated( poosx + gap + s(spacer), poosy, s(24), s(24), 0 )

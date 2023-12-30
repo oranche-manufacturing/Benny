@@ -196,7 +196,18 @@ do -- Toolgun
 			if SERVER then
 				local summon = ents.Create( "benny_npc_human" )
 				summon:SetPos( tr.HitPos + tr.HitNormal )
+				local ang = Angle( 0, p:EyeAngles().y+180, 0 )
+				summon:SetAngles( ang )
 				summon:Spawn()
+			end
+		end,
+		["remover"] = function( self, p, tr )
+			if SERVER then
+				local ent = tr.Entity
+				if IsValid( ent ) then
+					ent:Remove()
+					return
+				end
 			end
 		end,
 	}
