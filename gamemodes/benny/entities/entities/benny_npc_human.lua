@@ -270,7 +270,7 @@ function ENT:Think()
 		end
 	end
 
-	net.Start("Benny_DebugNextbot")
+	net.Start( "Benny_DebugNextbot", true )
 		net.WriteEntity(self)
 
 		net.WriteString( self.State )
