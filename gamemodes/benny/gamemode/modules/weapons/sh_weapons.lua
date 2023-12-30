@@ -286,7 +286,7 @@ do -- Toolgun
 
 	
 	WEAPONS["camera"] = {
-		Name = "DIRECTOR'S CAMERA",
+		Name = "CAMERA",
 		Description = "Developer development device",
 		Type = "special",
 

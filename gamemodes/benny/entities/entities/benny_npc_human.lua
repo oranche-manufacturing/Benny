@@ -130,7 +130,7 @@ if CLIENT then
 			end
 
 			do
-				local x, y = Ox, Oy + s(36*2)
+				local x, y = Ox, Oy + s(36*3)
 				DST( "Seeing:", "DNB_8", x, y, color_white )
 				y = y + s(8)
 				for i, v in pairs( data.Seeing ) do
@@ -163,7 +163,10 @@ function ENT:DebugChat( text, color )
 end
 
 function ENT:SetState( state )
+	self:RunCurrentState( "Disable", state )
+	local oldstate = self.State
 	self.State = state
+	self:RunCurrentState( "Enable", oldstate )
 end
 
 function ENT:GetState()
@@ -171,24 +174,50 @@ function ENT:GetState()
 end
 
 function ENT:RunCurrentState( func, ... )
-	self.States[self:GetState()][func]( self, ... )
+	if self:GetState() then
+		self.States[self:GetState()][func]( self, ... )
+	end
 end
 
 ENT.States = {
 	["idle"] = {
 		RunBehavior = function( self )
-			--self:StartActivity( ACT_HL2MP_WALK_PASSIVE )
-			--self:MoveToPos( self:GetPos() + Vector( math.Rand( -1, 1 ), math.Rand( -1, 1 ), 0 ) * 100 )
-			self:StartActivity( ACT_HL2MP_IDLE_RPG or ACT_HL2MP_IDLE_PASSIVE )
-
-			coroutine.wait(5)
-
+			self:StartActivity( ACT_HL2MP_IDLE_PASSIVE )
 			coroutine.yield()
+		end,
+		Enable = function( self, from )
+			-- Holster
+			self:AddGestureSequence( self:SelectWeightedSequence(ACT_GMOD_GESTURE_MELEE_SHOVE_1HAND) )
+			self:SetCycle( 0.65 )
+			if from then
+				self:DebugChat( "Entering idle from " .. from, Color( 100, 255, 100 ) )
+			end
+		end,
+		Disable = function( self, to )
+			-- Draw
+			self:AddGestureSequence( self:SelectWeightedSequence(ACT_GMOD_GESTURE_MELEE_SHOVE_1HAND) )
+			self:SetCycle( 0.75 )
+			self:DebugChat( "Entering " .. to .. " from idle", Color( 100, 255, 100 ) )
 		end,
 	},
 	["combat"] = {
 		RunBehavior = function( self )
+			local re = self:RecentEnemy()
+			if re then
+				if self.bSeeing[re] then
+					self.loco:FaceTowards( re:GetPos() )
+					self:StartActivity( ACT_HL2MP_IDLE_AR2 )
+				else
+					self.loco:SetDesiredSpeed( 200 )
+					self:StartActivity( ACT_HL2MP_WALK_RPG )
+				end
+			end
 
+			coroutine.yield()
+		end,
+		Enable = function( self, from )
+		end,
+		Disable = function( self, to )
 		end,
 	},
 }
@@ -201,18 +230,22 @@ end
 function ENT:OnEntitySight( ent )
 	if !self.bSeeing[ent] then
 		if ent.BennyNPC and ent.Faction == self.Faction then
-			self:DebugChat( "Hello " .. ent:Nick() .. ".", Color( 200, 255, 200 ) )
+			if self.bEnemyMemory[ent] then
+			else
+				self:DebugChat( "Hello " .. ent:Nick() .. ".", Color( 200, 255, 200 ) )
+			end
 		else
 			if self.bEnemyMemory[ent] then
 				local em = self.bEnemyMemory[ent]
 				if CurTime()-em.LastSeenTime > 5 then
-					self:DebugChat( "Eyes on " .. ent:Nick() .. "!! " .. string.NiceTime(CurTime()-em.LastSeenTime), Color( 255, 200, 100 ) )
+					self:DebugChat( "New contact " .. ent:Nick() .. "!! " .. string.NiceTime(CurTime()-em.LastSeenTime), Color( 255, 200, 100 ) )
 				else
-					self:DebugChat( "Reacquired " .. ent:Nick() .. "!! " .. string.NiceTime(CurTime()-em.LastSeenTime), Color( 255, 200, 100 ) )
+					self:DebugChat( "There he is " .. ent:Nick() .. "!! " .. string.NiceTime(CurTime()-em.LastSeenTime), Color( 255, 200, 100 ) )
 				end
 			else
 				self:DebugChat( "New target " .. ent:Nick() .. "!!", Color( 255, 200, 100 ) )
 			end
+			self:SetState("combat")
 		end
 	end
 	self.bSeeing[ent] = true
@@ -227,7 +260,7 @@ function ENT:Initialize()
 	self.loco:SetDesiredSpeed( 100 )		-- Walk speed
 	self.loco:SetStepHeight( 22 )
 	self:SetShouldServerRagdoll( false )
-	self:SetFOV( 45 )
+	self:SetFOV( 90 )
 	
 	self:SetState("idle")
 
@@ -246,7 +279,26 @@ function ENT:RunBehaviour()
 	end
 end
 
+function ENT:ChaseEnemy( options )
+end
+
 function ENT:OnContact( ent )
+end
+
+function ENT:TopEnemy()
+	for ent, _ in pairs( self.bSeeing ) do
+		if ent.BennyNPC and ent.Faction != self.Faction or !ent.BennyNPC then
+			return ent
+		end
+	end
+end
+
+function ENT:RecentEnemy()
+	for ent, data in SortedPairsByMemberValue( self.bEnemyMemory, "LastSeenTime" ) do
+		if ent.BennyNPC and ent.Faction != self.Faction or !ent.BennyNPC then
+			return ent
+		end
+	end
 end
 
 function ENT:Think()
@@ -258,14 +310,26 @@ function ENT:Think()
 		if !self.bEnemyMemory[ent] then
 			self.bEnemyMemory[ent] = {}
 		end
-		self.bEnemyMemory[ent].LastPos = ent:GetPos()
-		self.bEnemyMemory[ent].LastSeenTime = CurTime()
+		local t = self.bEnemyMemory[ent]
+		t.LastPos = ent:GetPos()
+		t.LastSeenTime = CurTime()
+		t.RequestVis1 = false
 
 		if ent.BennyNPC then
 			if !self.Team and !ent.Team and self.Rank >= ent.Rank then
 				self:DebugChat( "Duoing with " .. ent:Nick() )
 				self.Team = "ALPHA_Duo_1"
 				ent.Team = "ALPHA_Duo_1"
+			end
+		end
+	end
+
+	if self:GetState() == "combat" then
+		for ent, data in pairs( self.bEnemyMemory ) do
+			if !data.RequestVis1 and data.LastSeenTime+5 < CurTime() then
+				data.RequestVis1 = true
+				self:DebugChat( "Where is " .. ent:Nick() )
+				self:SetState("idle")
 			end
 		end
 	end
