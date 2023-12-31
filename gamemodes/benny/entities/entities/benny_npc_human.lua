@@ -209,13 +209,16 @@ ENT.States = {
 					self:StartActivity( ACT_HL2MP_IDLE_AR2 )
 
 					if (self.NextFire or 0) <= CurTime() then
-						self:FireBullets( {
-							Attacker = self,
-							Inflictor = self,
-							Damage = 0,
-							Dir = self:EyeAngles():Forward(),
-							Src = self:EyePos()
-						} )
+						local rp = RecipientFilter()
+						rp:AddAllPlayers()
+						self:EmitSound("benny/weapons/usp/01.ogg", 100, 100, 0.2, nil, nil, nil, rp )
+						--self:FireBullets( {
+						--	Attacker = self,
+						--	Inflictor = self,
+						--	Damage = 0,
+						--	Dir = self:EyeAngles():Forward(),
+						--	Src = self:EyePos()
+						--} )
 						self.NextFire = CurTime() + 0.5
 					end
 				else
@@ -224,7 +227,7 @@ ENT.States = {
 					
 					local em = self.bEnemyMemory[re]
 					if em and em.GoToLastKnown and em.GoToLastKnown != true then
-						local result = self:MoveToPos( em.GoToLastKnown, { lookahead = 300, tolerance = 64, draw = true, repath = 0.2 } )
+						local result = self:MoveToPos( em.GoToLastKnown, { lookahead = 100, tolerance = 32, draw = true, repath = 0.5 } )
 						if result == "ok" then
 							em.GoToLastKnown = true
 							self:DebugChat("Went to last known position")
@@ -245,16 +248,19 @@ ENT.States = {
 function ENT:BodyUpdate()
 	local target = self:RecentEnemy()
 	if target then
-		local a = self:EyePos() - target:EyePos()
+		-- Without this +64z, they stare straight up. It's eye level now, I guess.
+		local a = self:EyePos() - (self.bSeeing[target] and target:EyePos() or self.bEnemyMemory[target].LastPos + Vector(0,0,64))
+		a:Normalize()
 		a = a:Angle()
 		self:SetPoseParameter( "aim_yaw", 0 or a.y )
-		self:SetPoseParameter( "aim_pitch", -a.p )
+		local r1, r2 = self:GetPoseParameterRange( self:LookupPoseParameter( "aim_pitch" ) )
+		self:SetPoseParameter( "aim_pitch", math.Clamp( -a.p, r1, r2 ) )
 	end
-	self:SetPoseParameter( "move_x", 1 )
-	self:SetPoseParameter( "move_y", 1 )
-	self:SetPlaybackRate(1)
-	self:FrameAdvance()
-	--self:BodyMoveXY()
+	--self:SetPoseParameter( "move_x", 1 )
+	--self:SetPoseParameter( "move_y", 1 )
+	--self:SetPlaybackRate(1)
+	--self:FrameAdvance()
+	self:BodyMoveXY()
 	return
 end
 
@@ -269,7 +275,7 @@ function ENT:OnEntitySight( ent )
 			if self.bEnemyMemory[ent] then
 				local em = self.bEnemyMemory[ent]
 				if CurTime()-em.LastSeenTime > 5 then
-					self:DebugChat( "New contact " .. ent:Nick() .. "!! " .. string.NiceTime(CurTime()-em.LastSeenTime), Color( 255, 200, 100 ) )
+					self:DebugChat( "Been a while " .. ent:Nick() .. "!! " .. string.NiceTime(CurTime()-em.LastSeenTime), Color( 255, 200, 100 ) )
 					self.NextFire = CurTime() + 0.5
 				else
 					self:DebugChat( "There he is " .. ent:Nick() .. "!! " .. string.NiceTime(CurTime()-em.LastSeenTime), Color( 255, 200, 100 ) )
@@ -288,8 +294,18 @@ function ENT:OnEntitySightLost( ent )
 	self.bSeeing[ent] = nil
 end
 
+local wide, tall = 12/2, 64
+local b1 = Vector( wide, wide, tall )
+local b2 = Vector( -wide, -wide, 0 )
+
+local wide, tall = 48/2, 96
+local s1 = Vector( wide, wide, tall )
+local s2 = Vector( -wide, -wide, 0 )
+
 function ENT:Initialize()
 	self:SetModel( "models/player/infoplayerrealism.mdl" )
+	self:SetCollisionBounds( b1, b2 )
+	self:SetSurroundingBounds( s1, s2 )
 	self.loco:SetDesiredSpeed( 100 )		-- Walk speed
 	self.loco:SetStepHeight( 22 )
 	self:SetShouldServerRagdoll( false )
