@@ -372,7 +372,12 @@ function ENT:Think()
 
 	if self:GetState() == "combat" then
 		for ent, data in pairs( self.bEnemyMemory ) do
-			if !data.GoToLastKnown and data.LastSeenTime+5 < CurTime() then
+			if !IsValid(ent) then
+				print("wtf")
+				self.bEnemyMemory[ent] = nil
+				continue
+			end
+			if self.Faction != ent.Faction and !data.GoToLastKnown and data.LastSeenTime+5 < CurTime() then
 				data.GoToLastKnown = Vector(data.LastPos)
 				self:DebugChat( "Investigating " .. ent:Nick() .. "'s last known position" )
 				--self:SetState("idle")
