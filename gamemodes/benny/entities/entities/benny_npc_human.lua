@@ -212,13 +212,13 @@ ENT.States = {
 						local rp = RecipientFilter()
 						rp:AddAllPlayers()
 						self:EmitSound("benny/weapons/usp/01.ogg", 100, 100, 0.2, nil, nil, nil, rp )
-						--self:FireBullets( {
-						--	Attacker = self,
-						--	Inflictor = self,
-						--	Damage = 0,
-						--	Dir = self:EyeAngles():Forward(),
-						--	Src = self:EyePos()
-						--} )
+						self:FireBullets( {
+							Attacker = self,
+							Inflictor = self,
+							Damage = 3,
+							Dir = self:EyeAngles():Forward(),
+							Src = self:EyePos()
+						} )
 						self.NextFire = CurTime() + 0.5
 					end
 				else
@@ -227,13 +227,18 @@ ENT.States = {
 					
 					local em = self.bEnemyMemory[re]
 					if em and em.GoToLastKnown and em.GoToLastKnown != true then
-						local result = self:MoveToPos( em.GoToLastKnown, { lookahead = 100, tolerance = 32, draw = true, repath = 0.5 } )
+						local result = self:ChaseEnemy( { re = re, draw = true } )
+						--local result = self:MoveToPos( em.GoToLastKnown, { lookahead = 100, tolerance = 32, draw = true, repath = 0.5 } )
 						if result == "ok" then
 							em.GoToLastKnown = true
 							self:DebugChat("Went to last known position of " .. re:Nick())
 						elseif result == "stuck" then
 							em.GoToLastKnown = true
 							self:DebugChat("Failed to go to last known position of " .. re:Nick() .. " at " .. tostring(self:GetPos()))
+						elseif result == "cancelled" then
+							em.GoToLastKnown = false
+							self:DebugChat("Reengaging " .. re:Nick() .. "!!")
+							self:EmitSound( "benny/dev/reengaging.wav", 90, 100, 1 )
 						else
 							em.GoToLastKnown = true
 							self:DebugChat("Unknown state " .. result .. " while going to " .. re:Nick() .. " at " .. tostring(self:GetPos()))
@@ -241,7 +246,7 @@ ENT.States = {
 					elseif em and em.GoToLastKnown == true then
 						self:DebugChat("Investigated " .. re:Nick() .. "'s last known position, it's clear." )
 						self:SetState("idle")
-						self:EmitSound( "benny/dev/lostem.ogg", 90, 100, 1 )
+						self:EmitSound( "benny/dev/at last point of interest.wav", 90, 100, 1 )
 					end
 				end
 			end
@@ -254,6 +259,38 @@ ENT.States = {
 		end,
 	},
 }
+
+function ENT:ChaseEnemy( options )
+	local options = options or {}
+	local path = Path( "Follow" )
+	path:SetMinLookAheadDistance( options.lookahead or 300 )
+	path:SetGoalTolerance( options.tolerance or 20 )
+
+	local em = self.bEnemyMemory[options.re]
+	if !em.GoToLastKnown then return "cancelled" end
+	if !isvector( em.GoToLastKnown ) then return "cancelled" end
+	path:Compute( self, em.GoToLastKnown )		-- Compute the path towards the enemy's position
+
+	if ( !path:IsValid() ) then return "failed" end
+
+	while ( path:IsValid() ) do
+		if !em.GoToLastKnown then return "cancelled" end
+		if !isvector( em.GoToLastKnown ) then return "cancelled" end
+		if ( path:GetAge() > 0.1 ) then					-- Since we are following the player we have to constantly remake the path
+			path:Compute(self, em.GoToLastKnown )-- Compute the path towards the enemy's position again
+		end
+		path:Update( self )								-- This function moves the bot along the path
+		
+		if ( options.draw ) then path:Draw() end
+		-- If we're stuck then call the HandleStuck function and abandon
+		if ( self.loco:IsStuck() ) then
+			self:HandleStuck()
+			return "stuck"
+		end
+		coroutine.yield()
+	end
+	return "ok"
+end
 
 function ENT:BodyUpdate()
 	local target = self:RecentEnemy()
@@ -284,17 +321,17 @@ function ENT:OnEntitySight( ent )
 		else
 			if self.bEnemyMemory[ent] then
 				local em = self.bEnemyMemory[ent]
-				if CurTime()-em.LastSeenTime > 3 then
+				if CurTime()-em.LastSeenTime > 5 then
 					self:DebugChat( "Been a while " .. ent:Nick() .. "!! " .. string.NiceTime(CurTime()-em.LastSeenTime), Color( 255, 200, 100 ) )
 					self.NextFire = CurTime() + 0.5
-					self:EmitSound( "benny/dev/therehis.ogg", 90, 100, 1 )
+					self:EmitSound( "benny/dev/there he is.wav", 90, 100, 1 )
 				else
 					self:DebugChat( "Resighted " .. ent:Nick() .. "! " .. string.NiceTime(CurTime()-em.LastSeenTime), Color( 255, 200, 100 ) )
 					self.NextFire = CurTime() + 0.25
 				end
 			else
 				self:DebugChat( "New target " .. ent:Nick() .. "!!", Color( 255, 200, 100 ) )
-				self:EmitSound( "benny/dev/target.ogg", 90, 100, 1 )
+				self:EmitSound( "benny/dev/new target.wav", 90, 100, 1 )
 			end
 			self:SetState("combat")
 		end
@@ -376,7 +413,7 @@ function ENT:Think()
 		if ent.BennyNPC then
 			if !self.Team and !ent.Team and self.Rank >= ent.Rank then
 				self:DebugChat( "Duoing with " .. ent:Nick() )
-				self:EmitSound( "benny/dev/yourewithme.ogg", 90, 100, 1 )
+				self:EmitSound( "benny/dev/stick with me.wav", 90, 100, 1 )
 				self.Team = "ALPHA_Duo_1"
 				ent.Team = "ALPHA_Duo_1"
 			end
@@ -390,10 +427,10 @@ function ENT:Think()
 				self.bEnemyMemory[ent] = nil
 				continue
 			end
-			if self.Faction != ent.Faction and !data.GoToLastKnown and data.LastSeenTime+5 < CurTime() then
+			if self.Faction != ent.Faction and !data.GoToLastKnown and data.LastSeenTime + 2 < CurTime() then
 				data.GoToLastKnown = Vector(data.LastPos)
 				self:DebugChat( "Investigating " .. ent:Nick() .. "'s last known position" )
-				self:EmitSound( "benny/dev/immoving.ogg", 90, 100, 1 )
+				self:EmitSound( "benny/dev/moving.wav", 90, 100, 1 )
 				--self:SetState("idle")
 			end
 		end
