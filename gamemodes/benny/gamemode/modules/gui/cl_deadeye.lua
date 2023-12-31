@@ -410,3 +410,7 @@ function OpenDeadeye()
 end
 
 if IsValid( GOD ) then OpenDeadeye() end
+
+concommand.Add("benny_dev_deadeye", function()
+	OpenDeadeye()
+end)
