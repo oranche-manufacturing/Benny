@@ -230,7 +230,13 @@ ENT.States = {
 						local result = self:MoveToPos( em.GoToLastKnown, { lookahead = 100, tolerance = 32, draw = true, repath = 0.5 } )
 						if result == "ok" then
 							em.GoToLastKnown = true
-							self:DebugChat("Went to last known position")
+							self:DebugChat("Went to last known position of " .. re:Nick())
+						elseif result == "stuck" then
+							em.GoToLastKnown = true
+							self:DebugChat("Failed to go to last known position of " .. re:Nick() .. " at " .. tostring(self:GetPos()))
+						else
+							em.GoToLastKnown = true
+							self:DebugChat("Unkown state " .. result .. " while going to " .. re:Nick() .. " at " .. tostring(self:GetPos()))
 						end
 					end
 				end
