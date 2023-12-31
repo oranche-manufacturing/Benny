@@ -236,8 +236,12 @@ ENT.States = {
 							self:DebugChat("Failed to go to last known position of " .. re:Nick() .. " at " .. tostring(self:GetPos()))
 						else
 							em.GoToLastKnown = true
-							self:DebugChat("Unkown state " .. result .. " while going to " .. re:Nick() .. " at " .. tostring(self:GetPos()))
+							self:DebugChat("Unknown state " .. result .. " while going to " .. re:Nick() .. " at " .. tostring(self:GetPos()))
 						end
+					elseif em and em.GoToLastKnown == true then
+						self:DebugChat("Investigated " .. re:Nick() .. "'s last known position, it's clear." )
+						self:SetState("idle")
+						self:EmitSound( "benny/dev/lostem.ogg", 90, 100, 1 )
 					end
 				end
 			end
@@ -280,15 +284,17 @@ function ENT:OnEntitySight( ent )
 		else
 			if self.bEnemyMemory[ent] then
 				local em = self.bEnemyMemory[ent]
-				if CurTime()-em.LastSeenTime > 5 then
+				if CurTime()-em.LastSeenTime > 3 then
 					self:DebugChat( "Been a while " .. ent:Nick() .. "!! " .. string.NiceTime(CurTime()-em.LastSeenTime), Color( 255, 200, 100 ) )
 					self.NextFire = CurTime() + 0.5
+					self:EmitSound( "benny/dev/therehis.ogg", 90, 100, 1 )
 				else
-					self:DebugChat( "There he is " .. ent:Nick() .. "!! " .. string.NiceTime(CurTime()-em.LastSeenTime), Color( 255, 200, 100 ) )
+					self:DebugChat( "Resighted " .. ent:Nick() .. "! " .. string.NiceTime(CurTime()-em.LastSeenTime), Color( 255, 200, 100 ) )
 					self.NextFire = CurTime() + 0.25
 				end
 			else
 				self:DebugChat( "New target " .. ent:Nick() .. "!!", Color( 255, 200, 100 ) )
+				self:EmitSound( "benny/dev/target.ogg", 90, 100, 1 )
 			end
 			self:SetState("combat")
 		end
@@ -370,6 +376,7 @@ function ENT:Think()
 		if ent.BennyNPC then
 			if !self.Team and !ent.Team and self.Rank >= ent.Rank then
 				self:DebugChat( "Duoing with " .. ent:Nick() )
+				self:EmitSound( "benny/dev/yourewithme.ogg", 90, 100, 1 )
 				self.Team = "ALPHA_Duo_1"
 				ent.Team = "ALPHA_Duo_1"
 			end
@@ -386,6 +393,7 @@ function ENT:Think()
 			if self.Faction != ent.Faction and !data.GoToLastKnown and data.LastSeenTime+5 < CurTime() then
 				data.GoToLastKnown = Vector(data.LastPos)
 				self:DebugChat( "Investigating " .. ent:Nick() .. "'s last known position" )
+				self:EmitSound( "benny/dev/immoving.ogg", 90, 100, 1 )
 				--self:SetState("idle")
 			end
 		end
