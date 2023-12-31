@@ -196,7 +196,7 @@ do -- Toolgun
 			if SERVER then
 				local summon = ents.Create( "benny_npc_human" )
 				summon:SetPos( tr.HitPos + tr.HitNormal )
-				local ang = Angle( 0, p:EyeAngles().y+180, 0 )
+				local ang = Angle( 0, p:EyeAngles().y+0, 0 )
 				summon:SetAngles( ang )
 				summon:Spawn()
 			end
