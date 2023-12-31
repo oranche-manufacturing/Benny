@@ -273,11 +273,11 @@ local lonk = {
 		Text1 = "DEV. SPAWN",
 		Text2 = "Cheat items in",
 	},
-	{
-		Glyph = "F4",
-		Text1 = "CHOREOGRAPHER",
-		Text2 = "Manage scenes",
-	},
+	--{
+	--	Glyph = "F4",
+	--	Text1 = "CHOREOGRAPHER",
+	--	Text2 = "Manage scenes",
+	--},
 }
 
 -- Stew port

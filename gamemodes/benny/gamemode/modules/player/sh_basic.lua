@@ -84,7 +84,7 @@ hook.Add( "PlayerButtonDown", "Benny_PlayerButtonDown_Dev", function( ply, butto
 		elseif button == KEY_F3 then
 			OpenSMenu()
 		elseif button == KEY_F4 then
-			OpenDeadeye()
+			-- OpenDeadeye()
 		elseif button == KEY_F5 then
 		elseif button == KEY_F6 then
 		elseif button == KEY_F7 then
