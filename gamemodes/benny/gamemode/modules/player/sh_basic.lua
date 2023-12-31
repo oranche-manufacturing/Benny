@@ -1,21 +1,16 @@
 
 if SERVER then
-	util.AddNetworkString( "benny_syncinv" )
 	util.AddNetworkString( "benny_sendinvitem" )
 	util.AddNetworkString( "benny_discardinvitem" )
 end
 
-concommand.Add("benny_debug_give", function(ply, cmd, args)
-	assert(SERVER, "not server")
-	local inv = ply:INV_Get()
-	local str = UUID_generate()
+function BENNY.CreateItem( classname )
+	local class = WeaponGet(classname)
 
-	local class = WeaponGet(args[1])
-
-	assert(class, "Invalid Class " .. tostring(class))
+	assert( class, "Invalid Class " .. tostring(classname) )
 
 	local item = {
-		Class = args[1],
+		Class = classname,
 		Acquisition = CurTime(),
 	}
 
@@ -24,13 +19,22 @@ concommand.Add("benny_debug_give", function(ply, cmd, args)
 	elseif class.Features == "magazine" then
 		item.Ammo = class.Ammo
 	end
+	
+	return item
+end
 
-	inv[str] = item
+concommand.Add("benny_debug_give", function(ply, cmd, args)
+	assert(SERVER, "not server")
+	local inv = ply:INV_Get()
+	local str = UUID_generate()
+
+	local newitem = BENNY.CreateItem( args[1] )
+	inv[str] = newitem
 
 	-- PROTO: WriteTable.
 	net.Start( "benny_sendinvitem" )
 		net.WriteString( str )
-		net.WriteTable( item )
+		net.WriteTable( newitem )
 	net.Send( ply )
 end,
 function(cmd, args)
@@ -42,7 +46,16 @@ function(cmd, args)
 		end
 	end
 	return meow
-end, "arg 1: player ent index, arg 2: classname")
+end, "arg 1: classname")
+
+if CLIENT then
+	net.Receive( "benny_sendinvitem", function()
+		LocalPlayer():INV_Get()[net.ReadString()] = net.ReadTable()
+	end)
+	net.Receive( "benny_discardinvitem", function()
+		LocalPlayer():INV_Get()[net.ReadString()] = nil
+	end)
+end
 
 concommand.Add("benny_inv_discard", function( ply, cmd, args )
 	local inv = ply:INV_Get()
@@ -56,13 +69,25 @@ concommand.Add("benny_inv_discard", function( ply, cmd, args )
 		net.WriteString( args[1] )
 	net.Send( ply )
 
-	if wep:GetWep1() == args[1] then
+	if wep:D_GetID( false ) == args[1] then
+		print( "Disequipped " .. args[1] .. " for " .. tostring(wep) )
 		wep:SetWep1( "" )
 		wep:SetWep1_Clip( "" )
 		wep:SetClip1( 0 )
 	end
-	if wep:GetWep2() == args[1] then
+	if wep:D_GetID( true ) == args[1] then
+		print( "Disequipped " .. args[1] .. " for " .. tostring(wep) )
 		wep:SetWep2( "" )
+		wep:SetWep2_Clip( "" )
+		wep:SetClip2( 0 )
+	end
+	if wep:D_GetMagID( false ) == args[1] then
+		inv[wep:D_GetID( false )].Loaded = ""
+		wep:SetWep1_Clip( "" )
+		wep:SetClip1( 0 )
+	end
+	if wep:D_GetMagID( true ) == args[1] then
+		inv[wep:D_GetID( true )].Loaded = ""
 		wep:SetWep2_Clip( "" )
 		wep:SetClip2( 0 )
 	end
