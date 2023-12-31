@@ -367,10 +367,12 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 		
 		if true then
 			surface.SetDrawColor( schema("bg") )
-			local s_h = ss(18)
-			surface.DrawRect( b_x, b_y - s_h - ss(4), b_w, s_h )
+			local s_h = ss(14)
+			local s_w = ss(46)
+			surface.DrawRect( b_x, b_y - s_h - ss(2), s_w, s_h )
 
-			draw.SimpleText( string.format( "%f", p:GetVelocity():Length2D()/39.3701 ):Left( 4 ) .. " m/s", "Benny_18", b_x + ss(4), b_y - s_h - ss(4-2), schema_c("fg") )
+			draw.SimpleText( string.format( "%f", p:GetVelocity():Length2D()/39.3701 ):Left( 4 ), "Benny_12", b_x + ss(4), b_y - s_h - ss(2-2), schema_c("fg") )
+			draw.SimpleText( "m/s", "Benny_12", b_x + s_w - ss(4), b_y - s_h - ss(2-2), schema_c("fg"), TEXT_ALIGN_RIGHT )
 		end
 	end
 
