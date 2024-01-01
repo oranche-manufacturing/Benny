@@ -82,11 +82,13 @@ concommand.Add("benny_inv_discard", function( ply, cmd, args )
 		wep:SetClip2( 0 )
 	end
 	if wep:bGetMagInvID( false ) == args[1] then
+		print( "Unloaded " .. args[1] .. " for " .. tostring(wep) )
 		inv[wep:bGetInvID( false )].Loaded = ""
 		wep:SetWep1_Clip( "" )
 		wep:SetClip1( 0 )
 	end
 	if wep:bGetMagInvID( true ) == args[1] then
+		print( "Unloaded " .. args[1] .. " for " .. tostring(wep) )
 		inv[wep:bGetInvID( true )].Loaded = ""
 		wep:SetWep2_Clip( "" )
 		wep:SetClip2( 0 )

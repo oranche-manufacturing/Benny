@@ -139,7 +139,7 @@ end
 
 function PT:INV_Get()
 	if !self.INV then
-		print( "Inventory created")
+		print( "Inventory created for " .. tostring(self) )
 		self.INV = {}
 	end
 	return self.INV
