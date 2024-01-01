@@ -171,6 +171,7 @@ do -- Pistols
 
 		--
 		AmmoStd = 7,
+		AutoGenMag = true,
 		Delay = (60/180),
 		Firemodes = FIREMODE_SEMI,
 		Damage = 47,
@@ -189,14 +190,17 @@ do -- Pistols
 		Speed_FiringTime = 0.5,
 	})
 
-	ItemDef("mag_deagle", {
-		Name = "MAG: DEAGLE 7-rnd",
-		Base = "base_magazine",
+end
 
-		Ammo = 7,
-	})
+for i, v in SortedPairs( WEAPONS ) do
+	if v.AutoGenMag then
+		ItemDef("mag_" .. i, {
+			Name = "MAG: " .. v.Name,
+			Base = "base_magazine",
 
-
+			Ammo = v.AmmoStd,
+		})
+	end
 end
 --[[
 ItemDef("deagle", {
