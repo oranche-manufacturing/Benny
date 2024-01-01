@@ -30,39 +30,39 @@ local function beatup( ply, num )
 			invid = invid + 1
 			if num == 0 then num = 10 end
 			if num == invid then
-				if id == wep:D_GetReqID( hand ) then
+				if id == wep:bGetReqInvID( hand ) then
 					-- If we are selected our currently equipped weapon, holster it.
-					return wep:D_SetReqID( hand, "" )
+					return wep:bSetReqInvID( hand, "" )
 				else
-					if wep:D_GetReqID( hand ) != "" then
+					if wep:bGetReqInvID( hand ) != "" then
 						-- Something is in this hand
 
-						if wep:D_GetReqID( !hand ) != "" then
+						if wep:bGetReqInvID( !hand ) != "" then
 							-- Something in the other hand
-							wep:D_SetReqID( !hand, wep:D_GetReqID( hand ) )
-							wep:D_SetReqID( hand, id )
+							wep:bSetReqInvID( !hand, wep:bGetReqInvID( hand ) )
+							wep:bSetReqInvID( hand, id )
 							return
 						else
 							-- Nothing in the other hand
-							wep:D_SetReqID( !hand, "" )
-							wep:D_SetReqID( hand, id )
+							wep:bSetReqInvID( !hand, "" )
+							wep:bSetReqInvID( hand, id )
 							return
 						end
 					else
 						-- Nothing in this hand.
-						if wep:D_GetReqID( !hand ) == id then
+						if wep:bGetReqInvID( !hand ) == id then
 							-- Weapon we want is in the other hand.
-							wep:D_SetReqID( !hand, "" )
-							wep:D_SetReqID( hand, id )
+							wep:bSetReqInvID( !hand, "" )
+							wep:bSetReqInvID( hand, id )
 							return
 						end
 					end
-					return wep:D_SetReqID( hand, id )
+					return wep:bSetReqInvID( hand, id )
 				end
 			end
 		end
 	end
-	return wep:D_SetReqID( hand, "" )
+	return wep:bSetReqInvID( hand, "" )
 end
 
 hook.Add( "PlayerButtonDown", "Benny_PlayerButtonDown_Inv", function( ply, button )

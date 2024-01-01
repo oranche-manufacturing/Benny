@@ -516,8 +516,8 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 					
 					local identicallist = p:INV_Find( wep:BTable( hand ).Class )
 					identicallist = table.Flip( identicallist )
-					local numba = identicallist[ wep:D_GetID( hand ) ]
-					draw.SimpleText( "#" .. tostring(numba) .. ", " .. wep:D_GetID( hand ), "Benny_10", p_x+p_w-pb2, p_y+ss(7), scheme["bg"], TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP )
+					local numba = identicallist[ wep:bGetInvID( hand ) ]
+					draw.SimpleText( "#" .. tostring(numba) .. ", " .. wep:bGetInvID( hand ), "Benny_10", p_x+p_w-pb2, p_y+ss(7), scheme["bg"], TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP )
 
 					if wep_class.Firemodes then -- Firemode
 						surface.SetDrawColor( scheme["fg"] )
@@ -526,19 +526,19 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 						draw.SimpleText( wep:B_FiremodeName( hand ), "Benny_12", p_x + pb + ss(14.5), p_y + pb + t_h + ss(8), scheme["bg"], TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER )
 						-- draw.SimpleText( "[AMMO TYPE]", "Benny_10", p_x + pb + ss(30+4), p_y + pb + t_h + ss(8), scheme["fg"], TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER )
 					end
-					if wep_class.Ammo then -- Ammo
+					if wep_table.Loaded and wep_table.Loaded != "" then -- Ammo
 						local b_w, b_h = ss(3), ss(10)
 						local lw, lh = ss(2), ss(2)
 						surface.SetDrawColor( scheme["fg"] )
 
-						local ammo = math.max( wep:D_GetClip( hand ), wep_class.Ammo )
+						local ammo = math.max( wep:bGetIntClip( hand ), ItemDef(inv[wep_table.Loaded].Class).Ammo )
 						if ammo>30 then b_w, b_h = ss(3), ss(4) end
 
 						local offset = b_h
 						local count = 1
 						for i=1, ammo do
 							local thefunk = surface.DrawRect
-							if i > wep:D_GetClip( hand ) then
+							if i > wep:bGetIntClip( hand ) then
 								thefunk = surface.DrawOutlinedRect
 							end
 							if i!=1 and i%30 == 1 then
@@ -548,9 +548,9 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 							thefunk( p_x + p_w - b_w - pb - ((count-1)*(b_w+lw)), p_y + p_h - offset - pb, b_w, b_h, ss(0.5) )
 							count = count + 1
 						end
-						draw.SimpleText( wep:D_GetClip( hand ), "Benny_12", p_x + p_w - pb - ss(1), p_y + p_h - offset - ss(12+3), scheme["fg"], TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP )
+						draw.SimpleText( wep:bGetIntClip( hand ), "Benny_12", p_x + p_w - pb - ss(1), p_y + p_h - offset - ss(12+3), scheme["fg"], TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP )
 
-						if wep:D_GetMagID( hand ) != wep_table.Loaded then
+						if wep:bGetMagInvID( hand ) != wep_table.Loaded then
 							surface.SetDrawColor( scheme["bg"] )
 							surface.DrawRect( p_x, p_y - ss( 12+3 ), ss( 66 ), ss( 12 ) )
 							draw.SimpleText( "!! Mag desync.", "Benny_12", p_x + ss( 2 ), p_y - ss( 12+2 ), scheme["fg"], TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP )
@@ -563,7 +563,7 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 						local b2 = ss( 2 )
 						local b3 = ss( 3 )
 						local b4 = ss( 4 )
-						local maglist = p:INV_FindMagSmart( wep_table.Class, wep:D_GetID( hand ) )
+						local maglist = p:INV_FindMagSmart( wep_class.ClassName, wep:bGetInvID( hand ) )
 						for id, tag in ipairs( maglist ) do
 							--assert( inv[tag], "That magazine doesn't exist. " .. tag )
 							local chunk = ((ss(1)+m_w)*(id-1))
@@ -578,8 +578,8 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 							local s3 = math.floor( s2 - s1 )
 
 							local m1, m2, m3, m4 = m_x + bb + bb - chunk, m_y + bb + bb - s3, m_w - b2 - b2, s2
-							local active = tag == wep:D_GetMagID( hand )
-							local active2 = tag == wep:D_GetMagID( !hand )
+							local active = tag == wep:bGetMagInvID( hand )
+							local active2 = tag == wep:bGetMagInvID( !hand )
 							if active or active2 then
 								draw.SimpleText( active2 and "|" or "x", "Benny_10", m_x + (m_w/2) - chunk, m_y + (m_h/2), scheme["fg"], TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER )
 							end
@@ -735,9 +735,9 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 		local invid = 0
 		for _, item in pairs( weighted ) do
 			local id = iflip[item]
-			local active = wep:D_GetReqID( false ) == id or wep:D_GetReqID( true ) == id
-			local active_r = wep:D_GetReqID( false ) == id
-			local active_l = wep:D_GetReqID( true ) == id
+			local active = wep:bGetReqInvID( false ) == id or wep:bGetReqInvID( true ) == id
+			local active_r = wep:bGetReqInvID( false ) == id
+			local active_l = wep:bGetReqInvID( true ) == id
 			local class = WeaponGet(item.Class)
 			local boxsize = ss(b_w)
 			surface.SetDrawColor( scheme[active and "fg" or "bg"] )
@@ -911,7 +911,7 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 			draw.SimpleText( wep1_class.Name, 						"Benny_14", bx-mx, by+ss(8)*-1, color_white, TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP )
 			draw.SimpleText( "Clip1: " .. wep:Clip1(),				"Benny_14", bx-mx, by+ss(8)*0, color_white, TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP )
 			draw.SimpleText( "ID1: " .. wep:GetWep1(),				"Benny_14", bx-mx, by+ss(8)*1, color_white, TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP )
-			draw.SimpleText( "MagID1: " .. wep:D_GetMagID( false ),	"Benny_14", bx-mx, by+ss(8)*2, color_white, TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP )
+			draw.SimpleText( "MagID1: " .. wep:bGetMagInvID( false ),	"Benny_14", bx-mx, by+ss(8)*2, color_white, TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP )
 			if wep1_table.Loaded then
 				draw.SimpleText( "T_MagID1: " .. wep1_table.Loaded,		"Benny_14", bx-mx, by+ss(8)*3, color_white, TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP )
 			end
@@ -922,7 +922,7 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 			draw.SimpleText( wep2_class.Name,						"Benny_14", bx+mx, by+ss(8)*-1, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP )
 			draw.SimpleText( "Clip2: " .. wep:Clip2(),				"Benny_14", bx+mx, by+ss(8)*0, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP )
 			draw.SimpleText( "ID2: " .. wep:GetWep2(),				"Benny_14", bx+mx, by+ss(8)*1, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP )
-			draw.SimpleText( "MagID2: " .. wep:D_GetMagID( true ),	"Benny_14", bx+mx, by+ss(8)*2, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP )
+			draw.SimpleText( "MagID2: " .. wep:bGetMagInvID( true ),	"Benny_14", bx+mx, by+ss(8)*2, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP )
 			if wep2_table.Loaded then
 				draw.SimpleText( "T_MagID2: " .. wep2_table.Loaded,		"Benny_12", bx+mx, by+24*3, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP )
 			end
@@ -939,8 +939,8 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 			local hand = i==2
 			if hand then boost = -boost end
 
-			local wr = wep:D_GetReloading( hand )
-			local wrt = wep:D_GetReloadType( hand )
+			local wr = wep:bGetReloadTime( hand )
+			local wrt = wep:bGetReloadType( hand )
 			if wr > 0 then
 				local b1 = math.TimeFraction( wr, wr + wep:GetStat( hand, "Reload_MagIn" ), wr + wep:GetStat( hand, "Reload_MagIn_Bonus1" ) )
 				local b2 = math.TimeFraction( wr, wr + wep:GetStat( hand, "Reload_MagIn" ), wr + wep:GetStat( hand, "Reload_MagIn_Bonus2" ) )

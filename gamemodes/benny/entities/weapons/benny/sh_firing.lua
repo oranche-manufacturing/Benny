@@ -29,36 +29,36 @@ function SWEP:BFire( hand )
 		if wep_class.Custom_Fire then
 			if wep_class.Custom_Fire( self, wep_table, wep_class, hand ) then return end
 		end
-		if self:D_GetDelay( hand ) > CurTime() then
+		if self:bGetIntDelay( hand ) > CurTime() then
 			return
 		end
-		if self:D_GetHolstering( hand ) > 0 then
+		if self:bGetHolsterTime( hand ) > 0 then
 			return
 		end
-		if self:D_GetClip( hand ) == 0 then
-			if self:D_GetBurst( hand ) >= 1 then
+		if self:bGetIntClip( hand ) == 0 then
+			if self:bGetBurst( hand ) >= 1 then
 				return
 			end
 			B_Sound( self, wep_class.Sound_DryFire )
-			self:D_SetBurst( hand, self:D_GetBurst( hand ) + 1 )
+			self:bSetBurst( hand, self:bGetBurst( hand ) + 1 )
 			return
 		end
-		if self:D_GetBurst( hand ) >= self:B_Firemode( hand ).Mode then
+		if self:bGetBurst( hand ) >= self:B_Firemode( hand ).Mode then
 			return
 		end
 		
 		if !ConVarSV_Bool("cheat_infiniteammo") then
-			self:B_Ammo( hand, self:D_GetClip( hand ) - 1 )
+			self:B_Ammo( hand, self:bGetIntClip( hand ) - 1 )
 		end
 
 		B_Sound( self, wep_class.Sound_Fire )
 		self:TPFire( hand )
 		self:CallFire( hand )
 
-		self:D_SetDelay( hand, CurTime() + wep_class.Delay )
-		self:D_SetBurst( hand, self:D_GetBurst( hand ) + 1 )
-		self:D_SetSpread( hand, math.Clamp( self:D_GetSpread( hand ) + wep_class.SpreadAdd, 0, wep_class.SpreadAddMax ) )
-		self:D_SetShotTime( hand, CurTime() )
+		self:bSetIntDelay( hand, CurTime() + wep_class.Delay )
+		self:bSetBurst( hand, self:bGetBurst( hand ) + 1 )
+		self:bSetSpread( hand, math.Clamp( self:bGetSpread( hand ) + wep_class.SpreadAdd, 0, wep_class.SpreadAddMax ) )
+		self:bSetShotTime( hand, CurTime() )
 
 		
 		if CLIENT and IsFirstTimePredicted() then
@@ -80,7 +80,7 @@ function SWEP:CallFire( hand )
 	local p = self:GetOwner()
 	local class = self:BClass( hand )
 	local spread = self:BSpread( hand )
-	for i=1, class.Pellets or 1 do
+	for i=1, self:GetStat( hand, "Pellets" ) do
 		local dir = self:GetOwner():EyeAngles()
 
 		local radius = util.SharedRandom("benny_distance_"..tostring(hand), 0, 1, i )
@@ -98,7 +98,7 @@ function SWEP:CallFire( hand )
 		self:FireBullets( {
 			Attacker = p,
 			Damage = class.Damage,
-			Force = class.Damage/10,
+			Force = ( class.Damage / 10 ) * self:GetStat( hand, "Pellets" ),
 			Src = p:EyePos(),
 			Dir = dir:Forward(),
 			Tracer = 0,

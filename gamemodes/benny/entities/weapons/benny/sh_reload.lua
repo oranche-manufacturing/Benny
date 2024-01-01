@@ -11,20 +11,20 @@ function SWEP:Reload( hand )
 		if wep_class.Custom_Reload then
 			if wep_class.Custom_Reload( self, wep_table ) then return end
 		end
-		if self:D_GetDelay( hand ) > CurTime() then
+		if self:bGetIntDelay( hand ) > CurTime() then
 			return false
 		end
-		local rt = self:D_GetReloading( hand )
+		local rt = self:bGetReloadTime( hand )
 		if rt > 0 then
-			local rtt = self:D_GetReloadType( hand )
+			local rtt = self:bGetReloadType( hand )
 			-- TODO: Unshitify this.
 			if rtt == 1 then
 				if (rt+self:GetStat( hand, "Reload_MagIn_Bonus1" )) <= RealTime() and RealTime() <= (rt+self:GetStat( hand, "Reload_MagIn_Bonus2" )) then
-					self:D_SetReloading( hand, 0 )
+					self:bSetReloadTime( hand, 0 )
 					return true
 				else
 					B_Sound( self, "Common.ReloadFail" )
-					self:D_SetReloading( hand, RealTime() )
+					self:bSetReloadTime( hand, RealTime() )
 					return false
 				end
 			else
@@ -32,15 +32,15 @@ function SWEP:Reload( hand )
 			end
 		end
 
-		local curmag = self:D_GetMagID( hand )
+		local curmag = self:bGetMagInvID( hand )
 		if curmag != "" then
-			self:D_SetReloading( hand, RealTime() )
-			self:D_SetReloadType( hand, 2 )
+			self:bSetReloadTime( hand, RealTime() )
+			self:bSetReloadType( hand, 2 )
 			B_Sound( self, wep_class.Sound_MagOut )
-			self:Reload_MagOut( hand, self:D_GetMagID( hand ), inv )
+			self:Reload_MagOut( hand, self:bGetMagInvID( hand ), inv )
 		elseif self:GetBestLoadableMagazine( hand, wep_table.Class, inv, wep_table ) then
-			self:D_SetReloading( hand, RealTime() )
-			self:D_SetReloadType( hand, 1 )
+			self:bSetReloadTime( hand, RealTime() )
+			self:bSetReloadType( hand, 1 )
 			B_Sound( self, wep_class.Sound_MagIn )
 		else
 			B_Sound( self, "Common.NoAmmo" )
@@ -59,7 +59,7 @@ function SWEP:Reload_MagOut( hand, curmag, optinv, optwep_table, optwep_class )
 	if !inv[curmag] then
 		-- PROTO: This happens sometimes. I'm commenting it so it doesn't look like anything broke, because it didn't.
 		-- ErrorNoHalt( "Mag isn't a valid item" )
-		self:D_SetMagID( hand, "" )
+		self:bSetMagInvID( hand, "" )
 		wep_table.Loaded = ""
 	elseif inv[curmag].Ammo == 0 then
 		if SERVER or (CLIENT and IsFirstTimePredicted()) then
@@ -67,8 +67,8 @@ function SWEP:Reload_MagOut( hand, curmag, optinv, optwep_table, optwep_class )
 		end
 	end
 
-	self:D_SetMagID( hand, "" )
-	self:D_SetClip( hand, 0 )
+	self:bSetMagInvID( hand, "" )
+	self:bSetIntClip( hand, 0 )
 	--B_Sound( self, wep_class.Sound_MagOut )
 	wep_table.Loaded = ""
 end
@@ -122,8 +122,8 @@ function SWEP:Reload_MagIn( hand, curmag, optinv, optwep_table, optwep_class )
 	local mag = self:GetBestLoadableMagazine( hand, wep_table.Class )
 
 	if mag then
-		self:D_SetMagID( hand, mag )
-		self:D_SetClip( hand, inv[mag].Ammo )
+		self:bSetMagInvID( hand, mag )
+		self:bSetIntClip( hand, inv[mag].Ammo )
 		wep_table.Loaded = mag
 		B_Sound( self, wep_class.Sound_Cock )
 	else

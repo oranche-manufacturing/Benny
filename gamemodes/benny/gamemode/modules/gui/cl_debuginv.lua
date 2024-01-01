@@ -130,8 +130,8 @@ local function regen_items( itemlist )
 
 			local wep = ply:BennyCheck()
 			if wep then
-				local handed_r = wep:D_GetID( false ) == v
-				local handed_l = wep:D_GetID( true ) == v
+				local handed_r = wep:bGetInvID( false ) == v
+				local handed_l = wep:bGetInvID( true ) == v
 				if handed_r or handed_l then
 					draw.SimpleText( handed_l and "LEFT" or "RIGHT", "Benny_18", w/2, h/2 + ss(1), schema_c("bg"), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER )
 				end

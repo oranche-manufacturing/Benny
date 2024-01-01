@@ -69,25 +69,25 @@ concommand.Add("benny_inv_discard", function( ply, cmd, args )
 		net.WriteString( args[1] )
 	net.Send( ply )
 
-	if wep:D_GetID( false ) == args[1] then
+	if wep:bGetInvID( false ) == args[1] then
 		print( "Disequipped " .. args[1] .. " for " .. tostring(wep) )
 		wep:SetWep1( "" )
 		wep:SetWep1_Clip( "" )
 		wep:SetClip1( 0 )
 	end
-	if wep:D_GetID( true ) == args[1] then
+	if wep:bGetInvID( true ) == args[1] then
 		print( "Disequipped " .. args[1] .. " for " .. tostring(wep) )
 		wep:SetWep2( "" )
 		wep:SetWep2_Clip( "" )
 		wep:SetClip2( 0 )
 	end
-	if wep:D_GetMagID( false ) == args[1] then
-		inv[wep:D_GetID( false )].Loaded = ""
+	if wep:bGetMagInvID( false ) == args[1] then
+		inv[wep:bGetInvID( false )].Loaded = ""
 		wep:SetWep1_Clip( "" )
 		wep:SetClip1( 0 )
 	end
-	if wep:D_GetMagID( true ) == args[1] then
-		inv[wep:D_GetID( true )].Loaded = ""
+	if wep:bGetMagInvID( true ) == args[1] then
+		inv[wep:bGetInvID( true )].Loaded = ""
 		wep:SetWep2_Clip( "" )
 		wep:SetClip2( 0 )
 	end

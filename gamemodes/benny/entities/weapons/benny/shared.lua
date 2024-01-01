@@ -25,6 +25,8 @@ AddCSLuaFile( "sh_firing.lua" )
 include		( "sh_firing.lua" )
 AddCSLuaFile( "sh_inv.lua" )
 include		( "sh_inv.lua" )
+AddCSLuaFile( "sh_stat2.lua" )
+include		( "sh_stat2.lua" )
 AddCSLuaFile( "sh_holdtypes.lua" )
 include		( "sh_holdtypes.lua" )
 AddCSLuaFile( "sh_reload.lua" )
@@ -79,7 +81,7 @@ end
 function SWEP:BClass( alt )
 	local ta =  self:BTable( alt )
 	if ta then
-		return WEAPONS[ ta.Class ]
+		return WeaponGet( ta.Class )
 	else
 		return false
 	end
@@ -88,13 +90,13 @@ end
 function SWEP:B_Ammo( hand, value )
 	local p = self:GetOwner()
 	local inv = p:INV_Get()
-	self:D_SetClip( hand, value )
-	assert( self:D_GetMagID( hand ) != "", "There is no magazine loaded!" )
-	inv[ self:D_GetMagID( hand ) ].Ammo = value
+	self:bSetIntClip( hand, value )
+	assert( self:bGetMagInvID( hand ) != "", "There is no magazine loaded!" )
+	inv[ self:bGetMagInvID( hand ) ].Ammo = value
 end
 
 function SWEP:B_Firemode( alt )
-	return self:BClass( alt ).Firemodes[ self:D_GetFiremode( alt ) ]
+	return self:BClass( alt ).Firemodes[ self:bGetFiremode( alt ) ]
 end
 
 function SWEP:B_FiremodeName( alt )
@@ -142,26 +144,26 @@ hook.Add( "PlayerButtonUp", "Benny_PlayerButtonUp_TempForAim", function( ply, bu
 end)
 
 function SWEP:BStartHolster( hand )
-	if self:D_GetHolstering( hand ) == -1 then
+	if self:bGetHolsterTime( hand ) == -1 then
 		B_Sound( self, "Common.Holster" )
 		-- print( "Holstering the " .. (hand and "LEFT" or "RIGHT") )
-		self:D_SetHolstering( hand, 0 )
-		self:D_SetReloading( hand, -1 )
-		self:D_SetReloadType( hand, 0 )
+		self:bSetHolsterTime( hand, 0 )
+		self:bSetReloadTime( hand, -1 )
+		self:bSetReloadType( hand, 0 )
 	end
 end
 
 function SWEP:BThinkHolster( hand )
-	if self:D_GetHolstering( hand ) >= 0 then
-		self:D_SetHolstering( hand, math.Approach( self:D_GetHolstering( hand ), 1, FrameTime() / 0.35 ) )
+	if self:bGetHolsterTime( hand ) >= 0 then
+		self:bSetHolsterTime( hand, math.Approach( self:bGetHolsterTime( hand ), 1, FrameTime() / 0.35 ) )
 	end
-	if self:D_GetHolstering( hand ) == 1 then
-		self:D_SetHolstering( hand, -1 )
-		self:D_SetReloading( hand, -1 )
-		self:D_SetReloadType( hand, 0 )
+	if self:bGetHolsterTime( hand ) == 1 then
+		self:bSetHolsterTime( hand, -1 )
+		self:bSetReloadTime( hand, -1 )
+		self:bSetReloadType( hand, 0 )
 		self:BHolster( hand )
 		local p = self:GetOwner()
-		local req = self:D_GetReqID( hand )
+		local req = self:bGetReqInvID( hand )
 		local inv = p:INV_Get()
 		if req != "" and inv[req] then
 			self:BDeploy( hand, req )
@@ -178,25 +180,25 @@ function SWEP:Think()
 	local wep2 = self:BTable( true )
 	local wep2c = self:BClass( true )
 
-	if self:D_GetReqID( false ) != "" and self:D_GetReqID( true ) != "" and self:D_GetReqID( false ) == self:D_GetReqID( true ) then
-		self:D_SetReqID( false, "" )
-		self:D_SetReqID( true, "" )
+	if self:bGetReqInvID( false ) != "" and self:bGetReqInvID( true ) != "" and self:bGetReqInvID( false ) == self:bGetReqInvID( true ) then
+		self:bSetReqInvID( false, "" )
+		self:bSetReqInvID( true, "" )
 		if CLIENT then chat.AddText( "Same weapons on ReqID, both holstered" ) end
 	end
 	for i=1, 2 do
 		local hand = i==2
-		if self:D_GetReqID( hand ) != "" and !inv[self:D_GetReqID( hand )] then
-			self:D_SetReqID( hand, "" )
+		if self:bGetReqInvID( hand ) != "" and !inv[self:bGetReqInvID( hand )] then
+			self:bSetReqInvID( hand, "" )
 		end
-		local req = self:D_GetReqID( hand )
-		local req_o = self:D_GetReqID( !hand )
-		local curr = self:D_GetID( hand )
-		local curr_o = self:D_GetID( !hand )
+		local req = self:bGetReqInvID( hand )
+		local req_o = self:bGetReqInvID( !hand )
+		local curr = self:bGetInvID( hand )
+		local curr_o = self:bGetInvID( !hand )
 		if req != curr then
 			-- Don't allow holstering from this weapon if...
 			-- Just know, this feels bad.
-			if self:D_GetReloading( hand ) > 0 then
-			elseif self:D_GetShotTime( hand ) + self:GetStat( hand, "ShootHolsterTime" ) > CurTime() then
+			if self:bGetReloadTime( hand ) > 0 then
+			elseif self:bGetShotTime( hand ) + self:GetStat( hand, "ShootHolsterTime" ) > CurTime() then
 
 			else
 				if curr != "" then
@@ -220,18 +222,18 @@ function SWEP:Think()
 		self:BThinkHolster( hand )
 
 		do -- Reload logic
-			if self:D_GetReloading( hand ) != -1 then
-				local rlt = self:D_GetReloadType( hand )
+			if self:bGetReloadTime( hand ) != -1 then
+				local rlt = self:bGetReloadType( hand )
 				-- TODO: Unshitify this.
-				if RealTime() >= self:D_GetReloading( hand ) + (rlt == 1 and self:GetStat( hand, "Reload_MagIn" ) or rlt == 2 and self:GetStat( hand, "Reload_MagOut" )) then
+				if RealTime() >= self:bGetReloadTime( hand ) + (rlt == 1 and self:GetStat( hand, "Reload_MagIn" ) or rlt == 2 and self:GetStat( hand, "Reload_MagOut" )) then
 					if rlt == 1 then
 						if SERVER or (CLIENT and IsFirstTimePredicted() ) then
-							self:Reload_MagIn( hand, self:D_GetMagID( hand ), inv )
+							self:Reload_MagIn( hand, self:bGetMagInvID( hand ), inv )
 						end
 					elseif rlt == 2 then
 					end
-					self:D_SetReloading( hand, -1 )
-					self:D_SetReloadType( hand, 0 )
+					self:bSetReloadTime( hand, -1 )
+					self:bSetReloadType( hand, 0 )
 					-- Do reload stuff.
 				end
 			end
@@ -243,23 +245,23 @@ function SWEP:Think()
 	for i=1, 2 do
 		local hand = i==2
 		if !self:C_AttackDown( hand ) then
-			self:D_SetBurst( hand, 0 )
+			self:bSetBurst( hand, 0 )
 		end
 	end
 
 	for i=1, 2 do
 		local hand = i==2
 		local wep, wepc = self:BTable( hand ), self:BClass( hand )
-		if wepc and wepc.Features == "firearm" and self:D_GetDelay( hand ) < CurTime()-0.01 then
-			local mweh = math.Remap( CurTime(), self:D_GetShotTime( hand ), self:D_GetShotTime( hand ) + self:GetStat( hand, "SpreadDecay_RampTime" ), 0, 1 )
+		if wepc and wepc.Features == "firearm" and self:bGetIntDelay( hand ) < CurTime()-0.01 then
+			local mweh = math.Remap( CurTime(), self:bGetShotTime( hand ), self:bGetShotTime( hand ) + self:GetStat( hand, "SpreadDecay_RampTime" ), 0, 1 )
 			mweh = math.Clamp( mweh, 0, 1 )
 			local decayfinal = Lerp( math.ease.InExpo( mweh ), self:GetStat( hand, "SpreadDecay_Start" ), self:GetStat( hand, "SpreadDecay_End" ) )
-			self:D_SetSpread( hand, math.Approach( self:D_GetSpread( hand ), 0, decayfinal * FrameTime() ) )
+			self:bSetSpread( hand, math.Approach( self:bGetSpread( hand ), 0, decayfinal * FrameTime() ) )
 		end
 	end
 
 	local ht = "normal"
-	if self:BClass( false ) and self:D_GetHolstering( false ) < 0 then
+	if self:BClass( false ) and self:bGetHolsterTime( false ) < 0 then
 		ht = "passive"
 		if self:GetUserAim() then
 			if self:BClass( true ) then

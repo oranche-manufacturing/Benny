@@ -182,6 +182,7 @@ local T_WEIGHT = {
 	["equipment"]		= 00,
 	["grenade"]			= -10,
 	["magazine"]		= -100,
+	["base"]			= -1000,
 }
 
 function PT:INV_Weight()
@@ -253,6 +254,7 @@ do
 		["utility"]			= { 6, 2 },
 		["equipment"]		= { 7, 1 },
 		["magazine"]		= { 8, 1 },
+		["base"]			= { 8, 2 },
 	}
 
 	-- PROTO: Cache this!
@@ -289,16 +291,6 @@ do
 		end
 		return inventorylist
 	end
-	-- PROTO: I am on an outdated version of GMod.
-	function table.Flip( tab )
-		local res = {}
-	
-		for k, v in pairs( tab ) do
-			res[ v ] = k
-		end
-	
-		return res
-	end
 	function PT:INV_ListFromBuckets()
 		local buckets = self:INV_Buckets()
 
@@ -325,7 +317,7 @@ hook.Add("StartCommand", "Benny_INV_StartCommand", function( ply, cmd )
 	-- 	if CLIENT and ply.CLIENTDESIRE and inv[ply.CLIENTDESIRE ] and inv_bucketlist_flipped[ ply.CLIENTDESIRE ] then
 	-- 		cmd:SetUpMove( inv_bucketlist_flipped[ ply.CLIENTDESIRE ] )
 	-- 	end
-	-- 	if CLIENT and (wep:D_GetID( hand ) == ply.CLIENTDESIRE) then
+	-- 	if CLIENT and (wep:bGetInvID( hand ) == ply.CLIENTDESIRE) then
 	-- 		ply.CLIENTDESIRE = 0
 	-- 		print("Fixed")
 	-- 	end
