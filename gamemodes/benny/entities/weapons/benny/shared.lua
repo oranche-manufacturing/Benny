@@ -198,8 +198,9 @@ function SWEP:Think()
 			-- Don't allow holstering from this weapon if...
 			-- Just know, this feels bad.
 			if self:bGetReloadTime( hand ) > 0 then
-			elseif self:bGetShotTime( hand ) + self:GetStat( hand, "ShootHolsterTime" ) > CurTime() then
-
+				-- hold
+			elseif self:BClass( hand ) and self:bGetShotTime( hand ) + self:GetStat( hand, "ShootHolsterTime" ) > CurTime() then
+				-- hold
 			else
 				if curr != "" then
 					-- require holster first

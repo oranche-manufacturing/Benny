@@ -29,6 +29,13 @@ ItemDef("base", {
 
 	WModel = "models/weapons/w_357.mdl",
 
+	Speed_Move = 1,
+	Speed_Aiming = 1,
+	Speed_Reloading = 1,
+	Speed_Firing = 1,
+	Speed_FiringTime = 0.2,
+	ShootHolsterTime = 0,
+
 	Func_Attack = function( self, hand )
 	end,
 
@@ -49,7 +56,7 @@ ItemDef("base", {
 })
 
 ItemDef("base_firearm", {
-	Name = "Base Firearm",
+	--Name = "Base Firearm",
 	Type = "base",
 	Base = "base",
 	Description = "Base for firearms",
@@ -103,7 +110,7 @@ ItemDef("base_magazine", {
 })
 
 ItemDef("deagle", {
-	Name = "DEAGLE",
+	--Name = "DEAGLE",
 	Description = "Autoloading .50 caliber pistol.",
 	Base = "base_firearm",
 	Type = "pistol",

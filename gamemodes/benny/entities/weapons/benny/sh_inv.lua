@@ -1,32 +1,9 @@
 
-
-local fallbackstat = {
-	["Reload_MagOut"] = 0.2,
-	["Reload_MagIn"] = 0.8,
-	["Reload_MagIn_Bonus1"] = 0.56,
-	["Reload_MagIn_Bonus2"] = 0.56+0.1,
-	["Sound_Cock"] = "Glock.Cock",
-	["Damage"] = 0,
-	["Pellets"] = 1,
-	["Firemodes"] = { { Mode = 1 } },
-	["Delay"] = 0,
-	["Ammo"] = 0,
-	["Spread"] = 0,
-	["SpreadAdd"] = 0,
-	["SpreadDecay_Start"] = 0,
-	["SpreadDecay_End"] = 0,
-	["SpreadDecay_RampTime"] = 0,
-	["Speed_Move"] = 1,
-	["Speed_Aiming"] = 1,
-	["Speed_Reloading"] = 1,
-	["Speed_Firing"] = 1,
-	["Speed_FiringTime"] = 0.2,
-	["ShootHolsterTime"] = 0,
-}
-
 function SWEP:GetStat( hand, stat )
-	local thereturn = (self:BClass( hand ) and self:BClass( hand )[stat] or fallbackstat[stat])
-	assert( thereturn, "No stat for " .. stat )
+	local Hand = ((hand==true and "Left Hand") or (hand==false and "Right Hand"))
+	assert( self:BClass( hand ), "No weapon in " .. Hand .. " (Trying to get stat " .. stat .. ")" )
+	local thereturn = (self:BClass( hand ) and self:BClass( hand )[stat])
+	assert( thereturn, "No stat for " .. stat .. " ( " .. Hand .. " )" )
 	return thereturn
 end
 

@@ -18,7 +18,7 @@ ItemDef = {}
 
 function ItemDef.__index( self, key )
 	if rawget(self, "BaseClass") then
-		return rawget( rawget(self, "BaseClass"), key )
+		return rawget(self, "BaseClass")[key]
 	end
 end
 
