@@ -556,7 +556,7 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 							draw.SimpleText( "!! Mag desync.", "Benny_12", p_x + ss( 2 ), p_y - ss( 12+2 ), scheme["fg"], TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP )
 						end
 					end
-					if wep_class.Ammo then -- Magazines
+					if wep_class.AmmoStd then -- Magazines
 						local m_w, m_h = ss( 12 ), ss( 20 )
 						local m_x, m_y = p_x + p_w - m_w, p_y + p_h + ss(1)--p_x - m_w, p_y + p_h - m_h
 						local bb = ss( 1 )

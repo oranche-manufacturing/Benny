@@ -1,16 +1,16 @@
 
+local FIREMODE_AUTO = {
+	{ Mode = math.huge },
+}
+local FIREMODE_AUTOSEMI = {
+	{ Mode = math.huge },
+	{ Mode = 1 },
+}
+local FIREMODE_SEMI = {
+	{ Mode = 1 },
+}
 
 do -- Sound definitions
-
-	AddSound( "Anaconda.Fire", {
-		"benny/weapons/anaconda/01.ogg",
-		"benny/weapons/anaconda/02.ogg",
-		"benny/weapons/anaconda/03.ogg",
-	}, 140, 100, 0.5, CHAN_STATIC )
-
-	AddSound( "Anaconda.MagOut", "benny/weapons/anaconda/magout.ogg", 70, 100, 0.5, CHAN_STATIC )
-	AddSound( "Anaconda.MagIn", "benny/weapons/anaconda/magin.ogg", 70, 100, 0.5, CHAN_STATIC )
-	AddSound( "Deagle.Cock", "benny/weapons/deagle/cock.ogg", 70, 100, 0.5, CHAN_STATIC )
 
 	AddSound( "Common.Unload", "benny/weapons/unload.ogg", 70, 100, 0.5, CHAN_STATIC )
 	AddSound( "Common.Dryfire.Pistol", "benny/weapons/common/06-13.ogg", 70, 100, 0.5, CHAN_STATIC )
@@ -19,6 +19,28 @@ do -- Sound definitions
 	AddSound( "Common.Holster", "benny/weapons/common/magpouchin.ogg", 70, 100, 0.5, CHAN_STATIC )
 	AddSound( "Common.NoAmmo", "benny/weapons/noammo.ogg", 70, 100, 0.5, CHAN_STATIC )
 	AddSound( "Common.ReloadFail", "benny/hud/reloadfail.ogg", 70, 100, 0.1, CHAN_STATIC )
+
+	-- Deagle
+	AddSound( "Deagle.Cock", "benny/weapons/deagle/cock.ogg", 70, 100, 0.5, CHAN_STATIC )
+
+	-- Glock
+	AddSound( "Glock.Fire", {
+		"benny/weapons/glock/01.ogg",
+		"benny/weapons/glock/02.ogg",
+		"benny/weapons/glock/03.ogg",
+	}, 140, 100, 0.5, CHAN_STATIC )
+	AddSound( "Glock.MagOut", "benny/weapons/glock/magout.ogg", 70, 100, 0.5, CHAN_STATIC )
+	AddSound( "Glock.MagIn", "benny/weapons/glock/magin.ogg", 70, 100, 0.5, CHAN_STATIC )
+	AddSound( "Glock.Cock", "benny/weapons/glock/cock.ogg", 70, 100, 0.5, CHAN_STATIC )
+
+	-- Anaconda
+	AddSound( "Anaconda.Fire", {
+		"benny/weapons/anaconda/01.ogg",
+		"benny/weapons/anaconda/02.ogg",
+		"benny/weapons/anaconda/03.ogg",
+	}, 140, 100, 0.5, CHAN_STATIC )
+	AddSound( "Anaconda.MagOut", "benny/weapons/anaconda/magout.ogg", 70, 100, 0.5, CHAN_STATIC )
+	AddSound( "Anaconda.MagIn", "benny/weapons/anaconda/magin.ogg", 70, 100, 0.5, CHAN_STATIC )
 
 end
 
@@ -162,6 +184,8 @@ do -- Pistols
 
 		WModel = "models/weapons/w_pist_deagle.mdl",
 		HoldType = "revolver",
+		GestureFire = { ACT_HL2MP_GESTURE_RANGE_ATTACK_PISTOL, 0.25 },
+		GestureDraw = { ACT_HL2MP_GESTURE_RELOAD_REVOLVER, 0.8 },
 
 		Sound_Fire = "Anaconda.Fire",
 		Sound_DryFire = "Common.Dryfire.Pistol",
@@ -188,6 +212,48 @@ do -- Pistols
 		Speed_Reloading = 0.95,
 		Speed_Firing = 0.95,
 		Speed_FiringTime = 0.5,
+	})
+
+	ItemDef("glock", {
+		Name = "GLOCK-18",
+		Description = "Bullet storm. Lasts about a second or so, just like you!",
+		Base = "base_firearm",
+		Category = "pistol",
+
+		WModel = "models/weapons/w_pist_glock18.mdl",
+		HoldType = "revolver",
+		GestureFire = { ACT_HL2MP_GESTURE_RANGE_ATTACK_PISTOL, 0.25 },
+		GestureDraw = { ACT_HL2MP_GESTURE_RELOAD_REVOLVER, 0.8 },
+
+		Sound_Fire = "Glock.Fire",
+		Sound_DryFire = "Common.Dryfire.Pistol",
+		Sound_MagOut = "Glock.MagOut",
+		Sound_MagIn = "Glock.MagIn",
+		Sound_Cock = "Glock.Cock",
+
+		--
+		AmmoStd = 17,
+		AutoGenMag = true,
+		Delay = (60/900),
+		Firemodes = FIREMODE_AUTOSEMI,
+		Damage = 22,
+		Spread = 60/60,
+		SpreadAdd = 0.8,
+		SpreadAddMax = 15,
+		
+		SpreadDecay_Start = 3,
+		SpreadDecay_End = 11,
+		SpreadDecay_RampTime = 0.5,
+
+		Reload_MagOut = 0.25,
+		Reload_MagIn = 1.1,
+		Reload_MagIn_Bonus1 = 0.8,
+		Reload_MagIn_Bonus2 = 0.8+0.08,
+
+		Speed_Move = 1,
+		Speed_Aiming = 0.95,
+		Speed_Reloading = 0.95,
+		Speed_Firing = 0.95,
 	})
 
 end
