@@ -17,7 +17,7 @@ end
 function ENT:Use( activator )
 	if ( activator:IsPlayer() ) then 
 		local wep = activator:GetActiveWeapon()
-		local bt, bc = wep:BTable(), wep:BClass()
+		local bt, bc = wep:bWepTable(), wep:bWepClass()
 		for i=1, 3 do
 			-- if bt["Ammo" .. i] and bt.Loaded != i then
 			-- 	bt["Ammo" .. i] = bc.Ammo

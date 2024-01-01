@@ -21,10 +21,10 @@ function SWEP:SecondaryAttack()
 end
 
 function SWEP:BFire( hand )
-	if self:BTable( hand ) and self:GetAim() == 1 then
+	if self:bWepTable( hand ) and self:GetAim() == 1 then
 		local p = self:GetOwner()
-		local wep_table = self:BTable( hand )
-		local wep_class = self:BClass( hand )
+		local wep_table = self:bWepTable( hand )
+		local wep_class = self:bWepClass( hand )
 
 		if wep_class.Custom_Fire then
 			if wep_class.Custom_Fire( self, wep_table, wep_class, hand ) then return end
@@ -78,7 +78,7 @@ end
 local bc = { effects = true, damage = true }
 function SWEP:CallFire( hand )
 	local p = self:GetOwner()
-	local class = self:BClass( hand )
+	local class = self:bWepClass( hand )
 	local spread = self:BSpread( hand )
 	for i=1, self:GetStat( hand, "Pellets" ) do
 		local dir = self:GetOwner():EyeAngles()

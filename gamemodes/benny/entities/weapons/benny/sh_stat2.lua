@@ -1,6 +1,32 @@
 
 -- Stat2
 
+function SWEP:bWepTable( alt )
+	return self:GetOwner():INV_Get()[ ((alt==true) and self:GetWep2()) or ((alt==false) and self:GetWep1()) ]
+end
+
+function SWEP:bWepClass( alt )
+	local ta = self:bWepTable( alt )
+	if ta then
+		return WeaponGet( ta.Class )
+	else
+		return false
+	end
+end
+
+function SWEP:bMagTable( alt )
+	return self:GetOwner():INV_Get()[ ((alt==true) and self:GetWep2_Clip()) or ((alt==false) and self:GetWep1_Clip()) ]
+end
+
+function SWEP:bMagClass( alt )
+	local ta = self:bMagTable( alt )
+	if ta then
+		return WeaponGet( ta.Class )
+	else
+		return false
+	end
+end
+
 -- Weapon ID
 function SWEP:bGetInvID( hand )
 	assert( hand!=nil, "Missing hand argument" )

@@ -114,7 +114,7 @@ SWEP.GestureDraw			= { ACT_GMOD_GESTURE_MELEE_SHOVE_1HAND, 0.75 }
 SWEP.GestureHolster			= { ACT_GMOD_GESTURE_MELEE_SHOVE_1HAND, 0.65 }
 function SWEP:TPFire( hand )
 	if CLIENT and !IsFirstTimePredicted() then return end
-	local target = self:BClass( hand ) and self:BClass( hand ).GestureFire
+	local target = self:bWepClass( hand ) and self:bWepClass( hand ).GestureFire
 	if !target then
 		target = self.GestureFire
 	end
@@ -122,7 +122,7 @@ function SWEP:TPFire( hand )
 end
 function SWEP:TPReload( hand )
 	if CLIENT and !IsFirstTimePredicted() then return end
-	local target = self:BClass( hand ) and self:BClass( hand ).GestureReload
+	local target = self:bWepClass( hand ) and self:bWepClass( hand ).GestureReload
 	if !target then
 		target = self.GestureReload
 	end
@@ -130,7 +130,7 @@ function SWEP:TPReload( hand )
 end
 function SWEP:TPDraw( hand )
 	if CLIENT and !IsFirstTimePredicted() then return end
-	local target = self:BClass( hand ) and self:BClass( hand ).GestureDraw
+	local target = self:bWepClass( hand ) and self:bWepClass( hand ).GestureDraw
 	if !target then
 		target = self.GestureDraw
 	end
@@ -138,7 +138,7 @@ function SWEP:TPDraw( hand )
 end
 function SWEP:TPHolster( hand )
 	if CLIENT and !IsFirstTimePredicted() then return end
-	local target = self:BClass( hand ) and self:BClass( hand ).GestureHolster
+	local target = self:bWepClass( hand ) and self:bWepClass( hand ).GestureHolster
 	if !target then
 		target = self.GestureHolster
 	end

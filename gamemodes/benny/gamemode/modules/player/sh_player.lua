@@ -195,8 +195,8 @@ function PT:INV_Weight()
 	end
 	-- PROTO: HOLY SHIT THIS SUCKS, MAKES A FUNCTION AND MIGHT RUN EVERY FRAME!!!
 	table.sort( results, function( a, b )
-		return	(T_WEIGHT[b[2]["Type"]] - b[1]["Acquisition"]*(1e-5))
-		< 		(T_WEIGHT[a[2]["Type"]] - a[1]["Acquisition"]*(1e-5))
+		return	(T_WEIGHT[b[2]["Category"]] - b[1]["Acquisition"]*(1e-5))
+		< 		(T_WEIGHT[a[2]["Category"]] - a[1]["Acquisition"]*(1e-5))
 	end )
 	local finale = {}
 	for i, v in ipairs( results ) do
@@ -278,7 +278,7 @@ do
 			local temp = {}
 			for id, data in pairs( inv ) do
 				local idata = WeaponGet(data.Class)
-				local translated = translat[idata.Type]
+				local translated = translat[idata.Category]
 
 				if i == translated[1] then
 					table.insert( temp, { id, translated[2] } )

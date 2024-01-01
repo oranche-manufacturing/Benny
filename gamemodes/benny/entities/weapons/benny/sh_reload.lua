@@ -5,8 +5,8 @@ function SWEP:Reload( hand )
 	if hand == nil then return end -- Needs to be called from the custom ones
 	local p = self:GetOwner()
 	local inv = p:INV_Get()
-	local wep_table = self:BTable( hand )
-	local wep_class = self:BClass( hand )
+	local wep_table = self:bWepTable( hand )
+	local wep_class = self:bWepClass( hand )
 	if wep_table then
 		if wep_class.Custom_Reload then
 			if wep_class.Custom_Reload( self, wep_table ) then return end
@@ -53,8 +53,8 @@ end
 function SWEP:Reload_MagOut( hand, curmag, optinv, optwep_table, optwep_class )
 	local p = self:GetOwner()
 	local inv = optinv or p:INV_Get()
-	local wep_table = optwep_table or self:BTable( hand )
-	local wep_class = optwep_class or self:BClass( hand )
+	local wep_table = optwep_table or self:bWepTable( hand )
+	local wep_class = optwep_class or self:bWepClass( hand )
 
 	if !inv[curmag] then
 		-- PROTO: This happens sometimes. I'm commenting it so it doesn't look like anything broke, because it didn't.
@@ -76,7 +76,7 @@ end
 function SWEP:GetLoadableMagazines( hand, class, optinv, optwep_table )
 	local p = self:GetOwner()
 	local inv = optinv or p:INV_Get()
-	local wep_table = optwep_table or self:BTable( hand )
+	local wep_table = optwep_table or self:bWepTable( hand )
 	local maglist = p:INV_FindMag( wep_table.Class )
 	
 	local usedlist = {}
@@ -92,7 +92,7 @@ end
 function SWEP:GetBestLoadableMagazine( hand, class, optinv, optwep_table )
 	local p = self:GetOwner()
 	local inv = optinv or p:INV_Get()
-	local wep_table = optwep_table or self:BTable( hand )
+	local wep_table = optwep_table or self:bWepTable( hand )
 	local maglist = p:INV_FindMag( wep_table.Class )
 	local mag = false
 	
@@ -117,8 +117,8 @@ end
 function SWEP:Reload_MagIn( hand, curmag, optinv, optwep_table, optwep_class )
 	local p = self:GetOwner()
 	local inv = optinv or p:INV_Get()
-	local wep_table = optwep_table or self:BTable( hand )
-	local wep_class = optwep_class or self:BClass( hand )
+	local wep_table = optwep_table or self:bWepTable( hand )
+	local wep_class = optwep_class or self:bWepClass( hand )
 	local mag = self:GetBestLoadableMagazine( hand, wep_table.Class )
 
 	if mag then

@@ -24,8 +24,8 @@ hook.Add( "InputMouseApply", "Benny_InputMouseApply", function( cmd, x, y, ang )
 	local p = LocalPlayer()
 	local w = p:BennyCheck()
 	local cdis = false
-	if w and w:BClass( false ) and w:BClass( false ).Custom_DisableSpecialMovement and w:BClass( false ).Custom_DisableSpecialMovement( w ) then cdis = true end
-	if w and w:BClass( true ) and w:BClass( true ).Custom_DisableSpecialMovement and w:BClass( true ).Custom_DisableSpecialMovement( w ) then cdis = true end
+	if w and w:bWepClass( false ) and w:bWepClass( false ).Custom_DisableSpecialMovement and w:bWepClass( false ).Custom_DisableSpecialMovement( w ) then cdis = true end
+	if w and w:bWepClass( true ) and w:bWepClass( true ).Custom_DisableSpecialMovement and w:bWepClass( true ).Custom_DisableSpecialMovement( w ) then cdis = true end
 	if GetConVar("benny_cam_override"):GetString() != "" then cdis = true end
 	if p:NoclippingAndNotVaulting() then cdis = true end
 	if w and !cdis then
@@ -85,8 +85,8 @@ hook.Add( "CreateMove", "Benny_CreateMove", function( cmd )
 	local w = p:BennyCheck()
 	local cdis = false
 	if w then
-		if w:BClass( false ) and w:BClass( false ).Custom_DisableSpecialMovement and w:BClass( false ).Custom_DisableSpecialMovement( w ) then cdis = true end
-		if w:BClass( true ) and w:BClass( true ).Custom_DisableSpecialMovement and w:BClass( true ).Custom_DisableSpecialMovement( w ) then cdis = true end
+		if w:bWepClass( false ) and w:bWepClass( false ).Custom_DisableSpecialMovement and w:bWepClass( false ).Custom_DisableSpecialMovement( w ) then cdis = true end
+		if w:bWepClass( true ) and w:bWepClass( true ).Custom_DisableSpecialMovement and w:bWepClass( true ).Custom_DisableSpecialMovement( w ) then cdis = true end
 	end
 	if GetConVar("benny_cam_override"):GetString() != "" then cdis = true end
 	if LocalPlayer():NoclippingAndNotVaulting() then cdis = true end

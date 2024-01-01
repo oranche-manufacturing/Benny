@@ -64,7 +64,7 @@ local mewer = {
 			score_1 = rmt1c( BENNY_GetStat( class, "Damage" ) * truedelay, 100, 350 )
 			score_1 = score_1 * weight_1
 
-			score_2 = rmt1c( BENNY_GetStat( class, "Ammo" ), 16, 42 )
+			score_2 = rmt1c( BENNY_GetStat( class, "AmmoStd" ), 16, 42 )
 			score_2 = score_2 * weight_2
 
 			return score_1 + score_2
@@ -339,7 +339,7 @@ function OpenSMenu()
 				surface.SetDrawColor( schema("fg") )
 				surface.DrawRect( 0, 0, w, h )
 
-				draw.SimpleText( BENNY_GetStat( hm, "Ammo" ) .. " rounds", "Benny_12", ss(2), ss(2), schema_c("bg") )
+				draw.SimpleText( BENNY_GetStat( hm, "AmmoStd" ) .. " rounds", "Benny_12", ss(2), ss(2), schema_c("bg") )
 			end
 			return true
 		end
@@ -381,11 +381,12 @@ function OpenSMenu()
 	local createlist = {}
 	
 	for ClassName, Class in pairs( WEAPONS ) do
-		if !createlist[Class.Type] then
-			createlist[Class.Type] = {}
+		if !createlist[Class.Category] then
+			print(Class, Class.Category)
+			createlist[Class.Category] = {}
 		end
 
-		table.insert( createlist[Class.Type], { ClassName = ClassName, Class = Class } )
+		table.insert( createlist[Class.Category], { ClassName = ClassName, Class = Class } )
 	end
 
 	for i, v in SortedPairs( createlist ) do

@@ -73,20 +73,6 @@ function SWEP:SetupDataTables()
 	self:SetWep2_Reloading( -1 )
 end
 
--- BENNY shit
-function SWEP:BTable( alt )
-	return self:GetOwner():INV_Get()[ alt and self:GetWep2() or self:GetWep1() ]
-end
-
-function SWEP:BClass( alt )
-	local ta =  self:BTable( alt )
-	if ta then
-		return WeaponGet( ta.Class )
-	else
-		return false
-	end
-end
-
 function SWEP:B_Ammo( hand, value )
 	local p = self:GetOwner()
 	local inv = p:INV_Get()
@@ -96,7 +82,7 @@ function SWEP:B_Ammo( hand, value )
 end
 
 function SWEP:B_Firemode( alt )
-	return self:BClass( alt ).Firemodes[ self:bGetFiremode( alt ) ]
+	return self:bWepClass( alt ).Firemodes[ self:bGetFiremode( alt ) ]
 end
 
 function SWEP:B_FiremodeName( alt )
@@ -175,10 +161,10 @@ function SWEP:Think()
 	local p = self:GetOwner()
 	local inv = p:INV_Get()
 
-	local wep1 = self:BTable( false )
-	local wep1c = self:BClass( false )
-	local wep2 = self:BTable( true )
-	local wep2c = self:BClass( true )
+	local wep1 = self:bWepTable( false )
+	local wep1c = self:bWepClass( false )
+	local wep2 = self:bWepTable( true )
+	local wep2c = self:bWepClass( true )
 
 	if self:bGetReqInvID( false ) != "" and self:bGetReqInvID( true ) != "" and self:bGetReqInvID( false ) == self:bGetReqInvID( true ) then
 		self:bSetReqInvID( false, "" )
@@ -199,7 +185,7 @@ function SWEP:Think()
 			-- Just know, this feels bad.
 			if self:bGetReloadTime( hand ) > 0 then
 				-- hold
-			elseif self:BClass( hand ) and self:bGetShotTime( hand ) + self:GetStat( hand, "ShootHolsterTime" ) > CurTime() then
+			elseif self:bWepClass( hand ) and self:bGetShotTime( hand ) + self:GetStat( hand, "ShootHolsterTime" ) > CurTime() then
 				-- hold
 			else
 				if curr != "" then
@@ -252,7 +238,7 @@ function SWEP:Think()
 
 	for i=1, 2 do
 		local hand = i==2
-		local wep, wepc = self:BTable( hand ), self:BClass( hand )
+		local wep, wepc = self:bWepTable( hand ), self:bWepClass( hand )
 		if wepc and wepc.Features == "firearm" and self:bGetIntDelay( hand ) < CurTime()-0.01 then
 			local mweh = math.Remap( CurTime(), self:bGetShotTime( hand ), self:bGetShotTime( hand ) + self:GetStat( hand, "SpreadDecay_RampTime" ), 0, 1 )
 			mweh = math.Clamp( mweh, 0, 1 )
@@ -262,10 +248,10 @@ function SWEP:Think()
 	end
 
 	local ht = "normal"
-	if self:BClass( false ) and self:bGetHolsterTime( false ) < 0 then
+	if self:bWepClass( false ) and self:bGetHolsterTime( false ) < 0 then
 		ht = "passive"
 		if self:GetUserAim() then
-			if self:BClass( true ) then
+			if self:bWepClass( true ) then
 				ht = "duel"
 			else
 				ht = self:GetStat( false, "HoldType" )
@@ -281,9 +267,9 @@ function SWEP:Think()
 	
 	for i=1, 2 do
 		local hand = i==2
-		if self:BClass( hand ) then
-			if self:BClass( hand ).Custom_Think then
-				self:BClass( hand ).Custom_Think( self, self:BTable( hand ), self:BClass( hand ), hand )
+		if self:bWepClass( hand ) then
+			if self:bWepClass( hand ).Custom_Think then
+				self:bWepClass( hand ).Custom_Think( self, self:bWepTable( hand ), self:bWepClass( hand ), hand )
 			end
 		end
 	end

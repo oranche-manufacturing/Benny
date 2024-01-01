@@ -487,16 +487,16 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 	
 	if wep and ConVarCL_Bool("hud_enable_active") then -- Weapon
 		local inv = p:INV_Get()
-		local wep1 = wep:BTable( false )
-		local wep1c = wep:BClass( false )
-		local wep2 = wep:BTable( true )
-		local wep2c = wep:BClass( true )
+		local wep1 = wep:bWepTable( false )
+		local wep1c = wep:bWepClass( false )
+		local wep2 = wep:bWepTable( true )
+		local wep2c = wep:bWepClass( true )
 
 		for i=1, 2 do
 			local hand = i==2
-			if wep:BTable( hand ) then -- New Weapon HUD
-				local wep_table = wep:BTable( hand )
-				local wep_class = wep:BClass( hand )
+			if wep:bWepTable( hand ) then -- New Weapon HUD
+				local wep_table = wep:bWepTable( hand )
+				local wep_class = wep:bWepClass( hand )
 
 				local p_w, p_h = ss(156), ss(64)
 				local p_x, p_y = sw - p_w - Wb, Hb
@@ -514,7 +514,7 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 
 					draw.SimpleText( wep_class.Name, "Benny_16", p_x+ss(6), p_y+ss(5), scheme["bg"], TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP )
 					
-					local identicallist = p:INV_Find( wep:BTable( hand ).Class )
+					local identicallist = p:INV_Find( wep:bWepTable( hand ).Class )
 					identicallist = table.Flip( identicallist )
 					local numba = identicallist[ wep:bGetInvID( hand ) ]
 					draw.SimpleText( "#" .. tostring(numba) .. ", " .. wep:bGetInvID( hand ), "Benny_10", p_x+p_w-pb2, p_y+ss(7), scheme["bg"], TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP )
@@ -649,11 +649,11 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 		
 		for hhhh=1, 2 do
 			local hand = hhhh==2
-			if wep:GetUserAim() and wep:BClass( hand ) then -- Crosshair
+			if wep:GetUserAim() and wep:bWepClass( hand ) then -- Crosshair
 				local s, w, h = ss, ScrW(), ScrH()
 
 				local gap = gap
-				if wep:BClass( hand ).Spread then
+				if wep:bWepClass( hand ).Spread then
 					gap = gap * wep:BSpread( hand )
 				end
 
@@ -665,7 +665,7 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 					local mat1 = i == 1 and mat_long_s or mat_long
 					local mat2 = i == 1 and mat_dot_s or mat_dot
 					surface.SetDrawColor( cooler )
-					local typ = wep:BClass( hand ).Type
+					local typ = wep:bWepClass( hand ).Category
 					if typ == "rifle" or typ == "sniper" then
 						surface.SetMaterial( mat1 )
 						surface.DrawTexturedRectRotated( poosx - s(spacer_long) - gap, poosy, s(16), s(16), 0 )
@@ -742,12 +742,10 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 			local boxsize = ss(b_w)
 			surface.SetDrawColor( scheme[active and "fg" or "bg"] )
 			surface.DrawRect( b_x + bump, b_y, boxsize, ss(b_h) )
-			--draw.SimpleText( class.Type, "Benny_8", b_x + bump + boxsize/2, b_y + ss(3), scheme["fg"], TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP )
 			draw.SimpleText( class.Name, "Benny_8", b_x + bump + boxsize/2, b_y + ss(4), scheme[active and "bg" or "fg"], TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP )
 			if active then
 				draw.SimpleText( active_r and "RIGHT" or active_l and "LEFT", "Benny_10", b_x + bump + boxsize/2, b_y + ss(10), scheme["bg"], TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP )
 			end
-			--draw.SimpleText( "", "Benny_8", b_x + bump + boxsize/2, b_y + ss(17), scheme["fg"], TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP )
 			if class.Features == "firearm" or class.Features == "grenade" then
 				invid = invid + 1
 				surface.SetDrawColor( scheme[active and "bg" or "fg"] )
@@ -906,7 +904,7 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 		local bx, by = sw/2, sh*(0.75)
 		local mx = 50
 
-		local wep1_table, wep1_class = wep:BTable( false ), wep:BClass( false )
+		local wep1_table, wep1_class = wep:bWepTable( false ), wep:bWepClass( false )
 		if wep1_table then
 			draw.SimpleText( wep1_class.Name, 						"Benny_14", bx-mx, by+ss(8)*-1, color_white, TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP )
 			draw.SimpleText( "Clip1: " .. wep:Clip1(),				"Benny_14", bx-mx, by+ss(8)*0, color_white, TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP )
@@ -917,7 +915,7 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 			end
 		end
 
-		local wep2_table, wep2_class = wep:BTable( true ), wep:BClass( true )
+		local wep2_table, wep2_class = wep:bWepTable( true ), wep:bWepClass( true )
 		if wep2_table then
 			draw.SimpleText( wep2_class.Name,						"Benny_14", bx+mx, by+ss(8)*-1, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP )
 			draw.SimpleText( "Clip2: " .. wep:Clip2(),				"Benny_14", bx+mx, by+ss(8)*0, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP )

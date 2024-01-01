@@ -291,7 +291,7 @@ hook.Add( "CalcView", "Benny_CalcView", function( ply, pos, ang, fov )
 		
 	local wep = ply:BennyCheck()
 	if wep then -- and ply:GetActiveWeapon():GetAim() > 0 then
-		local cv = wep:BClass( true ) and wep:BClass( true ).Custom_CalcView or wep:BClass( false ) and wep:BClass( false ).Custom_CalcView
+		local cv = wep:bWepClass( true ) and wep:bWepClass( true ).Custom_CalcView or wep:bWepClass( false ) and wep:bWepClass( false ).Custom_CalcView
 		local halt = false
 		if cv then
 			halt = cv( wep, view, view.origin, view.angles, view.fov )

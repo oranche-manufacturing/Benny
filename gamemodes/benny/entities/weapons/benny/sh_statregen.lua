@@ -28,7 +28,7 @@ else
 			else
 				data = net.ReadDouble()
 			end
-			LocalPlayer():GetActiveWeapon():BTable()[stat] = data
+			LocalPlayer():GetActiveWeapon():bWepTable()[stat] = data
 		end
 	end)
 end

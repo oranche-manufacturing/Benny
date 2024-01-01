@@ -1,22 +1,22 @@
 
 function SWEP:GetStat( hand, stat )
 	local Hand = ((hand==true and "Left Hand") or (hand==false and "Right Hand"))
-	assert( self:BClass( hand ), "No weapon in " .. Hand .. " (Trying to get stat " .. stat .. ")" )
-	local thereturn = (self:BClass( hand ) and self:BClass( hand )[stat])
+	assert( self:bWepClass( hand ), "No weapon in " .. Hand .. " (Trying to get stat " .. stat .. ")" )
+	local thereturn = (self:bWepClass( hand ) and self:bWepClass( hand )[stat])
 	assert( thereturn, "No stat for " .. stat .. " ( " .. Hand .. " )" )
 	return thereturn
 end
 
 function BENNY_GetStat( class, stat )
 	assert( class, "No class" )
-	local thereturn = (class[stat] or fallbackstat[stat])
+	local thereturn = class[stat]
 	assert( thereturn, "No stat for " .. stat )
 	return thereturn
 end
 
 function SWEP:C_DualCheck()
 	local p = self:GetOwner()
-	local lt = self:BClass( true )
+	local lt = self:bWepClass( true )
 	if lt then
 		if lt.Features == "firearm" then
 			return p:GetInfoNum( "benny_wep_ao_firearms", 1 )==1
@@ -77,7 +77,7 @@ function SWEP:BHolster( hand )
 
 	local p = self:GetOwner()
 	--B_Sound( self, "Common.Holster" )
-	local item = self:BTable( hand )
+	local item = self:bWepTable( hand )
 	if item then
 		local class = WeaponGet(item.Class)
 		if class.Custom_Holster then class.Custom_Holster( self, item, class, hand ) end
@@ -89,6 +89,6 @@ function SWEP:BHolster( hand )
 end
 
 function SWEP:BSpread( hand )
-	return self:BClass( hand ).Spread + self:bGetSpread( hand )
+	return self:bWepClass( hand ).Spread + self:bGetSpread( hand )
 end
 

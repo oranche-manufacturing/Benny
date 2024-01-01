@@ -24,6 +24,7 @@ end
 
 ItemDef("base", {
 	Name = "Base Item",
+	Category = "base",
 	Type = "base",
 	Description = "Base of everything",
 
@@ -56,10 +57,49 @@ ItemDef("base", {
 })
 
 ItemDef("base_firearm", {
-	--Name = "Base Firearm",
-	Type = "base",
+	Name = "Base Firearm",
+	Category = "base",
 	Base = "base",
 	Description = "Base for firearms",
+	Features = "firearm",
+
+	WModel = "models/weapons/w_pistol.mdl",
+	HoldType = "pistol",
+
+	-- Firearm specific
+	Firemodes = {
+		{
+			Mode = 1,
+		},
+	},
+
+	Damage = 0,
+	AmmoStd = 1,
+	Pellets = 1,
+	Delay = 60/600,
+
+	Spread = 0,
+	SpreadAdd = 0,
+	SpreadAddMax = 1,
+	
+	SpreadDecay_Start = 1,
+	SpreadDecay_End = 2,
+	SpreadDecay_RampTime = 1,
+	
+	Reload_MagOut = 0.2,
+	Reload_MagIn = 0.8,
+	Reload_MagIn_Bonus1 = 0.56,
+	Reload_MagIn_Bonus2 = 0.56+0.1,
+
+	Func_Attack = function( self, hand )
+	end,
+})
+
+ItemDef("base_melee", {
+	Name = "Base Melee",
+	Category = "base",
+	Base = "base",
+	Description = "Base for melee weapons",
 	Features = "firearm",
 
 	WModel = "models/weapons/w_pistol.mdl",
@@ -89,7 +129,7 @@ ItemDef("base_firearm", {
 
 ItemDef("base_grenade", {
 	Name = "Base Grenade",
-	Type = "grenade",
+	Category = "grenade",
 	Base = "base",
 	Description = "Base for grenades",
 	Features = "grenade",
@@ -100,7 +140,7 @@ ItemDef("base_grenade", {
 
 ItemDef("base_magazine", {
 	Name = "Base Magazine",
-	Type = "magazine",
+	Category = "magazine",
 	Base = "base",
 	Description = "Base for magazines",
 	Features = "magazine",
@@ -110,10 +150,10 @@ ItemDef("base_magazine", {
 })
 
 ItemDef("deagle", {
-	--Name = "DEAGLE",
+	Name = "DEAGLE",
 	Description = "Autoloading .50 caliber pistol.",
 	Base = "base_firearm",
-	Type = "pistol",
+	Category = "pistol",
 
 	WModel = "models/weapons/w_pist_deagle.mdl",
 	HoldType = "revolver",
@@ -123,13 +163,32 @@ ItemDef("deagle", {
 	Sound_MagOut = "Anaconda.MagOut",
 	Sound_MagIn = "Anaconda.MagIn",
 	Sound_Cock = "Deagle.Cock",
+
+	--
+	AmmoStd = 7,
+	Delay = (60/180),
+	Firemodes = FIREMODE_SEMI,
+	Damage = 47,
+	Spread = 30/60,
+	SpreadAdd = 4,
+	SpreadAddMax = 15,
+	
+	SpreadDecay_Start = 8,
+	SpreadDecay_End = 25,
+	SpreadDecay_RampTime = 0.5,
+
+	Speed_Move = 0.95,
+	Speed_Aiming = 0.95,
+	Speed_Reloading = 0.95,
+	Speed_Firing = 0.95,
+	Speed_FiringTime = 0.5,
 })
 
 ItemDef("mag_deagle", {
 	Name = "MAG: DEAGLE 7-rnd",
 	Base = "base_magazine",
 
-	Ammo = 7,
+	Ammo = 14,
 })
 --[[
 ItemDef("deagle", {

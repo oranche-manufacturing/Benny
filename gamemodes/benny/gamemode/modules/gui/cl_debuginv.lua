@@ -14,15 +14,15 @@ local function regen_items( itemlist )
 		local class = inv[v].Class
 		local Class = WeaponGet(class)
 
-		if !catesmade[Class.Type] then
-			catesmade[Class.Type] = true
+		if !catesmade[Class.Category] then
+			catesmade[Class.Category] = true
 			local cate = vgui.Create( "DButton" )
 			itemlist:AddItem( cate )
 			cate:SetSize( 1, ss(12) )
 			cate:Dock( TOP )
 			cate:DockMargin( 0, 0, 0, ss(2) )
 
-			cate.Text_Name = Class.Type
+			cate.Text_Name = Class.Category
 
 			function cate:Paint( w, h )
 				surface.SetDrawColor( schemes[active]["bg"] )

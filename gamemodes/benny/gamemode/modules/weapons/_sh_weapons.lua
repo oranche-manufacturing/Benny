@@ -1332,7 +1332,7 @@ do -- Grenades, nothing here is guaranteed.
 		-- TEMP: Do this right!
 		if !class.GrenadeCharge then self:SetGrenadeDownStart( CurTime() ) end
 		--
-		local hand = (self:BTable( true ) and self:BTable( true ).Class == data.Class) or false
+		local hand = (self:bWepTable( true ) and self:bWepTable( true ).Class == data.Class) or false
 		self:TPFire( hand )
 		if SERVER then GrenadeCreate( self, data ) end
 		local id = self:bGetInvID( hand )

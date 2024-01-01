@@ -2,7 +2,7 @@ function SWEP:DrawWorldModel()
 	local p = self:GetOwner()
 	do
 		local wm = self.CWM
-		local class = self:BClass( false )
+		local class = self:bWepClass( false )
 		if class then
 			if !IsValid(wm) then
 				wm = ClientsideModel( class.WModel )
@@ -19,7 +19,7 @@ function SWEP:DrawWorldModel()
 	end
 	do
 		local wm = self.CWM_Left
-		local class = self:BClass( true )
+		local class = self:bWepClass( true )
 		if class then
 			if !IsValid(wm) then
 				wm = ClientsideModel( class.WModel )
