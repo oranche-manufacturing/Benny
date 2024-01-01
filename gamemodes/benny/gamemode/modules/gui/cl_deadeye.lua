@@ -411,6 +411,6 @@ end
 
 if IsValid( GOD ) then OpenDeadeye() end
 
-concommand.Add("benny_dev_deadeye", function()
+concommand.Add("benny_ui_deadeye", function()
 	OpenDeadeye()
 end)

@@ -423,7 +423,6 @@ function ENT:Think()
 	if self:GetState() == "combat" then
 		for ent, data in pairs( self.bEnemyMemory ) do
 			if !IsValid(ent) then
-				print("wtf")
 				self.bEnemyMemory[ent] = nil
 				continue
 			end

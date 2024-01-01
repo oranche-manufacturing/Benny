@@ -77,3 +77,7 @@ function OpenSettingsMenu()
 		genpan( Base, Sect, conf[2] )
 	end
 end
+
+concommand.Add("benny_ui_settings", function()
+	OpenSettingsMenu()
+end)

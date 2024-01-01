@@ -68,7 +68,7 @@ function CreateMainMenu()
 		draw.SimpleText( "BENNY", "Benny_72", ss(32), self:GetTall()/2 - ss(58 + (28*0)), schema_c("fg") )
 	end
 
-	local bump = -ss(16)
+	local bump = -ss(32)
 	for i=#meow, 1, -1 do
 		local label = meow[i]
 		local spacer = label == ""
@@ -91,3 +91,7 @@ function CreateMainMenu()
 	end
 
 end
+
+concommand.Add("benny_ui_mainmenu", function()
+	CreateMainMenu()
+end)

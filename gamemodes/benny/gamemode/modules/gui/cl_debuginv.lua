@@ -168,9 +168,7 @@ local function regen_items( itemlist )
 		end
 	end
 end
-concommand.Add("benny_debug_inv", function()
-	OpenDebugInv()
-end)
+
 function OpenDebugInv()
 	if IsValid( base ) then base:Remove() return end
 	base = vgui.Create("BFrame")
@@ -185,3 +183,7 @@ function OpenDebugInv()
 
 	regen_items( itemlist )
 end
+
+concommand.Add("benny_ui_inv", function()
+	OpenDebugInv()
+end)

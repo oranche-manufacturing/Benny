@@ -266,7 +266,50 @@ function OpenSMenu()
 		surface.DrawOutlinedRect( 0, 0, w, h, ss(0.5) )
 	end
 
+	-- PROTO: Do regen stats.
+	do
+		local BAR_NAME = statlist:Add( "DLabel" )
+		BAR_NAME:SetTall( ss(18) )
+		BAR_NAME:Dock( TOP )
+		BAR_NAME:DockMargin( 0, 0, 0, ss(2) )
+		function BAR_NAME:Paint( w, h )
+			surface.SetDrawColor( schema("fg") )
+			surface.DrawRect( 0, 0, w, h )
+
+			local rang = WeaponGet( pan_active )
+			draw.SimpleText( rang.Name, "Benny_18", ss(2), ss(2), schema_c("bg") )
+			return true
+		end
+	end
+
+	do
+		local BAR_DESC = statlist:Add( "DLabel" )
+		BAR_DESC:SetTall( ss(18) )
+		BAR_DESC:Dock( TOP )
+		BAR_DESC:DockMargin( 0, 0, 0, ss(2) )
+		local lastheight = 0
+		function BAR_DESC:Paint( w, h )
+			surface.SetDrawColor( schema("fg") )
+			surface.DrawRect( 0, 0, w, h )
+
+			local rang = WeaponGet( pan_active )
+			local multiline = multlinetext( rang.Description, w-ss(2), "Benny_12" )
+			for i, v in ipairs( multiline ) do
+				local line = i-1
+				local height = ss( 14 + (#multiline-1)*12 )
+				if lastheight != height then
+					BAR_DESC:SetTall( height )
+					lastheight = height
+				end
+				draw.SimpleText( v, "Benny_12", ss(2), ss(2+12*line), schema_c("bg") )
+			end
+
+			return true
+		end
+	end
+
 	for i, us in ipairs( mewer ) do
+		do continue end
 		local fucker = statlist:Add( "DLabel" )
 		fucker:SetTall( ss(us.Size) )
 		fucker:Dock( TOP )
@@ -334,6 +377,7 @@ function OpenSMenu()
 		fucker:Dock( TOP )
 		fucker:DockMargin( 0, 0, 0, ss(2) )
 		function fucker:Paint( w, h )
+			do return true end
 			if pan_active then
 				local hm = WeaponGet( pan_active )
 				surface.SetDrawColor( schema("fg") )
@@ -351,6 +395,7 @@ function OpenSMenu()
 		fucker:Dock( TOP )
 		fucker:DockMargin( 0, 0, 0, ss(2) )
 		function fucker:Paint( w, h )
+			do return true end
 			if pan_active then
 				local hm = WeaponGet( pan_active )
 				surface.SetDrawColor( schema("fg") )
@@ -433,3 +478,7 @@ function OpenSMenu()
 	end
 
 end
+
+concommand.Add("benny_ui_spawnmenu", function()
+	OpenSMenu()
+end)
