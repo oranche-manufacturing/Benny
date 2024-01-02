@@ -120,6 +120,10 @@ function SWEP:TPFire( hand )
 	end
 	self:GetOwner():AddVCDSequenceToGestureSlot( GESTURE_SLOT_GRENADE, self:GetOwner():SelectWeightedSequence(target[1]), target[2], true )
 end
+function SWEP:TPCustom( tg1, tg2 )
+	if CLIENT and !IsFirstTimePredicted() then return end
+	self:GetOwner():AddVCDSequenceToGestureSlot( GESTURE_SLOT_GRENADE, self:GetOwner():SelectWeightedSequence(tg1), tg2, true )
+end
 function SWEP:TPReload( hand )
 	if CLIENT and !IsFirstTimePredicted() then return end
 	local target = self:bWepClass( hand ) and self:bWepClass( hand ).GestureReload

@@ -14,24 +14,27 @@ function BENNY_GetStat( class, stat )
 	return thereturn
 end
 
-function SWEP:C_DualCheck()
+function SWEP:hFlipHand( hand )
+	hand = hand or false
 	local p = self:GetOwner()
 	local lt = self:bWepClass( true )
+	local flip = false
 	if lt then
 		if lt.Features == "firearm" then
-			return p:GetInfoNum( "benny_wep_ao_firearms", 1 )==1
+			flip = p:GetInfoNum( "benny_wep_ao_firearms", 1 )==1
 		elseif lt.Features == "grenade" then
-			return p:GetInfoNum( "benny_wep_ao_grenades", 0 )==1
+			flip = p:GetInfoNum( "benny_wep_ao_grenades", 0 )==1
 		else
-			return p:GetInfoNum( "benny_wep_ao_junk", 0 )==1
+			flip = p:GetInfoNum( "benny_wep_ao_junk", 0 )==1
 		end
 	else
-		return false
+		--return false
 	end
+	return ((flip and !hand) or (!flip and hand))
 end
 
 function SWEP:C_AttackDown( hand )
-	if self:C_DualCheck() then hand = !hand end
+	if self:hFlipHand() then hand = !hand end
 	return (hand == true) and self:GetOwner():KeyDown( IN_ATTACK2 ) or (hand == false) and self:GetOwner():KeyDown( IN_ATTACK )
 end
 

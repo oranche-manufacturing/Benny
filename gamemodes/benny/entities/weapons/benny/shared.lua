@@ -107,13 +107,12 @@ hook.Add( "PlayerButtonDown", "Benny_PlayerButtonDown_TempForAim", function( ply
 			end
 		end
 
-		local dual = wep:C_DualCheck()
 		if button == KEY_R then
-			if dual then wep:Reload( true ) else wep:Reload( false ) end
+			wep:Reload( wep:hFlipHand( false ) )
 		end
 
 		if button == KEY_T then
-			if dual then wep:Reload( false ) else wep:Reload( true ) end
+			wep:Reload( wep:hFlipHand( true ) )
 		end
 	end
 end)

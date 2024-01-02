@@ -1,77 +1,34 @@
 
 
 function SWEP:PrimaryAttack()
-	local dual = self:C_DualCheck()
-	if dual then
-		self:BFire( true )
-	else
-		self:BFire( false )
-	end
+	local hand = self:hFlipHand( false )
+	self:DevFire( hand )
 	return true
 end
 
 function SWEP:SecondaryAttack()
-	local dual = self:C_DualCheck()
-	if dual then
-		self:BFire( false )
-	else
-		self:BFire( true )
-	end
+	local hand = self:hFlipHand( true )
+	self:DevFire( hand )
 	return true
 end
 
+function SWEP:DevFire( hand )
+	if self:bWepClass( hand ) then
+		self:BFire( hand )
+	elseif self:bWepClass( !hand ) then
+		self:BFireAlt( !hand )
+	end
+end
+
 function SWEP:BFire( hand )
-	if self:bWepTable( hand ) and self:GetAim() == 1 then
-		local p = self:GetOwner()
-		local wep_table = self:bWepTable( hand )
-		local wep_class = self:bWepClass( hand )
+	if self:bWepClass( hand ) and self:bWepClass( hand ).Func_Attack then
+		if self:bWepClass( hand ).Func_Attack( self, hand ) then return end
+	end
+end
 
-		if wep_class.Custom_Fire then
-			if wep_class.Custom_Fire( self, wep_table, wep_class, hand ) then return end
-		end
-		if self:bGetIntDelay( hand ) > CurTime() then
-			return
-		end
-		if self:bGetHolsterTime( hand ) > 0 then
-			return
-		end
-		if self:bGetIntClip( hand ) == 0 then
-			if self:bGetBurst( hand ) >= 1 then
-				return
-			end
-			B_Sound( self, wep_class.Sound_DryFire )
-			self:bSetBurst( hand, self:bGetBurst( hand ) + 1 )
-			return
-		end
-		if self:bGetBurst( hand ) >= self:B_Firemode( hand ).Mode then
-			return
-		end
-		
-		if !ConVarSV_Bool("cheat_infiniteammo") then
-			self:B_Ammo( hand, self:bGetIntClip( hand ) - 1 )
-		end
-
-		B_Sound( self, wep_class.Sound_Fire )
-		self:TPFire( hand )
-		self:CallFire( hand )
-
-		self:bSetIntDelay( hand, CurTime() + wep_class.Delay )
-		self:bSetBurst( hand, self:bGetBurst( hand ) + 1 )
-		self:bSetSpread( hand, math.Clamp( self:bGetSpread( hand ) + wep_class.SpreadAdd, 0, wep_class.SpreadAddMax ) )
-		self:bSetShotTime( hand, CurTime() )
-
-		
-		if CLIENT and IsFirstTimePredicted() then
-			-- PROTO: This is shit! Replace it with a function that gets the right model.
-			if IsValid(hand and self.CWM_Left or self.CWM) and (hand and self.CWM_Left or self.CWM):GetAttachment( 1 ) then
-				local vStart = (hand and self.CWM_Left or self.CWM):GetAttachment( 1 ).Pos
-				local ed = EffectData()
-				ed:SetOrigin( vStart )
-				ed:SetEntity( self )
-				ed:SetAttachment( (hand and 16 or 0) + 1 )
-				util.Effect( "benny_muzzleflash", ed )
-			end
-		end
+function SWEP:BFireAlt( hand )
+	if self:bWepClass( hand ) and self:bWepClass( hand ).Func_AttackAlt then
+		if self:bWepClass( hand ).Func_AttackAlt( self, hand ) then return end
 	end
 end
 

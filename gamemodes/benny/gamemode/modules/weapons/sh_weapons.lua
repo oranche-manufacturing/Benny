@@ -20,6 +20,7 @@ do -- Sound definitions
 	AddSound( "Common.NoAmmo", "benny/weapons/noammo.ogg", 70, 100, 0.5, CHAN_STATIC )
 	AddSound( "Common.ReloadFail", "benny/hud/reloadfail.ogg", 70, 100, 0.1, CHAN_STATIC )
 
+-- Pistols
 	-- Deagle
 	AddSound( "Deagle.Cock", "benny/weapons/deagle/cock.ogg", 70, 100, 0.5, CHAN_STATIC )
 
@@ -41,6 +42,18 @@ do -- Sound definitions
 	}, 140, 100, 0.5, CHAN_STATIC )
 	AddSound( "Anaconda.MagOut", "benny/weapons/anaconda/magout.ogg", 70, 100, 0.5, CHAN_STATIC )
 	AddSound( "Anaconda.MagIn", "benny/weapons/anaconda/magin.ogg", 70, 100, 0.5, CHAN_STATIC )
+
+-- Rifles
+	-- FNC
+	AddSound( "FNC.Fire", {
+		"benny/weapons/fnc/01.ogg",
+		"benny/weapons/fnc/02.ogg",
+		"benny/weapons/fnc/03.ogg",
+	}, 140, 100, 0.5, CHAN_STATIC )
+	AddSound( "FNC.MagOut", "benny/weapons/fnc/magout.ogg", 70, 100, 0.5, CHAN_STATIC )
+	AddSound( "FNC.MagIn", "benny/weapons/fnc/magin.ogg", 70, 100, 0.5, CHAN_STATIC )
+	AddSound( "FNC.Cock", "benny/weapons/fnc/cock.ogg", 70, 100, 0.5, CHAN_STATIC )
+
 
 end
 
@@ -64,7 +77,7 @@ do -- Bases
 		Func_Attack = function( self, hand )
 		end,
 
-		Func_Attack2 = function( self, hand )
+		Func_AttackAlt = function( self, hand )
 		end,
 
 		Func_Reload = function( self, hand )
@@ -116,6 +129,100 @@ do -- Bases
 		Reload_MagIn_Bonus2 = 0.56+0.1,
 
 		Func_Attack = function( self, hand )
+			if self:GetAim() == 1 then
+				local p = self:GetOwner()
+				local wep_table = self:bWepTable( hand )
+				local wep_class = self:bWepClass( hand )
+				if self:bGetIntDelay( hand ) > CurTime() then
+					return
+				end
+				if self:bGetHolsterTime( hand ) > 0 then
+					return
+				end
+				if self:bGetIntClip( hand ) == 0 then
+					if self:bGetBurst( hand ) >= 1 then
+						return
+					end
+					B_Sound( self, wep_class.Sound_DryFire )
+					self:bSetBurst( hand, self:bGetBurst( hand ) + 1 )
+					return
+				end
+				if self:bGetBurst( hand ) >= self:B_Firemode( hand ).Mode then
+					return
+				end
+				
+				if !ConVarSV_Bool("cheat_infiniteammo") then
+					self:B_Ammo( hand, self:bGetIntClip( hand ) - 1 )
+				end
+		
+				B_Sound( self, wep_class.Sound_Fire )
+				self:TPFire( hand )
+				self:CallFire( hand )
+		
+				self:bSetIntDelay( hand, CurTime() + wep_class.Delay )
+				self:bSetBurst( hand, self:bGetBurst( hand ) + 1 )
+				self:bSetSpread( hand, math.Clamp( self:bGetSpread( hand ) + wep_class.SpreadAdd, 0, wep_class.SpreadAddMax ) )
+				self:bSetShotTime( hand, CurTime() )
+		
+				
+				if CLIENT and IsFirstTimePredicted() then
+					-- PROTO: This is shit! Replace it with a function that gets the right model.
+					if IsValid(hand and self.CWM_Left or self.CWM) and (hand and self.CWM_Left or self.CWM):GetAttachment( 1 ) then
+						local vStart = (hand and self.CWM_Left or self.CWM):GetAttachment( 1 ).Pos
+						local ed = EffectData()
+						ed:SetOrigin( vStart )
+						ed:SetEntity( self )
+						ed:SetAttachment( (hand and 16 or 0) + 1 )
+						util.Effect( "benny_muzzleflash", ed )
+					end
+				end
+			end
+		end,
+
+		Func_AttackAlt = function( self, hand )
+			if self:bGetIntDelay( hand ) > CurTime() then
+				return
+			end
+			self:bSetIntDelay( hand, CurTime() + 0.45 )
+
+			self:TPCustom( ACT_HL2MP_GESTURE_RANGE_ATTACK_MELEE2, 0.36 )
+
+			local p = self:GetOwner()
+
+			local tr = {
+				start = p:EyePos(),
+				endpos = p:EyePos() + p:EyeAngles():Forward()*64,
+				mins = Vector( -8, -8, -8 ),
+				maxs = Vector( 8, 8, 8 ),
+				filter = p,
+				collisiongroup = COLLISION_GROUP_PLAYER,
+			}
+			-- debugoverlay.SweptBox( tr.start, tr.endpos, tr.mins, tr.maxs, angle_zero, 3, Color( 255, 255, 255, 0 ))
+
+			if p:IsPlayer() then p:LagCompensation( true ) end
+			tr = util.TraceHull(tr)
+			if p:IsPlayer() then p:LagCompensation( false ) end
+
+			if tr.HitWorld then
+				self:EmitSound( "physics/concrete/concrete_block_impact_hard1.wav", 70, 150 + util.SharedRandom( "Benny_RifleMelee", -20, 20 ), 0.25 )
+			elseif tr.Entity and tr.Entity != NULL then
+				self:EmitSound( "benny/violence/bodysplat_mix.ogg", 70, 100 + util.SharedRandom( "Benny_RifleMelee", -10, 10 ), 0.25 )
+
+				if SERVER then
+					local dmginfo = DamageInfo()
+					dmginfo:SetAttacker( p )
+					dmginfo:SetInflictor( self )
+					dmginfo:SetDamage( 34 )
+					
+					dmginfo:SetDamagePosition( tr.HitPos )
+					dmginfo:SetDamageForce( tr.Normal*100*34 )
+
+					tr.Entity:TakeDamageInfo( dmginfo )
+				end
+				
+			else
+				self:EmitSound( "weapons/slam/throw.wav", 70, 200 + util.SharedRandom( "Benny_RifleMelee", -20, 20 ), 0.25 )
+			end
 		end,
 	})
 
@@ -176,6 +283,7 @@ do -- Bases
 end
 
 do -- Pistols
+
 	ItemDef("deagle", {
 		Name = "DEAGLE",
 		Description = "Autoloading .50 caliber pistol.",
@@ -251,6 +359,52 @@ do -- Pistols
 		Reload_MagIn_Bonus2 = 0.8+0.08,
 
 		Speed_Move = 1,
+		Speed_Aiming = 0.95,
+		Speed_Reloading = 0.95,
+		Speed_Firing = 0.95,
+	})
+
+end
+
+do -- Rifles
+
+	ItemDef("fnc", {
+		Name = "FNC PARA",
+		Description = "Run of the mill automatic assault rifle.",
+		Base = "base_firearm",
+		Category = "rifle",
+
+		Icon = Material( "benny/weapons/fnc.png", "smooth" ),
+		WModel = "models/weapons/w_rif_ar556.mdl",
+		HoldType = "rpg",
+		GestureFire = { ACT_HL2MP_GESTURE_RANGE_ATTACK_PISTOL, 0.3 },
+
+		Sound_Fire = "FNC.Fire",
+		Sound_DryFire = "Common.Dryfire.Rifle",
+		Sound_MagOut = "FNC.MagOut",
+		Sound_MagIn = "FNC.MagIn",
+		Sound_Cock = "FNC.Cock",
+
+		--
+		AmmoStd = 30,
+		AutoGenMag = true,
+		Delay = (60/700),
+		Firemodes = FIREMODE_AUTOSEMI,
+		Damage = 30,
+		Spread = 30/60,
+		SpreadAdd = 22/60,
+		SpreadAddMax = 10,
+		
+		SpreadDecay_Start = 0,
+		SpreadDecay_End = 12,
+		SpreadDecay_RampTime = 0.2,
+
+		Reload_MagOut = 0.3,
+		Reload_MagIn = 1.3,
+		Reload_MagIn_Bonus1 = 0.8,
+		Reload_MagIn_Bonus2 = 0.8+0.1,
+
+		Speed_Move = 0.95,
 		Speed_Aiming = 0.95,
 		Speed_Reloading = 0.95,
 		Speed_Firing = 0.95,
