@@ -657,7 +657,7 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 					gap = gap * wep:BSpread( hand )
 				end
 
-				local meow = wep:C_DualCheck()
+				local meow = wep:hFlipHand()
 				
 				for i=1, 2 do
 					local cooler = i == 1 and touse2 or (hand!=meow and touse1_primary or touse1)
@@ -713,7 +713,7 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 		local iflip = table.Flip( p:INV_Get())
 
 		local b_w = 48
-		local b_h = 22
+		local b_h = 15
 
 		local b_x, b_y = sw - Wb, sh - Hb - ss(b_h)
 
@@ -744,7 +744,11 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 			surface.DrawRect( b_x + bump, b_y, boxsize, ss(b_h) )
 			draw.SimpleText( class.Name, "Benny_8", b_x + bump + boxsize/2, b_y + ss(4), scheme[active and "bg" or "fg"], TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP )
 			if active then
-				draw.SimpleText( active_r and "RIGHT" or active_l and "LEFT", "Benny_10", b_x + bump + boxsize/2, b_y + ss(10), scheme["bg"], TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP )
+				if active_r then
+					draw.SimpleText( "R", "Benny_10", b_x + bump + boxsize - ss(2), b_y + ss(b_h) - ss(9), scheme["bg"], TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP )
+				elseif active_l then
+					draw.SimpleText( "L", "Benny_10", b_x + bump + ss(2), b_y + ss(b_h) - ss(9), scheme["bg"], TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP )
+				end
 			end
 			if class.Features == "firearm" or class.Features == "grenade" then
 				invid = invid + 1
