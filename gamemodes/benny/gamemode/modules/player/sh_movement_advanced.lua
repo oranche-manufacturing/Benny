@@ -38,6 +38,18 @@ local MAXVAULTHEIGHT = 64
 local MAXVAULTHEIGHT_FUCKERY = MAXVAULTHEIGHT+1
 local MAXVAULTHEIGHT_V = Vector( 0, 0, MAXVAULTHEIGHT_FUCKERY )
 
+if CLIENT then
+hook.Add( "CreateMove", "Benny_ADV_CreateMove", function( cmd )
+	local ply = LocalPlayer()
+	if ply:KeyDown( IN_SPEED ) then
+		cmd:AddKey( IN_ALT1 )
+	end
+end)
+end
+
+hook.Add( "StartCommand", "Benny_StartCommand", function( ply, cmd )
+end)
+
 hook.Add( "Move", "Benny_Move", function( ply, mv )
 	local ang = mv:GetMoveAngles()
 	local pos = mv:GetOrigin()
@@ -166,5 +178,38 @@ hook.Add( "Move", "Benny_Move", function( ply, mv )
 		mv:SetMaxSpeed( targetspeed )
 		mv:SetMaxClientSpeed( targetspeed )
 	end
+
+	if ply:GetJumpBoost() == 0 then
+		if mv:KeyDown( IN_ALT1 ) then
+			local dig = Vector( mv:GetForwardSpeed()+0.01, mv:GetSideSpeed(), 0 ):GetNormalized()
+			local dug = Angle( 0, ply:EyeAngles().y, 0 )
+			ply:SetGroundEntity( NULL )
+			local upspeed = 100
+			local movespeed = 200
+			local pitch = ply:EyeAngles().p
+			if pitch < -15 then
+				upspeed = 250
+				movespeed = 320
+			elseif pitch < 15 then
+				upspeed = 150
+				movespeed = 260
+			end
+			dig:Mul( movespeed )
+			mv:SetVelocity( dug:Forward()*dig.x + dug:Right()*dig.y + (vector_up*upspeed) )
+			ply:AddFlags( FL_ANIMDUCKING )
+			ply:SetJumpBoost( 1 )
+			if CLIENT and IsFirstTimePredicted() then
+				ply:EmitSound( "weapons/slam/throw.wav", 70, 200, 0.5 )
+			end
+		end
+	elseif ply:OnGround() then
+		if mv:KeyDown( IN_ALT1 ) then
+			ply:SetJumpBoost( -1 )
+		else
+			ply:SetJumpBoost( 0 )
+		end
+		ply:RemoveFlags( FL_ANIMDUCKING )
+	end
+
 	--debugoverlay.Box( Target+(TargetNor*16), ba, bb, 0, CR )
 end)

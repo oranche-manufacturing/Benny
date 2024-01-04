@@ -246,7 +246,7 @@ local lonk = {
 		Spacer = true,
 	},
 	{
-		Glyph = "SPACE",
+		Glyph = "SHIFT",
 		Text1 = "STUNT",
 		Text2 = "Do a barrel roll",
 	},
@@ -306,8 +306,8 @@ item_selected = item_selected or 1
 
 hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 	local sw, sh = ScrW(), ScrH()
-	local Wb = ss(20)
-	local Hb = ss(20)
+	local Wb = sh*0.05--ss(20)
+	local Hb = sh*0.05--ss(20)
 
 	-- Wb = (sh*(4/3))
 	-- Wb = (sw-Wb)/2

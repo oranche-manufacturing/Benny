@@ -1,12 +1,12 @@
 
 -- Movement
 
-local wa, wb = 0, 0
-
 local blop = Angle()
-local lastmoveangle = 0
-local lastmoveangle_lerp
-TPSOverride = TPSOverride or Angle()
+if CLIENT then
+	lastmoveangle = lastmoveangle or 0
+	lastmoveangle_lerp = lastmoveangle_lerp or nil
+	TPSOverride = TPSOverride or Angle()
+end
 
 hook.Add( "PlayerNoClip", "Benny_PlayerNoClip", function( ply, desiredNoClipState )
 	if CLIENT then
@@ -28,7 +28,7 @@ hook.Add( "InputMouseApply", "Benny_InputMouseApply", function( cmd, x, y, ang )
 	if w and w:bWepClass( true ) and w:bWepClass( true ).Custom_DisableSpecialMovement and w:bWepClass( true ).Custom_DisableSpecialMovement( w ) then cdis = true end
 	if GetConVar("benny_cam_override"):GetString() != "" then cdis = true end
 	if p:NoclippingAndNotVaulting() then cdis = true end
-	if w and !cdis then
+	if w and !cdis and (y!=0 or x!=0) then
 		TPSOverride:Add( Angle( y*0.022, -x*0.022, 0 ) )
 		return true
 	end
@@ -49,8 +49,6 @@ hook.Add( "CreateMove", "Benny_CreateMove", function( cmd )
 		if lx != 0 or ly != 0 then
 			x, y = ly * -320, lx * 320
 		end
-
-		wa, wb = x, y
 
 		local ad = Vector( x, y, 0 )
 
