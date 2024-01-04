@@ -22,6 +22,10 @@ PLAYER.TeammateNoCollide	= true
 PLAYER.AvoidPlayers			= true
 PLAYER.UseVMHands			= true
 
+function PLAYER:Init()
+	self.Player:AddEFlags( EFL_NO_DAMAGE_FORCES )
+end
+
 function PLAYER:SetupDataTables()
 	self.Player:NetworkVar( "Bool",			0,		"Shoulder" )
 	

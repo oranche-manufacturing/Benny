@@ -226,35 +226,81 @@ do -- Bases
 		end,
 	})
 
+	local q1, q2 = Vector( -1, -1, -1 ), Vector( 1, 1, 1 )
 	ItemDef("base_melee", {
 		Name = "Base Melee",
-		Category = "base",
+		Category = "melee",
 		Base = "base",
 		Description = "Base for melee weapons",
-		Features = "firearm",
+		Features = "melee",
 
-		WModel = "models/weapons/w_pistol.mdl",
-		HoldType = "pistol",
+		WModel = "models/weapons/w_crowbar.mdl",
+		HoldType = "melee",
 
-		-- Firearm specific
-		Firemodes = {
-			{
-				Mode = 1,
-			},
-		},
-
-		Damage = 0,
-		Delay = 60/600,
-
-		Spread = 0,
-		SpreadAdd = 0,
-		SpreadAddMax = 1,
-		
-		SpreadDecay_Start = 1,
-		SpreadDecay_End = 2,
-		SpreadDecay_RampTime = 1,
+		Damage = 34,
+		Force = 100,
+		Delay = 0.45,
+		Range = 64,
+		HullSize = 2,
 
 		Func_Attack = function( self, hand )
+			if self:bGetIntDelay( hand ) > CurTime() then
+				return
+			end
+			local wep_table = self:bWepTable( hand )
+			local wep_class = self:bWepClass( hand )
+			self:bSetIntDelay( hand, CurTime() + wep_class.Delay )
+
+			self:TPCustom( wep_class.GestureFire[1], wep_class.GestureFire[2] )
+
+			local p = self:GetOwner()
+
+			q1[1] = -wep_class.HullSize
+			q1[2] = -wep_class.HullSize
+			q1[3] = -wep_class.HullSize
+			q2[1] = wep_class.HullSize
+			q2[2] = wep_class.HullSize
+			q2[3] = wep_class.HullSize
+			local range = p:EyeAngles():Forward()
+			range:Mul(wep_class.Range)
+			range:Add(p:EyePos())
+			local tr = {
+				start = p:EyePos(),
+				endpos = range,
+				mins = q1,
+				maxs = q2,
+				filter = p,
+				collisiongroup = COLLISION_GROUP_PLAYER,
+			}
+			-- debugoverlay.SweptBox( tr.start, tr.endpos, tr.mins, tr.maxs, angle_zero, 3, Color( 255, 255, 255, 0 ))
+
+			if p:IsPlayer() then p:LagCompensation( true ) end
+			tr = util.TraceHull(tr)
+			if p:IsPlayer() then p:LagCompensation( false ) end
+
+			if tr.HitWorld then
+				self:EmitSound( "physics/concrete/concrete_block_impact_hard1.wav", 70, 150 + util.SharedRandom( "Benny_RifleMelee", -20, 20 ), 0.25 )
+			elseif tr.Entity and tr.Entity != NULL then
+				self:EmitSound( "benny/violence/bodysplat_mix.ogg", 70, 100 + util.SharedRandom( "Benny_RifleMelee", -10, 10 ), 0.25 )
+
+				if SERVER then
+					local dmginfo = DamageInfo()
+					dmginfo:SetAttacker( p )
+					dmginfo:SetInflictor( self )
+					dmginfo:SetDamage( wep_class.Damage )
+					
+					dmginfo:SetDamagePosition( tr.HitPos )
+					dmginfo:SetDamageForce( tr.Normal*wep_class.Force*wep_class.Damage )
+
+					tr.Entity:TakeDamageInfo( dmginfo )
+				end
+				
+			else
+				self:EmitSound( "weapons/slam/throw.wav", 70, 200 + util.SharedRandom( "Benny_RifleMelee", -20, 20 ), 0.25 )
+			end
+		end,
+
+		Func_AttackAlt = function( self, hand )
 		end,
 	})
 
@@ -278,6 +324,110 @@ do -- Bases
 
 		WModel = "models/weapons/w_slam.mdl",
 		HoldType = "slam",
+	})
+
+end
+
+do -- Melee
+
+	ItemDef("bat", {
+		Name = "ALUMINUM BAT",
+		Description = "Bonk!",
+		Base = "base_melee",
+
+		MAdj = Vector( 3, -2, 3 ),
+		MAdjA = Angle( 0, 0, 180 ),
+		WModel = "models/benny/wep/melee_bat.mdl",
+		HoldType = "melee2",
+		GestureFire = { ACT_HL2MP_GESTURE_RANGE_ATTACK_MELEE2, 0.2 },
+		GestureDraw = { ACT_HL2MP_GESTURE_RELOAD_REVOLVER, 0.8 },
+
+		--
+		Damage = 34,
+		Force = 100,
+		Delay = 0.45,
+		Range = 72,
+		HullSize = 2,
+	})
+
+	ItemDef("bat_wood", {
+		Name = "BASEBALL BAT",
+		Description = "There's my ball!",
+		Base = "base_melee",
+
+		MAdj = Vector( 3, -2, 3 ),
+		MAdjA = Angle( 0, 0, 180 ),
+		WModel = "models/benny/wep/melee_bat.mdl",
+		HoldType = "melee2",
+		GestureFire = { ACT_HL2MP_GESTURE_RANGE_ATTACK_MELEE2, 0.2 },
+		GestureDraw = { ACT_HL2MP_GESTURE_RELOAD_REVOLVER, 0.8 },
+
+		--
+		Damage = 34,
+		Force = 100,
+		Delay = 0.5,
+		Range = 72,
+		HullSize = 2,
+	})
+
+	ItemDef("machete", {
+		Name = "MACHETE",
+		Description = "Chop chop!",
+		Base = "base_melee",
+
+		MAdj = Vector( 3, -2, 0 ),
+		MAdjA = Angle( 0, 0, 180 ),
+		WModel = "models/benny/wep/melee_machete.mdl",
+		HoldType = "melee",
+		GestureFire = { ACT_HL2MP_GESTURE_RANGE_ATTACK_MELEE, 0.2 },
+		GestureDraw = { ACT_HL2MP_GESTURE_RELOAD_REVOLVER, 0.8 },
+
+		--
+		Damage = 34,
+		Force = 100,
+		Delay = 0.4,
+		Range = 64,
+		HullSize = 2,
+	})
+
+	ItemDef("kabar", {
+		Name = "KABAR",
+		Description = "Shank shank!",
+		Base = "base_melee",
+
+		MAdj = Vector( 3, -2, 0 ),
+		MAdjA = Angle( 0, 0, 180 ),
+		WModel = "models/benny/wep/melee_kabar.mdl",
+		HoldType = "knife",
+		GestureFire = { ACT_HL2MP_GESTURE_RANGE_ATTACK_MELEE2, 0.0 },
+		GestureDraw = { ACT_HL2MP_GESTURE_RELOAD_REVOLVER, 0.8 },
+
+		--
+		Damage = 34,
+		Force = 100,
+		Delay = 0.35,
+		Range = 48,
+		HullSize = 2,
+	})
+
+	ItemDef("baton", {
+		Name = "BATON",
+		Description = "Excessive force!",
+		Base = "base_melee",
+
+		MAdj = Vector( 3, -2, 0 ),
+		MAdjA = Angle( 0, 0, 180 ),
+		WModel = "models/benny/wep/melee_baton.mdl",
+		HoldType = "melee2",
+		GestureFire = { ACT_GMOD_GESTURE_MELEE_SHOVE_1HAND, 0.3 },
+		GestureDraw = { ACT_HL2MP_GESTURE_RELOAD_REVOLVER, 0.8 },
+
+		--
+		Damage = 34,
+		Force = 100,
+		Delay = 0.45,
+		Range = 64,
+		HullSize = 2,
 	})
 
 end

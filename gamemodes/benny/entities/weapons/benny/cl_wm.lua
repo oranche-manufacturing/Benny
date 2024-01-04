@@ -10,7 +10,34 @@ function SWEP:DrawWorldModel()
 			end
 			wm:SetModel( class.WModel )
 			wm:SetNoDraw( true )
-			wm:AddEffects( EF_BONEMERGE )
+			if class.MAdj then
+				if wm:IsEffectActive( EF_BONEMERGE ) then
+					wm:RemoveEffects( EF_BONEMERGE )
+				end
+				
+				-- Specify a good position
+				local offsetVec = class.MAdj
+				local offsetAng = class.MAdjA or angle_zero
+				
+				local boneid = p:LookupBone("ValveBiped.Bip01_R_Hand") -- Right Hand
+				if !boneid then return end
+
+				local matrix = p:GetBoneMatrix(boneid)
+				if !matrix then return end
+
+				local newPos, newAng = LocalToWorld(offsetVec, offsetAng, matrix:GetTranslation(), matrix:GetAngles())
+
+				wm:SetPos(newPos)
+				wm:SetAngles(newAng)
+
+				wm:SetupBones()
+			else
+				if !wm:IsEffectActive( EF_BONEMERGE ) then
+					wm:AddEffects( EF_BONEMERGE )
+				end
+				wm:SetPos(self:GetPos())
+				wm:SetAngles(self:GetAngles())
+			end
 			wm:SetParent( p )
 			if true or self:GetUserAim() then wm:DrawModel() end
 		else

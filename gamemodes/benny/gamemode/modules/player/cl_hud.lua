@@ -750,7 +750,7 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 					draw.SimpleText( "L", "Benny_10", b_x + bump + ss(2), b_y + ss(b_h) - ss(9), scheme["bg"], TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP )
 				end
 			end
-			if class.Features == "firearm" or class.Features == "grenade" then
+			if class.Features == "firearm" or class.Features == "grenade" or class.Features == "melee" then
 				invid = invid + 1
 				surface.SetDrawColor( scheme[active and "bg" or "fg"] )
 				surface.DrawOutlinedRect( b_x + bump + ss(1), b_y + ss(1), boxsize-ss(2), ss(b_h-2), ss(0.5) )
