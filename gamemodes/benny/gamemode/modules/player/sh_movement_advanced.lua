@@ -152,7 +152,7 @@ hook.Add( "Move", "Benny_Move", function( ply, mv )
 	local w = ply:BennyCheck()
 	local hand = false
 	if w and w:bWepClass( hand ) then
-		local targetspeed = ply:GetMaxSpeed()
+		local targetspeed = mv:GetMaxSpeed()
 
 		targetspeed = targetspeed * w:GetStat( hand, "Speed_Move" )
 
