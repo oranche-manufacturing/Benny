@@ -58,8 +58,12 @@ CONVARS_CL["wep_ao_junk"]				= { 0,			0,		1,		true,		true,	"Whether offhand junk
 
 CONVARS_CL["wep_toolgun"]				= { "",			nil,	nil,	true,		true,	"Toolgun tool." }
 
-CONVARS_CL["cam_override"]		= { "",			nil,	nil,	false,		true,	"Override camera" }
-CONVARS_CL["cam_unlock"]			= { 0,			0,		1,		false,		false,	"Unlock camera" }
+CONVARS_CL["cam_override"]				= { "",			nil,	nil,	false,		true,	"Override camera" }
+CONVARS_CL["cam_unlock"]				= { 0,			0,		1,		false,		false,	"Unlock camera" }
+
+
+CONVARS_CL["bind2_reload"]				= { KEY_R,		nil,	nil,	true,		true,	"Bind for Reload" }
+CONVARS_CL["bind2_reloada"]				= { KEY_T,		nil,	nil,	true,		true,	"Bind for ReloadAlt" }
 
 CONVARS_CL_GEN = {}
 for i, v in pairs( CONVARS_CL ) do 

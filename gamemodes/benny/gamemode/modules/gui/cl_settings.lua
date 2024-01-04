@@ -1,7 +1,7 @@
 
 -- Settings panel
 
--- 0 = checkbox, 1 = slider, 2 = string
+-- 0 = checkbox, 1 = slider, 2 = string, 3 = binder
 local conf = {
 	[1] = {
 		{ 0, "benny_hud_enable_health",		"Health",			},
@@ -17,6 +17,8 @@ local conf = {
 			{ 2, "Pressing Left Mouse will throw an offhand grenade." },
 		{ 0, "benny_wep_ao_junk",			"Junk Overrides Primary Attack" },
 			{ 2, "Pressing Left Mouse will throw offhand junk." },
+		{ 3, "benny_bind_reload",			"Reload" },
+		{ 3, "benny_bind_reloada",			"Reload Alt" },
 	},
 }
 
@@ -47,6 +49,20 @@ local function genpan( Base, Sect, Conf )
 			Butt:Dock(TOP)
 			Butt:DockMargin( 24, -5, 0, 0 )
 			Butt:SetText( v[2] )
+		elseif v[1] == 3 then
+			local Butt = Scroll:Add("DLabel")
+			Butt:Dock(TOP)
+			Butt:DockMargin( 48+5, 0, 0, 0 )
+			Butt:SetText( v[3] )
+
+			local Butt = Scroll:Add("DBinder")
+			Butt:Dock(TOP)
+			Butt:DockMargin( 48, 0, 48, 2 )
+			Butt:SetText( v[2] )
+			
+			function Butt:OnChange( num )
+				RunConsoleCommand( v[2], num )
+			end
 		end
 	end
 end

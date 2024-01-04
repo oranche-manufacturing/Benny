@@ -107,11 +107,11 @@ hook.Add( "PlayerButtonDown", "Benny_PlayerButtonDown_TempForAim", function( ply
 			end
 		end
 
-		if button == KEY_R then
+		if button == ply:GetInfoNum("benny_bind_reload", KEY_R) then
 			wep:Reload( wep:hFlipHand( false ) )
 		end
 
-		if button == KEY_T then
+		if button == ply:GetInfoNum("benny_bind_reloada", KEY_T) then
 			wep:Reload( wep:hFlipHand( true ) )
 		end
 	end
