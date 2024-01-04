@@ -427,7 +427,6 @@ function OpenSMenu()
 	
 	for ClassName, Class in pairs( WEAPONS ) do
 		if !createlist[Class.Category] then
-			print(Class, Class.Category)
 			createlist[Class.Category] = {}
 		end
 
