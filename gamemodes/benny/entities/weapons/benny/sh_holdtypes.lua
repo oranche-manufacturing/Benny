@@ -72,6 +72,11 @@ do
 			self.ActivityTranslate[ ACT_MP_JUMP ] = ACT_HL2MP_JUMP_SLAM
 		end
 
+		if ( t == "passive" ) then
+			self.ActivityTranslate[ ACT_MP_CROUCH_IDLE ] = ACT_HL2MP_IDLE_CROUCH_SLAM
+			self.ActivityTranslate[ ACT_MP_CROUCHWALK ] = ACT_HL2MP_WALK_CROUCH_SLAM
+		end
+
 		if ( t == "rpg" ) then
 			self.ActivityTranslate[ ACT_MP_CROUCH_IDLE ] = ACT_HL2MP_IDLE_CROUCH_AR2
 			self.ActivityTranslate[ ACT_MP_CROUCHWALK ] = ACT_HL2MP_WALK_CROUCH_AR2
