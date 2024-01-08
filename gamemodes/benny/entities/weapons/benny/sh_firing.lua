@@ -1,18 +1,16 @@
 
 
 function SWEP:PrimaryAttack()
-	local hand = self:hFlipHand( false )
-	self:DevFire( hand )
+	self:BFireLogic( self:hFlipHand( false ) )
 	return true
 end
 
 function SWEP:SecondaryAttack()
-	local hand = self:hFlipHand( true )
-	self:DevFire( hand )
+	self:BFireLogic( self:hFlipHand( true ) )
 	return true
 end
 
-function SWEP:DevFire( hand )
+function SWEP:BFireLogic( hand )
 	if self:bWepClass( hand ) then
 		self:BFire( hand )
 	elseif self:bWepClass( !hand ) then
