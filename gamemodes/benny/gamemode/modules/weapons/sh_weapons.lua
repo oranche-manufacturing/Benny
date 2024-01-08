@@ -43,6 +43,106 @@ do -- Sound definitions
 	AddSound( "Anaconda.MagOut", "benny/weapons/anaconda/magout.ogg", 70, 100, 0.5, CHAN_STATIC )
 	AddSound( "Anaconda.MagIn", "benny/weapons/anaconda/magin.ogg", 70, 100, 0.5, CHAN_STATIC )
 
+	-- 1911
+	AddSound( "1911.Fire", {
+		"benny/weapons/1911/01.ogg",
+		"benny/weapons/1911/02.ogg",
+		"benny/weapons/1911/03.ogg",
+	}, 140, 100, 0.5, CHAN_STATIC )
+	AddSound( "1911.MagOut", "benny/weapons/1911/magout.ogg", 70, 100, 0.5, CHAN_STATIC )
+	AddSound( "1911.MagIn", "benny/weapons/1911/magin.ogg", 70, 100, 0.5, CHAN_STATIC )
+
+	-- Nambu
+	AddSound( "Nambu.Fire", {
+		"benny/weapons/nambu/01.ogg",
+		"benny/weapons/nambu/02.ogg",
+		"benny/weapons/nambu/03.ogg",
+	}, 140, 100, 0.5, CHAN_STATIC )
+	AddSound( "Nambu.MagOut", "benny/weapons/nambu/magout.ogg", 70, 100, 0.5, CHAN_STATIC )
+	AddSound( "Nambu.MagIn", "benny/weapons/nambu/magin.ogg", 70, 100, 0.5, CHAN_STATIC )
+
+	-- USP
+	AddSound( "USP.Fire", {
+		"benny/weapons/usp/01.ogg",
+		"benny/weapons/usp/02.ogg",
+		"benny/weapons/usp/03.ogg",
+	}, 140, 100, 0.5, CHAN_STATIC )
+	AddSound( "USP.MagOut", "benny/weapons/usp/magout.ogg", 70, 100, 0.5, CHAN_STATIC )
+	AddSound( "USP.MagIn", "benny/weapons/usp/magin.ogg", 70, 100, 0.5, CHAN_STATIC )
+
+	-- M92
+	AddSound( "M92.Fire", {
+		"benny/weapons/m92/01.ogg",
+		"benny/weapons/m92/02.ogg",
+		"benny/weapons/m92/03.ogg",
+	}, 140, 100, 0.5, CHAN_STATIC )
+
+	-- P226
+	AddSound( "P226.Fire", {
+		"benny/weapons/p226/01.ogg",
+		"benny/weapons/p226/02.ogg",
+		"benny/weapons/p226/03.ogg",
+	}, 140, 100, 0.5, CHAN_STATIC )
+
+	-- M92
+	AddSound( "M92.MagOut", "benny/weapons/m92/magout.ogg", 70, 100, 0.5, CHAN_STATIC )
+	AddSound( "M92.MagIn", "benny/weapons/m92/magin.ogg", 70, 100, 0.5, CHAN_STATIC )
+
+	-- P226
+	AddSound( "P226.MagOut", "benny/weapons/p226/magout.ogg", 70, 100, 0.5, CHAN_STATIC )
+	AddSound( "P226.MagIn", "benny/weapons/p226/magin.ogg", 70, 100, 0.5, CHAN_STATIC )
+
+	-- CZ-75A
+
+
+-- SMGs
+	-- Bizon
+	AddSound( "Bizon.Fire", {
+		"benny/weapons/bizon/01.ogg",
+		"benny/weapons/bizon/02.ogg",
+		"benny/weapons/bizon/03.ogg",
+	}, 140, 100, 0.5, CHAN_STATIC )
+	AddSound( "Bizon.MagOut", "benny/weapons/bizon/magout.ogg", 70, 100, 0.5, CHAN_STATIC )
+	AddSound( "Bizon.MagIn", "benny/weapons/bizon/magin.ogg", 70, 100, 0.5, CHAN_STATIC )
+
+	-- MP5K
+	AddSound( "MP5K.Fire", {
+		"benny/weapons/mp5k/01.ogg",
+		"benny/weapons/mp5k/02.ogg",
+		"benny/weapons/mp5k/03.ogg",
+	}, 140, 100, 0.5, CHAN_STATIC )
+	AddSound( "MP5K.MagOut", "benny/weapons/mp5k/magout.ogg", 70, 100, 0.5, CHAN_STATIC )
+	AddSound( "MP5K.MagIn", "benny/weapons/mp5k/magin.ogg", 70, 100, 0.5, CHAN_STATIC )
+	AddSound( "MP5K.Cock", "benny/weapons/mp5k/cock.ogg", 70, 100, 0.5, CHAN_STATIC )
+
+	-- MAC11
+	AddSound( "MAC11.Fire", {
+		"benny/weapons/mac11/01.ogg",
+		"benny/weapons/mac11/02.ogg",
+		"benny/weapons/mac11/03.ogg",
+	}, 140, 100, 0.5, CHAN_STATIC )
+	AddSound( "MAC11.MagOut", "benny/weapons/mac11/magout.ogg", 70, 100, 0.5, CHAN_STATIC )
+	AddSound( "MAC11.MagIn", "benny/weapons/mac11/magin.ogg", 70, 100, 0.5, CHAN_STATIC )
+
+	-- MP7
+	AddSound( "MP7.Fire", {
+		"benny/weapons/mp7/01.ogg",
+		"benny/weapons/mp7/02.ogg",
+		"benny/weapons/mp7/03.ogg",
+	}, 140, 100, 0.5, CHAN_STATIC )
+	AddSound( "MP7.MagOut", "benny/weapons/mp7/magout.ogg", 70, 100, 0.5, CHAN_STATIC )
+	AddSound( "MP7.MagIn", "benny/weapons/mp7/magin.ogg", 70, 100, 0.5, CHAN_STATIC )
+
+	-- TMP
+	AddSound( "TMP.Fire", {
+		"benny/weapons/tmp/01.ogg",
+		"benny/weapons/tmp/02.ogg",
+		"benny/weapons/tmp/03.ogg",
+	}, 140, 100, 0.5, CHAN_STATIC )
+	AddSound( "TMP.MagOut", "benny/weapons/tmp/magout.ogg", 70, 100, 0.5, CHAN_STATIC )
+	AddSound( "TMP.MagIn", "benny/weapons/tmp/magin.ogg", 70, 100, 0.5, CHAN_STATIC )
+
+
 -- Rifles
 	-- FNC
 	AddSound( "FNC.Fire", {
@@ -53,6 +153,64 @@ do -- Sound definitions
 	AddSound( "FNC.MagOut", "benny/weapons/fnc/magout.ogg", 70, 100, 0.5, CHAN_STATIC )
 	AddSound( "FNC.MagIn", "benny/weapons/fnc/magin.ogg", 70, 100, 0.5, CHAN_STATIC )
 	AddSound( "FNC.Cock", "benny/weapons/fnc/cock.ogg", 70, 100, 0.5, CHAN_STATIC )
+
+	-- M16A2
+	AddSound( "M16A2.Fire", {
+		"benny/weapons/m16a2/01.ogg",
+		"benny/weapons/m16a2/02.ogg",
+		"benny/weapons/m16a2/03.ogg",
+	}, 140, 100, 0.5, CHAN_STATIC )
+	AddSound( "M16A2.MagOut", "benny/weapons/m16a2/magout.ogg", 70, 100, 0.5, CHAN_STATIC )
+	AddSound( "M16A2.MagIn", "benny/weapons/m16a2/magin.ogg", 70, 100, 0.5, CHAN_STATIC )
+	AddSound( "M16A2.Cock", "benny/weapons/m16a2/cock.ogg", 70, 100, 0.5, CHAN_STATIC )
+
+
+-- Shotguns
+	-- AA12
+	AddSound( "AA12.Fire", "benny/weapons/aa12/01.ogg", 140, 100, 0.5, CHAN_STATIC )
+	AddSound( "AA12.MagOut", "benny/weapons/aa12/magout.ogg", 70, 100, 0.5, CHAN_STATIC )
+	AddSound( "AA12.MagIn", "benny/weapons/aa12/magin.ogg", 70, 100, 0.5, CHAN_STATIC )
+
+	-- SPAS-12
+	AddSound( "SPAS12.Fire", {
+		"benny/weapons/spas12/01.ogg",
+		"benny/weapons/spas12/02.ogg",
+		"benny/weapons/spas12/03.ogg",
+	}, 140, 100, 0.5, CHAN_STATIC )
+	AddSound( "SPAS12.MagOut", {
+		"benny/weapons/spas12/magout-01.ogg",
+		"benny/weapons/spas12/magout-02.ogg",
+		"benny/weapons/spas12/magout-03.ogg",
+	}, 70, 100, 0.5, CHAN_STATIC )
+	AddSound( "SPAS12.MagIn", "benny/weapons/spas12/magin.ogg", 70, 100, 0.5, CHAN_STATIC )
+
+
+-- Machine Guns
+	-- QBB-LSW
+	AddSound( "QBBLSW.Fire", {
+		"benny/weapons/qbblsw/fire-01.ogg",
+		"benny/weapons/qbblsw/fire-02.ogg",
+		"benny/weapons/qbblsw/fire-03.ogg",
+	}, 140, 100, 0.5, CHAN_STATIC )
+
+	-- Stoner 63
+	AddSound( "Stoner63.Fire", {
+		"benny/weapons/stoner63/01.ogg",
+		"benny/weapons/stoner63/02.ogg",
+		"benny/weapons/stoner63/03.ogg",
+	}, 140, 100, 0.5, CHAN_STATIC )
+
+
+-- Snipers
+	-- Barrett .50
+	AddSound( "Barrett.Fire", {
+		"benny/weapons/barrett/fire-01.ogg",
+		"benny/weapons/barrett/fire-02.ogg",
+		"benny/weapons/barrett/fire-03.ogg",
+	}, 140, 100, 0.5, CHAN_STATIC )
+	AddSound( "Barrett.MagOut", "benny/weapons/barrett/magout.ogg", 70, 100, 0.5, CHAN_STATIC )
+	AddSound( "Barrett.MagIn", "benny/weapons/barrett/magin.ogg", 70, 100, 0.5, CHAN_STATIC )
+	AddSound( "Barrett.Cock", "benny/weapons/barrett/cock.ogg", 70, 100, 0.5, CHAN_STATIC )
 
 
 end
@@ -514,6 +672,92 @@ do -- Pistols
 		Speed_Firing = 0.95,
 	})
 
+	ItemDef("1911", {
+		Name = "COBRA .45",
+		Description = "Hits hard. They don't make them like they used to!",
+		Base = "base_firearm",
+		Category = "pistol",
+		
+		WModel = "models/weapons/w_colt.mdl",
+		HoldType = "revolver",
+		GestureFire = { ACT_HL2MP_GESTURE_RANGE_ATTACK_PISTOL, 0.2 },
+		GestureDraw = { ACT_HL2MP_GESTURE_RELOAD_REVOLVER, 0.8 },
+		
+		Sound_Fire = "1911.Fire",
+		Sound_DryFire = "Common.Dryfire.Pistol",
+		Sound_Reload = "1911.Reload",
+		Sound_MagOut = "1911.MagOut",
+		Sound_MagIn = "1911.MagIn",
+		Sound_Cock = "Glock.Cock",
+		
+		--
+		AmmoStd = 8,
+		AutoGenMag = true,
+		Delay = (60/300),
+		Firemodes = FIREMODE_SEMI,
+		Damage = 30,
+		Spread = 22/60,
+		SpreadAdd = 0.5,
+		SpreadAddMax = 15,
+		
+		SpreadDecay_Start = 3,
+		SpreadDecay_End = 11,
+		SpreadDecay_RampTime = 0.5,
+		
+		Reload_MagOut = 0.1,
+		Reload_MagIn = 0.75,
+		Reload_MagIn_Bonus1 = 0.4,
+		Reload_MagIn_Bonus2 = 0.4+0.15,
+		
+		Speed_Move = 1,
+		Speed_Aiming = 0.98,
+		Speed_Reloading = 1,
+		Speed_Firing = 1,
+	})
+	
+	ItemDef("mk23", {
+		Name = "MK. 23",
+		Description = "If it works for hardasses around the world, it'll work for you.",
+		Base = "base_firearm",
+		Category = "pistol",
+
+		Icon = Material( "benny/weapons/mk23.png", "smooth" ),
+		WModel = "models/weapons/w_pist_usp.mdl",
+		HoldType = "revolver",
+		GestureFire = { ACT_HL2MP_GESTURE_RANGE_ATTACK_PISTOL, 0.2 },
+		GestureDraw = { ACT_HL2MP_GESTURE_RELOAD_REVOLVER, 0.8 },
+
+		Sound_Fire = "USP.Fire",
+		Sound_DryFire = "Common.Dryfire.Pistol",
+		Sound_Reload = "USP.Reload",
+		Sound_MagOut = "USP.MagOut",
+		Sound_MagIn = "USP.MagIn",
+		Sound_Cock = "Glock.Cock",
+
+		--
+		AmmoStd = 12,
+		AutoGenMag = true,
+		Delay = (60/300),
+		Firemodes = FIREMODE_SEMI,
+		Damage = 32,
+		Spread = 15/60,
+		SpreadAdd = 0.4,
+		SpreadAddMax = 15,
+		
+		SpreadDecay_Start = 3,
+		SpreadDecay_End = 11,
+		SpreadDecay_RampTime = 0.5,
+
+		Reload_MagOut = 0.15,
+		Reload_MagIn = 0.85,
+		Reload_MagIn_Bonus1 = 0.5,
+		Reload_MagIn_Bonus2 = 0.5+0.12,
+
+		Speed_Move = 1,
+		Speed_Aiming = 0.98,
+		Speed_Reloading = 1,
+		Speed_Firing = 1,
+	})
 end
 
 do -- Rifles
