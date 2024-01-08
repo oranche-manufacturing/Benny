@@ -276,8 +276,10 @@ function OpenSMenu()
 			surface.SetDrawColor( schema("fg") )
 			surface.DrawRect( 0, 0, w, h )
 
-			local rang = WeaponGet( pan_active )
-			draw.SimpleText( rang.Name, "Benny_18", ss(2), ss(2), schema_c("bg") )
+			if pan_active then
+				local rang = WeaponGet( pan_active )
+				draw.SimpleText( rang.Name, "Benny_18", ss(2), ss(2), schema_c("bg") )
+			end
 			return true
 		end
 	end
@@ -292,16 +294,18 @@ function OpenSMenu()
 			surface.SetDrawColor( schema("fg") )
 			surface.DrawRect( 0, 0, w, h )
 
-			local rang = WeaponGet( pan_active )
-			local multiline = multlinetext( rang.Description, w-ss(2), "Benny_12" )
-			for i, v in ipairs( multiline ) do
-				local line = i-1
-				local height = ss( 14 + (#multiline-1)*12 )
-				if lastheight != height then
-					BAR_DESC:SetTall( height )
-					lastheight = height
+			if pan_active then
+				local rang = WeaponGet( pan_active )
+				local multiline = multlinetext( rang.Description, w-ss(2), "Benny_12" )
+				for i, v in ipairs( multiline ) do
+					local line = i-1
+					local height = ss( 14 + (#multiline-1)*12 )
+					if lastheight != height then
+						BAR_DESC:SetTall( height )
+						lastheight = height
+					end
+					draw.SimpleText( v, "Benny_12", ss(2), ss(2+12*line), schema_c("bg") )
 				end
-				draw.SimpleText( v, "Benny_12", ss(2), ss(2+12*line), schema_c("bg") )
 			end
 
 			return true
@@ -455,8 +459,12 @@ function OpenSMenu()
 			end
 
 			function button:DoRightClick()
-				RunConsoleCommand( "benny_debug_give", "mag_" .. New.ClassName )
-				chat.AddText( "Gave " .. WeaponGet("mag_"..New.ClassName).Name )
+				if ItemDef("mag_"..New.ClassName) then
+					RunConsoleCommand( "benny_debug_give", "mag_" .. New.ClassName )
+					chat.AddText( "Gave " .. ItemDef("mag_"..New.ClassName).Name )
+				else
+					chat.AddText( "That item doesn't exist. " .. "mag_"..New.ClassName )
+				end
 			end
 
 			function button:Think()

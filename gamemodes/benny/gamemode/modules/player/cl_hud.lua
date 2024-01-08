@@ -290,14 +290,12 @@ local col_1a = Color(100, 100, 255, 200)
 local col_2 = Color(0, 0, 0, 255)
 local col_3 = Color(255, 127, 127, 255)
 local col_4 = Color(255, 222, 222, 255)
-local heartbeatcol = Color(255, 255, 255, 255)
 local mat_dot = Material("benny/hud/xhair/dotx.png", "smooth")
 local mat_long = Material("benny/hud/xhair/long.png", "smooth")
 local mat_dot_s = Material("benny/hud/xhair/dot_s.png", "mips smooth")
 local mat_long_s = Material("benny/hud/xhair/long_s.png", "mips smooth")
 local spacer_long = 3 -- screenscaled
 local spacer = 1 -- screenscaled
-local gap = 0
 
 local trash_vec, trash_ang = Vector(), Angle()
 
@@ -343,8 +341,7 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 		surface.DrawOutlinedRect( b_x + b_s, b_y + b_s, ss(142-8), b_bh, ss( 0.5 ) )
 		surface.DrawRect( b_x + b_s + ss(1), b_y + b_s + ss(1), ss(142*hp-8-2), b_bh - ss(2) )
 
-		heartbeatcol.a = math.ease.OutQuint(1-ti)*255
-		surface.SetDrawColor( heartbeatcol )
+		surface.SetDrawColor( 255, 255, 255, math.ease.OutQuint(1-ti)*255 )
 		surface.SetMaterial( mat_grad )
 		surface.DrawTexturedRect( b_x + b_s + ss(1), b_y + b_s + ss(1), ss(142*hp*ti-8-2), b_bh - ss(2) )
 
@@ -603,7 +600,7 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 		cam.Start3D()
 			local lool = ( EyePos() + ( EyeAngles():Forward()*8192 ) + ( dispersion * EyeAngles():Up()*8192 ) ) :ToScreen()
 		cam.End3D()
-		gap = ( (ScrH()/2) - lool.y )
+		local gap = ( (ScrH()/2) - lool.y )
 
 		do
 			local tr1 = util.TraceLine({
