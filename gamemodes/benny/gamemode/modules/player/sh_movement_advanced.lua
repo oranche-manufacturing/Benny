@@ -183,20 +183,21 @@ hook.Add( "Move", "Benny_Move", function( ply, mv )
 		if mv:KeyDown( IN_ALT1 ) then
 			local dig = Vector( mv:GetForwardSpeed()+0.01, mv:GetSideSpeed(), 0 ):GetNormalized()
 			local dug = Angle( 0, ply:EyeAngles().y, 0 )
-			ply:SetGroundEntity( NULL )
-			local upspeed = 100
-			local movespeed = 200
+			local upspeed = 120
+			local movespeed = 230
 			local pitch = ply:EyeAngles().p
-			if pitch < -15 then
+			if pitch < -12 then
 				upspeed = 250
 				movespeed = 320
-			elseif pitch < 15 then
-				upspeed = 150
+			elseif pitch < 12 then
+				upspeed = 160
 				movespeed = 260
 			end
 			dig:Mul( movespeed )
+			if !ply:OnGround() then upspeed = mv:GetVelocity().z end
+			ply:SetGroundEntity( NULL )
 			mv:SetVelocity( dug:Forward()*dig.x + dug:Right()*dig.y + (vector_up*upspeed) )
-			ply:AddFlags( FL_ANIMDUCKING )
+			ply:AddVCDSequenceToGestureSlot( GESTURE_SLOT_JUMP, ply:SelectWeightedSequence( ACT_GMOD_GESTURE_RANGE_ZOMBIE_SPECIAL ), 0.6, true )
 			ply:SetJumpBoost( 1 )
 			if CLIENT and IsFirstTimePredicted() then
 				ply:EmitSound( "weapons/slam/throw.wav", 70, 200, 0.5 )
@@ -208,7 +209,6 @@ hook.Add( "Move", "Benny_Move", function( ply, mv )
 		else
 			ply:SetJumpBoost( 0 )
 		end
-		ply:RemoveFlags( FL_ANIMDUCKING )
 	end
 
 	--debugoverlay.Box( Target+(TargetNor*16), ba, bb, 0, CR )
