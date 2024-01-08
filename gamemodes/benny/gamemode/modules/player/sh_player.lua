@@ -86,6 +86,24 @@ local bgl = {
 		[12] = 0,
 		[13] = 0,
 	},
+	["mp_cia"] = {
+		[0] = Vector( 1, 1, 1 )
+	},
+	["mp_plasof"] = {
+		[0] = Vector( 1, 1, 1 )
+	},
+	["mp_militia"] = {
+		[0] = Vector( 1, 1, 1 )
+	},
+	["mp_natguard"] = {
+		[0] = Vector( 1, 1, 1 )
+	},
+	["mp_viper"] = {
+		[0] = Vector( 1, 1, 1 )
+	},
+	["mp_halo"] = {
+		[0] = Vector( 1, 1, 1 )
+	},
 }
 
 function PT:MakeCharacter()
