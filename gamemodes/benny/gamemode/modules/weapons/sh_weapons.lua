@@ -630,6 +630,48 @@ do -- Pistols
 		Speed_FiringTime = 0.5,
 	})
 
+	ItemDef("cz75a", {
+		Name = "CZ-75A",
+		Description = "Automatic pocket machine pistol!",
+		Base = "base_firearm",
+		Category = "pistol",
+
+		WModel = "models/weapons/w_pist_pmt.mdl",
+		HoldType = "revolver",
+		GestureFire = { ACT_HL2MP_GESTURE_RANGE_ATTACK_PISTOL, 0.25 },
+		GestureDraw = { ACT_HL2MP_GESTURE_RELOAD_REVOLVER, 0.8 },
+
+		Sound_Fire = "Glock.Fire",
+		Sound_DryFire = "Common.Dryfire.Pistol",
+		Sound_MagOut = "Glock.MagOut",
+		Sound_MagIn = "Glock.MagIn",
+		Sound_Cock = "Glock.Cock",
+
+		--
+		AmmoStd = 12,
+		AutoGenMag = true,
+		Delay = (60/1100),
+		Firemodes = FIREMODE_AUTOSEMI,
+		Damage = 22,
+		Spread = 60/60,
+		SpreadAdd = 0.8,
+		SpreadAddMax = 15,
+		
+		SpreadDecay_Start = 3,
+		SpreadDecay_End = 11,
+		SpreadDecay_RampTime = 0.5,
+
+		Reload_MagOut = 0.25,
+		Reload_MagIn = 1.1,
+		Reload_MagIn_Bonus1 = 0.8,
+		Reload_MagIn_Bonus2 = 0.8+0.08,
+
+		Speed_Move = 1,
+		Speed_Aiming = 0.95,
+		Speed_Reloading = 0.95,
+		Speed_Firing = 0.95,
+	})
+
 	ItemDef("glock", {
 		Name = "GLOCK-18",
 		Description = "Bullet storm. Lasts about a second or so, just like you!",
@@ -758,6 +800,319 @@ do -- Pistols
 		Speed_Reloading = 1,
 		Speed_Firing = 1,
 	})
+
+	ItemDef("nambu", {
+		Name = "NAMBU .38",
+		Description = "Eastern revolver that hits as hard as it costs.",
+		Base = "base_firearm",
+		Category = "pistol",
+
+		Icon = Material( "benny/weapons/mk23.png", "smooth" ),
+		WModel = "models/weapons/w_pist_derringer.mdl",
+		HoldType = "revolver",
+		GestureFire = { ACT_HL2MP_GESTURE_RANGE_ATTACK_REVOLVER, 0.3 },
+		GestureDraw = { ACT_HL2MP_GESTURE_RELOAD_REVOLVER, 0.8 },
+
+		Sound_Fire = "Nambu.Fire",
+		Sound_DryFire = "Common.Dryfire.Pistol",
+		Sound_MagOut = "Nambu.MagOut",
+		Sound_MagIn = "Nambu.MagIn",
+		Sound_Cock = "Glock.Cock",
+
+		--
+		AmmoStd = 6,
+		AutoGenMag = true,
+		Delay = (60/180),
+		Firemodes = FIREMODE_SEMI,
+		Damage = 36,
+		Spread = 30/60,
+		SpreadAdd = 1.5,
+		SpreadAddMax = 15,
+		
+		SpreadDecay_Start = 3,
+		SpreadDecay_End = 11,
+		SpreadDecay_RampTime = 0.5,
+
+		Reload_MagOut = 0.5,
+		Reload_MagIn = 0.5,
+		Reload_MagIn_Bonus1 = 0.2,
+		Reload_MagIn_Bonus2 = 0.2+0.1,
+
+		Speed_Move = 1,
+		Speed_Aiming = 1,
+		Speed_Reloading = 0.9,
+		Speed_Firing = 1,
+	})
+
+	ItemDef("anaconda", {
+		Name = "ANACONDA",
+		Description = "Precise and kicks like a mule.",
+		Base = "base_firearm",
+		Category = "pistol",
+
+		Icon = Material( "benny/weapons/mk23.png", "smooth" ),
+		WModel = "models/weapons/w_357.mdl",
+		HoldType = "revolver",
+		GestureFire = { ACT_HL2MP_GESTURE_RANGE_ATTACK_REVOLVER, 0.1 },
+		GestureDraw = { ACT_HL2MP_GESTURE_RELOAD_REVOLVER, 0.8 },
+
+		Sound_Fire = "Anaconda.Fire",
+		Sound_DryFire = "Common.Dryfire.Pistol",
+		Sound_MagOut = "Anaconda.MagOut",
+		Sound_MagIn = "Anaconda.MagIn",
+		Sound_Cock = "Glock.Cock",
+
+		--
+		AmmoStd = 6,
+		AutoGenMag = true,
+		Delay = (60/180),
+		Firemodes = FIREMODE_SEMI,
+		Damage = 55,
+		Spread = 30/60,
+		SpreadAdd = 6,
+		SpreadAddMax = 15,
+		
+		SpreadDecay_Start = 6,
+		SpreadDecay_End = 22,
+		SpreadDecay_RampTime = 0.65,
+
+		Reload_MagOut = 0.6,
+		Reload_MagIn = 0.6,
+		Reload_MagIn_Bonus1 = 0.18,
+		Reload_MagIn_Bonus2 = 0.18+0.08,
+
+		Speed_Move = 1.0,
+		Speed_Aiming = 0.95,
+		Speed_Reloading = 0.9,
+		Speed_Firing = 0.95,
+	})
+
+end
+
+do -- SMGs
+	
+	ItemDef("tmp", {
+		Name = "TMP",
+		Description = "Small, compact, and favored by private security.",
+		Base = "base_firearm",
+		Category = "smg",
+
+		WModel = "models/weapons/w_smg_tmp_us.mdl",
+		HoldType = "rpg",
+		GestureFire = { ACT_HL2MP_GESTURE_RANGE_ATTACK_PISTOL, 0.3 },
+
+		Sound_Fire = "TMP.Fire",
+		Sound_DryFire = "Common.Dryfire.Rifle",
+		Sound_Reload = "TMP.Reload",
+		Sound_MagOut = "TMP.MagOut",
+		Sound_MagIn = "TMP.MagIn",
+		Sound_Cock = "MP5K.Cock",
+
+		--
+		AmmoStd = 15,
+		AutoGenMag = true,
+		Delay = (60/650),
+		Firemodes = FIREMODE_AUTOSEMI,
+		Damage = 22,
+		Spread = 20/60,
+		SpreadAdd = 10/60,
+		SpreadAddMax = 10,
+
+		SpreadDecay_Start = 4,
+		SpreadDecay_End = 30,
+		SpreadDecay_RampTime = 0.4,
+
+		Speed_Move = 0.97,
+		Speed_Aiming = 0.97,
+		Speed_Reloading = 0.97,
+		Speed_Firing = 0.97,
+	})
+
+	ItemDef("mp7", {
+		Name = "MP7",
+		Description = "Small, pistol-sized, goes through kevlar like a knife.",
+		Base = "base_firearm",
+		Category = "smg",
+
+		WModel = "models/weapons/w_smg1.mdl",
+		HoldType = "rpg",
+		GestureFire = { ACT_HL2MP_GESTURE_RANGE_ATTACK_PISTOL, 0.3 },
+
+		Sound_Fire = "MP7.Fire",
+		Sound_DryFire = "Common.Dryfire.Rifle",
+		Sound_Reload = "MP7.Reload",
+		Sound_MagOut = "MP7.MagOut",
+		Sound_MagIn = "MP7.MagIn",
+		Sound_Cock = "MP5K.Cock",
+
+		--
+		AmmoStd = 20,
+		AutoGenMag = true,
+		Delay = (60/900),
+		Firemodes = FIREMODE_AUTOSEMI,
+		Damage = 19,
+		Spread = 20/60,
+		SpreadAdd = 20/60,
+		SpreadAddMax = 10,
+
+		SpreadDecay_Start = 2,
+		SpreadDecay_End = 30,
+		SpreadDecay_RampTime = 0.2,
+
+		Speed_Move = 0.97,
+		Speed_Aiming = 0.97,
+		Speed_Reloading = 0.97,
+		Speed_Firing = 0.97,
+	})
+
+	ItemDef("mp5k", {
+		Name = "MP5K",
+		Description = "Quality manufacturing, but a cumbersome reload.",
+		Base = "base_firearm",
+		Category = "smg",
+
+		WModel = "models/weapons/w_smg_mp5k.mdl",
+		HoldType = "rpg",
+		GestureFire = { ACT_HL2MP_GESTURE_RANGE_ATTACK_PISTOL, 0.3 },
+
+		Sound_Fire = "MP5K.Fire",
+		Sound_DryFire = "Common.Dryfire.Rifle",
+		Sound_Reload = "MP5K.Reload",
+		Sound_MagOut = "MP5K.MagOut",
+		Sound_MagIn = "MP5K.MagIn",
+		Sound_Cock = "MP5K.Cock",
+
+		--
+		AmmoStd = 15,
+		AutoGenMag = true,
+		Delay = (60/750),
+		Firemodes = FIREMODE_AUTOSEMI,
+		Damage = 22,
+		Spread = 20/60,
+		SpreadAdd = 10/60,
+		SpreadAddMax = 10,
+
+		SpreadDecay_Start = 3,
+		SpreadDecay_End = 30,
+		SpreadDecay_RampTime = 0.3,
+
+		Speed_Move = 0.97,
+		Speed_Aiming = 0.97,
+		Speed_Reloading = 0.97,
+		Speed_Firing = 0.97,
+	})
+
+	ItemDef("mac11", {
+		Name = "MAC-11",
+		Description = "More fit for combat in a phone booth.",
+		Base = "base_firearm",
+		Category = "smg",
+
+		WModel = "models/weapons/w_smg_mac10.mdl",
+		HoldType = "revolver",
+		GestureFire = { ACT_HL2MP_GESTURE_RANGE_ATTACK_PISTOL, 0.1 },
+
+		Sound_Fire = "MAC11.Fire",
+		Sound_DryFire = "Common.Dryfire.Rifle",
+		Sound_Reload = "MAC11.Reload",
+		Sound_MagOut = "MAC11.MagOut",
+		Sound_MagIn = "MAC11.MagIn",
+		Sound_Cock = "MP5K.Cock",
+
+		--
+		AmmoStd = 16,
+		AutoGenMag = true,
+		Delay = (60/1400),
+		Firemodes = FIREMODE_AUTOSEMI,
+		Damage = 19,
+		Spread = 60/60,
+		SpreadAdd = 30/60,
+		SpreadAddMax = 20,
+
+		SpreadDecay_Start = 10,
+		SpreadDecay_End = 30,
+		SpreadDecay_RampTime = 0.3,
+
+		Speed_Move = 0.97,
+		Speed_Aiming = 0.97,
+		Speed_Reloading = 0.97,
+		Speed_Firing = 0.97,
+	})
+
+	ItemDef("bizon", {
+		Name = "BIZON",
+		Description = "Unwieldy bullet storm.",
+		Base = "base_firearm",
+		Category = "smg",
+
+		WModel = "models/weapons/w_smg_bizon.mdl",
+		HoldType = "rpg",
+		GestureFire = { ACT_HL2MP_GESTURE_RANGE_ATTACK_REVOLVER, 0.34 },
+
+		Sound_Fire = "Bizon.Fire",
+		Sound_DryFire = "Common.Dryfire.Rifle",
+		Sound_Reload = "Bizon.Reload",
+		Sound_MagOut = "Bizon.MagOut",
+		Sound_MagIn = "Bizon.MagIn",
+		Sound_Cock = "MP5K.Cock",
+
+		--
+		AmmoStd = 40,
+		AutoGenMag = true,
+		Delay = (60/700),
+		Firemodes = FIREMODE_AUTOSEMI,
+		Damage = 20,
+		Spread = 40/60,
+		SpreadAdd = 10/60,
+		SpreadAddMax = 20,
+		
+		SpreadDecay_Start = 1,
+		SpreadDecay_End = 10,
+		SpreadDecay_RampTime = 0.6,
+
+		Speed_Move = 0.94,
+		Speed_Aiming = 0.94,
+		Speed_Reloading = 0.93,
+		Speed_Firing = 0.93,
+	})
+
+	ItemDef("chicom", {
+		Name = "QCW-CQB-21",
+		Description = "Subsonic bullpup SMG.",
+		Base = "base_firearm",
+		Category = "smg",
+
+		WModel = "models/weapons/w_rif_famas.mdl",
+		HoldType = "rpg",
+		GestureFire = { ACT_HL2MP_GESTURE_RANGE_ATTACK_REVOLVER, 0.34 },
+
+		Sound_Fire = "M92.Fire",
+		Sound_DryFire = "Common.Dryfire.Rifle",
+		Sound_Reload = "Bizon.Reload",
+		Sound_MagOut = "Bizon.MagOut",
+		Sound_MagIn = "Bizon.MagIn",
+		Sound_Cock = "MP5K.Cock",
+
+		--
+		AmmoStd = 36,
+		AutoGenMag = true,
+		Delay = (60/1050),
+		Firemodes = FIREMODE_AUTOSEMI,
+		Damage = 18,
+		Spread = 40/60,
+		SpreadAdd = 33/60,
+		SpreadAddMax = 20,
+		
+		SpreadDecay_Start = 4,
+		SpreadDecay_End = 30,
+		SpreadDecay_RampTime = 0.7,
+
+		Speed_Move = 0.95,
+		Speed_Aiming = 0.95,
+		Speed_Reloading = 0.94,
+		Speed_Firing = 0.94,
+	})
+	
 end
 
 do -- Rifles
