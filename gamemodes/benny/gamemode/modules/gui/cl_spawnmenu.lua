@@ -246,7 +246,7 @@ function OpenSMenu()
 	if IsValid( smenu ) then smenu:Remove() return end
 	local active = GetConVar("benny_hud_tempactive"):GetString()
 	smenu = vgui.Create("BFrame")
-	smenu:SetSize( ss(440), ss(360) )
+	smenu:SetSize( ss(350), ss(360) )
 	smenu:SetTitle("Developer Spawnmenu")
 	smenu:MakePopup()
 	smenu:SetKeyboardInputEnabled( false )
@@ -256,8 +256,10 @@ function OpenSMenu()
 	itemlist:Dock( FILL )
 	smenu:Center()
 
+	itemlist:GetVBar():SetWide( 0 )
+
 	local statlist = smenu:Add("DPanel")
-	statlist:SetWide( ss(440/2) )
+	statlist:SetWide( ss(220) )
 	statlist:Dock( RIGHT )
 	statlist:DockMargin( ss(2), 0, 0, 0 )
 	statlist:DockPadding( ss(2), ss(2), ss(2), ss(2) )
@@ -430,6 +432,7 @@ function OpenSMenu()
 	local createlist = {}
 	
 	for ClassName, Class in pairs( WEAPONS ) do
+		if rawget(Class, "Hide") then continue end
 		if !createlist[Class.Category] then
 			createlist[Class.Category] = {}
 		end
@@ -446,8 +449,8 @@ function OpenSMenu()
 		Collapse:DockPadding( ss(2), ss(2), ss(2), ss(2) )
 		for Mew, New in ipairs( v ) do
 			local button = Collapse:Add( "DButton" )
-			button:SetSize( ss(96), ss(20) )
-			button:DockMargin( 0, 0, 0, ss(2) )
+			button:SetSize( 0, ss(10) )
+			button:DockMargin( 0, 0, 0, ss(0) )
 
 			button.Text_Name = New.Class.Name
 			button.Text_Desc = New.Class.Description
@@ -474,11 +477,46 @@ function OpenSMenu()
 			end
 
 			function button:Paint( w, h )
-				surface.SetDrawColor( schema("fg") )
-				surface.DrawOutlinedRect( 0, 0, w, h, ss(1) )
-				
-				draw.SimpleText( self.Text_Name, "Benny_14", w/2, ss(2), schema_c("fg"), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP )
-				draw.SimpleText( self.Text_Desc, "Benny_8", w/2, ss(2+8), schema_c("fg"), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP )
+
+				local z = 0.5
+				if self:IsHovered() then
+
+					local nx, ny = 0, 0
+					for i=1, 9 do
+						-- PROTO: ...
+						if i==1 then
+							nx, ny = -1, -1
+						elseif i==2 then
+							nx, ny = 0, -1
+						elseif i==3 then
+							nx, ny = 1, -1
+						elseif i==4 then
+							nx, ny = -1, 0
+						elseif i==5 then
+							continue
+						elseif i==6 then
+							nx, ny = 1, 0
+						elseif i==7 then
+							nx, ny = -1, 1
+						elseif i==8 then
+							nx, ny = 0, 1
+						elseif i==9 then
+							nx, ny = 1, 1
+						end
+						nx, ny = ss(nx), ss(ny)
+						draw.SimpleText( self.Text_Name, "Benny_14", ss(2)+nx, ss(-1)+ny, schema_c("fg") )
+					end
+
+					draw.SimpleText( self.Text_Name, "Benny_14", ss(2), ss(-1), schema_c("bg") )
+				else
+					draw.SimpleText( self.Text_Name, "Benny_14", ss(2), ss(-1), schema_c("fg") )
+				end
+				--surface.SetDrawColor( schema("fg") )
+				--surface.DrawOutlinedRect( 0, 0, surface.GetTextSize(self.Text_Name)+ss(2+2), h )
+
+				--surface.SetDrawColor( schema("fg") )
+				--surface.DrawRect( ss(2), h-ss(1), surface.GetTextSize(self.Text_Name), ss(0.5) )
+				--draw.SimpleText( self.Text_Desc, "Benny_8", w/2, ss(2+8), schema_c("fg"), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP )
 				return true
 			end
 		end

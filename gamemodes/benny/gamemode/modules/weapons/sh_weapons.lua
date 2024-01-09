@@ -222,6 +222,7 @@ do -- Bases
 		Category = "base",
 		Type = "base",
 		Description = "Base of everything",
+		Hide = true,
 
 		WModel = "models/weapons/w_357.mdl",
 
@@ -257,6 +258,7 @@ do -- Bases
 		Base = "base",
 		Description = "Base for firearms",
 		Features = "firearm",
+		Hide = true,
 
 		WModel = "models/weapons/w_pistol.mdl",
 		HoldType = "pistol",
@@ -391,6 +393,7 @@ do -- Bases
 		Base = "base",
 		Description = "Base for melee weapons",
 		Features = "melee",
+		Hide = true,
 
 		WModel = "models/weapons/w_crowbar.mdl",
 		HoldType = "melee",
@@ -468,6 +471,7 @@ do -- Bases
 		Base = "base",
 		Description = "Base for grenades",
 		Features = "grenade",
+		Hide = true,
 
 		WModel = "models/weapons/w_grenade.mdl",
 		HoldType = "slam",
@@ -479,6 +483,7 @@ do -- Bases
 		Base = "base",
 		Description = "Base for magazines",
 		Features = "magazine",
+		Hide = true,
 
 		WModel = "models/weapons/w_slam.mdl",
 		HoldType = "slam",
@@ -1157,6 +1162,93 @@ do -- Rifles
 		Speed_Aiming = 0.95,
 		Speed_Reloading = 0.95,
 		Speed_Firing = 0.95,
+	})
+
+	ItemDef("qbz", {
+		Name = "QBZ-95",
+		Description = "Bullpup assault rifle. Low profile, great in close quarters.",
+		Base = "base_firearm",
+		Category = "rifle",
+
+		Icon = Material( "benny/weapons/fnc.png", "smooth" ),
+		WModel = "models/weapons/w_rif_bakm.mdl",
+		HoldType = "rpg",
+		GestureFire = { ACT_HL2MP_GESTURE_RANGE_ATTACK_PISTOL, 0.3 },
+
+		Sound_Fire = "QBBLSW.Fire",
+		Sound_DryFire = "Common.Dryfire.Rifle",
+		Sound_MagOut = "FNC.MagOut",
+		Sound_MagIn = "FNC.MagIn",
+		Sound_Cock = "FNC.Cock",
+
+		--
+		AmmoStd = 30,
+		AutoGenMag = true,
+		Delay = (60/800),
+		Firemodes = FIREMODE_AUTOSEMI,
+		Damage = 28,
+		Spread = 45/60,
+		SpreadAdd = 35/60,
+		SpreadAddMax = 10,
+		
+		SpreadDecay_Start = 12,
+		SpreadDecay_End = 36,
+		SpreadDecay_RampTime = 0.6,
+
+		Reload_MagOut = 0.4,
+		Reload_MagIn = 1.5,
+		Reload_MagIn_Bonus1 = 0.8,
+		Reload_MagIn_Bonus2 = 0.8+0.1,
+
+		Speed_Move = 0.975,
+		Speed_Aiming = 0.975,
+		Speed_Reloading = 0.975,
+		Speed_Firing = 0.975,
+	})
+
+	ItemDef("m16a2", {
+		Name = "M16A2",
+		Description = "Burst-fire assault rifle. Precise and effective at range.",
+		Base = "base_firearm",
+		Category = "rifle",
+
+		Icon = Material( "benny/weapons/m16a2.png", "smooth" ),
+		WModel = "models/weapons/w_rif_m16a2.mdl",
+		HoldType = "rpg",
+		GestureFire = { ACT_HL2MP_GESTURE_RANGE_ATTACK_PISTOL, 0.3 },
+
+		Sound_Fire = "M16A2.Fire",
+		Sound_DryFire = "Common.Dryfire.Rifle",
+		Sound_MagOut = "M16A2.MagOut",
+		Sound_MagIn = "M16A2.MagIn",
+		Sound_Cock = "M16A2.Cock",
+
+		--
+		AmmoStd = 30,
+		AutoGenMag = true,
+		Delay = (60/700),
+		Firemodes = {
+			{ Mode = 3 },
+			{ Mode = 1 },
+		},
+		Damage = 32,
+		Spread = 22/60,
+		SpreadAdd = 11/60,
+		SpreadAddMax = 10,
+		
+		SpreadDecay_Start = 0,
+		SpreadDecay_End = 12,
+		SpreadDecay_RampTime = 0.3,
+
+		Reload_MagOut = 0.3,
+		Reload_MagIn = 1.3,
+		Reload_MagIn_Bonus1 = 0.6,
+		Reload_MagIn_Bonus2 = 0.6+0.1,
+
+		Speed_Move = 0.95,
+		Speed_Aiming = 0.9,
+		Speed_Reloading = 0.95,
+		Speed_Firing = 0.9,
 	})
 
 end
