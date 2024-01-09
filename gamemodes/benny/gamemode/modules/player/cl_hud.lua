@@ -7,6 +7,7 @@ local hide = {
 	["CHudAmmo"] = true,
 	["CHudSecondaryAmmo"] = true,
 	["CHudPoisonDamageIndicator"] = true,
+	["CHudDamageIndicator"] = true,
 	["CHudCrosshair"] = true,
 	["CHUDQuickInfo"] = true,
 	["CHudSuitPower"] = true,
