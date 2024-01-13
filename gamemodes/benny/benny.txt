@@ -2,7 +2,7 @@
 {
 	"base"		"base"
 	"title"		"Your Name Is Benny"
-	"maps"		"^benny_"
+	"maps"		"^b\-"
 	"category"	"other"
 	"menusystem"	"1"
 	"settings"
