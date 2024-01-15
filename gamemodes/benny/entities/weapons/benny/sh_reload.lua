@@ -8,6 +8,9 @@ function SWEP:Reload( hand )
 	local wep_table = self:bWepTable( hand )
 	local wep_class = self:bWepClass( hand )
 	if wep_table then
+		if self:bWepClass( hand ) and self:bWepClass( hand ).Func_Reload then
+			if self:bWepClass( hand ).Func_Reload( self, hand ) then return end
+		end
 		if wep_class.Custom_Reload then
 			if wep_class.Custom_Reload( self, wep_table ) then return end
 		end
