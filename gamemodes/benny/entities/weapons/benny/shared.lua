@@ -31,6 +31,8 @@ AddCSLuaFile( "sh_holdtypes.lua" )
 include		( "sh_holdtypes.lua" )
 AddCSLuaFile( "sh_reload.lua" )
 include		( "sh_reload.lua" )
+AddCSLuaFile( "sh_drop.lua" )
+include		( "sh_drop.lua" )
 
 AddCSLuaFile( "cl_wm.lua" )
 if CLIENT then
@@ -50,6 +52,7 @@ function SWEP:SetupDataTables()
 	self:NetworkVar( "Float", 9, "Wep2_Holstering" )
 	self:NetworkVar( "Float", 10, "Wep1_Reloading" )
 	self:NetworkVar( "Float", 11, "Wep2_Reloading" )
+	self:NetworkVar( "Float", 12, "JustThrew" )
 	self:NetworkVar( "String", 0, "Wep1" )
 	self:NetworkVar( "String", 1, "Wep2" )
 	self:NetworkVar( "String", 2, "Wep1_Clip" )
@@ -62,6 +65,7 @@ function SWEP:SetupDataTables()
 	self:NetworkVar( "Int", 5, "Wep2_ReloadType" )
 	self:NetworkVar( "Bool", 0, "UserAim" )
 	self:NetworkVar( "Bool", 1, "GrenadeDown" )
+	self:NetworkVar( "Bool", 2, "JustThrewHand" )
 
 	self:SetWep1_Firemode( 1 )
 	self:SetWep2_Firemode( 1 )
@@ -113,6 +117,14 @@ hook.Add( "PlayerButtonDown", "Benny_PlayerButtonDown_TempForAim", function( ply
 
 		if button == ply:GetInfoNum("benny_bind_reloada", KEY_T) then
 			wep:Reload( wep:hFlipHand( true ) )
+		end
+
+		if button == ply:GetInfoNum("benny_bind_drop", KEY_G) then
+			wep:Drop( wep:hFlipHand( false ) )
+		end
+
+		if button == ply:GetInfoNum("benny_bind_dropa", KEY_H) then
+			wep:Drop( wep:hFlipHand( true ) )
 		end
 	end
 end)
@@ -184,6 +196,8 @@ function SWEP:Think()
 			-- Just know, this feels bad.
 			if self:bGetReloadTime( hand ) > 0 then
 				-- hold
+			elseif self:GetJustThrew() > CurTime() then
+				-- hold
 			elseif self:bWepClass( hand ) and self:bGetShotTime( hand ) + self:GetStat( hand, "ShootHolsterTime" ) > CurTime() then
 				-- hold
 			else
@@ -206,6 +220,13 @@ function SWEP:Think()
 		end
 
 		self:BThinkHolster( hand )
+
+		if self:GetJustThrew() != 0 and self:GetJustThrew() <= CurTime() then
+			if SERVER then
+				InvDiscard( p, self:bGetInvID( self:GetJustThrewHand() ) )
+			end
+			self:SetJustThrew( 0 )
+		end
 
 		do -- Reload logic
 			if self:bGetReloadTime( hand ) != -1 then
@@ -250,7 +271,9 @@ function SWEP:Think()
 	if self:bWepClass( false ) and self:bGetHolsterTime( false ) < 0 then
 		ht = "passive"
 		if self:GetUserAim() then
-			if self:bWepClass( true ) then
+			if self:GetJustThrew() != 0 then
+				ht = "melee"
+			elseif self:bWepClass( true ) then
 				ht = "duel"
 			else
 				ht = self:GetStat( false, "HoldType" )

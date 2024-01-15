@@ -543,7 +543,7 @@ do -- Toolgun
 		end,
 		["summon_human"] = function( self, p, tr )
 			if SERVER then
-				local summon = ents.Create( "benny_npc_human" )
+				local summon = ents.Create( "b-npc_human" )
 				summon:SetPos( tr.HitPos + tr.HitNormal )
 				local ang = Angle( 0, p:EyeAngles().y+0, 0 )
 				summon:SetAngles( ang )

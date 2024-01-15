@@ -524,6 +524,11 @@ hook.Add( "HUDPaint", "Benny_HUDPaint", function()
 						draw.SimpleText( wep:B_FiremodeName( hand ), "Benny_12", p_x + pb + ss(14.5), p_y + pb + t_h + ss(8), scheme["bg"], TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER )
 						-- draw.SimpleText( "[AMMO TYPE]", "Benny_10", p_x + pb + ss(30+4), p_y + pb + t_h + ss(8), scheme["fg"], TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER )
 					end
+					if wep_table.Thrown then
+
+						draw.SimpleText( "X", "Benny_48", p_x+p_w/2, p_y+p_h/2 + ss(8), scheme["fg"], TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER )
+
+					end
 					if wep:bMagClass( hand ) then -- Ammo
 						local b_w, b_h = ss(3), ss(10)
 						local lw, lh = ss(2), ss(2)

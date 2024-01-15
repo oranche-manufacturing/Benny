@@ -59,42 +59,46 @@ if CLIENT then
 	end)
 end
 
-concommand.Add("benny_inv_discard", function( ply, cmd, args )
+function InvDiscard( ply, ID )
 	local inv = ply:INV_Get()
 	local wep = ply:GetActiveWeapon()
-	local item = inv[args[1]]
+	local item = inv[ID]
 	-- PROTO: Check that this is the correct 'benny' weapon.
 	assert( item, "That item doesn't exist. " .. tostring(item) )
 
-	inv[args[1]] = nil
+	inv[ID] = nil
 	net.Start( "benny_discardinvitem" )
-		net.WriteString( args[1] )
+		net.WriteString( ID )
 	net.Send( ply )
 
-	if wep:bGetInvID( false ) == args[1] then
-		print( "Disequipped " .. args[1] .. " for " .. tostring(wep) )
+	if wep:bGetInvID( false ) == ID then
+		print( "Disequipped " .. ID .. " for " .. tostring(wep) )
 		wep:SetWep1( "" )
 		wep:SetWep1_Clip( "" )
 		wep:SetClip1( 0 )
 	end
-	if wep:bGetInvID( true ) == args[1] then
-		print( "Disequipped " .. args[1] .. " for " .. tostring(wep) )
+	if wep:bGetInvID( true ) == ID then
+		print( "Disequipped " .. ID .. " for " .. tostring(wep) )
 		wep:SetWep2( "" )
 		wep:SetWep2_Clip( "" )
 		wep:SetClip2( 0 )
 	end
-	if wep:bGetMagInvID( false ) == args[1] then
-		print( "Unloaded " .. args[1] .. " for " .. tostring(wep) )
+	if wep:bGetMagInvID( false ) == ID then
+		print( "Unloaded " .. ID .. " for " .. tostring(wep) )
 		inv[wep:bGetInvID( false )].Loaded = ""
 		wep:SetWep1_Clip( "" )
 		wep:SetClip1( 0 )
 	end
-	if wep:bGetMagInvID( true ) == args[1] then
-		print( "Unloaded " .. args[1] .. " for " .. tostring(wep) )
+	if wep:bGetMagInvID( true ) == ID then
+		print( "Unloaded " .. ID .. " for " .. tostring(wep) )
 		inv[wep:bGetInvID( true )].Loaded = ""
 		wep:SetWep2_Clip( "" )
 		wep:SetClip2( 0 )
 	end
+end
+
+concommand.Add("benny_inv_discard", function( ply, cmd, args )
+	InvDiscard( ply, args[1] )
 end)
 
 hook.Add( "PlayerDeathSound", "Benny_PlayerDeathSound", function( ply )

@@ -1,2 +1,3 @@
 
-SWEP.Base = "b-item"
+ENT.Base = "b-item"
+

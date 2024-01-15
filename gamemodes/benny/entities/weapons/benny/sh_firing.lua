@@ -1,11 +1,13 @@
 
 
 function SWEP:PrimaryAttack()
+	if self:bWepTable( self:hFlipHand( false ) ) and self:bWepTable( self:hFlipHand( false ) ).Thrown then return true end
 	self:BFireLogic( self:hFlipHand( false ) )
 	return true
 end
 
 function SWEP:SecondaryAttack()
+	if self:bWepTable( self:hFlipHand( true ) ) and self:bWepTable( self:hFlipHand( true ) ).Thrown then return true end
 	self:BFireLogic( self:hFlipHand( true ) )
 	return true
 end

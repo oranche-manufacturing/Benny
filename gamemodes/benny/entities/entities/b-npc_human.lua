@@ -4,6 +4,8 @@ ENT.Base 			= "base_nextbot"
 ENT.Spawnable		= true
 ENT.BennyNPC		= true
 
+ENT.AutomaticFrameAdvance = true
+
 function ENT:Nick()
 	return "GEN#" .. self:EntIndex()
 end
@@ -343,11 +345,11 @@ function ENT:OnEntitySightLost( ent )
 	self.bSeeing[ent] = nil
 end
 
-local wide, tall = 12/2, 64
+local wide, tall = 16/2, 64
 local b1 = Vector( wide, wide, tall )
 local b2 = Vector( -wide, -wide, 0 )
 
-local wide, tall = 48/2, 96
+local wide, tall = 48/2, 80
 local s1 = Vector( wide, wide, tall )
 local s2 = Vector( -wide, -wide, 0 )
 
@@ -359,6 +361,13 @@ function ENT:Initialize()
 	self.loco:SetStepHeight( 22 )
 	self:SetShouldServerRagdoll( false )
 	self:SetFOV( 90 )
+
+	self:SetMaxHealth( 100 )
+	self:SetHealth( 100 )
+
+	self:SetCollisionGroup( COLLISION_GROUP_NPC )
+
+	if SERVER then self:PhysicsInitShadow( true, true ) end
 	
 	self:SetState("idle")
 
@@ -458,4 +467,8 @@ function ENT:Think()
 			end
 		end
 	net.SendPVS(self:GetPos())
+
+	self:NextThink( CurTime() )
+	if CLIENT then self:SetNextClientThink( CurTime() ) end
+	return true
 end
