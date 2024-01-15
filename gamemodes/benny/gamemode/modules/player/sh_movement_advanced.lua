@@ -183,16 +183,8 @@ hook.Add( "Move", "Benny_Move", function( ply, mv )
 		if mv:KeyDown( IN_ALT1 ) then
 			local dig = Vector( mv:GetForwardSpeed()+0.01, mv:GetSideSpeed(), 0 ):GetNormalized()
 			local dug = Angle( 0, ply:EyeAngles().y, 0 )
-			local upspeed = 120
-			local movespeed = 230
-			local pitch = ply:EyeAngles().p
-			if pitch < -12 then
-				upspeed = 250
-				movespeed = 320
-			elseif pitch < 12 then
-				upspeed = 160
-				movespeed = 260
-			end
+			local upspeed = 180
+			local movespeed = 250
 			dig:Mul( movespeed )
 			if !ply:OnGround() then upspeed = mv:GetVelocity().z end
 			ply:SetGroundEntity( NULL )
