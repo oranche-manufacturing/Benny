@@ -5,7 +5,7 @@ if SERVER then
 end
 
 function BENNY.CreateItem( classname )
-	local class = WeaponGet(classname)
+	local class = ItemDef(classname)
 
 	assert( class, "Invalid Class " .. tostring(classname) )
 
@@ -14,12 +14,14 @@ function BENNY.CreateItem( classname )
 		Acquisition = CurTime(),
 	}
 
-	if class.Features == "firearm" then
-		item.Loaded = ""
-	elseif class.Features == "magazine" then
-		item.Ammo = class.Ammo
-	end
-	
+	class.Init_Item( class, item )
+
+	--if class.Features == "firearm" then
+	--	item.Loaded = ""
+	--elseif class.Features == "magazine" then
+	--	item.Ammo = class.Ammo
+	--end
+	--
 	return item
 end
 

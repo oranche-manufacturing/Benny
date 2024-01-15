@@ -26,7 +26,7 @@ local function beatup( ply, num )
 	for _, item in pairs( weighted ) do
 		local class = WeaponGet(item.Class)
 		local id = iflip[item]
-		if class.Features == "firearm" or class.Features == "grenade" or class.Features == "melee" then
+		if class.Equipable or class.Features == "firearm" or class.Features == "grenade" or class.Features == "melee" then
 			invid = invid + 1
 			if num == 0 then num = 10 end
 			if num == invid then

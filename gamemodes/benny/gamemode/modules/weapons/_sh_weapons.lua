@@ -1,106 +1,6 @@
 
 do -- Toolgun
 
-	local ToolGunTools = {
-		["ammocrate"] = function( self, p, tr )
-			if SERVER then
-				local summon = ents.Create( "benny_equipment_ammo" )
-				summon:SetPos( tr.HitPos + tr.HitNormal )
-				summon:Spawn()
-			end
-		end,
-		["summon_human"] = function( self, p, tr )
-			if SERVER then
-				local summon = ents.Create( "benny_npc_human" )
-				summon:SetPos( tr.HitPos + tr.HitNormal )
-				local ang = Angle( 0, p:EyeAngles().y+0, 0 )
-				summon:SetAngles( ang )
-				summon:Spawn()
-			end
-		end,
-		["remover"] = function( self, p, tr )
-			if SERVER then
-				local ent = tr.Entity
-				if IsValid( ent ) then
-					ent:Remove()
-					return
-				end
-			end
-		end,
-	}
-	local function CreateSelect()
-		local Frame = vgui.Create( "DFrame" )
-		Frame:SetSize( 300, 85 )
-		Frame:SetTitle( "Toolgun Select" )
-		Frame:Center()
-		Frame:MakePopup()
-
-		local Text = Frame:Add( "DLabel" )
-		Text:Dock( TOP )
-		Text:DockMargin( 10, 0, 10, 0 )
-		Text:SetText( "Select a tool." )
-
-		local List = Frame:Add( "DComboBox" )
-		List:Dock( TOP )
-		List:SetValue(GetConVar("benny_wep_toolgun"):GetString())
-		List:DockMargin( 10, 0, 10, 0 )
-		for i, v in SortedPairs( ToolGunTools ) do
-			List:AddChoice( i )
-		end
-		List.OnSelect = function( self, index, value )
-			RunConsoleCommand( "benny_wep_toolgun", value )
-			Frame:Remove()
-		end
-	end
-	WEAPONS["toolgun"] = {
-		Name = "TOOL GUN",
-		Description = "Developer development device. Hold ALT for Remover",
-		Type = "special",
-
-		WModel = "models/weapons/w_toolgun.mdl",
-		HoldType = "revolver",
-		GestureDraw = { ACT_HL2MP_GESTURE_RELOAD_REVOLVER, 0.8 },
-
-		Delay = (60/300),
-		Firemodes = FIREMODE_SEMI,
-
-		Custom_Fire = function( self, data )
-			if self:GetDelay1() > CurTime() then
-				return true
-			end
-			self:SetDelay1( CurTime() + 0.2 )
-		
-			local p = self:GetOwner()
-		
-			local tr = p:GetEyeTrace()
-			local tool = p:KeyDown( IN_WALK ) and "remover" or p:GetInfo( "benny_wep_toolgun" )
-			if ToolGunTools[tool] then ToolGunTools[tool]( self, p, tr ) else return true end
-		
-			if CLIENT and IsFirstTimePredicted() then
-				local vStart = self:GetAttachment( 1 ).Pos
-				local vPoint = tr.HitPos
-				local effectdata = EffectData()
-				effectdata:SetStart( vStart )
-				effectdata:SetOrigin( vPoint )
-				util.Effect( "ToolTracer", effectdata )
-			end
-		
-			-- Return true to skip weapon logic
-			return true
-		end,
-		
-		Custom_Reload = function( self, data )
-			if CLIENT then
-				CreateSelect()
-			end
-		
-			-- Return true to skip weapon logic
-			return true
-		end,
-
-		Features = "firearm",
-	}
-
 	
 	WEAPONS["camera"] = {
 		Name = "CAMERA",
@@ -658,7 +558,7 @@ do -- Grenades, nothing here is guaranteed.
 		Custom_Reload = GrenadeReload,
 		Custom_Think = GrenadeThink,
 		Custom_Holster = GrenadeHolster,
-		GrenadeEnt = "benny_grenade_frag",
+		GrenadeEnt = "b-gr_frag",
 		GrenadeFuse = 4,
 		GrenadeCharge = true,
 		
@@ -678,7 +578,7 @@ do -- Grenades, nothing here is guaranteed.
 		Custom_Reload = GrenadeReload,
 		Custom_Think = GrenadeThink,
 		Custom_Holster = GrenadeHolster,
-		GrenadeEnt = "benny_grenade_semtex",
+		GrenadeEnt = "b-gr_semtex",
 		GrenadeFuse = 4,
 		GrenadeCharge = true,
 		
@@ -698,7 +598,7 @@ do -- Grenades, nothing here is guaranteed.
 		Custom_Reload = GrenadeReload,
 		Custom_Think = GrenadeThink,
 		Custom_Holster = GrenadeHolster,
-		GrenadeEnt = "benny_grenade_molotov",
+		GrenadeEnt = "b-gr_molotov",
 		GrenadeFuse = 4,
 		GrenadeCharge = true,
 		
@@ -718,7 +618,7 @@ do -- Grenades, nothing here is guaranteed.
 		Custom_Reload = GrenadeReload,
 		Custom_Think = GrenadeThink,
 		Custom_Holster = GrenadeHolster,
-		GrenadeEnt = "benny_grenade_tknife",
+		GrenadeEnt = "b-gr_tknife",
 		GrenadeFuse = 4,
 		GrenadeCharge = true,
 		
@@ -738,7 +638,7 @@ do -- Grenades, nothing here is guaranteed.
 		Custom_Reload = GrenadeReload,
 		Custom_Think = GrenadeThink,
 		Custom_Holster = GrenadeHolster,
-		GrenadeEnt = "benny_grenade_smoke",
+		GrenadeEnt = "b-gr_smoke",
 		GrenadeFuse = 4,
 		GrenadeCharge = true,
 		
@@ -758,7 +658,7 @@ do -- Grenades, nothing here is guaranteed.
 		Custom_Reload = GrenadeReload,
 		Custom_Think = GrenadeThink,
 		Custom_Holster = GrenadeHolster,
-		GrenadeEnt = "benny_grenade_flashbang",
+		GrenadeEnt = "b-gr_flashbang",
 		GrenadeFuse = 2,
 		GrenadeCharge = false,
 		
@@ -778,7 +678,7 @@ do -- Grenades, nothing here is guaranteed.
 		Custom_Reload = GrenadeReload,
 		Custom_Think = GrenadeThink,
 		Custom_Holster = GrenadeHolster,
-		GrenadeEnt = "benny_grenade_prox",
+		GrenadeEnt = "b-gr_prox",
 		GrenadeFuse = 4,
 		GrenadeCharge = true,
 		

@@ -16,7 +16,17 @@ end
 -- ItemDef metatable
 ItemDef = {}
 
+ItemDefHelpers = {
+	Get = function( self, key )
+		return self.key
+	end,
+	GetRaw = function( self, key )
+		return rawget( self, key )
+	end,
+}
+
 function ItemDef.__index( self, key )
+	if ItemDefHelpers[key] then return ItemDefHelpers[key] end
 	if rawget(self, "BaseClass") then
 		return rawget(self, "BaseClass")[key]
 	end
@@ -28,9 +38,8 @@ function ItemDef:new( classname, classtable )
 		newdef.ClassName = classname
 		newdef.BaseClass = WEAPONS[newdef.Base]
 
-		WEAPONS[classname] = newdef
-
 		setmetatable( newdef, ItemDef )
+		WEAPONS[classname] = newdef
 		return newdef
 	else
 		return WEAPONS[classname]

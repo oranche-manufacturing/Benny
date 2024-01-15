@@ -20,7 +20,7 @@ do -- Sound definitions
 	AddSound( "Common.NoAmmo", "benny/weapons/noammo.ogg", 70, 100, 0.5, CHAN_STATIC )
 	AddSound( "Common.ReloadFail", "benny/hud/reloadfail.ogg", 70, 100, 0.1, CHAN_STATIC )
 
--- Pistols
+	-- Pistols
 	-- Deagle
 	AddSound( "Deagle.Cock", "benny/weapons/deagle/cock.ogg", 70, 100, 0.5, CHAN_STATIC )
 
@@ -93,9 +93,11 @@ do -- Sound definitions
 	AddSound( "P226.MagIn", "benny/weapons/p226/magin.ogg", 70, 100, 0.5, CHAN_STATIC )
 
 	-- CZ-75A
+	AddSound( "CZ75A.MagOut", "benny/weapons/cz75a/magout.ogg", 70, 100, 0.5, CHAN_STATIC )
+	AddSound( "CZ75A.MagIn", "benny/weapons/cz75a/magin.ogg", 70, 100, 0.5, CHAN_STATIC )
 
 
--- SMGs
+	-- SMGs
 	-- Bizon
 	AddSound( "Bizon.Fire", {
 		"benny/weapons/bizon/01.ogg",
@@ -143,7 +145,7 @@ do -- Sound definitions
 	AddSound( "TMP.MagIn", "benny/weapons/tmp/magin.ogg", 70, 100, 0.5, CHAN_STATIC )
 
 
--- Rifles
+	-- Rifles
 	-- FNC
 	AddSound( "FNC.Fire", {
 		"benny/weapons/fnc/01.ogg",
@@ -165,7 +167,7 @@ do -- Sound definitions
 	AddSound( "M16A2.Cock", "benny/weapons/m16a2/cock.ogg", 70, 100, 0.5, CHAN_STATIC )
 
 
--- Shotguns
+	-- Shotguns
 	-- AA12
 	AddSound( "AA12.Fire", "benny/weapons/aa12/01.ogg", 140, 100, 0.5, CHAN_STATIC )
 	AddSound( "AA12.MagOut", "benny/weapons/aa12/magout.ogg", 70, 100, 0.5, CHAN_STATIC )
@@ -185,7 +187,7 @@ do -- Sound definitions
 	AddSound( "SPAS12.MagIn", "benny/weapons/spas12/magin.ogg", 70, 100, 0.5, CHAN_STATIC )
 
 
--- Machine Guns
+	-- Machine Guns
 	-- QBB-LSW
 	AddSound( "QBBLSW.Fire", {
 		"benny/weapons/qbblsw/fire-01.ogg",
@@ -201,7 +203,7 @@ do -- Sound definitions
 	}, 140, 100, 0.5, CHAN_STATIC )
 
 
--- Snipers
+	-- Snipers
 	-- Barrett .50
 	AddSound( "Barrett.Fire", {
 		"benny/weapons/barrett/fire-01.ogg",
@@ -232,6 +234,10 @@ do -- Bases
 		Speed_Firing = 1,
 		Speed_FiringTime = 0.2,
 		ShootHolsterTime = 0,
+
+		Init_Item = function( class, item, class_for )
+			print( class, ": Base says hi")
+		end,
 
 		Func_Attack = function( self, hand )
 		end,
@@ -287,6 +293,14 @@ do -- Bases
 		Reload_MagIn = 0.8,
 		Reload_MagIn_Bonus1 = 0.56,
 		Reload_MagIn_Bonus2 = 0.56+0.1,
+
+		Init_Item = function( class, item )
+			if class.BaseClass:GetRaw( "Init_Item" ) then
+				class.BaseClass:GetRaw( "Init_Item" )( class.BaseClass, item )
+			end
+			print( class, ": Firearm init" )
+			item.Loaded = ""
+		end,
 
 		Func_Attack = function( self, hand )
 			if self:GetAim() == 1 then
@@ -404,6 +418,13 @@ do -- Bases
 		Range = 64,
 		HullSize = 2,
 
+		Init_Item = function( class, item )
+			if class.BaseClass:GetRaw( "Init_Item" ) then
+				class.BaseClass:GetRaw( "Init_Item" )( class.BaseClass, item )
+			end
+			print( class, ": Melee init" )
+		end,
+
 		Func_Attack = function( self, hand )
 			if self:bGetIntDelay( hand ) > CurTime() then
 				return
@@ -473,6 +494,13 @@ do -- Bases
 		Features = "grenade",
 		Hide = true,
 
+		Init_Item = function( class, item )
+			if class.BaseClass:GetRaw( "Init_Item" ) then
+				class.BaseClass:GetRaw( "Init_Item" )( class.BaseClass, item )
+			end
+			print( class, ": Grenade init" )
+		end,
+
 		WModel = "models/weapons/w_grenade.mdl",
 		HoldType = "slam",
 	})
@@ -485,9 +513,136 @@ do -- Bases
 		Features = "magazine",
 		Hide = true,
 
+		--
+		AmmoStd = 0,
+		AutoGenMag = false,
+
+		Init_Item = function( class, item )
+			if class.BaseClass:GetRaw( "Init_Item" ) then
+				class.BaseClass:GetRaw( "Init_Item" )( class.BaseClass, item )
+			end
+			print( class, ": Clip init" )
+			item.Ammo = class.Ammo
+		end,
+
 		WModel = "models/weapons/w_slam.mdl",
 		HoldType = "slam",
 	})
+
+end
+
+do -- Toolgun
+
+	local ToolGunTools = {
+		["ammocrate"] = function( self, p, tr )
+			if SERVER then
+				local summon = ents.Create( "b-eq_ammo" )
+				summon:SetPos( tr.HitPos + tr.HitNormal )
+				summon:Spawn()
+			end
+		end,
+		["summon_human"] = function( self, p, tr )
+			if SERVER then
+				local summon = ents.Create( "benny_npc_human" )
+				summon:SetPos( tr.HitPos + tr.HitNormal )
+				local ang = Angle( 0, p:EyeAngles().y+0, 0 )
+				summon:SetAngles( ang )
+				summon:Spawn()
+			end
+		end,
+		["remover"] = function( self, p, tr )
+			if SERVER then
+				local ent = tr.Entity
+				if IsValid( ent ) then
+					ent:Remove()
+					return
+				end
+			end
+		end,
+	}
+	local function CreateSelect()
+		local Frame = vgui.Create( "DFrame" )
+		Frame:SetSize( 300, 85 )
+		Frame:SetTitle( "Toolgun Select" )
+		Frame:Center()
+		Frame:MakePopup()
+
+		local Text = Frame:Add( "DLabel" )
+		Text:Dock( TOP )
+		Text:DockMargin( 10, 0, 10, 0 )
+		Text:SetText( "Select a tool." )
+
+		local List = Frame:Add( "DComboBox" )
+		List:Dock( TOP )
+		List:SetValue(GetConVar("benny_wep_toolgun"):GetString())
+		List:DockMargin( 10, 0, 10, 0 )
+		for i, v in SortedPairs( ToolGunTools ) do
+			List:AddChoice( i )
+		end
+		List.OnSelect = function( self, index, value )
+			RunConsoleCommand( "benny_wep_toolgun", value )
+			Frame:Remove()
+		end
+	end
+	WEAPONS["toolgun"] = {
+		Name = "TOOL GUN",
+		Description = "Developer development device. Hold ALT for Remover",
+		Base = "base",
+		Category = "special",
+		Equipable = true,
+
+		WModel = "models/weapons/w_toolgun.mdl",
+		HoldType = "revolver",
+		GestureDraw = { ACT_HL2MP_GESTURE_RELOAD_REVOLVER, 0.8 },
+
+		Delay = (60/300),
+		Firemodes = FIREMODE_SEMI,
+
+		-- These for some reason aren't taken by the base correctly
+		Init_Item = function()
+		end,
+		Speed_Move = 1,
+		Speed_Aiming = 1,
+		Speed_Reloading = 1,
+		Speed_Firing = 1,
+		Speed_FiringTime = 0.2,
+		ShootHolsterTime = 0,
+		--
+
+		Func_Attack = function( self, data )
+			if self:GetDelay1() > CurTime() then
+				return true
+			end
+			self:SetDelay1( CurTime() + 0.2 )
+		
+			local p = self:GetOwner()
+		
+			local tr = p:GetEyeTrace()
+			local tool = p:KeyDown( IN_WALK ) and "remover" or p:GetInfo( "benny_wep_toolgun" )
+			if ToolGunTools[tool] then ToolGunTools[tool]( self, p, tr ) else return true end
+		
+			if CLIENT and IsFirstTimePredicted() then
+				local vStart = self:GetAttachment( 1 ).Pos
+				local vPoint = tr.HitPos
+				local effectdata = EffectData()
+				effectdata:SetStart( vStart )
+				effectdata:SetOrigin( vPoint )
+				util.Effect( "ToolTracer", effectdata )
+			end
+		
+			-- Return true to skip weapon logic
+			return true
+		end,
+		
+		Func_Reload = function( self, data )
+			if CLIENT then
+				CreateSelect()
+			end
+		
+			-- Return true to skip weapon logic
+			return true
+		end,
+	}
 
 end
 

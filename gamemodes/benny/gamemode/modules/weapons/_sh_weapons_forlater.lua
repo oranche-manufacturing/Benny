@@ -110,7 +110,7 @@ WEAPONS["g_gas"] = {
 	Custom_Reload = GrenadeReload,
 	Custom_Think = GrenadeThink,
 	Custom_Holster = GrenadeHolster,
-	GrenadeEnt = "benny_grenade_gas",
+	GrenadeEnt = "b-gr_gas",
 	GrenadeFuse = 4,
 	GrenadeCharge = true,
 	
@@ -130,7 +130,7 @@ WEAPONS["g_claymore"] = {
 	Custom_Reload = GrenadeReload,
 	Custom_Think = GrenadeThink,
 	Custom_Holster = GrenadeHolster,
-	GrenadeEnt = "benny_grenade_claymore",
+	GrenadeEnt = "b-gr_claymore",
 	GrenadeFuse = 4,
 	GrenadeCharge = true,
 	
@@ -150,7 +150,7 @@ WEAPONS["g_scrambler"] = {
 	Custom_Reload = GrenadeReload,
 	Custom_Think = GrenadeThink,
 	Custom_Holster = GrenadeHolster,
-	GrenadeEnt = "benny_grenade_scrambler",
+	GrenadeEnt = "b-gr_scrambler",
 	GrenadeFuse = 4,
 	GrenadeCharge = true,
 	
@@ -170,7 +170,7 @@ WEAPONS["g_emp"] = {
 	Custom_Reload = GrenadeReload,
 	Custom_Think = GrenadeThink,
 	Custom_Holster = GrenadeHolster,
-	GrenadeEnt = "benny_grenade_emp",
+	GrenadeEnt = "b-gr_emp",
 	GrenadeFuse = 4,
 	GrenadeCharge = true,
 	
@@ -190,7 +190,7 @@ WEAPONS["g_shockcharge"] = {
 	Custom_Reload = GrenadeReload,
 	Custom_Think = GrenadeThink,
 	Custom_Holster = GrenadeHolster,
-	GrenadeEnt = "benny_grenade_shockcharge",
+	GrenadeEnt = "b-gr_shockcharge",
 	GrenadeFuse = 4,
 	GrenadeCharge = true,
 	
@@ -210,7 +210,7 @@ WEAPONS["g_thermobaric"] = {
 	Custom_Reload = GrenadeReload,
 	Custom_Think = GrenadeThink,
 	Custom_Holster = GrenadeHolster,
-	GrenadeEnt = "benny_grenade_thermobaric",
+	GrenadeEnt = "b-gr_thermobaric",
 	GrenadeFuse = 4,
 	GrenadeCharge = true,
 	
