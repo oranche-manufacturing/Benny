@@ -1,7 +1,7 @@
 AddCSLuaFile()
 
 ENT.Type = "anim"
-ENT.Base = "benny_grenade"
+ENT.Base = "b-gr"
 
 ENT.Model = "models/weapons/w_eq_fraggrenade_thrown.mdl"
 
@@ -11,11 +11,6 @@ function ENT:Explode()
 	effectdata:SetOrigin( self:GetPos() )
 	effectdata:SetFlags( explosionflags )
 	util.Effect( "Explosion", effectdata )
-
-	local dmg = DamageInfo()
-	dmg:SetDamage( 125 )
-	dmg:SetAttacker( self:GetOwner() )
-	util.BlastDamageInfo( dmg, self:GetPos(), 140 )
 
 	self:Remove()
 	return

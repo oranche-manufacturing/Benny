@@ -1,7 +1,7 @@
 AddCSLuaFile()
 
 ENT.Type = "anim"
-ENT.Base = "benny_grenade"
+ENT.Base = "b-gr"
 
 ENT.Model = "models/weapons/w_eq_fraggrenade_thrown.mdl"
 
